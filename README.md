@@ -1,49 +1,59 @@
 # Scuola
 
-Sito statico per lo studio, diviso per materie: Informatica, Sistemi e Reti, TPSIT, GPOI, Storia, Italiano, Inglese.
-Solo HTML, CSS e JavaScript: non c'è niente da compilare né da installare.
+Quaderno di studio diviso per materie: Informatica, Sistemi e Reti, TPSIT, GPOI, Storia, Italiano, Inglese.
+Solo HTML, CSS e JavaScript: niente da compilare o installare. Funziona da computer e da telefono, anche offline.
+
+## Cosa c'è
+
+- **Ricerca** in tutte le pagine (`Ctrl K`, `/` o il tasto *Cerca* in basso sul telefono), senza distinzione di maiuscole e accenti; `"tra virgolette"` per una frase esatta. Ogni risultato porta alla sezione giusta e le parole vengono evidenziate.
+- **Progressi**: ogni argomento si può segnare come *studiato*; menu, panoramiche e home mostrano quanti ne hai fatti per materia.
+- **Ripasso** (`ripasso.html`): raccoglie da solo tutte le flashcard e i quiz delle pagine.
+  - Flashcard con il metodo a scatole (Leitner): le carte che sai tornano dopo 1, 2, 4, 8, 16 giorni.
+  - Quiz di 10 domande a caso con punteggio e miglior risultato.
+- **Codice colorato** (c, cpp, java, python, js, sql, bash, html) con pulsante Copia.
+- **Schemi di rete** disegnati da un elenco di nodi e collegamenti.
+- **Offline / app**: dal telefono, *Aggiungi a schermata Home* per usarlo come un'app; le pagine già aperte restano disponibili senza connessione.
+- Tema chiaro "quaderno" e scuro "lavagna", automatico o dal pulsante in alto.
+
+Progressi e ripasso sono salvati nel browser del dispositivo che usi.
 
 ## Struttura
 
 ```
-index.html              home con la griglia delle materie
-cerca.html              pagina dei risultati di ricerca
-componenti.html         catalogo dei blocchi grafici (box, esercizi, codice, tabelle…)
-materie/<materia>/      una cartella per materia, index.html = panoramica
-assets/css/style.css    stile (tema chiaro/scuro automatico)
-assets/js/site.js       ELENCO DI MATERIE E PAGINE: menu e ricerca partono da qui
-assets/js/layout.js     barra superiore, menu laterale, indice della pagina
-assets/js/search.js     ricerca full-text
+index.html · cerca.html · ripasso.html · componenti.html
+materie/<materia>/index.html     panoramica della materia
+materie/<materia>/<pagina>.html  argomenti
+assets/js/site.js                ELENCO DI MATERIE E PAGINE (si parte da qui)
+assets/js/layout.js              menu, barra in basso, progressi, indice pagina
+assets/js/components.js          codice, flashcard, quiz, schemi di rete
+assets/js/search.js              ricerca
+assets/js/ripasso.js             pagina Ripasso
+assets/css/style.css             grafica
+sw.js · manifest.webmanifest     offline e installazione come app
+tools/pagine.py                  rigenera home, cerca, ripasso e panoramiche
 ```
 
 ## Aggiungere una pagina
 
-1. Crea il file, ad esempio `materie/informatica/cicli.html`, partendo dal modello in fondo a `componenti.html`.
-2. Registralo in `assets/js/site.js` nell'array `pages` della materia:
+1. Copia il modello in fondo a `componenti.html` in `materie/<materia>/nome.html`.
+2. Aggiungi una riga in `assets/js/site.js`, nell'array `pages` della materia:
    ```js
-   { title: "Cicli", path: "materie/informatica/cicli.html", type: "esercizi" },
+   { title: "Subnetting", path: "materie/sistemi-e-reti/subnetting.html", type: "esercizi" },
    ```
-   Tipi disponibili: `teoria`, `esercizi`, `laboratorio`, `riassunto`, `verifica`.
+   Tipi: `teoria`, `esercizi`, `laboratorio`, `riassunto`, `verifica`, `vocabolario`.
 
-Menu laterale, elenco argomenti della materia e ricerca si aggiornano da soli.
+`componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-## Ricerca
-
-- `Ctrl K` / `⌘ K` o `/` aprono la ricerca rapida da qualsiasi pagina.
-- Non distingue maiuscole e accenti (`perche` trova *perché*).
-- Più parole devono comparire tutte; `"tra virgolette"` cerca la frase esatta.
-- Ogni risultato porta alla sezione giusta (titoli `h2`/`h3`) e le parole vengono evidenziate nella pagina.
-- Per escludere una parte di pagina dalla ricerca: `data-search-ignore`.
+Le pagine *I cicli in C*, *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 
-La ricerca legge le pagine via HTTP, quindi aprire i file con doppio clic non basta:
-
 ```sh
-python3 -m http.server 8000
-# poi apri http://localhost:8000
+python3 -m http.server 8000   # poi apri http://localhost:8000
 ```
 
-## Pubblicazione
+## Pubblicarlo con GitHub Pages
 
-GitHub → **Settings → Pages** → *Deploy from a branch* → `main` / `(root)`.
+GitHub Pages gratuito richiede che il repository sia **pubblico**:
+Settings → General → Change visibility → Public, poi Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
+Il sito sarà su `https://madonnahtml.github.io/school/`.

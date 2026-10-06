@@ -2,25 +2,25 @@
 <html lang="it" data-toc="off">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Cerca · Scuola</title>
   <meta name="description" content="Cerca in tutte le materie.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/layout.js" defer></script>
-  <script src="assets/js/search.js" defer></script>
+  <meta name="theme-color" content="#fbfcfe" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b2723" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <script src="assets/js/site.js?v=2"></script>
 </head>
 <body>
 <main id="content">
 
   <div class="search-page" data-search-page>
     <h1>Cerca</h1>
-    <form class="hero-search" role="search">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input class="search-page-input" type="search" name="q" placeholder="Cerca parole, argomenti, esercizi…" aria-label="Testo da cercare" autocomplete="off" spellcheck="false">
+    <form class="field" role="search">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search-q" class="search-page-input" type="search" name="q" placeholder="Cerca parole, argomenti, esercizi…" aria-label="Testo da cercare" autocomplete="off" spellcheck="false" enterkeyhint="search">
     </form>
     <div class="search-filters" aria-label="Filtra per materia"></div>
     <p class="search-page-info" aria-live="polite"></p>

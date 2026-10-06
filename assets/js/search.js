@@ -8,11 +8,11 @@
  * - Finestra rapida con Ctrl/⌘ + K o "/", pagina completa in cerca.html.
  * - Aprendo un risultato, le parole cercate vengono evidenziate nella pagina.
  */
-(function () {
+SITE.ready(function () {
   "use strict";
   var SITE = window.SITE;
   var I = SITE.icons || {};
-  var CACHE_KEY = "search-index-v1";
+  var CACHE_KEY = "site-index-v" + SITE.version;
   var CACHE_TTL = 5 * 60 * 1000;
   var BLOCK = /^(P|DIV|LI|UL|OL|TD|TH|TR|TABLE|BR|H[1-6]|PRE|BLOCKQUOTE|DT|DD|DL|SECTION|ARTICLE|DETAILS|SUMMARY|FIGURE|FIGCAPTION|HEADER|FOOTER|ASIDE)$/;
 
@@ -30,9 +30,32 @@
   }
   function clean(s) { return s.replace(/\s+/g, " ").trim(); }
 
-  // Divide il contenuto di una pagina in sezioni, una per ogni titolo h2/h3.
-  function sectionsOf(doc, page) {
+  // Divide il contenuto di una pagina in sezioni (una per titolo h2/h3)
+  // e raccoglie flashcard e domande dei quiz per la pagina Ripasso.
+  function parsePage(doc, page) {
     var main = doc.getElementById("content") || doc.body;
+    var base = { subject: page.subject.id, path: page.path, page: page.title };
+
+    var cards = Array.prototype.map.call(main.querySelectorAll(".flashcard"), function (c) {
+      var f = c.querySelector(".fc-front"), b = c.querySelector(".fc-back");
+      if (!f || !b) return null;
+      return Object.assign({ id: SITE.hash(page.path + "|" + clean(f.textContent)), front: f.innerHTML.trim(), back: b.innerHTML.trim() }, base);
+    }).filter(Boolean);
+
+    var questions = Array.prototype.map.call(main.querySelectorAll(".quiz-q"), function (q) {
+      var list = q.querySelector("ul, ol"), why = q.querySelector(".quiz-why");
+      if (!list) return null;
+      var text = Array.prototype.filter.call(q.children, function (el) { return el !== list && el !== why; })
+        .map(function (el) { return el.outerHTML; }).join("");
+      return Object.assign({
+        id: SITE.hash(page.path + "|" + clean(q.textContent)),
+        question: text,
+        options: Array.prototype.map.call(list.children, function (li) { return li.innerHTML.trim(); }),
+        answer: parseInt(q.getAttribute("data-answer"), 10) - 1,
+        why: why ? why.innerHTML.trim() : "",
+      }, base);
+    }).filter(Boolean);
+
     main.querySelectorAll("script, style, template, [data-search-ignore], [data-subject-pages], [data-subject-grid]")
       .forEach(function (n) { n.remove(); });
 
@@ -48,15 +71,15 @@
         if (c.tagName === "H2" || c.tagName === "H3") {
           var id = c.id;
           if (!id) {
-            var base = SITE.slug(c.textContent), k = 2;
-            id = base;
-            while (used[id] || doc.getElementById(id)) id = base + "-" + k++;
+            var b = SITE.slug(c.textContent), k = 2;
+            id = b;
+            while (used[id] || doc.getElementById(id)) id = b + "-" + k++;
           }
           used[id] = true;
           cur = { title: clean(c.textContent), anchor: id, text: "" };
           sections.push(cur);
         } else if (c.tagName === "H1") {
-          // il titolo della pagina è già in page.title
+          // il titolo è già in page.title
         } else if (c.querySelector("h2, h3")) {
           walk(c);
         } else {
@@ -66,19 +89,17 @@
     }
     walk(main);
 
-    return sections
-      .map(function (s) {
-        return {
-          subject: page.subject.id,
-          page: page.title === "Panoramica" && h1 ? clean(h1.textContent) : page.title,
-          path: page.path,
-          type: page.type || "",
-          title: s.title,
-          anchor: s.anchor,
-          text: clean(s.text),
-        };
-      })
-      .filter(function (r) { return r.text || r.title; });
+    sections = sections.map(function (s) {
+      return Object.assign({}, base, {
+        page: page.isIndex && h1 ? clean(h1.textContent) : page.title,
+        type: page.type || "",
+        title: s.title,
+        anchor: s.anchor,
+        text: clean(s.text),
+      });
+    }).filter(function (r) { return r.text || r.title; });
+
+    return { sections: sections, cards: cards, questions: questions };
   }
 
   var indexPromise = null;
@@ -101,10 +122,15 @@
     indexPromise = Promise.all(SITE.allPages().map(function (p) {
       return fetch(SITE.url(p.path))
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
-        .then(function (htmlText) { return sectionsOf(parser.parseFromString(htmlText, "text/html"), p); })
-        .catch(function () { return []; });
-    })).then(function (lists) {
-      var data = [].concat.apply([], lists);
+        .then(function (htmlText) { return parsePage(parser.parseFromString(htmlText, "text/html"), p); })
+        .catch(function () { return { sections: [], cards: [], questions: [] }; });
+    })).then(function (parts) {
+      var data = { sections: [], cards: [], questions: [] };
+      parts.forEach(function (x) {
+        data.sections = data.sections.concat(x.sections);
+        data.cards = data.cards.concat(x.cards);
+        data.questions = data.questions.concat(x.questions);
+      });
       try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), root: SITE.root, data: data })); } catch (e) { /* */ }
       return data;
     });
@@ -137,11 +163,11 @@
     return !re.test(hay[i - 1] || " ") && !re.test(hay[i + len] || " ");
   }
 
-  function search(index, query, subjectFilter) {
+  function search(data, query, subjectFilter) {
     var terms = parseQuery(query);
     if (!terms.length) return [];
     var results = [];
-    index.forEach(function (r) {
+    data.sections.forEach(function (r) {
       if (subjectFilter && r.subject !== subjectFilter) return;
       var text = SITE.norm(r.text);
       var title = SITE.norm(r.title);
@@ -250,7 +276,7 @@
       '<div class="search-dialog" role="dialog" aria-modal="true" aria-label="Cerca nel sito">' +
         '<div class="search-field">' + SITE.icon(I.search) +
           '<input type="search" placeholder="Cerca parole, argomenti, esercizi…" autocomplete="off" spellcheck="false" aria-label="Testo da cercare">' +
-          '<kbd data-close>Esc</kbd>' +
+          '<kbd data-close>Esc</kbd><button type="button" class="icon-btn search-close" data-close aria-label="Chiudi la ricerca">' + SITE.icon(I.close) + '</button>' +
         "</div>" +
         (currentSubject ? '<div class="search-scope"><button type="button" class="chip" aria-pressed="false">Solo ' +
           SITE.escape(currentSubject.name) + "</button></div>" : "") +
@@ -406,8 +432,7 @@
         pOut.innerHTML = order.map(function (id) {
           var s = SITE.subject(id);
           return '<section class="result-group" style="--c:' + s.color + '"><h2 class="result-group-title">' +
-            '<span class="side-icon">' + SITE.icon(s.icon) + "</span>" + SITE.escape(s.name) +
-            '<span class="side-count">' + groups[id].length + "</span></h2>" +
+            SITE.escape(s.name) + '<span class="count">' + groups[id].length + "</span></h2>" +
             groups[id].map(function (it) { return resultHTML(it, q, "result-card"); }).join("") + "</section>";
         }).join("");
       }, function (err) { pOut.innerHTML = errorHTML(err); });
@@ -520,5 +545,18 @@
     });
   }
 
+  /* ---------- Home: riquadro "Ripasso di oggi" ---------- */
+  var reviewBox = document.querySelector("[data-review-summary]");
+  if (reviewBox) {
+    loadIndex().then(function (data) {
+      var st = SITE.review.state();
+      var due = data.cards.filter(function (c) { return SITE.review.isDue(c.id, st); }).length;
+      reviewBox.querySelector("[data-due]").textContent = due;
+      reviewBox.querySelector("[data-due-label]").textContent = due === 1 ? "carta da ripassare oggi" : "carte da ripassare oggi";
+      reviewBox.querySelector("[data-quiz-n]").textContent = data.questions.length;
+    }, function () { /* lascia i trattini */ });
+  }
+
   SITE.search = { open: openModal, load: loadIndex, query: search };
-})();
+  SITE.loadIndex = loadIndex;
+});

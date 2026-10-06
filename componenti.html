@@ -2,105 +2,136 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Componenti · Scuola</title>
-  <meta name="description" content="Catalogo dei blocchi grafici da usare nelle pagine.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/layout.js" defer></script>
-  <script src="assets/js/search.js" defer></script>
+  <meta name="description" content="Catalogo dei blocchi da usare nelle pagine.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <script src="assets/js/site.js?v=2"></script>
 </head>
 <body>
 <main id="content">
   <h1>Componenti</h1>
-  <p class="lead">Catalogo dei blocchi grafici disponibili per le pagine delle materie. Copia l'HTML che ti serve.</p>
+  <p class="lead">I blocchi disponibili per le pagine delle materie, ognuno con l'HTML da copiare.</p>
 
-  <h2>Box evidenziati</h2>
+  <h2>Box</h2>
   <div class="callout def"><span class="callout-title">Definizione</span>Un <strong>algoritmo</strong> è una sequenza finita di istruzioni che risolve un problema.</div>
   <div class="callout info"><span class="callout-title">Nota</span>Informazione utile da ricordare.</div>
   <div class="callout tip"><span class="callout-title">Trucco</span>Un modo veloce per ricordare un concetto.</div>
   <div class="callout warn"><span class="callout-title">Attenzione</span>Errore tipico da evitare in verifica.</div>
-  <pre data-lang="html"><code>&lt;div class="callout def"&gt;&lt;span class="callout-title"&gt;Definizione&lt;/span&gt;Testo…&lt;/div&gt;
+<pre data-lang="html"><code>&lt;div class="callout def"&gt;&lt;span class="callout-title"&gt;Definizione&lt;/span&gt;Testo…&lt;/div&gt;
 &lt;!-- varianti: def · info · tip · warn --&gt;</code></pre>
 
-  <h2>Esercizi con soluzione</h2>
-  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+  <h2>Esercizio con soluzione</h2>
   <div class="esercizio">
-    <div class="esercizio-head"><span class="esercizio-num">1</span>Somma di due numeri <span class="badge badge-facile">facile</span></div>
-    <div class="esercizio-body"><p>Scrivi un programma che legge due interi e ne stampa la somma.</p></div>
-    <details class="soluzione">
-      <summary>Mostra soluzione</summary>
-      <div class="soluzione-body">
-<pre data-lang="python"><code>a = int(input())
-b = int(input())
-print(a + b)</code></pre>
-      </div>
-    </details>
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Titolo dell'esercizio <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Testo dell'esercizio.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body"><p>Soluzione spiegata.</p></div></details>
   </div>
-  <pre data-lang="html"><code>&lt;div class="esercizio"&gt;
-  &lt;div class="esercizio-head"&gt;&lt;span class="esercizio-num"&gt;1&lt;/span&gt;Titolo &lt;span class="badge badge-facile"&gt;facile&lt;/span&gt;&lt;/div&gt;
-  &lt;div class="esercizio-body"&gt;&lt;p&gt;Testo dell'esercizio&lt;/p&gt;&lt;/div&gt;
-  &lt;details class="soluzione"&gt;
-    &lt;summary&gt;Mostra soluzione&lt;/summary&gt;
-    &lt;div class="soluzione-body"&gt;…&lt;/div&gt;
-  &lt;/details&gt;
+<pre data-lang="html"><code>&lt;div class="exercise-tools"&gt;&lt;button class="btn btn-ghost" type="button" data-toggle-solutions&gt;Mostra tutte le soluzioni&lt;/button&gt;&lt;/div&gt;
+
+&lt;div class="esercizio"&gt;
+  &lt;div class="esercizio-head"&gt;&lt;span class="esercizio-num"&gt;01&lt;/span&gt;Titolo &lt;span class="badge badge-facile"&gt;facile&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="esercizio-body"&gt;&lt;p&gt;Testo&lt;/p&gt;&lt;/div&gt;
+  &lt;details class="soluzione"&gt;&lt;summary&gt;Soluzione&lt;/summary&gt;&lt;div class="soluzione-body"&gt;…&lt;/div&gt;&lt;/details&gt;
 &lt;/div&gt;
 &lt;!-- difficoltà: badge-facile · badge-medio · badge-difficile --&gt;</code></pre>
 
-  <h2>Codice</h2>
-  <p>Ogni <code>&lt;pre&gt;</code> riceve automaticamente la barra con il pulsante <em>Copia</em>. L'attributo <code>data-lang</code> ne indica il linguaggio.</p>
-  <pre data-lang="c"><code>#include &lt;stdio.h&gt;
+  <h2>Codice colorato</h2>
+  <p>Basta indicare il linguaggio con <code>data-lang</code>: c, cpp, java, python, js, sql, bash, html. Il pulsante <em>Copia</em> si aggiunge da solo.</p>
+<pre data-lang="python"><code># media di una lista di voti
+voti = [7, 8, 6.5]
+media = sum(voti) / len(voti)
+print(f"Media: {media:.2f}")</code></pre>
+<pre data-lang="sql"><code>SELECT nome, cognome
+FROM studenti
+WHERE classe = '5A'
+ORDER BY cognome;</code></pre>
 
-int main(void) {
-    printf("Ciao!\n");
-    return 0;
-}</code></pre>
+  <h2>Flashcard</h2>
+  <p>Le flashcard di tutte le pagine finiscono in automatico nella pagina <a href="ripasso.html">Ripasso</a>.</p>
+  <div class="flashcards">
+    <div class="flashcard"><div class="fc-front">Domanda o parola</div><div class="fc-back">Risposta</div></div>
+  </div>
+<pre data-lang="html"><code>&lt;div class="flashcards"&gt;
+  &lt;div class="flashcard"&gt;&lt;div class="fc-front"&gt;Domanda&lt;/div&gt;&lt;div class="fc-back"&gt;Risposta&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
 
-  <h2>Tabelle</h2>
+  <h2>Quiz</h2>
+  <div class="quiz">
+    <div class="quiz-q" data-answer="2">
+      <p>Domanda di esempio: quanto fa 2 + 2?</p>
+      <ul><li>3</li><li>4</li><li>5</li></ul>
+      <p class="quiz-why">Spiegazione che compare dopo la risposta.</p>
+    </div>
+  </div>
+<pre data-lang="html"><code>&lt;div class="quiz"&gt;
+  &lt;div class="quiz-q" data-answer="2"&gt;   &lt;!-- risposta giusta, contando da 1 --&gt;
+    &lt;p&gt;Domanda&lt;/p&gt;
+    &lt;ul&gt;&lt;li&gt;A&lt;/li&gt;&lt;li&gt;B&lt;/li&gt;&lt;li&gt;C&lt;/li&gt;&lt;/ul&gt;
+    &lt;p class="quiz-why"&gt;Spiegazione&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+  <h2>Schema di rete</h2>
+  <figure class="rete"
+    data-nodi="Internet:cloud; FW:firewall; R1:router:10.0.0.1; SW1:switch; AP:ap; PC1:pc:10.0.0.10; Server:server:10.0.0.2"
+    data-collegamenti="Internet-FW; FW-R1; R1-SW1; SW1-PC1; SW1-Server; SW1-AP">
+    <figcaption>Lo schema si disegna da solo a partire dall'elenco di nodi e collegamenti.</figcaption>
+  </figure>
+<pre data-lang="html"><code>&lt;figure class="rete"
+  data-nodi="Internet:cloud; R1:router:192.168.1.1; SW1:switch; PC1:pc:192.168.1.10"
+  data-collegamenti="Internet-R1; R1-SW1; SW1-PC1"&gt;
+  &lt;figcaption&gt;Didascalia&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;!-- nodo = Nome:tipo:etichetta · tipi: pc laptop server router switch hub firewall cloud ap --&gt;</code></pre>
+
+  <h2>Pila a livelli</h2>
+  <ol class="stack">
+    <li><b>2</b><strong>Livello alto</strong><span>Descrizione</span></li>
+    <li><b>1</b><strong>Livello basso</strong><span>Descrizione</span></li>
+  </ol>
+
+  <h2>Tabella</h2>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Livello</th><th>Nome</th><th>Esempio</th></tr></thead>
-      <tbody>
-        <tr><td>4</td><td>Trasporto</td><td>TCP, UDP</td></tr>
-        <tr><td>3</td><td>Rete</td><td>IP</td></tr>
-      </tbody>
+      <thead><tr><th>Colonna</th><th>Colonna</th></tr></thead>
+      <tbody><tr><td>Valore</td><td>Valore</td></tr></tbody>
     </table>
   </div>
 
   <h2>Linea del tempo</h2>
   <ol class="timeline">
-    <li><span class="when">1848</span>Moti rivoluzionari in Europa.</li>
-    <li><span class="when">1861</span>Proclamazione del Regno d'Italia.</li>
+    <li><span class="when">1848</span><div>Evento</div></li>
+    <li><span class="when">1861</span><div>Evento</div></li>
   </ol>
 
-  <h2>Schede</h2>
+  <h2>Schede brevi</h2>
   <div class="cards">
-    <div class="card"><strong>to run</strong><p>correre · ran · run</p></div>
-    <div class="card"><strong>to write</strong><p>scrivere · wrote · written</p></div>
+    <div class="card"><strong>Termine</strong><p>Spiegazione breve.</p></div>
+    <div class="card"><strong>Termine</strong><p>Spiegazione breve.</p></div>
   </div>
 
-  <h2>Badge tipo pagina</h2>
-  <p><span class="badge badge-teoria">Teoria</span> <span class="badge badge-esercizi">Esercizi</span> <span class="badge badge-laboratorio">Laboratorio</span> <span class="badge badge-riassunto">Riassunto</span> <span class="badge badge-verifica">Verifica</span></p>
-
-  <h2>Nuova pagina</h2>
-  <p>Modello per una nuova pagina in <code>materie/&lt;materia&gt;/</code>, da registrare poi in <code>assets/js/site.js</code>:</p>
-  <pre data-lang="html"><code>&lt;!doctype html&gt;
+  <h2>Modello di nuova pagina</h2>
+  <p>Salvala in <code>materie/&lt;materia&gt;/nome.html</code> e aggiungi una riga in <code>assets/js/site.js</code>.</p>
+<pre data-lang="html"><code>&lt;!doctype html&gt;
 &lt;html lang="it" data-subject="informatica"&gt;
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"&gt;
   &lt;title&gt;Titolo · Scuola&lt;/title&gt;
-  &lt;link rel="stylesheet" href="../../assets/css/style.css"&gt;
-  &lt;script src="../../assets/js/site.js"&gt;&lt;/script&gt;
-  &lt;script src="../../assets/js/layout.js" defer&gt;&lt;/script&gt;
-  &lt;script src="../../assets/js/search.js" defer&gt;&lt;/script&gt;
+  &lt;link rel="manifest" href="../../manifest.webmanifest"&gt;
+  &lt;link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml"&gt;
+  &lt;link rel="apple-touch-icon" href="../../assets/img/icon-180.png"&gt;
+  &lt;link rel="stylesheet" href="../../assets/css/style.css?v=2"&gt;
+  &lt;script src="../../assets/js/site.js?v=2"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
 &lt;main id="content"&gt;
   &lt;h1&gt;Titolo&lt;/h1&gt;
+  &lt;p class="lead"&gt;Una frase che riassume l'argomento.&lt;/p&gt;
   &lt;h2&gt;Prima sezione&lt;/h2&gt;
   …
 &lt;/main&gt;

@@ -1,0 +1,16 @@
+{
+  "name": "Scuola",
+  "short_name": "Scuola",
+  "description": "Quaderno di appunti, esercizi e ripasso",
+  "lang": "it",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfcfe",
+  "theme_color": "#1d4fc4",
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "assets/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

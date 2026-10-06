@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="it" data-toc="off" data-scripts="ripasso">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ripasso · Scuola</title>
+  <meta name="description" content="Flashcard e quiz raccolti da tutte le materie.">
+  <meta name="theme-color" content="#fbfcfe" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b2723" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <script src="assets/js/site.js?v=2"></script>
+</head>
+<body>
+<main id="content">
+
+  <div data-ripasso>
+    <h1>Ripasso</h1>
+    <p class="lead">Flashcard e quiz raccolti in automatico da tutte le pagine.</p>
+    <div class="rip-modes" role="tablist" aria-label="Modalità">
+      <button type="button" role="tab" data-mode="carte" aria-selected="true">Flashcard</button>
+      <button type="button" role="tab" data-mode="quiz" aria-selected="false">Quiz</button>
+    </div>
+    <div class="rip-filters" aria-label="Materia"></div>
+    <section class="rip-stage" aria-live="polite"></section>
+  </div>
+</main>
+</body>
+</html>

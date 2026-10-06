@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#1d4fc4"/>
+  <g stroke="#ffffff" stroke-opacity="0.13" stroke-width="4">
+    <path d="M0 96h512M0 160h512M0 224h512M0 288h512M0 352h512M0 416h512M96 0v512M160 0v512M224 0v512M288 0v512M352 0v512M416 0v512"/>
+  </g>
+  <text x="256" y="350" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="300" fill="#ffffff" transform="rotate(-6 256 256)">S</text>
+</svg>

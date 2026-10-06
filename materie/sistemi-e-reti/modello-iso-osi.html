@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il modello ISO/OSI · Scuola</title>
+  <meta name="description" content="I sette livelli del modello ISO/OSI, dispositivi e protocolli.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=2">
+  <script src="../../assets/js/site.js?v=2"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il modello ISO/OSI</h1>
+  <p class="lead">Un modello di riferimento che divide la comunicazione in rete in sette livelli. Ogni livello offre servizi a quello superiore e usa quelli del livello inferiore.</p>
+
+  <h2>I sette livelli</h2>
+  <ol class="stack">
+    <li><b>7</b><strong>Applicazione</strong><span>Servizi per l'utente: HTTP, DNS, SMTP, FTP</span></li>
+    <li><b>6</b><strong>Presentazione</strong><span>Formato dei dati, cifratura, compressione</span></li>
+    <li><b>5</b><strong>Sessione</strong><span>Apertura, gestione e chiusura del dialogo</span></li>
+    <li><b>4</b><strong>Trasporto</strong><span>Comunicazione tra processi: TCP, UDP · segmenti</span></li>
+    <li><b>3</b><strong>Rete</strong><span>Indirizzamento logico e instradamento: IP · pacchetti</span></li>
+    <li><b>2</b><strong>Collegamento dati</strong><span>Indirizzi MAC, controllo errori: Ethernet · frame</span></li>
+    <li><b>1</b><strong>Fisico</strong><span>Segnali su cavo, fibra o radio · bit</span></li>
+  </ol>
+  <div class="callout tip"><span class="callout-title">Per ricordarli</span>Dal basso: <strong>F</strong>isico, <strong>C</strong>ollegamento, <strong>R</strong>ete, <strong>T</strong>rasporto, <strong>S</strong>essione, <strong>P</strong>resentazione, <strong>A</strong>pplicazione.</div>
+
+  <h2>Incapsulamento</h2>
+  <p>Quando un dato scende i livelli, ognuno aggiunge la propria intestazione (header). Chi riceve fa il percorso inverso: ogni livello toglie l'intestazione del livello corrispondente. L'unità di dati di ogni livello si chiama <strong>PDU</strong> (Protocol Data Unit).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Livello</th><th>PDU</th><th>Indirizzo</th></tr></thead>
+      <tbody>
+        <tr><td>4 · Trasporto</td><td>Segmento (TCP) / datagramma (UDP)</td><td>Porta</td></tr>
+        <tr><td>3 · Rete</td><td>Pacchetto</td><td>Indirizzo IP</td></tr>
+        <tr><td>2 · Collegamento</td><td>Frame</td><td>Indirizzo MAC</td></tr>
+        <tr><td>1 · Fisico</td><td>Bit</td><td>–</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Dispositivi e livelli</h2>
+  <p>Ogni dispositivo di rete lavora fino a un certo livello: l'<strong>hub</strong> ripete i segnali (livello 1), lo <strong>switch</strong> inoltra i frame in base al MAC (livello 2), il <strong>router</strong> instrada i pacchetti in base all'IP (livello 3).</p>
+  <figure class="rete"
+    data-nodi="Internet:cloud; R1:router:192.168.1.1; SW1:switch; PC1:pc:192.168.1.10; PC2:laptop:192.168.1.11; Server:server:192.168.1.2"
+    data-collegamenti="Internet-R1; R1-SW1; SW1-PC1; SW1-PC2; SW1-Server">
+    <figcaption>Una piccola LAN: lo switch collega i dispositivi, il router la collega a Internet.</figcaption>
+  </figure>
+
+  <div class="callout warn"><span class="callout-title">Attenzione</span>ISO/OSI è un modello di riferimento. Internet usa il modello <strong>TCP/IP</strong>, che ha meno livelli: i livelli 5, 6 e 7 sono riuniti nel solo livello di applicazione.</div>
+
+  <h2>Flashcard</h2>
+  <div class="flashcards">
+    <div class="flashcard"><div class="fc-front">Livello del router</div><div class="fc-back">3 · Rete</div></div>
+    <div class="flashcard"><div class="fc-front">Livello dello switch</div><div class="fc-back">2 · Collegamento dati</div></div>
+    <div class="flashcard"><div class="fc-front">PDU del livello 2</div><div class="fc-back">frame</div></div>
+    <div class="flashcard"><div class="fc-front">A che livello lavorano TCP e UDP?</div><div class="fc-back">4 · Trasporto</div></div>
+    <div class="flashcard"><div class="fc-front">Cosa significa PDU?</div><div class="fc-back">Protocol Data Unit</div></div>
+  </div>
+
+  <h2>Quiz</h2>
+  <div class="quiz">
+    <div class="quiz-q" data-answer="3">
+      <p>A quale livello appartiene il protocollo IP?</p>
+      <ul><li>Trasporto</li><li>Collegamento dati</li><li>Rete</li><li>Applicazione</li></ul>
+      <p class="quiz-why">IP si occupa di indirizzamento logico e instradamento, compiti del livello 3.</p>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <p>Quale dispositivo inoltra i frame in base all'indirizzo MAC?</p>
+      <ul><li>Hub</li><li>Switch</li><li>Router</li></ul>
+      <p class="quiz-why">Lo switch lavora al livello 2 e usa la tabella degli indirizzi MAC.</p>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <p>Quanti livelli ha il modello ISO/OSI?</p>
+      <ul><li>7</li><li>5</li><li>4</li></ul>
+      <p class="quiz-why">Fisico, Collegamento, Rete, Trasporto, Sessione, Presentazione, Applicazione.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
