@@ -14,7 +14,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e ripasso",
-    version: "2",
+    version: "3",
 
     // Tipi di pagina: etichetta mostrata accanto al titolo.
     pageTypes: {
@@ -61,6 +61,7 @@
         icon: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/>',
         pages: [
           { title: "Panoramica", path: "materie/tpsit/index.html", type: "panoramica" },
+          { title: "Sistemi distribuiti", path: "materie/tpsit/sistemi-distribuiti.html", type: "teoria" },
         ],
       },
       {

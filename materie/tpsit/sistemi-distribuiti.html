@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sistemi distribuiti · Scuola</title>
+  <meta name="description" content="UD1 di TPSIT: sistemi centralizzati e distribuiti, client-server a livelli, ISO/OSI e TCP/IP, P2P.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=3">
+  <script src="../../assets/js/site.js?v=3"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Sistemi distribuiti</h1>
+  <p class="lead">UD1: cos'è un sistema distribuito, come sono organizzate le applicazioni web a livelli, come viaggiano i dati in rete e come funziona il peer-to-peer.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li><strong>Centralizzato vs distribuito</strong>: un solo "cervellone" contro tanti computer che collaborano.</li>
+      <li><strong>Nodi e messaggi</strong>: i computer di un sistema distribuito comunicano solo scambiandosi messaggi in rete.</li>
+      <li><strong>Ruoli</strong>: client, server e actor.</li>
+      <li><strong>Pro e contro</strong>: affidabilità e scalabilità da una parte, complessità e sicurezza dall'altra.</li>
+      <li><strong>Livelli (tier) e P2P</strong>: come sono "impilati" i sistemi e come funzionano senza un capo.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Centralizzato o distribuito</h2>
+  <p class="ref">Slide 3-5</p>
+
+  <div class="compare">
+    <div>
+      <h4>Sistema centralizzato</h4>
+      <p class="hand">Una scuola con un solo bidello</p>
+      <p>Tutto (calcoli, dati, schermo) sta su un'unica macchina molto potente, il <strong>server</strong> o <strong>mainframe</strong>. Gli utenti usano dei <strong>terminali</strong>: mostrano e raccolgono quello che scrivi, ma non elaborano niente.</p>
+      <p><span class="contro">Contro:</span> c'è un <strong>singolo punto di guasto</strong>: se il server si ferma, si blocca tutto. Con troppi utenti il nodo centrale va in <strong>congestione</strong>.</p>
+    </div>
+    <div>
+      <h4>Sistema distribuito</h4>
+      <p class="hand">Una pizzeria con tanti cuochi</p>
+      <p>Tanti computer, chiamati <strong>nodi</strong>, che lavorano insieme comunicando <strong>solo scambiandosi messaggi in rete</strong>. Non hanno una memoria in comune.</p>
+      <p><span class="pro">Obiettivo:</span> sembrare un <strong>unico sistema</strong> a chi lo usa. Quando apri un social non vedi le migliaia di computer che ci sono dietro.</p>
+    </div>
+  </div>
+
+  <figure class="rete"
+    data-nodi="Mainframe:server; Terminale 1:pc; Terminale 2:pc; Terminale 3:pc"
+    data-collegamenti="Mainframe-Terminale 1; Mainframe-Terminale 2; Mainframe-Terminale 3">
+    <figcaption>Sistema centralizzato: i terminali dipendono tutti dal mainframe.</figcaption>
+  </figure>
+
+  <div class="callout def"><span class="callout-title">Trasparenza</span>L'utente usa il sistema distribuito come se fosse un computer solo, senza vedere quanti nodi ci sono e dove si trovano.</div>
+
+  <!-- ============================================================= -->
+  <h2>Client, server e actor</h2>
+  <p class="ref">Slide 6</p>
+  <p>Pensa a un ristorante:</p>
+  <div class="cards">
+    <div class="card"><strong>Client</strong><p>Il cliente che chiede qualcosa. Es. il browser che chiede una pagina.</p></div>
+    <div class="card"><strong>Server</strong><p>La cucina che prepara e serve. Es. il computer che manda la pagina.</p></div>
+    <div class="card"><strong>Actor</strong><p>Il cameriere: per te è un server (ti porta il piatto), per la cucina è un client (le chiede il piatto). Fa entrambi i ruoli.</p></div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Client e server non sono tipi di computer: sono <strong>ruoli di un programma</strong>. Lo stesso computer può essere client in un momento e server in un altro.</div>
+
+  <!-- ============================================================= -->
+  <h2>Come si classificano</h2>
+  <p class="ref">Slide 6-7</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Criterio</th><th>Tipo</th><th>Idea</th><th>Esempi</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2">Per scopo</td><td><strong>Di calcolo</strong></td><td>Tanti amici che fanno insieme un puzzle da 10.000 pezzi</td><td>Simulazioni scientifiche, grafica 3D</td></tr>
+        <tr><td><strong>Di dati</strong></td><td>Tante filiali di una biblioteca con lo stesso catalogo</td><td>Banche, e-commerce, social</td></tr>
+        <tr><td rowspan="2">Per architettura</td><td><strong>Client-server</strong></td><td>C'è chi chiede e chi serve</td><td>Siti web, posta</td></tr>
+        <tr><td><strong>Peer-to-peer</strong></td><td>Tutti sono "pari" e si scambiano risorse direttamente</td><td>BitTorrent, eMule</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Benefici e svantaggi</h2>
+  <p class="ref">Slide 8-9</p>
+
+  <h3>Benefici</h3>
+  <ul>
+    <li><strong>Affidabilità e tolleranza ai guasti</strong>: come la panchina nel calcio. I nodi sono ridondanti: se uno si guasta, un altro lo sostituisce e il sistema continua a funzionare.</li>
+    <li><strong>Integrazione dei sistemi legacy</strong> (cioè vecchi): come un interprete tra un nonno e un nipote, permette a sistemi vecchi e nuovi di lavorare insieme.</li>
+    <li><strong>Trasparenza</strong>: l'utente non vede la complessità.</li>
+    <li><strong>Prestazioni e scalabilità</strong>: se arrivano più utenti, il sistema può crescere.</li>
+  </ul>
+
+  <div class="compare">
+    <div>
+      <h4>Scalabilità verticale</h4>
+      <p>Si compra un computer <strong>più potente</strong>.</p>
+      <p class="hand">Un bambino che va in palestra per diventare fortissimo.</p>
+    </div>
+    <div>
+      <h4>Scalabilità orizzontale</h4>
+      <p>Si aggiungono <strong>più computer</strong>. Nei sistemi distribuiti di solito si fa così.</p>
+      <p class="hand">Si chiamano altri bambini ad aiutare.</p>
+    </div>
+  </div>
+
+  <h3>Svantaggi</h3>
+  <ul>
+    <li><strong>Complessità</strong>: più pezzi ci sono, più è difficile capire chi fa cosa e dove si rompe qualcosa. Il sistema può crescere fuori controllo e la manutenzione diventa impegnativa.</li>
+    <li><strong>Sicurezza</strong>: più computer collegati significa più porte da chiudere a chiave.</li>
+    <li><strong>Produzione del software</strong>: scrivere programmi che funzionano su tanti computer insieme è molto più difficile che scriverne uno per una macchina sola.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Le 8 false credenze</h2>
+  <p>Chi costruisce sistemi distribuiti all'inizio dà per scontate cose comode ma <strong>false</strong>. Sono le famose <em>fallacies of distributed computing</em>, attribuite a Peter Deutsch e ad altri ingegneri di Sun Microsystems.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Credenza falsa</th><th>Perché è falsa</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>La rete è affidabile</td><td>È più stabile di una volta, ma a volte cade.</td></tr>
+        <tr><td>2</td><td>La latenza è zero</td><td>La latenza è il tempo tra richiesta e risposta: con una rete in mezzo non è mai zero.</td></tr>
+        <tr><td>3</td><td>La banda è infinita</td><td>La banda è quanti dati passano nel "tubo", e il tubo si riempie.</td></tr>
+        <tr><td>4</td><td>La rete è sicura</td><td>Crederci è pericoloso.</td></tr>
+        <tr><td>5</td><td>La topologia non cambia</td><td>Nel cloud i collegamenti cambiano e le macchine si accendono e si spengono.</td></tr>
+        <tr><td>6</td><td>C'è un solo amministratore</td><td>Spesso ci lavorano molte squadre diverse.</td></tr>
+        <tr><td>7</td><td>Il costo del trasporto è zero</td><td>Spostare dati costa tempo e a volte soldi.</td></tr>
+        <tr><td>8</td><td>La rete è omogenea</td><td>Ci sono macchine e cavi di tipi diversi: per questo servono protocolli standard.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Per ricordarle</span>La rete è come una strada vera: può avere <strong>buche</strong>, <strong>traffico</strong>, <strong>ladri</strong>, <strong>deviazioni</strong>, più <strong>enti</strong> che la gestiscono, <strong>pedaggi</strong> e <strong>veicoli</strong> diversi.</div>
+
+  <!-- ============================================================= -->
+  <h2>Applicazioni web: client-side e server-side</h2>
+  <p class="ref">Slide 10-11</p>
+  <p>Quando apri un sito, il lavoro può essere fatto in due posti.</p>
+  <div class="compare">
+    <div>
+      <h4>Client-side</h4>
+      <p>Sul <strong>tuo computer</strong>, nel browser.</p>
+      <p>Esempio: un bottone che fa comparire un messaggio senza chiedere niente al server. Alleggerisce il lavoro del server.</p>
+      <p class="hand">Al tavolo del ristorante: versarsi l'acqua, scegliere dal menù.</p>
+    </div>
+    <div>
+      <h4>Server-side</h4>
+      <p>Sul <strong>computer remoto</strong>, il server.</p>
+      <p>Solo qui si può parlare con un <strong>database</strong> o leggere e scrivere i file del server (JavaScript nel browser non può farlo). I dati salvati sul server sono uguali per tutti gli utenti, come una classifica di gioco.</p>
+      <p class="hand">La cucina: frigo, forno, quaderno degli ordini.</p>
+    </div>
+  </div>
+
+  <h3>Il ciclo richiesta-risposta</h3>
+  <ol>
+    <li>Il browser invia una <strong>HTTP Request</strong>.</li>
+    <li>Il server la elabora.</li>
+    <li>Il server restituisce una <strong>HTTP Response</strong> con la pagina.</li>
+  </ol>
+
+  <h3>Due tipi di linguaggi</h3>
+  <div class="cards">
+    <div class="card"><strong>Mark-up</strong><p>HTML, XML. Il "disegno della casa": con i tag descrivono la struttura (titolo, paragrafo…) e spesso l'aspetto.</p></div>
+    <div class="card"><strong>Programmazione</strong><p>Java, PHP, JavaScript. La "ricetta": una sequenza di istruzioni da eseguire.</p></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il modello client-server</h2>
+  <p class="ref">Slide 12-13</p>
+  <p>Un insieme di host (in realtà i <strong>processi</strong> che girano su di essi) gestisce delle risorse: è il <strong>server</strong>. Gli altri, i <strong>client</strong>, chiedono di usarle. Un server può a sua volta diventare client di un altro server, come il cameriere.</p>
+  <div class="callout def"><span class="callout-title">Middleware</span>Software "di mezzo" che fa da traduttore: permette al client di chiamare a distanza un oggetto del server (<strong>invocazione remota</strong>) e di riceverne il risultato.</div>
+
+  <h3>Servizi tipici</h3>
+  <p>Ognuno ha un programma client e un programma server.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Servizio</th><th>A cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Telnet</strong></td><td>Usare un computer lontano come se fosse il tuo.</td></tr>
+        <tr><td><strong>HTTP</strong></td><td>Il browser (client) chiede pagine a un web server.</td></tr>
+        <tr><td><strong>FTP</strong></td><td>Copiare e cancellare file su un computer remoto.</td></tr>
+        <tr><td><strong>SMTP</strong>, <strong>IMAP</strong></td><td>Posta elettronica: SMTP la spedisce, IMAP permette di leggerla dal server.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>One-tier, two-tier, three-tier</h2>
+  <p class="ref">Slide 14-15</p>
+  <p>Un <strong>livello</strong> (tier) è un nodo o un gruppo di nodi con un compito preciso.</p>
+
+  <h3>Three-tier: il modello principale</h3>
+  <ol class="stack">
+    <li><b>1</b><strong>Presentazione</strong><span>Front-end: il browser o l'app. Il cameriere che mostra il menù e prende l'ordine.</span></li>
+    <li><b>2</b><strong>Logica</strong><span>Back-end: decide cosa fare. Lo chef. Es. premi "Compra": controlla il magazzino, calcola prezzi e sconti, avvia l'ordine.</span></li>
+    <li><b>3</b><strong>Dati</strong><span>Il database che conserva tutto. La dispensa.</span></li>
+  </ol>
+  <figure class="rete"
+    data-nodi="Browser:laptop:presentazione; Application server:server:logica; Database:db:dati"
+    data-collegamenti="Browser-Application server; Application server-Database">
+    <figcaption>Three-tier: il browser non parla mai direttamente con il database.</figcaption>
+  </figure>
+  <div class="callout warn"><span class="callout-title">Regola d'oro</span>Interfaccia e database comunicano <strong>sempre passando dal livello di mezzo</strong>, mai direttamente: il cameriere non entra in dispensa. Così i dati sono protetti, si può cambiare un livello senza rompere gli altri e ogni livello può crescere da solo (se il collo di bottiglia è la logica, si aggiungono server solo lì).</div>
+
+  <div class="compare">
+    <div>
+      <h4>Two-tier</h4>
+      <p>Il client parla direttamente con un server che fa sia da chef sia da dispensa. Semplice, ma adatto solo a <strong>piccole applicazioni</strong>.</p>
+    </div>
+    <div>
+      <h4>One-tier</h4>
+      <p>Terminali "stupidi" collegati a un solo mainframe, tipico degli <strong>anni '70</strong> e ormai in disuso. È il sistema centralizzato.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Applicazioni di rete, ISO/OSI e TCP/IP</h2>
+  <p class="ref">Slide 16-17</p>
+  <p>Un'<strong>applicazione di rete</strong> (o distribuita) è fatta da più programmi che girano su due o più computer. Può essere client-server, P2P o ibrida. Esempi: posta, chat, videoconferenze, streaming, telefonia VoIP.</p>
+  <p>Per spedire i dati si usa una pila a strati, il <strong>modello ISO/OSI</strong>: come impacchettare un regalo strato dopo strato e scartarlo dall'altra parte. I dati vengono spezzati in <strong>pacchetti</strong>, ognuno con un'intestazione che dice da dove arriva e dove va, come una busta con mittente e destinatario.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>OSI</th><th>Cosa fa</th><th>Esempi</th><th>TCP/IP</th></tr></thead>
+      <tbody>
+        <tr><td><strong>7</strong> Applicazione</td><td>Dati usati dai programmi</td><td>HTTP, FTP, SMTP, DNS</td><td rowspan="3">Applicazione</td></tr>
+        <tr><td><strong>6</strong> Presentazione</td><td>Traduce i dati in una forma comprensibile</td><td>Cifratura</td></tr>
+        <tr><td><strong>5</strong> Sessione</td><td>Tiene aperta la "conversazione"</td><td>–</td></tr>
+        <tr><td><strong>4</strong> Trasporto</td><td>Consegna tra i due estremi</td><td>TCP, UDP</td><td>Trasporto</td></tr>
+        <tr><td><strong>3</strong> Rete</td><td>Trova la strada tra reti diverse</td><td>IP (IPv4, IPv6)</td><td>Internet</td></tr>
+        <tr><td><strong>2</strong> Collegamento</td><td>Comunicazione nella stessa rete</td><td>Ethernet, indirizzo MAC</td><td rowspan="2">Rete fisica</td></tr>
+        <tr><td><strong>1</strong> Fisico</td><td>Segnali su cavi e onde radio</td><td>Cavo, fibra, wireless</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Paragone</span>Il livello 3 è come l'<strong>indirizzo</strong> scritto sulla lettera, il livello 2 è come il <strong>numero dell'appartamento</strong> a quell'indirizzo.</div>
+  <p><strong>TCP/IP</strong> è il modello usato davvero da Internet, con <strong>4 strati</strong> invece di 7. ISO/OSI è un modello astratto, utile per parlare di reti e protocolli. Approfondimento in Sistemi e Reti: <a href="../sistemi-e-reti/modello-iso-osi.html">Il modello ISO/OSI</a>.</p>
+
+  <!-- ============================================================= -->
+  <h2>L'architettura P2P</h2>
+  <p class="ref">Slide 18-21</p>
+  <p><strong>Peer</strong> vuol dire "pari": sono tutti uguali, come i bambini che si scambiano le figurine in cortile senza negozio. Ogni peer è <strong>sia client sia server</strong>. I peer condividono dati, memoria e banda, e il sistema si adatta quando qualcuno entra o esce. Esempi: eMule, BitTorrent.</p>
+
+  <h3>P2P decentralizzato</h3>
+  <p>Nessun capo. Per cercare una risorsa chiedi ai vicini, che chiedono ai loro vicini.</p>
+  <figure class="rete"
+    data-nodi="Peer A:laptop; Peer B:pc; Peer C:laptop; Peer D:pc; Peer E:laptop"
+    data-collegamenti="Peer A-Peer B; Peer A-Peer C; Peer B-Peer D; Peer C-Peer E; Peer B-Peer C">
+    <figcaption>Ogni peer conosce solo i suoi vicini.</figcaption>
+  </figure>
+  <p><span class="pro">Pro:</span> resiste ai guasti e cresce bene. <span class="contro">Contro:</span> le ricerche sono lente e imprecise.</p>
+
+  <h3>P2P centralizzato</h3>
+  <p>C'è un <strong>directory server</strong>, una bacheca che sa chi ha cosa. La bacheca <strong>non contiene i file</strong>: tiene solo l'elenco "risorsa → peer". Lo scambio poi avviene direttamente tra i peer.</p>
+  <figure class="rete"
+    data-nodi="Directory server:server:elenco risorse; Peer A:laptop; Peer B:pc; Peer C:laptop"
+    data-collegamenti="Directory server-Peer A; Directory server-Peer B; Directory server-Peer C; Peer A-Peer B">
+    <figcaption>A chiede al server chi ha il file, poi lo scarica direttamente da B.</figcaption>
+  </figure>
+  <p><strong>Esempio: Napster.</strong> Il client chiede al server centrale, riceve una lista di indirizzi IP, sceglie un nodo e si collega direttamente a lui per scaricare.</p>
+  <p><span class="pro">Pro:</span> ricerche veloci e precise. <span class="contro">Contro:</span> la bacheca è un singolo punto debole.</p>
+
+  <h3>P2P ibrido</h3>
+  <p>Come i rappresentanti di classe: alcuni peer, i <strong>supernodi</strong> (super-peer o ultra-peer), vengono scelti dinamicamente con un <strong>algoritmo di elezione</strong> e fanno da indice per un gruppo di compagni. Gli altri sono i <strong>leaf peer</strong> ("peer foglia"). I supernodi fanno un lavoro simile al server centrale, ma solo per una parte dei peer.</p>
+  <figure class="rete"
+    data-nodi="Supernodo 1:server; Supernodo 2:server; Leaf 1:laptop; Leaf 2:pc; Leaf 3:laptop; Leaf 4:pc"
+    data-collegamenti="Supernodo 1-Leaf 1; Supernodo 1-Leaf 2; Supernodo 1-Supernodo 2; Supernodo 2-Leaf 3; Supernodo 2-Leaf 4">
+    <figcaption>Ogni supernodo fa da indice per i suoi leaf peer.</figcaption>
+  </figure>
+
+  <div class="callout info"><span class="callout-title">Approfondimento: BitTorrent</span>I file passano direttamente tra i peer, ma il <strong>tracker</strong> è l'unica parte centralizzata del protocollo, quindi un possibile singolo punto di guasto. Nella pratica molti sistemi P2P sono un misto, non "puri".</div>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Un sistema distribuito è fatto da tanti computer che collaborano solo con messaggi, e all'utente sembra uno solo. Pro: affidabilità, scalabilità. Contro: complessità, sicurezza.</li>
+    <li>Il client-server a livelli (presentazione, logica, dati) è la base del web; i dati viaggiano nella pila ISO/OSI (7 strati) o TCP/IP (4 strati).</li>
+    <li>Nel P2P tutti sono sia client sia server: può essere decentralizzato, centralizzato (con una bacheca) o ibrido (con supernodi).</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <p>Scegli un'app che usi ogni giorno (WhatsApp, YouTube, Instagram).</p>
+      <ol>
+        <li>Disegna come funziona in tre livelli: presentazione, logica, dati.</li>
+        <li>Scrivi quale protocollo si usa a ogni livello OSI che riesci a riconoscere.</li>
+        <li>È client-server, P2P o ibrida? Perché?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Esempio di risposta (YouTube)</summary>
+      <div class="soluzione-body">
+        <ul>
+          <li><strong>Presentazione</strong>: l'app o il browser mostra video, commenti e pulsanti.</li>
+          <li><strong>Logica</strong>: i server decidono quali video consigliarti, gestiscono like, commenti e iscrizioni.</li>
+          <li><strong>Dati</strong>: database e archivi con video, account e commenti.</li>
+          <li><strong>Protocolli</strong>: HTTPS e DNS (livello 7), TCP o UDP (livello 4), IP (livello 3), Wi-Fi o Ethernet (livelli 2 e 1).</li>
+          <li>È <strong>client-server</strong>: tu chiedi i video, sono i server di YouTube a mandarteli. Gli utenti non si scambiano i video tra loro.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Per dopo</span>Argomenti che non servono ora ma sono l'evoluzione di questi sistemi: microservizi, Kubernetes, teorema CAP, DHT (tabelle hash distribuite), bootstrap dei peer, protocolli Gnutella e Freenet.</div>
+
+  <!-- ============================================================= -->
+  <h2>Flashcard</h2>
+  <div class="flashcards">
+    <div class="flashcard"><div class="fc-front">Sistema distribuito</div><div class="fc-back">tanti nodi che collaborano scambiandosi messaggi in rete e sembrano un unico sistema</div></div>
+    <div class="flashcard"><div class="fc-front">Difetto principale del sistema centralizzato</div><div class="fc-back">singolo punto di guasto (e congestione)</div></div>
+    <div class="flashcard"><div class="fc-front">Trasparenza</div><div class="fc-back">l'utente non vede la complessità: il sistema sembra uno solo</div></div>
+    <div class="flashcard"><div class="fc-front">Actor</div><div class="fc-back">fa sia da client sia da server, come il cameriere</div></div>
+    <div class="flashcard"><div class="fc-front">Scalabilità orizzontale</div><div class="fc-back">aggiungere più computer</div></div>
+    <div class="flashcard"><div class="fc-front">Scalabilità verticale</div><div class="fc-back">usare un computer più potente</div></div>
+    <div class="flashcard"><div class="fc-front">Middleware</div><div class="fc-back">software di mezzo per l'invocazione remota tra client e server</div></div>
+    <div class="flashcard"><div class="fc-front">I tre livelli del three-tier</div><div class="fc-back">presentazione, logica, dati</div></div>
+    <div class="flashcard"><div class="fc-front">Strati di TCP/IP</div><div class="fc-back">applicazione, trasporto, internet, rete fisica</div></div>
+    <div class="flashcard"><div class="fc-front">Cosa contiene il directory server nel P2P centralizzato?</div><div class="fc-back">solo l'elenco risorsa → peer, non i file</div></div>
+    <div class="flashcard"><div class="fc-front">Supernodo</div><div class="fc-back">peer eletto che fa da indice per un gruppo di leaf peer (P2P ibrido)</div></div>
+    <div class="flashcard"><div class="fc-front">Latenza</div><div class="fc-back">tempo tra la richiesta e la risposta</div></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Quiz</h2>
+  <div class="quiz">
+    <div class="quiz-q" data-answer="2">
+      <p>Come comunicano i nodi di un sistema distribuito?</p>
+      <ul><li>Condividendo la stessa memoria</li><li>Scambiandosi messaggi in rete</li><li>Attraverso i terminali del mainframe</li></ul>
+      <p class="quiz-why">I nodi non hanno memoria in comune: collaborano solo scambiandosi messaggi.</p>
+    </div>
+    <div class="quiz-q" data-answer="3">
+      <p>Un programma che è server per alcuni e client per altri si chiama:</p>
+      <ul><li>Peer</li><li>Middleware</li><li>Actor</li></ul>
+      <p class="quiz-why">L'actor fa entrambi i ruoli, come il cameriere tra cliente e cucina.</p>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <p>Aggiungere più computer per reggere più utenti è scalabilità:</p>
+      <ul><li>Orizzontale</li><li>Verticale</li><li>Trasparente</li></ul>
+      <p class="quiz-why">Verticale = macchina più potente; orizzontale = più macchine.</p>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <p>Nel modello three-tier, il livello di presentazione comunica con il database…</p>
+      <ul><li>direttamente, per essere più veloce</li><li>solo passando dal livello logico</li><li>solo tramite il protocollo FTP</li></ul>
+      <p class="quiz-why">È la regola d'oro: tutto passa dal livello di mezzo, che protegge i dati.</p>
+    </div>
+    <div class="quiz-q" data-answer="3">
+      <p>Quale di queste operazioni si può fare solo lato server?</p>
+      <ul><li>Mostrare un messaggio quando premi un bottone</li><li>Cambiare il colore di un titolo</li><li>Leggere i dati da un database remoto</li></ul>
+      <p class="quiz-why">JavaScript nel browser non può accedere direttamente al database: serve il server.</p>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <p>Quale protocollo serve per spedire la posta elettronica?</p>
+      <ul><li>IMAP</li><li>SMTP</li><li>FTP</li></ul>
+      <p class="quiz-why">SMTP spedisce, IMAP serve a leggere la posta dal server.</p>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <p>In TCP/IP, i livelli OSI 5, 6 e 7 diventano:</p>
+      <ul><li>Applicazione</li><li>Trasporto</li><li>Internet</li></ul>
+      <p class="quiz-why">TCP/IP ha 4 strati e riunisce sessione, presentazione e applicazione nel solo livello di applicazione.</p>
+    </div>
+    <div class="quiz-q" data-answer="3">
+      <p>Nel P2P centralizzato (es. Napster) il server centrale contiene:</p>
+      <ul><li>Tutti i file da scaricare</li><li>Una copia di backup dei peer</li><li>L'elenco di quali peer hanno quali risorse</li></ul>
+      <p class="quiz-why">Il directory server è solo un indice: il file si scarica direttamente da un altro peer.</p>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <p>Qual è il principale svantaggio del P2P decentralizzato?</p>
+      <ul><li>Ricerche lente e imprecise</li><li>Singolo punto di guasto</li><li>Non può crescere</li></ul>
+      <p class="quiz-why">Senza un indice bisogna chiedere ai vicini, che chiedono ai loro vicini.</p>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <p>"La latenza è zero" è:</p>
+      <ul><li>Vero nelle reti in fibra</li><li>Una delle 8 false credenze</li><li>Vero solo nel P2P</li></ul>
+      <p class="quiz-why">Con una rete in mezzo c'è sempre un tempo tra richiesta e risposta.</p>
+    </div>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide della UD1 del corso, con approfondimenti da: Atlassian, <em>Che cos'è un sistema distribuito?</em>; Oracle Developers, <em>Fallacies of distributed systems</em>; Cloudflare, modello OSI e TCP/IP; slide sul P2P del Linux Day Torino; DesignGurus sull'architettura three-tier; dev.to su client-side e server-side.</p>
+</main>
+</body>
+</html>

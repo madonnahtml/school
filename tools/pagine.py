@@ -15,8 +15,8 @@ HEAD = '''<!doctype html>
   <link rel="manifest" href="{r}manifest.webmanifest">
   <link rel="icon" href="{r}assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{r}assets/img/icon-180.png">
-  <link rel="stylesheet" href="{r}assets/css/style.css?v=2">
-  <script src="{r}assets/js/site.js?v=2"></script>
+  <link rel="stylesheet" href="{r}assets/css/style.css?v=3">
+  <script src="{r}assets/js/site.js?v=3"></script>
 </head>
 <body>
 <main id="content">

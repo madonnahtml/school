@@ -436,6 +436,18 @@ pre code { padding: 0; border: 0; background: none; font-size: inherit; }
 .callout.warn { --cl: #c9711c; }
 .callout.def { --cl: var(--pen); border: 1.5px solid var(--pen); background: var(--surface); }
 
+/* Riferimento alle slide del prof: <p class="ref">Slide 3-5</p> */
+#content .ref { margin: -0.4em 0 0.8em; font: 600 11.5px var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); }
+
+/* Confronto a due colonne */
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 1.2em 0 1.6em; }
+.compare > div { padding: 14px 16px; border: 1px solid var(--rule-strong); border-radius: var(--r-lg); background: var(--surface); }
+.compare h4 { margin: 0 0 6px; font: 700 1.05rem var(--font-display); }
+#content .compare p, #content .compare ul { margin: 0 0 0.5em; font-size: 15.5px; }
+#content .compare > div > :last-child { margin-bottom: 0; }
+.pro { color: var(--good); font-weight: 700; }
+.contro { color: var(--bad); font-weight: 700; }
+
 /* Esercizi */
 .exercise-tools { display: flex; justify-content: flex-end; margin: -0.4em 0 1em; }
 .esercizio { margin: 1.5em 0; border: 1px solid var(--rule-strong); border-radius: var(--r-lg); background: var(--surface); }

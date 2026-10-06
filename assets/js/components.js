@@ -203,7 +203,7 @@ SITE.ready(function () {
    * Schema di rete:
    * <figure class="rete" data-nodi="Internet:cloud; R1:router:192.168.1.1; SW1:switch; PC1:pc:.10"
    *         data-collegamenti="Internet-R1; R1-SW1; SW1-PC1"><figcaption>…</figcaption></figure>
-   * Tipi: pc, laptop, server, router, switch, hub, firewall, cloud, ap
+   * Tipi: pc, laptop, server, db, router, switch, hub, firewall, cloud, ap
    * ================================================================= */
   var GLYPH = {
     pc: '<rect x="4" y="6" width="32" height="21" rx="2"/><path d="M20 27v6M12 34h16"/>',
@@ -214,6 +214,7 @@ SITE.ready(function () {
     hub: '<rect x="3" y="13" width="34" height="14" rx="3"/><circle cx="11" cy="20" r="1.5" class="dotfill"/><circle cx="20" cy="20" r="1.5" class="dotfill"/><circle cx="29" cy="20" r="1.5" class="dotfill"/>',
     firewall: '<rect x="4" y="6" width="32" height="28" rx="2"/><path d="M4 15h32M4 25h32M14 6v9M26 6v9M20 15v10M10 25v9M30 25v9"/>',
     cloud: '<path d="M11 31a7 7 0 0 1-.6-14A10 10 0 0 1 29.5 15 8 8 0 0 1 29 31z"/>',
+    db: '<ellipse cx="20" cy="9" rx="13" ry="5"/><path d="M7 9v22c0 2.8 5.8 5 13 5s13-2.2 13-5V9M7 20c0 2.8 5.8 5 13 5s13-2.2 13-5"/>',
     ap: '<rect x="8" y="24" width="24" height="9" rx="2"/><path d="M20 24v-6M12 12a11 11 0 0 1 16 0M15 16a6 6 0 0 1 10 0"/>',
   };
 
@@ -262,8 +263,18 @@ SITE.ready(function () {
 
     var svg = '<svg class="rete-svg" viewBox="0 0 ' + W + " " + H + '" style="max-width:' + W + "px;min-width:" + Math.min(W, 420) + 'px" role="img" aria-label="' +
       esc(fig.querySelector("figcaption") ? fig.querySelector("figcaption").textContent : "Schema di rete") + '">';
+    // le linee partono sotto il nome del nodo più in alto e arrivano sopra l'icona dell'altro,
+    // così non attraversano mai le scritte
     links.forEach(function (l) {
-      svg += '<line class="rete-link" x1="' + cx(l[0]) + '" y1="' + cy(l[0]) + '" x2="' + cx(l[1]) + '" y2="' + cy(l[1]) + '"/>';
+      var a = l[0], c = l[1], x1, y1, x2, y2;
+      if (a.depth === c.depth) {
+        var dir = cx(c) > cx(a) ? 1 : -1;
+        x1 = cx(a) + 26 * dir; y1 = cy(a); x2 = cx(c) - 26 * dir; y2 = cy(c);
+      } else {
+        if (a.depth > c.depth) { var t = a; a = c; c = t; }
+        x1 = cx(a); y1 = cy(a) + (a.label ? 62 : 46); x2 = cx(c); y2 = cy(c) - 24;
+      }
+      svg += '<line class="rete-link" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>';
     });
     nodes.forEach(function (n) {
       var g = GLYPH[n.type] || GLYPH.pc;
