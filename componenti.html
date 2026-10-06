@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Componenti · Scuola</title>
+  <meta name="description" content="Catalogo dei blocchi grafici da usare nelle pagine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/search.js" defer></script>
+</head>
+<body>
+<main id="content">
+  <h1>Componenti</h1>
+  <p class="lead">Catalogo dei blocchi grafici disponibili per le pagine delle materie. Copia l'HTML che ti serve.</p>
+
+  <h2>Box evidenziati</h2>
+  <div class="callout def"><span class="callout-title">Definizione</span>Un <strong>algoritmo</strong> è una sequenza finita di istruzioni che risolve un problema.</div>
+  <div class="callout info"><span class="callout-title">Nota</span>Informazione utile da ricordare.</div>
+  <div class="callout tip"><span class="callout-title">Trucco</span>Un modo veloce per ricordare un concetto.</div>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Errore tipico da evitare in verifica.</div>
+  <pre data-lang="html"><code>&lt;div class="callout def"&gt;&lt;span class="callout-title"&gt;Definizione&lt;/span&gt;Testo…&lt;/div&gt;
+&lt;!-- varianti: def · info · tip · warn --&gt;</code></pre>
+
+  <h2>Esercizi con soluzione</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">1</span>Somma di due numeri <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Scrivi un programma che legge due interi e ne stampa la somma.</p></div>
+    <details class="soluzione">
+      <summary>Mostra soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="python"><code>a = int(input())
+b = int(input())
+print(a + b)</code></pre>
+      </div>
+    </details>
+  </div>
+  <pre data-lang="html"><code>&lt;div class="esercizio"&gt;
+  &lt;div class="esercizio-head"&gt;&lt;span class="esercizio-num"&gt;1&lt;/span&gt;Titolo &lt;span class="badge badge-facile"&gt;facile&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="esercizio-body"&gt;&lt;p&gt;Testo dell'esercizio&lt;/p&gt;&lt;/div&gt;
+  &lt;details class="soluzione"&gt;
+    &lt;summary&gt;Mostra soluzione&lt;/summary&gt;
+    &lt;div class="soluzione-body"&gt;…&lt;/div&gt;
+  &lt;/details&gt;
+&lt;/div&gt;
+&lt;!-- difficoltà: badge-facile · badge-medio · badge-difficile --&gt;</code></pre>
+
+  <h2>Codice</h2>
+  <p>Ogni <code>&lt;pre&gt;</code> riceve automaticamente la barra con il pulsante <em>Copia</em>. L'attributo <code>data-lang</code> ne indica il linguaggio.</p>
+  <pre data-lang="c"><code>#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Ciao!\n");
+    return 0;
+}</code></pre>
+
+  <h2>Tabelle</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Livello</th><th>Nome</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td>4</td><td>Trasporto</td><td>TCP, UDP</td></tr>
+        <tr><td>3</td><td>Rete</td><td>IP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Linea del tempo</h2>
+  <ol class="timeline">
+    <li><span class="when">1848</span>Moti rivoluzionari in Europa.</li>
+    <li><span class="when">1861</span>Proclamazione del Regno d'Italia.</li>
+  </ol>
+
+  <h2>Schede</h2>
+  <div class="cards">
+    <div class="card"><strong>to run</strong><p>correre · ran · run</p></div>
+    <div class="card"><strong>to write</strong><p>scrivere · wrote · written</p></div>
+  </div>
+
+  <h2>Badge tipo pagina</h2>
+  <p><span class="badge badge-teoria">Teoria</span> <span class="badge badge-esercizi">Esercizi</span> <span class="badge badge-laboratorio">Laboratorio</span> <span class="badge badge-riassunto">Riassunto</span> <span class="badge badge-verifica">Verifica</span></p>
+
+  <h2>Nuova pagina</h2>
+  <p>Modello per una nuova pagina in <code>materie/&lt;materia&gt;/</code>, da registrare poi in <code>assets/js/site.js</code>:</p>
+  <pre data-lang="html"><code>&lt;!doctype html&gt;
+&lt;html lang="it" data-subject="informatica"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Titolo · Scuola&lt;/title&gt;
+  &lt;link rel="stylesheet" href="../../assets/css/style.css"&gt;
+  &lt;script src="../../assets/js/site.js"&gt;&lt;/script&gt;
+  &lt;script src="../../assets/js/layout.js" defer&gt;&lt;/script&gt;
+  &lt;script src="../../assets/js/search.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;main id="content"&gt;
+  &lt;h1&gt;Titolo&lt;/h1&gt;
+  &lt;h2&gt;Prima sezione&lt;/h2&gt;
+  …
+&lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</main>
+</body>
+</html>

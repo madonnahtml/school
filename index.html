@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="it" data-toc="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scuola · Appunti e esercizi</title>
+  <meta name="description" content="Sito di studio diviso per materie: informatica, sistemi e reti, TPSIT, GPOI, storia, italiano, inglese.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/layout.js" defer></script>
+  <script src="assets/js/search.js" defer></script>
+</head>
+<body>
+<main id="content">
+
+  <section class="hero">
+    <h1>Cosa studiamo oggi?</h1>
+    <p>Appunti, teoria ed esercizi di tutte le materie in un unico posto. Cerca una parola e trovala ovunque.</p>
+    <form class="hero-search" action="cerca.html" method="get" role="search">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="search" name="q" placeholder="Es. subnet mask, Leopardi, present perfect…" aria-label="Cerca nel sito" autocomplete="off">
+      <button class="btn" type="submit">Cerca</button>
+    </form>
+  </section>
+
+  <div class="section-title"><h2>Materie</h2><span>7 materie</span></div>
+  <div class="subject-grid" data-subject-grid></div>
+
+  <div class="hints">
+    <div class="hint"><div><strong>Ricerca rapida</strong>Premi <kbd>Ctrl</kbd> <kbd>K</kbd> o <kbd>/</kbd> da qualsiasi pagina.</div></div>
+    <div class="hint"><div><strong>Frasi esatte</strong>Scrivi tra virgolette: <code>"livello di trasporto"</code>.</div></div>
+    <div class="hint"><div><strong>Senza accenti</strong><code>perche</code> trova anche <em>perché</em>, maiuscole comprese.</div></div>
+  </div>
+</main>
+</body>
+</html>
