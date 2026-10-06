@@ -7,9 +7,7 @@ Solo HTML, CSS e JavaScript: niente da compilare o installare. Funziona da compu
 
 - **Ricerca** in tutte le pagine (`Ctrl K`, `/` o il tasto *Cerca* in basso sul telefono), senza distinzione di maiuscole e accenti; `"tra virgolette"` per una frase esatta. Ogni risultato porta alla sezione giusta e le parole vengono evidenziate.
 - **Progressi**: ogni argomento si può segnare come *studiato*; menu, panoramiche e home mostrano quanti ne hai fatti per materia.
-- **Ripasso** (`ripasso.html`): raccoglie da solo tutte le flashcard e i quiz delle pagine.
-  - Flashcard con il metodo a scatole (Leitner): le carte che sai tornano dopo 1, 2, 4, 8, 16 giorni.
-  - Quiz di 10 domande a caso con punteggio e miglior risultato.
+- **Ripasso** (`ripasso.html`, ora **disattivato**): raccoglie da solo flashcard e quiz delle pagine, con metodo a scatole (Leitner) e quiz a punteggio. Per ora le pagine non hanno flashcard né quiz; si riattiva in `assets/js/site.js` con `features: { ripasso: true }`.
 - **Codice colorato** (c, cpp, java, python, js, sql, bash, html) con pulsante Copia.
 - **Schemi di rete** disegnati da un elenco di nodi e collegamenti.
 - **Offline / app**: dal telefono, *Aggiungi a schermata Home* per usarlo come un'app; le pagine già aperte restano disponibili senza connessione.
@@ -44,7 +42,7 @@ tools/pagine.py                  rigenera home, cerca, ripasso e panoramiche
 
 `componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-Le pagine *I cicli in C*, *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
+Pagine di appunti: TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*. Le pagine *I cicli in C*, *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 

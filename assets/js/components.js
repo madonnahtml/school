@@ -48,6 +48,17 @@ SITE.ready(function () {
   }
 
   function highlight(code, lang) {
+    if (lang === "http") {
+      return tokenize(code, [
+        ["keyword", /^(?:GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH|CONNECT|TRACE)\b/],
+        ["pre", /HTTP\/\d(?:\.\d)?/],
+        ["number", /\b[1-5]\d\d\b(?= [A-Za-z])/],
+        ["attr", /^[\w-]+(?=:)/],
+      ]);
+    }
+    if (lang === "json") {
+      return tokenize(code, [["attr", /"(?:\\.|[^"\\])*"(?=\s*:)/], ["string", STR], ["number", NUM], ["keyword", /\b(?:true|false|null)\b/]]);
+    }
     if (lang === "html" || lang === "xml") {
       return tokenize(code, [["comment", /<!--[\s\S]*?-->/], ["tag", /<\/?[\w-]+|\/?>/], ["attr", /[\w-]+(?==)/], ["string", STR]]);
     }
@@ -287,6 +298,51 @@ SITE.ready(function () {
     var holder = document.createElement("div");
     holder.className = "rete-scroll";
     holder.innerHTML = svg;
+    fig.insertBefore(holder, fig.firstChild);
+  });
+
+  /* =================================================================
+   * Schema di sequenza (chi manda cosa a chi, dall'alto in basso):
+   * <figure class="seq" data-attori="Client | Server"
+   *         data-passi="Client > Server : SYN; Server > Client : SYN, ACK; = connessione aperta">
+   * "A > B : testo" = freccia da A a B · "= testo" = linea di separazione con nota
+   * ================================================================= */
+  var seqN = 0;
+  main.querySelectorAll("figure.seq[data-passi]").forEach(function (fig) {
+    var actors = (fig.getAttribute("data-attori") || "Client | Server").split("|").map(function (x) { return x.trim(); });
+    var steps = fig.getAttribute("data-passi").split(";").map(function (x) { return x.trim(); }).filter(Boolean);
+    var W = 400, X = [70, 330], TOP = 46, ROW = 40;
+    var H = TOP + steps.length * ROW + 16;
+    var id = "seqh" + (seqN++);
+    var out = '<svg class="seq-svg" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' +
+      esc(fig.querySelector("figcaption") ? fig.querySelector("figcaption").textContent : "Schema di sequenza") + '">' +
+      '<defs><marker id="' + id + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+      '<path class="seq-head" d="M0 0L10 5L0 10z"/></marker></defs>';
+    actors.slice(0, 2).forEach(function (name, i) {
+      out += '<rect class="seq-actor" x="' + (X[i] - 56) + '" y="4" width="112" height="28" rx="6"/>' +
+        '<text class="seq-actor-name" x="' + X[i] + '" y="23" text-anchor="middle">' + esc(name) + "</text>" +
+        '<line class="seq-life" x1="' + X[i] + '" y1="32" x2="' + X[i] + '" y2="' + (H - 6) + '"/>';
+    });
+    steps.forEach(function (st, i) {
+      var y = TOP + i * ROW + 16;
+      if (st[0] === "=") {
+        out += '<line class="seq-sep" x1="12" y1="' + (y + 4) + '" x2="' + (W - 12) + '" y2="' + (y + 4) + '"/>' +
+          '<text class="seq-note" x="' + W / 2 + '" y="' + y + '" text-anchor="middle">' + esc(st.slice(1).trim()) + "</text>";
+        return;
+      }
+      var m = st.match(/^(.+?)\s*>\s*(.+?)\s*:\s*(.*)$/);
+      if (!m) return;
+      var from = actors.indexOf(m[1].trim()), to = actors.indexOf(m[2].trim());
+      if (from < 0 || to < 0) return;
+      var x1 = X[from] + (to > from ? 4 : -4), x2 = X[to] + (to > from ? -6 : 6);
+      out += '<line class="seq-msg ' + (from === 0 ? "seq-req" : "seq-res") + '" x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + (y + 12) +
+        '" marker-end="url(#' + id + ')"/>' +
+        '<text class="seq-label" x="' + W / 2 + '" y="' + (y + 1) + '" text-anchor="middle">' + esc(m[3]) + "</text>";
+    });
+    out += "</svg>";
+    var holder = document.createElement("div");
+    holder.className = "seq-box";
+    holder.innerHTML = out;
     fig.insertBefore(holder, fig.firstChild);
   });
 

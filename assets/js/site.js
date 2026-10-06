@@ -16,6 +16,10 @@
     tagline: "Quaderno di appunti, esercizi e ripasso",
     version: "3",
 
+    // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
+    // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
+    features: { ripasso: false },
+
     // Tipi di pagina: etichetta mostrata accanto al titolo.
     pageTypes: {
       panoramica: "Panoramica",
@@ -62,6 +66,7 @@
         pages: [
           { title: "Panoramica", path: "materie/tpsit/index.html", type: "panoramica" },
           { title: "Sistemi distribuiti", path: "materie/tpsit/sistemi-distribuiti.html", type: "teoria" },
+          { title: "Il protocollo HTTP", path: "materie/tpsit/protocollo-http.html", type: "teoria" },
         ],
       },
       {

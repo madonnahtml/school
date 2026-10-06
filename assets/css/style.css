@@ -418,6 +418,7 @@ code { font: 0.86em var(--font-mono); font-variant-ligatures: none; padding: 0.1
 .copy-btn:hover { background: var(--paper-2); color: var(--ink); }
 .copy-btn .icon { width: 14px; height: 14px; }
 pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 14px/1.6 var(--font-mono); font-variant-ligatures: none; tab-size: 4; }
+#content :not(pre) > code { overflow-wrap: anywhere; }
 pre code { padding: 0; border: 0; background: none; font-size: inherit; }
 .tok-keyword { color: var(--tok-keyword); font-weight: 600; }
 .tok-string { color: var(--tok-string); }
@@ -469,7 +470,6 @@ table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
 th, td { padding: 9px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
 th { font: 700 12.5px var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); background: var(--paper-2); }
 tr:last-child td { border-bottom: 0; }
-td code { white-space: nowrap; }
 
 /* Pila a livelli (es. ISO/OSI): <ol class="stack"><li><b>7</b><strong>Nome</strong><span>…</span></li></ol> */
 .stack { list-style: none; padding: 0 !important; margin: 1.4em 0 !important; display: grid; gap: 4px; }
@@ -488,7 +488,7 @@ td code { white-space: nowrap; }
 /* Schede brevi */
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin: 1.2em 0 1.6em; }
 .card { padding: 12px 14px; border: 1px solid var(--rule-strong); border-radius: var(--r); background: var(--surface); }
-.card strong { display: block; font-family: var(--font-display); }
+.card > strong { display: block; font-family: var(--font-display); }
 #content .card p { margin: 0; color: var(--ink-soft); font-size: 15px; }
 
 /* Schema di rete */
@@ -504,6 +504,28 @@ figure { margin: 1.6em 0; padding: 0; }
 .rete-name, .rete-label { paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
 .rete-label { fill: var(--ink-soft); font: 12px var(--font-mono); }
 figcaption { margin-top: 8px; font-size: 14px; color: var(--ink-soft); text-align: center; }
+
+/* Schema di sequenza */
+.seq-box { padding: 10px 8px; border: 1px solid var(--rule-strong); border-radius: var(--r-lg); background: var(--surface); }
+.seq-svg { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; }
+.seq-actor { fill: var(--paper-2); stroke: var(--rule-strong); }
+.seq-actor-name { fill: var(--ink); font: 700 14px var(--font-body); }
+.seq-life { stroke: var(--rule-strong); stroke-dasharray: 4 4; }
+.seq-msg { stroke-width: 2; }
+.seq-req { stroke: var(--pen); }
+.seq-res { stroke: var(--c-ink, var(--good)); }
+.seq-head { fill: var(--ink-soft); }
+.seq-label { fill: var(--ink); font: 12.5px var(--font-mono); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+.seq-sep { stroke: var(--rule-strong); stroke-dasharray: 2 4; }
+.seq-note { fill: var(--pen); font: 15px var(--font-hand); paint-order: stroke; stroke: var(--surface); stroke-width: 6px; stroke-linejoin: round; }
+
+/* Anatomia di un URL: <div class="anatomy"><span data-l="schema">https</span>://…</div> */
+.anatomy { overflow-x: auto; margin: 1.2em 0 1.4em; padding: 18px 16px 40px; border: 1px solid var(--rule-strong); border-radius: var(--r-lg); background: var(--surface); font: 15px/1.4 var(--font-mono); white-space: nowrap; }
+.anatomy span[data-l] { position: relative; display: inline-block; padding: 2px 3px; border-radius: 4px; background: color-mix(in srgb, var(--k, var(--pen)) 14%, transparent); color: color-mix(in srgb, var(--k, var(--pen)) var(--c-mix), var(--ink)); font-weight: 600; }
+.anatomy span[data-l]::after { content: attr(data-l); position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); font: 600 10.5px var(--font-body); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); white-space: nowrap; }
+.anatomy span[data-l]:nth-of-type(even)::after { top: calc(100% + 20px); }
+.anatomy .k1 { --k: #2f6fdb; } .anatomy .k2 { --k: #7a4fd0; } .anatomy .k3 { --k: #c8364b; } .anatomy .k4 { --k: #c9711c; }
+.anatomy .k5 { --k: #0f8b8d; } .anatomy .k6 { --k: #3a8f4a; } .anatomy .k7 { --k: #a0522d; }
 
 /* Evidenziatore */
 mark { background: var(--highlight); color: var(--highlight-ink); border-radius: 0.25em 0.45em 0.3em 0.5em; padding: 0 0.15em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -703,7 +725,7 @@ body.search-open { overflow: hidden; }
 
   .tabbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
-    display: grid; grid-template-columns: repeat(4, 1fr);
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
     height: calc(var(--tabbar) + env(safe-area-inset-bottom, 0px));
     padding-bottom: env(safe-area-inset-bottom, 0px);
     background: var(--surface);

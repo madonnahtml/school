@@ -39,7 +39,7 @@ SITE.ready(function () {
       '<span class="brand-name">' + SITE.escape(SITE.title) + "</span></a>" +
     '<button class="search-trigger" type="button" data-search-open>' + SITE.icon(I.search) +
       '<span class="search-trigger-label">Cerca negli appunti</span><kbd>' + (isMac ? "⌘" : "Ctrl") + " K</kbd></button>" +
-    '<a class="top-link' + (SITE.isHere("ripasso.html") ? " is-active" : "") + '" href="' + SITE.url("ripasso.html") + '">' + SITE.icon(I.cards) + "<span>Ripasso</span></a>" +
+    (SITE.features.ripasso ? '<a class="top-link' + (SITE.isHere("ripasso.html") ? " is-active" : "") + '" href="' + SITE.url("ripasso.html") + '">' + SITE.icon(I.cards) + "<span>Ripasso</span></a>" : "") +
     '<button class="icon-btn theme-btn" type="button" aria-label="Tema chiaro o scuro">' +
       SITE.icon(I.sun, "icon icon-sun") + SITE.icon(I.moon, "icon icon-moon") + "</button>";
 
@@ -85,7 +85,12 @@ SITE.ready(function () {
     '<a href="' + SITE.url("index.html") + '"' + (SITE.isHere("index.html") ? ' class="is-active"' : "") + ">" + SITE.icon(I.home) + "<span>Home</span></a>" +
     '<button type="button" data-open-menu' + (subject ? ' class="is-active"' : "") + ">" + SITE.icon(I.book) + "<span>Materie</span></button>" +
     '<button type="button" data-search-open' + (SITE.isHere("cerca.html") ? ' class="is-active"' : "") + ">" + SITE.icon(I.search) + "<span>Cerca</span></button>" +
-    '<a href="' + SITE.url("ripasso.html") + '"' + (SITE.isHere("ripasso.html") ? ' class="is-active"' : "") + ">" + SITE.icon(I.cards) + "<span>Ripasso</span></a>";
+    (SITE.features.ripasso ? '<a href="' + SITE.url("ripasso.html") + '"' + (SITE.isHere("ripasso.html") ? ' class="is-active"' : "") + ">" + SITE.icon(I.cards) + "<span>Ripasso</span></a>" : "");
+
+  // Blocchi legati a funzioni disattivate
+  document.querySelectorAll("[data-feature]").forEach(function (el) {
+    if (!SITE.features[el.getAttribute("data-feature")]) el.remove();
+  });
 
   /* ---------- Contenitore ---------- */
   var shell = document.createElement("div");

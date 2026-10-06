@@ -37,7 +37,7 @@ page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca
   <header class="home-head">
     <span class="home-date" data-today></span>
     <h1>Cosa studiamo oggi?</h1>
-    <p>Appunti, esercizi e ripasso di tutte le materie. Cerca una parola e la trovi ovunque sia scritta.</p>
+    <p>Appunti ed esercizi di tutte le materie. Cerca una parola e la trovi ovunque sia scritta.</p>
     <form class="field" action="cerca.html" method="get" role="search">
       {SEARCH}
       <input id="home-q" type="search" name="q" placeholder="Cavour, router, present perfect…" aria-label="Cerca negli appunti" autocomplete="off" enterkeyhint="search">
@@ -52,7 +52,7 @@ page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca
     </section>
 
     <aside class="home-side">
-      <section class="panel review-panel" data-review-summary>
+      <section class="panel review-panel" data-review-summary data-feature="ripasso">
         <h2>Ripasso di oggi</h2>
         <p class="review-big"><strong data-due>–</strong><span data-due-label>carte da ripassare oggi</span></p>
         <p class="review-sub"><span data-quiz-n>–</span> domande di quiz disponibili</p>
@@ -105,25 +105,25 @@ page('ripasso.html', 'Ripasso · Scuola', 'Flashcard e quiz raccolti da tutte le
 SUBJECTS = [
  ("informatica", "INF", "Informatica", "Programmazione, algoritmi, strutture dati e basi di dati.",
   "Teoria spiegata passo passo e tanti esercizi di programmazione, ognuno con la soluzione commentata.",
-  ["Leggi la teoria e prova subito gli esempi di codice.", "Risolvi gli esercizi <strong>prima</strong> di aprire la soluzione.", "Prima della verifica fai il quiz in Ripasso."]),
+  ["Leggi la teoria e prova subito gli esempi di codice.", "Risolvi gli esercizi <strong>prima</strong> di aprire la soluzione.", "Prima della verifica rifai gli esercizi senza guardare."]),
  ("sistemi-e-reti", "SIS", "Sistemi e Reti", "Architetture di rete, protocolli, indirizzamento IP e sicurezza.",
   "Modelli ISO/OSI e TCP/IP, protocolli, subnetting e configurazione dei dispositivi di rete.",
-  ["Studia livelli e protocolli aiutandoti con gli schemi.", "Allenati con gli esercizi di indirizzamento e subnetting.", "Ripassa le sigle con le flashcard."]),
+  ["Studia livelli e protocolli aiutandoti con gli schemi.", "Allenati con gli esercizi di indirizzamento e subnetting.", "Ripassa sigle e protocolli con le tabelle."]),
  ("tpsit", "TPS", "TPSIT", "Tecnologie e progettazione di sistemi informatici e di telecomunicazioni.",
   "Processi, thread, programmazione concorrente e di rete, applicazioni distribuite.",
   ["Capisci il concetto con la teoria.", "Leggi gli esempi di codice commentati.", "Rifai le attività di laboratorio."]),
  ("gpoi", "GPO", "GPOI", "Gestione progetto e organizzazione d'impresa.",
   "Project management, pianificazione, costi, organizzazione aziendale e casi pratici.",
-  ["Impara le definizioni chiave.", "Applica i metodi ai casi pratici (WBS, Gantt, PERT).", "Ripassa con le flashcard."]),
+  ["Impara le definizioni chiave.", "Applica i metodi ai casi pratici (WBS, Gantt, PERT).", "Ripassa con le schede riassuntive."]),
  ("storia", "STO", "Storia", "Eventi, periodi e collegamenti tra i fatti storici.",
   "Riassunti per periodo, linee del tempo e collegamenti tra cause e conseguenze.",
-  ["Leggi il riassunto del periodo.", "Fissa le date con la linea del tempo e le flashcard.", "Collega cause e conseguenze."]),
+  ["Leggi il riassunto del periodo.", "Fissa le date con la linea del tempo.", "Collega cause e conseguenze."]),
  ("italiano", "ITA", "Italiano", "Autori, correnti letterarie, analisi del testo e produzione scritta.",
   "Autori e correnti letterarie, analisi dei testi e indicazioni per la scrittura.",
   ["Inquadra l'autore nel suo periodo.", "Analizza i testi principali.", "Esercitati con le tracce di scrittura."]),
  ("inglese", "ING", "Inglese", "Grammar, vocabulary, reading e technical English.",
   "Regole di grammatica, vocabolario (anche tecnico) ed esercizi con soluzioni.",
-  ["Studia la regola con gli esempi.", "Memorizza il vocabolario con le flashcard.", "Fai gli esercizi e controlla le soluzioni."]),
+  ["Studia la regola con gli esempi.", "Memorizza il vocabolario con le tabelle.", "Fai gli esercizi e controlla le soluzioni."]),
 ]
 for sid, short, name, desc, intro, steps in SUBJECTS:
     li = "\n".join(f"      <li>{s}</li>" for s in steps)
