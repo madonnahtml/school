@@ -123,7 +123,8 @@
   // Radice del sito, ricavata dalla posizione di questo script (assets/js/site.js).
   var script = document.currentScript;
   SITE.root = script ? new URL("../../", script.src).href : new URL("./", location.href).href;
-  SITE.url = function (path) { return new URL(path, SITE.root).href; };
+  // La home è la radice del sito ("./"), così funziona anche dove "index.html" non è un percorso valido.
+  SITE.url = function (path) { return new URL(path === "index.html" ? "./" : path, SITE.root).href; };
 
   function clean(u) { return u.split(/[?#]/)[0].replace(/index\.html$/, ""); }
   SITE.isHere = function (path) { return clean(SITE.url(path)) === clean(location.href); };
