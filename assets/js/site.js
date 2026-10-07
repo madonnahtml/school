@@ -5,7 +5,7 @@
  * `pages` della materia: menu, elenco argomenti, progressi, ricerca e ripasso
  * si aggiornano da soli.
  *
- * Va caricato in modo sincrono nell'<head>: applica subito tema e colore della
+ * Va caricato in modo sincrono nell'<head>: applica subito il colore della
  * materia (niente "lampeggio") e poi carica gli altri script nell'ordine giusto.
  */
 (function () {
@@ -13,8 +13,8 @@
 
   var SITE = {
     title: "Scuola",
-    tagline: "Quaderno di appunti, esercizi e ripasso",
-    version: "3",
+    tagline: "Quaderno di appunti, esercizi e riassunti",
+    version: "4",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -249,21 +249,18 @@
   };
 
   var html = document.documentElement;
-  var theme = SITE.store.get("theme");
-  if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
   var current = SITE.subject(html.getAttribute("data-subject"));
   if (current) html.style.setProperty("--accent-subject", current.color);
 
   // Font
   var fonts = document.createElement("link");
   fonts.rel = "stylesheet";
-  fonts.href = "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400" +
-    "&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800" +
-    "&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400;700&display=swap";
+  fonts.href = "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;0,800;1,400" +
+    "&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Kalam:wght@400;700&display=swap";
   document.head.appendChild(fonts);
 
   // Script del sito, eseguiti nell'ordine indicato
-  var scripts = ["layout", "components", "search"].concat((html.getAttribute("data-scripts") || "").split(/\s+/).filter(Boolean));
+  var scripts = ["riassunti", "layout", "components", "search"].concat((html.getAttribute("data-scripts") || "").split(/\s+/).filter(Boolean));
   scripts.forEach(function (name) {
     var s = document.createElement("script");
     s.src = SITE.url("assets/js/" + name + ".js?v=" + SITE.version);
