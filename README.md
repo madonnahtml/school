@@ -42,7 +42,7 @@ tools/pagine.py                  rigenera home, cerca, ripasso e panoramiche
 
 `componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-Pagine di appunti: TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*. Le pagine *I cicli in C*, *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
+Pagine di appunti: TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio JSON*. Le pagine *I cicli in C*, *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 
