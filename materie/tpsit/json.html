@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il linguaggio JSON · Scuola</title>
+  <meta name="description" content="TPSIT: il formato JSON. A cosa serve, confronto con XML, oggetti, array, tipi di dato, annidamento, JSON.parse e JSON.stringify, esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=3">
+  <script src="../../assets/js/site.js?v=3"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il linguaggio JSON</h1>
+  <p class="lead">JSON è il modo più usato oggi per scrivere dei dati in forma di testo e mandarli da un programma all'altro. Vediamo com'è fatto, quali sono le sue regole e come si usa con JavaScript.</p>
+
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    <strong>JSON</strong> (<em>JavaScript Object Notation</em>) è un <strong>formato di testo</strong> standard e aperto per <strong>rappresentare e scambiare dati strutturati</strong>. È leggero e si legge facilmente sia da una persona sia da un programma.
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Perché serve un formato per i dati</h2>
+  <p>Immagina che un'app sul telefono chieda a un server i dati di uno studente. Il server ha questi dati in memoria, ma non può spedire "la memoria": deve trasformarli in una sequenza di caratteri, mandarli in rete e l'app dall'altra parte deve saperli rimettere insieme. Per farlo, entrambi devono usare le <strong>stesse regole di scrittura</strong>. JSON è proprio questo insieme di regole.</p>
+<pre data-lang="json"><code>{
+  "nome": "Luca",
+  "eta": 18,
+  "studente": true
+}</code></pre>
+  <p>Anche senza sapere niente di JSON si capisce cosa c'è scritto: uno studente che si chiama Luca e ha 18 anni. È questo il suo punto di forza.</p>
+
+  <div class="cards">
+    <div class="card"><strong>Testuale e leggero</strong><p>È solo testo, senza parti inutili: occupa poco e viaggia veloce in rete.</p></div>
+    <div class="card"><strong>Indipendente dal linguaggio</strong><p>È nato con JavaScript, ma oggi lo usano Java, C#, Python, PHP, C e quasi tutti gli altri linguaggi. <strong>Qualsiasi linguaggio che sa analizzare una stringa può leggere JSON.</strong></p></div>
+    <div class="card"><strong>Fatto per lo scambio</strong><p>È il formato tipico delle <strong>API</strong> e delle applicazioni web per passare dati tra client e server.</p></div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>JSON è come un <strong>modulo prestampato</strong> che tutti gli uffici del mondo sanno leggere: chiunque lo compili, chiunque lo riceva sa dove trovare il nome, l'età e così via. Non importa che lingua parli l'ufficio (Java, Python, PHP…).</div>
+
+  <!-- ============================================================= -->
+  <h2>Dove si usa</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Caso d'uso</th><th>Cosa succede</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Risposte delle API</strong></td><td>Richieste e risposte tra programmi sono scritte in JSON. La sintassi compatta le rende rapide da trasmettere e semplici da elaborare.</td><td>Un e-commerce manda i dati dell'ordine al servizio di pagamento e riceve un codice di autorizzazione.</td></tr>
+        <tr><td><strong>File di configurazione</strong></td><td>Le applicazioni salvano le impostazioni in un file JSON, facile da leggere e modificare a mano.</td><td>Indirizzi dei server, opzioni di visualizzazione (es. <code>package.json</code>, le impostazioni di VS Code).</td></tr>
+        <tr><td><strong>Microservizi</strong></td><td>Nel cloud un'applicazione è divisa in tanti piccoli servizi indipendenti (pagamenti, notifiche…). Si parlano in JSON anche se sono scritti in linguaggi diversi.</td><td>Il servizio ordini (Java) avvisa il servizio notifiche (Python).</td></tr>
+        <tr><td><strong>Dati in tempo reale</strong></td><td>Messaggi piccoli che arrivano di continuo e si elaborano subito.</td><td>Chat, dashboard che si aggiornano, risultati sportivi in diretta.</td></tr>
+        <tr><td><strong>Preferenze dell'utente</strong></td><td>App web e mobile salvano e ricaricano le scelte dell'utente.</td><td>Lingua, tema chiaro/scuro, notifiche attive.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout info"><span class="callout-title">Collegamento con HTTP</span>Quando un server risponde con dati JSON, nella response mette l'header <code>Content-Type: application/json</code>. L'esempio completo è in <a href="protocollo-http.html#risposte-in-formato-json">Il protocollo HTTP</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>XML e JSON a confronto</h2>
+  <p>Prima di JSON, per scambiare dati si usava soprattutto <strong>XML</strong>, un linguaggio a tag simile all'HTML. Ecco gli <strong>stessi dati</strong> scritti nei due modi:</p>
+  <div class="compare">
+    <div>
+      <h4>XML</h4>
+<pre data-lang="xml"><code>&lt;studente&gt;
+  &lt;nome&gt;Luca&lt;/nome&gt;
+  &lt;eta&gt;18&lt;/eta&gt;
+  &lt;studente&gt;true&lt;/studente&gt;
+&lt;/studente&gt;</code></pre>
+      <p>Ogni dato ha un tag di apertura <strong>e</strong> uno di chiusura: il nome del campo si scrive due volte.</p>
+    </div>
+    <div>
+      <h4>JSON</h4>
+<pre data-lang="json"><code>{
+  "nome": "Luca",
+  "eta": 18,
+  "studente": true
+}</code></pre>
+      <p>Il nome del campo si scrive una volta sola. Meno caratteri, stessa informazione.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>XML</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr><td colspan="2" style="text-align:center">Entrambi rappresentano <strong>dati strutturati</strong> in forma di testo</td></tr>
+        <tr><td>Dimensione <strong>maggiore</strong> (tag aperti e chiusi)</td><td>Dimensione <strong>inferiore</strong></td></tr>
+        <tr><td>Struttura <strong>più complessa</strong></td><td>Struttura <strong>più semplice</strong></td></tr>
+        <tr><td><strong>Meno leggibile</strong> a colpo d'occhio</td><td>Sintassi <strong>più compatta</strong>, la più diffusa nelle applicazioni web moderne</td></tr>
+        <tr><td>Non distingue i tipi: tutto è testo</td><td>Distingue numeri, stringhe, booleani, <code>null</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><em>L'ultima riga della tabella è un'aggiunta alle slide.</em></p>
+
+  <!-- ============================================================= -->
+  <h2>Le due strutture di JSON</h2>
+  <p>Tutto JSON si costruisce con <strong>solo due strutture</strong>:</p>
+  <div class="compare">
+    <div>
+      <h4>Oggetto <code>{ }</code></h4>
+      <p>Un insieme di coppie <strong>(nome, valore)</strong>. Ogni valore si ritrova tramite il suo nome.</p>
+      <p class="hand">Come una carta d'identità: "Nome: Maria", "Cognome: Rossi"…</p>
+    </div>
+    <div>
+      <h4>Array <code>[ ]</code></h4>
+      <p>Una <strong>lista ordinata</strong> di valori. Ogni valore si ritrova tramite la sua posizione.</p>
+      <p class="hand">Come la lista della spesa: primo, secondo, terzo…</p>
+    </div>
+  </div>
+  <p>Avere solo queste due strutture è un vantaggio: <strong>praticamente tutti i linguaggi</strong> hanno già qualcosa di simile (record, struct, dizionari, mappe per le coppie; array e liste per le sequenze). Per questo JSON si traduce facilmente in qualsiasi linguaggio.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>JSON</th><th>JavaScript</th><th>Python</th><th>Java</th><th>C</th></tr></thead>
+      <tbody>
+        <tr><td>oggetto <code>{ }</code></td><td>oggetto</td><td><code>dict</code></td><td><code>Map</code> / una classe</td><td><code>struct</code></td></tr>
+        <tr><td>array <code>[ ]</code></td><td>array</td><td><code>list</code></td><td><code>List</code> / array</td><td>array</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Com'è fatto un oggetto</h2>
+<pre data-lang="json"><code>{
+  "nome": "Maria",
+  "cognome": "Rossi",
+  "eta": 18
+}</code></pre>
+  <div class="cards">
+    <div class="card"><strong><code>{ }</code></strong><p>Le <strong>parentesi graffe</strong> aprono e chiudono l'oggetto.</p></div>
+    <div class="card"><strong><code>"chiave": valore</code></strong><p>Ogni proprietà è una <strong>chiave</strong> e il suo <strong>valore</strong>, separati dai <strong>due punti</strong>.</p></div>
+    <div class="card"><strong><code>,</code></strong><p>Le proprietà sono separate da una <strong>virgola</strong>. Dopo l'<strong>ultima</strong> proprietà la virgola <strong>non</strong> si mette.</p></div>
+  </div>
+
+  <h3>Le regole da non sbagliare</h3>
+  <ul>
+    <li>La <strong>chiave</strong> va sempre tra <strong>doppi apici</strong>: <code>"nome"</code>, mai <code>nome</code> né <code>'nome'</code>.</li>
+    <li>Le stringhe usano solo i <strong>doppi apici</strong> <code>"</code>, mai gli apici singoli <code>'</code>.</li>
+    <li><strong>Niente virgola</strong> dopo l'ultimo elemento (né negli oggetti, né negli array).</li>
+    <li><strong>Niente commenti</strong>: in JSON non esistono <code>//</code> o <code>/* */</code>.</li>
+    <li>Dentro uno stesso oggetto le chiavi dovrebbero essere <strong>tutte diverse</strong>.</li>
+  </ul>
+  <div class="compare">
+    <div>
+      <h4>Sbagliato</h4>
+<pre data-lang="testo"><code>{
+  nome: 'Maria',      // chiave senza apici, apici singoli, commento
+  "eta": 18,          // virgola finale
+}</code></pre>
+    </div>
+    <div>
+      <h4>Corretto</h4>
+<pre data-lang="json"><code>{
+  "nome": "Maria",
+  "eta": 18
+}</code></pre>
+    </div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Errore classico</span>Un solo carattere sbagliato (una virgola in più, un apice dimenticato) rende <strong>tutto il file non valido</strong>: il programma che lo legge si ferma con un errore. Per controllare si può incollare il testo in un <em>validatore JSON</em> online, o usare un editor come VS Code che segna l'errore in rosso.</div>
+
+  <!-- ============================================================= -->
+  <h2>I tipi di dato</h2>
+  <p>Il <strong>valore</strong> di una proprietà può essere di sei tipi:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Come si scrive</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Stringa</strong></td><td>Testo tra <strong>doppi apici</strong></td><td><code>"Informatica"</code></td></tr>
+        <tr><td><strong>Numero</strong></td><td>Intero o decimale, <strong>senza apici</strong>. Il separatore decimale è il <strong>punto</strong>.</td><td><code>18</code>, <code>7.5</code>, <code>-3</code></td></tr>
+        <tr><td><strong>Booleano</strong></td><td>Solo <code>true</code> o <code>false</code>, minuscolo e senza apici</td><td><code>true</code></td></tr>
+        <tr><td><strong>null</strong></td><td>L'<strong>assenza</strong> di un valore</td><td><code>null</code></td></tr>
+        <tr><td><strong>Oggetto</strong></td><td>Una struttura tra <code>{ }</code></td><td><code>{"via": "Roma"}</code></td></tr>
+        <tr><td><strong>Array</strong></td><td>Una sequenza di valori tra <code>[ ]</code></td><td><code>[8, 7, 9]</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="json"><code>{
+  "materia": "Informatica",
+  "ore": 6,
+  "media": 7.5,
+  "obbligatoria": true,
+  "docente_sostituto": null,
+  "aula": { "piano": 2, "numero": "L3" },
+  "voti": [8, 7, 9]
+}</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione agli apici</span><code>"18"</code> e <code>18</code> <strong>non sono la stessa cosa</strong>: il primo è una stringa (testo), il secondo un numero. Lo stesso vale per <code>"true"</code> (stringa) e <code>true</code> (booleano). Un programma che fa <code>"18" + 1</code> in JavaScript ottiene <code>"181"</code>, non <code>19</code>!</div>
+  <div class="callout info"><span class="callout-title">Cosa non c'è in JSON</span>Non esistono un tipo "data" né un tipo "carattere". Le date si scrivono come stringhe, di solito nel formato ISO: <code>"2026-10-08"</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Gli array</h2>
+<pre data-lang="json"><code>{
+  "materie": [
+    "Informatica",
+    "Matematica",
+    "Inglese"
+  ]
+}</code></pre>
+  <ul>
+    <li>Un array è racchiuso tra <strong>parentesi quadre</strong> <code>[ ]</code>.</li>
+    <li>I valori sono separati da <strong>virgole</strong> (e niente virgola dopo l'ultimo).</li>
+    <li>Può contenere stringhe, numeri, booleani, <code>null</code>, oggetti o altri array.</li>
+    <li>L'<strong>ordine conta</strong>: <code>["a", "b"]</code> è diverso da <code>["b", "a"]</code>. Il primo elemento ha posizione (indice) <strong>0</strong>.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Graffe o quadre?</span>Chiediti: "ogni valore ha un <strong>nome</strong>?" → oggetto <code>{ }</code>. "È un <strong>elenco</strong> di cose dello stesso tipo?" → array <code>[ ]</code>. Lo studente (nome, età, classe) è un oggetto; le sue materie sono un array.</div>
+
+  <!-- ============================================================= -->
+  <h2>Oggetti annidati</h2>
+  <p>Il valore di una proprietà può essere a sua volta un oggetto. Si dice che l'oggetto è <strong>annidato</strong> (uno dentro l'altro, come le matrioske).</p>
+<pre data-lang="json"><code>{
+  "studente": {
+    "nome": "Luca",
+    "classe": "5A",
+    "indirizzo": {
+      "via": "Roma",
+      "citta": "Torino"
+    }
+  }
+}</code></pre>
+  <p>L'oggetto <code>indirizzo</code> sta dentro <code>studente</code>, che sta dentro l'oggetto principale. Si ottiene una <strong>struttura gerarchica</strong>, ad albero, che tiene insieme le informazioni collegate tra loro:</p>
+<pre data-lang="testo"><code>(radice)
+└── studente
+    ├── nome: "Luca"
+    ├── classe: "5A"
+    └── indirizzo
+        ├── via: "Roma"
+        └── citta: "Torino"</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Ogni livello deve rispettare la sintassi JSON: <strong>parentesi</strong> chiuse nell'ordine giusto, <strong>doppi apici</strong>, <strong>due punti</strong> e <strong>virgole</strong>. Indentare bene (rientrare ogni livello di due spazi) aiuta molto a non perdersi.</div>
+
+  <!-- ============================================================= -->
+  <h2>Array di oggetti</h2>
+  <p>È la struttura che vedrai più spesso: un <strong>elenco</strong> di elementi, ognuno descritto da un <strong>oggetto</strong> con le stesse proprietà. È come una <strong>tabella</strong>: l'array sono le righe, le chiavi sono le colonne.</p>
+<pre data-lang="json"><code>{
+  "studenti": [
+    { "nome": "Anna", "voto": 8 },
+    { "nome": "Luca", "voto": 7 },
+    { "nome": "Sara", "voto": 9 }
+  ]
+}</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>indice</th><th>nome</th><th>voto</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Anna</td><td>8</td></tr>
+        <tr><td>1</td><td>Luca</td><td>7</td></tr>
+        <tr><td>2</td><td>Sara</td><td>9</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul>
+    <li><code>studenti</code> è un <strong>array</strong>;</li>
+    <li>ogni elemento dell'array è un <strong>oggetto</strong>;</li>
+    <li>ogni oggetto ha le proprietà <code>nome</code> e <code>voto</code>.</li>
+  </ul>
+  <p>Quando un server restituisce un <strong>elenco di record</strong> (i prodotti di un negozio, i risultati di una query sul database, i messaggi di una chat) usa quasi sempre questa forma.</p>
+
+  <!-- ============================================================= -->
+  <h2>JSON nelle applicazioni web</h2>
+  <figure class="seq" data-attori="Browser | Server"
+    data-passi="Browser > Server : GET /api/studenti; = il server legge i dati dal database; Server > Browser : 200 OK + JSON con l'elenco; = JavaScript legge il JSON e aggiorna la pagina">
+    <figcaption>Il server non manda una pagina intera, ma solo i dati in JSON.</figcaption>
+  </figure>
+  <ol>
+    <li>Il <strong>client</strong> invia una richiesta al server.</li>
+    <li>Il <strong>server</strong> elabora la richiesta e recupera o modifica i dati.</li>
+    <li>Il server restituisce una <strong>risposta in formato JSON</strong>.</li>
+    <li><strong>JavaScript</strong> legge la risposta e <strong>aggiorna la pagina</strong> senza ricaricarla tutta.</li>
+    <li>Lo stesso formato si può usare tra applicazioni diverse: la stessa API può servire il sito, l'app Android e quella iPhone.</li>
+  </ol>
+
+  <!-- ============================================================= -->
+  <h2>JSON e JavaScript</h2>
+  <p>Un dato JSON che arriva dalla rete è <strong>solo una stringa</strong>, un pezzo di testo: non si può scrivere <code>dati.nome</code> finché non lo si trasforma in un oggetto. JavaScript ha due funzioni per passare da una forma all'altra:</p>
+  <div class="compare">
+    <div>
+      <h4><code>JSON.stringify()</code></h4>
+      <p>Da <strong>oggetto</strong> JavaScript a <strong>stringa</strong> JSON. Si usa per <strong>spedire</strong> o <strong>salvare</strong> i dati.</p>
+      <p class="hand">Impacchetto il dato per spedirlo.</p>
+    </div>
+    <div>
+      <h4><code>JSON.parse()</code></h4>
+      <p>Da <strong>stringa</strong> JSON a <strong>oggetto</strong> JavaScript. Si usa quando i dati <strong>arrivano</strong>.</p>
+      <p class="hand">Spacchetto il dato per usarlo.</p>
+    </div>
+  </div>
+<pre data-lang="js"><code>const studente = {
+  nome: "Luca",
+  eta: 18
+};
+
+// oggetto → stringa
+const testo = JSON.stringify(studente);
+console.log(testo);          // {"nome":"Luca","eta":18}
+console.log(typeof testo);   // "string"
+
+// stringa → oggetto
+const oggetto = JSON.parse(testo);
+console.log(oggetto.nome);   // Luca
+console.log(oggetto.eta + 1); // 19</code></pre>
+  <p>Per accedere ai dati annidati si concatenano punti e indici:</p>
+<pre data-lang="js"><code>const dati = JSON.parse('{"studenti":[{"nome":"Anna","voto":8},{"nome":"Luca","voto":7}]}');
+
+console.log(dati.studenti.length);    // 2
+console.log(dati.studenti[1].nome);   // Luca
+
+// media dei voti
+let somma = 0;
+for (const s of dati.studenti) somma += s.voto;
+console.log(somma / dati.studenti.length); // 7.5</code></pre>
+  <p>Esempio reale: chiedere dati a un server con <code>fetch</code>, che fa la richiesta HTTP e con <code>.json()</code> esegue il <code>JSON.parse</code> per noi.</p>
+<pre data-lang="js"><code>const risposta = await fetch("/api/studenti");
+const studenti = await risposta.json();   // come JSON.parse(testo della risposta)
+console.log(studenti[0].nome);</code></pre>
+  <div class="callout def"><span class="callout-title">Da ricordare</span><strong>JSON è un formato di dati</strong>, JavaScript è un <strong>linguaggio di programmazione</strong>: non sono la stessa cosa. Un oggetto JavaScript può contenere funzioni, chiavi senza apici, apici singoli e commenti; il JSON no. JSON ha preso in prestito da JavaScript solo il <em>modo di scrivere</em> gli oggetti.</div>
+  <div class="callout warn"><span class="callout-title">Se il JSON è sbagliato</span><code>JSON.parse</code> su una stringa non valida lancia un errore (<code>SyntaxError</code>). Nei programmi veri si mette dentro un <code>try … catch</code>:
+<pre data-lang="js"><code>try {
+  const obj = JSON.parse(testoRicevuto);
+} catch (e) {
+  console.log("JSON non valido:", e.message);
+}</code></pre></div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>JSON</strong> = formato di <strong>testo</strong>, standard e aperto, per <strong>rappresentare e scambiare dati strutturati</strong>; indipendente dal linguaggio.</li>
+    <li>Si usa per <strong>API</strong>, <strong>file di configurazione</strong>, <strong>microservizi</strong>, <strong>dati in tempo reale</strong>, <strong>preferenze utente</strong>.</li>
+    <li>Rispetto a <strong>XML</strong> è più <strong>piccolo</strong>, più <strong>semplice</strong> e più <strong>leggibile</strong>.</li>
+    <li>Due strutture: <strong>oggetto</strong> <code>{ "chiave": valore }</code> e <strong>array</strong> <code>[ valore, valore ]</code>.</li>
+    <li>Sei tipi: <strong>stringa</strong>, <strong>numero</strong>, <strong>booleano</strong>, <strong>null</strong>, <strong>oggetto</strong>, <strong>array</strong>.</li>
+    <li>Si possono <strong>annidare</strong>: oggetti dentro oggetti, <strong>array di oggetti</strong> → struttura ad albero.</li>
+    <li>In JavaScript: <code>JSON.stringify()</code> oggetto → stringa, <code>JSON.parse()</code> stringa → oggetto.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Trova gli errori <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="testo"><code>{
+  nome: "Giulia",
+  'classe': "4B",
+  "eta": "17",
+  "promossa": True,
+  "materie": ["TPSIT", "Sistemi",],
+}</code></pre>
+      <p>Questo testo non è JSON valido. Trova tutti gli errori (e un punto che è valido ma probabilmente sbagliato).</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><code>nome</code>: la chiave deve stare tra doppi apici → <code>"nome"</code>.</li>
+        <li><code>'classe'</code>: apici singoli non ammessi → <code>"classe"</code>.</li>
+        <li><code>True</code>: i booleani sono minuscoli → <code>true</code>.</li>
+        <li>Virgola dopo <code>"Sistemi"</code> e dopo l'array: virgole finali non ammesse.</li>
+        <li><code>"17"</code> è valido, ma è una <strong>stringa</strong>: se l'età è un numero va scritta <code>17</code>.</li>
+      </ul>
+<pre data-lang="json"><code>{
+  "nome": "Giulia",
+  "classe": "4B",
+  "eta": 17,
+  "promossa": true,
+  "materie": ["TPSIT", "Sistemi"]
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Che tipo è? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Indica il tipo JSON di ogni valore: <code>"42"</code>, <code>42</code>, <code>4.2</code>, <code>false</code>, <code>"false"</code>, <code>null</code>, <code>[]</code>, <code>{}</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>"42"</code> stringa · <code>42</code> numero · <code>4.2</code> numero · <code>false</code> booleano · <code>"false"</code> stringa · <code>null</code> null · <code>[]</code> array (vuoto) · <code>{}</code> oggetto (vuoto).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>La scuola e i laboratori <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>(Esercizio 1 delle slide)</em> Crea un file JSON con:</p>
+      <ul>
+        <li>un oggetto <code>scuola</code> con <code>nome</code> e <code>citta</code>;</li>
+        <li>un array <code>laboratori</code> con almeno <strong>tre</strong> laboratori;</li>
+        <li>ogni laboratorio ha <code>nome</code>, <code>posti</code> e <code>responsabile</code>;</li>
+        <li>ogni laboratorio ha anche un array con almeno <strong>due software</strong> installati.</li>
+      </ul>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="json"><code>{
+  "scuola": {
+    "nome": "ITIS Alessandro Volta",
+    "citta": "Torino",
+    "laboratori": [
+      {
+        "nome": "Informatica 1",
+        "posti": 28,
+        "responsabile": "Prof. Bianchi",
+        "software": ["Visual Studio Code", "XAMPP", "Python"]
+      },
+      {
+        "nome": "Sistemi e Reti",
+        "posti": 24,
+        "responsabile": "Prof.ssa Verdi",
+        "software": ["Cisco Packet Tracer", "Wireshark"]
+      },
+      {
+        "nome": "TPSIT",
+        "posti": 26,
+        "responsabile": "Prof. Neri",
+        "software": ["Eclipse", "Node.js"]
+      }
+    ]
+  }
+}</code></pre>
+      <p>Ragionamento: la scuola ha delle proprietà con un nome → <strong>oggetto</strong>. I laboratori sono un elenco di cose dello stesso tipo → <strong>array di oggetti</strong>. I software sono un elenco di nomi → <strong>array di stringhe</strong>. <code>posti</code> è un numero, quindi senza apici. (Va bene anche mettere <code>laboratori</code> fuori da <code>scuola</code>, allo stesso livello.)</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>L'istituto e gli indirizzi di studio <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body">
+      <p><em>(Esercizi 2 e 3 delle slide)</em> Descrivi un istituto scolastico con: nome dell'istituto, città, indirizzi di studio e, per ogni indirizzo, nome, anni di corso e materie.</p>
+      <p>Vincoli: almeno un <strong>oggetto annidato</strong> e almeno un <strong>array di oggetti</strong>. Prima disegna lo <strong>schema ad albero</strong>, poi scrivi il file JSON.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><strong>1. Schema ad albero</strong> (<code>{}</code> = oggetto, <code>[]</code> = array):</p>
+<pre data-lang="testo"><code>istituto {}
+├── nome
+├── sede {}                 ← oggetto annidato
+│   ├── citta
+│   └── via
+└── indirizzi []            ← array di oggetti
+    └── (ogni indirizzo) {}
+        ├── nome
+        └── anni []         ← array di oggetti
+            └── (ogni anno) {}
+                ├── anno
+                └── materie []   ← array di stringhe</code></pre>
+      <p><strong>2. File JSON</strong> che segue lo schema:</p>
+<pre data-lang="json"><code>{
+  "istituto": {
+    "nome": "ITIS Alessandro Volta",
+    "sede": {
+      "citta": "Torino",
+      "via": "Via Roma 10"
+    },
+    "indirizzi": [
+      {
+        "nome": "Informatica e Telecomunicazioni",
+        "anni": [
+          { "anno": 3, "materie": ["Informatica", "Sistemi e Reti", "TPSIT", "Telecomunicazioni"] },
+          { "anno": 4, "materie": ["Informatica", "Sistemi e Reti", "TPSIT"] },
+          { "anno": 5, "materie": ["Informatica", "Sistemi e Reti", "TPSIT", "GPOI"] }
+        ]
+      },
+      {
+        "nome": "Elettronica ed Elettrotecnica",
+        "anni": [
+          { "anno": 3, "materie": ["Elettronica", "Sistemi automatici", "TPSEE"] },
+          { "anno": 4, "materie": ["Elettronica", "Sistemi automatici", "TPSEE"] }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+      <p>Vincoli rispettati: <code>sede</code> è un <strong>oggetto annidato</strong> dentro <code>istituto</code>; <code>indirizzi</code> (e anche <code>anni</code>) è un <strong>array di oggetti</strong>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Leggere i dati in JavaScript <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Usando il JSON dell'esercizio 03, salvato nella stringa <code>testo</code>, scrivi le istruzioni JavaScript per: a) stampare il nome della scuola; b) stampare il responsabile del secondo laboratorio; c) calcolare i posti totali.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="js"><code>const dati = JSON.parse(testo);
+
+console.log(dati.scuola.nome);                         // a) ITIS Alessandro Volta
+console.log(dati.scuola.laboratori[1].responsabile);   // b) Prof.ssa Verdi (indice 1 = secondo)
+
+let totale = 0;                                        // c)
+for (const lab of dati.scuola.laboratori) totale += lab.posti;
+console.log(totale);                                   // 78</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Da XML a JSON <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="xml"><code>&lt;libro&gt;
+  &lt;titolo&gt;I promessi sposi&lt;/titolo&gt;
+  &lt;autore&gt;Alessandro Manzoni&lt;/autore&gt;
+  &lt;anno&gt;1840&lt;/anno&gt;
+  &lt;capitoli&gt;38&lt;/capitoli&gt;
+&lt;/libro&gt;</code></pre>
+      <p>Riscrivi gli stessi dati in JSON. Quanti caratteri risparmi, più o meno?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="json"><code>{
+  "libro": {
+    "titolo": "I promessi sposi",
+    "autore": "Alessandro Manzoni",
+    "anno": 1840,
+    "capitoli": 38
+  }
+}</code></pre>
+      <p>In XML ogni nome di campo compare due volte (tag di apertura e di chiusura); in JSON una volta sola. Qui si risparmiano circa 30 caratteri: su migliaia di record la differenza diventa grande.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Il linguaggio JSON – JavaScript Object Notation". Il confronto XML/JSON con esempio, le regole di sintassi, la tabella dei tipi nei linguaggi, gli esempi con <code>fetch</code> e <code>try … catch</code>, gli esercizi 01, 02, 05, 06 e tutte le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>
