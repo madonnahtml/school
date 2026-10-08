@@ -173,6 +173,90 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/tpsit/json.html": {
+    breve: "Un formato di testo semplice e leggero per scrivere dati e scambiarli tra programmi.",
+    sezioni: [
+      {
+        titolo: "Perché serve un formato per i dati",
+        punti: [
+          "<strong>JSON</strong> (<em>JavaScript Object Notation</em>) è un formato di <strong>testo</strong>, standard e aperto, per rappresentare e scambiare <strong>dati strutturati</strong>.",
+          "È leggero e si legge facilmente sia da una persona sia da un programma.",
+          "È <strong>indipendente dal linguaggio</strong>: qualsiasi linguaggio che sa analizzare una stringa può leggerlo.",
+        ],
+      },
+      {
+        titolo: "Dove si usa",
+        punti: [
+          "Risposte delle <strong>API</strong>, <strong>file di configurazione</strong>, comunicazione tra <strong>microservizi</strong>.",
+          "<strong>Dati in tempo reale</strong> (chat, dashboard, risultati in diretta) e <strong>preferenze utente</strong> (lingua, tema, notifiche).",
+        ],
+      },
+      {
+        titolo: "XML e JSON a confronto",
+        punti: [
+          "Entrambi rappresentano dati strutturati.",
+          "JSON è <strong>più piccolo</strong>, <strong>più semplice</strong> e <strong>più leggibile</strong>: il nome del campo si scrive una volta sola, in XML due (tag di apertura e chiusura).",
+        ],
+      },
+      {
+        titolo: "Le due strutture di JSON",
+        punti: [
+          "<strong>Oggetto</strong> <code>{ }</code>: un insieme di coppie <code>\"chiave\": valore</code>.",
+          "<strong>Array</strong> <code>[ ]</code>: una lista <strong>ordinata</strong> di valori.",
+          "Quasi tutti i linguaggi hanno già strutture simili (record, dizionari, array): per questo JSON si usa ovunque.",
+        ],
+      },
+      {
+        titolo: "Com'è fatto un oggetto",
+        punti: [
+          "Graffe <code>{ }</code> per aprire e chiudere, <strong>due punti</strong> tra chiave e valore, <strong>virgola</strong> tra le proprietà.",
+          "Chiavi e stringhe sempre tra <strong>doppi apici</strong>. Niente virgola dopo l'ultimo elemento, niente commenti.",
+        ],
+      },
+      {
+        titolo: "I tipi di dato",
+        punti: [
+          "Sei tipi: <strong>stringa</strong>, <strong>numero</strong>, <strong>booleano</strong> (<code>true</code>/<code>false</code>), <strong>null</strong>, <strong>oggetto</strong>, <strong>array</strong>.",
+          "<code>\"18\"</code> è una stringa, <code>18</code> un numero: non sono la stessa cosa.",
+        ],
+      },
+      {
+        titolo: "Gli array",
+        punti: [
+          "Tra parentesi quadre, valori separati da virgole; possono contenere qualunque tipo.",
+          "L'ordine conta; il primo elemento ha indice <strong>0</strong>.",
+        ],
+      },
+      {
+        titolo: "Oggetti annidati",
+        punti: [
+          "Un oggetto può contenere altri oggetti: si ottiene una <strong>struttura gerarchica</strong>, ad albero.",
+          "Ogni livello deve rispettare la sintassi: parentesi, doppi apici, due punti e virgole.",
+        ],
+      },
+      {
+        titolo: "Array di oggetti",
+        punti: [
+          "Un elenco di oggetti con le stesse proprietà, come le righe di una tabella.",
+          "È la forma tipica con cui un server restituisce un <strong>elenco di record</strong>.",
+        ],
+      },
+      {
+        titolo: "JSON nelle applicazioni web",
+        punti: [
+          "Il client fa una richiesta, il server elabora e risponde con i dati in <strong>JSON</strong>, JavaScript li legge e <strong>aggiorna la pagina</strong>.",
+        ],
+      },
+      {
+        titolo: "JSON e JavaScript",
+        punti: [
+          "<code>JSON.stringify()</code>: da oggetto JavaScript a <strong>stringa</strong> JSON (per spedire o salvare).",
+          "<code>JSON.parse()</code>: da stringa JSON a <strong>oggetto</strong> JavaScript (per usare i dati ricevuti).",
+          "JSON è un <strong>formato di dati</strong>, JavaScript un <strong>linguaggio</strong>: non sono la stessa cosa.",
+        ],
+      },
+    ],
+  },
 
   /* ---------------- Informatica ---------------- */
   "materie/informatica/cicli-in-c.html": {
