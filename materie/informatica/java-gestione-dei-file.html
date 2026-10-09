@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: gestione dei file · Scuola</title>
+  <meta name="description" content="Informatica, Java: la classe File, exists, getPath, getAbsolutePath, isFile, scrivere con FileWriter, leggere con FileReader, eliminare con delete e gestire le eccezioni. Esempi spiegati riga per riga ed esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=5">
+  <script src="../../assets/js/site.js?v=5"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: gestione dei file</h1>
+  <p class="lead">Fino a ora i dati dei tuoi programmi sono vissuti solo nella <strong>memoria</strong>: appena il programma finisce, spariscono. Un <strong>file</strong> invece resta sul disco. In questo capitolo impari a creare, leggere, scrivere ed eliminare file di testo con le classi classiche di Java: <code>File</code>, <code>FileWriter</code> e <code>FileReader</code>.</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · La classe File</strong><p>L'oggetto che rappresenta un file sul disco e risponde a domande su di lui.</p></div>
+    <div class="card"><strong>02 · Esiste? Dov'è?</strong><p><code>exists()</code>, <code>getPath()</code>, <code>getAbsolutePath()</code>, <code>isFile()</code>.</p></div>
+    <div class="card"><strong>03 · Scrivere</strong><p><code>FileWriter</code>: <code>write</code>, <code>append</code>, <code>close</code>.</p></div>
+    <div class="card"><strong>04 · Leggere</strong><p><code>FileReader</code>: <code>read()</code> e il valore <code>-1</code> di fine file.</p></div>
+    <div class="card"><strong>05 · Eliminare</strong><p><code>delete()</code>, e perché è permanente.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Qui i file si usano sempre dentro un <code>try-catch</code>, perché possono lanciare <code>IOException</code>. Se non ti è chiaro, ripassa <a href="java-eccezioni-e-file.html">Java: eccezioni e file</a>. In quel capitolo i file si gestiscono con <code>Path</code> e <code>Files</code> (il modo moderno); qui vedi il modo <strong>classico</strong>, che si basa su un carattere alla volta. Sono due strade per arrivare allo stesso punto: conoscerle entrambe ti fa leggere il codice di chiunque.</div>
+
+  <!-- ============================================================= -->
+  <h2>Perché servono i file</h2>
+  <p>Una variabile vive nella <strong>RAM</strong>, la memoria veloce ma temporanea del computer: quando il programma termina, il suo contenuto viene perso. Per far <strong>sopravvivere</strong> un dato (un punteggio, un elenco di studenti, un'impostazione) bisogna salvarlo su un supporto permanente: il disco. Lì i dati si organizzano in <strong>file</strong>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Variabile</th><th>File</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dove sta</strong></td><td>nella RAM</td><td>sul disco</td></tr>
+        <tr><td><strong>Quando sparisce</strong></td><td>alla fine del programma</td><td>mai, finché non lo cancelli</td></tr>
+        <tr><td><strong>Velocità</strong></td><td>velocissima</td><td>molto più lenta</td></tr>
+        <tr><td><strong>A cosa serve</strong></td><td>calcoli durante l'esecuzione</td><td>salvare e riprendere i dati</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>In questo capitolo lavoriamo con i <strong>file di testo</strong>: contengono lettere, cifre e simboli che puoi aprire con il Blocco note. (I file di immagini, audio o PDF sono <strong>binari</strong> e si trattano in altro modo.)</p>
+
+  <!-- ============================================================= -->
+  <h2>La classe File</h2>
+  <p>Il punto di partenza è la classe <code>java.io.File</code>. Un oggetto <code>File</code> rappresenta un <strong>file o una cartella</strong> del computer, ma attenzione a cosa <em>non</em> fa:</p>
+  <div class="callout def">
+    <span class="callout-title">Cosa è un oggetto File</span>
+    Un oggetto <code>File</code> è soltanto un <strong>indirizzo con tanti metodi</strong>. <strong>Non apre</strong> il file, <strong>non legge</strong> il contenuto e <strong>non lo crea</strong>. Serve per <strong>fare domande</strong> (esiste? dove sta?) e per compiere operazioni sul file stesso (eliminarlo).
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Un oggetto <code>File</code> è come il <strong>biglietto con l'indirizzo</strong> di una casa. Con il biglietto puoi chiederti "la casa esiste?" o "in che via è?", ma finché non ci entri (con un <code>FileReader</code> o un <code>FileWriter</code>) non sai cosa c'è dentro. E scrivere un indirizzo su un biglietto non costruisce la casa.</div>
+
+  <h3>Come si crea</h3>
+<pre data-lang="java"><code>import java.io.File;
+
+File documento = new File("prova.txt");</code></pre>
+  <p>Il costruttore riceve il <strong>nome</strong> (o il percorso) del file come stringa. Se il file <code>prova.txt</code> non c'è, <strong>nessun errore</strong> e nessun file creato: la variabile <code>documento</code> punta semplicemente a un indirizzo, che per ora potrebbe essere vuoto.</p>
+
+  <h3>Percorso relativo e percorso assoluto</h3>
+  <div class="compare">
+    <div>
+      <h4>Relativo</h4>
+      <p>Solo il nome, o un percorso che parte dalla <strong>cartella di lavoro</strong> del programma.</p>
+<pre data-lang="java"><code>new File("prova.txt");
+new File("dati/prova.txt");</code></pre>
+      <p>Il file si cerca <strong>accanto al progetto</strong> (la <em>working directory</em>, cioè la cartella da cui parte il programma).</p>
+    </div>
+    <div>
+      <h4>Assoluto</h4>
+      <p>Il percorso <strong>completo</strong>, dalla radice del disco.</p>
+<pre data-lang="java"><code>new File("/Users/daniele/Desktop/prova.txt");
+new File("C:\\Users\\daniele\\prova.txt");</code></pre>
+      <p>Punta a un file preciso del computer, ovunque sia il programma.</p>
+    </div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Le barre su Windows</span>In una stringa Java il carattere <code>\</code> è speciale (<code>\n</code> è l'a capo). Per scrivere un percorso Windows servono quindi <strong>due barre</strong>: <code>"C:\\Users\\prova.txt"</code>. Oppure usa la barra normale <code>/</code>, che Java capisce su tutti i sistemi: <code>"C:/Users/prova.txt"</code>.</div>
+  <p>Per i tuoi programmi di scuola conviene il percorso <strong>relativo</strong>: funziona su qualunque computer, senza dover sapere come si chiama la cartella dell'utente.</p>
+
+  <!-- ============================================================= -->
+  <h2>Verificare se un file esiste</h2>
+  <p>Prima di leggere o eliminare un file è buona norma controllare che ci sia, con il metodo <code>exists()</code>.</p>
+<pre data-lang="java"><code>File documento = new File("prova.txt");
+
+if (documento.exists()) {
+    System.out.println("Il file esiste");
+} else {
+    System.out.println("Il file non esiste");
+}</code></pre>
+  <p><code>exists()</code> restituisce <code>true</code> se il file (o la cartella) è presente, <code>false</code> altrimenti. Nota che <strong>non lancia mai</strong> un'eccezione: risponde solo sì o no.</p>
+
+  <h3>Perché è importante</h3>
+  <ul>
+    <li><strong>Evita errori:</strong> aprire con <code>FileReader</code> un file che non c'è lancia una <code>FileNotFoundException</code>.</li>
+    <li><strong>Permette di scegliere:</strong> il programma decide cosa fare in base a cosa trova (chiedere un altro nome, creare il file, avvisare l'utente).</li>
+    <li><strong>Protegge i dati:</strong> sai se stai per sovrascrivere un file già pieno.</li>
+  </ul>
+  <div class="callout info"><span class="callout-title">Controllare non basta</span><code>exists()</code> dice com'era il disco <em>un attimo fa</em>. Tra il controllo e l'apertura un altro programma potrebbe cancellare il file, o i permessi potrebbero impedirti di leggerlo. Per questo il controllo <strong>si affianca</strong> al <code>try-catch</code>, non lo sostituisce.</div>
+
+  <!-- ============================================================= -->
+  <h2>Informazioni sul file: getPath(), getAbsolutePath(), isFile()</h2>
+  <p>La classe <code>File</code> offre metodi per ottenere informazioni sul file senza aprirlo.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Cosa restituisce</th><th>Esempio di risultato</th></tr></thead>
+      <tbody>
+        <tr><td><code>getPath()</code></td><td>il percorso <strong>così come l'hai scritto</strong> nel costruttore (relativo)</td><td><code>prova.txt</code></td></tr>
+        <tr><td><code>getAbsolutePath()</code></td><td>il percorso <strong>completo</strong>, dalla radice del disco</td><td><code>/Users/daniele/progetto/prova.txt</code></td></tr>
+        <tr><td><code>isFile()</code></td><td><code>true</code> se è un file regolare, <code>false</code> se è una cartella o non esiste</td><td><code>true</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="java"><code>File documento = new File("prova.txt");
+
+System.out.println(documento.getPath());          // prova.txt
+System.out.println(documento.getAbsolutePath());  // /Users/daniele/progetto/prova.txt
+System.out.println(documento.isFile());           // true (se il file esiste)</code></pre>
+  <p>L'output di <code>getAbsolutePath()</code> <strong>dipende dal tuo computer</strong>: Java prende la cartella di lavoro e le attacca davanti il nome. È utile quando non trovi il file che il programma ha creato: stampi il percorso assoluto e sai <strong>esattamente dove guardare</strong>.</p>
+  <div class="callout warn"><span class="callout-title">isFile() non è uguale a exists()</span>Se il file <strong>non esiste</strong>, <code>isFile()</code> dà <code>false</code> (non c'è nessun file regolare). Se il percorso è una <strong>cartella</strong>, <code>exists()</code> dà <code>true</code> ma <code>isFile()</code> dà <code>false</code>. Per distinguere si usa anche <code>isDirectory()</code>.</div>
+
+  <h3>Altri metodi utili</h3>
+  <p><em>Aggiunta alle slide.</em> La classe <code>File</code> ha molti altri metodi comodi:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Cosa fa</th></tr></thead>
+      <tbody>
+        <tr><td><code>getName()</code></td><td>solo il nome, senza cartelle (<code>prova.txt</code>)</td></tr>
+        <tr><td><code>length()</code></td><td>la dimensione in <strong>byte</strong> (<code>0</code> se vuoto o inesistente)</td></tr>
+        <tr><td><code>isDirectory()</code></td><td><code>true</code> se è una cartella</td></tr>
+        <tr><td><code>createNewFile()</code></td><td>crea un file <strong>vuoto</strong>; restituisce <code>true</code> se l'ha creato, <code>false</code> se c'era già (lancia <code>IOException</code>)</td></tr>
+        <tr><td><code>mkdir()</code></td><td>crea una cartella; restituisce <code>true</code> se riuscito</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Scrivere in un file con FileWriter</h2>
+  <p><code>FileWriter</code> è la classe che permette di <strong>scrivere caratteri</strong> in un file di testo. Se il file non esiste, <strong>lo crea</strong>.</p>
+<pre data-lang="java"><code>import java.io.FileWriter;
+import java.io.IOException;
+
+try {
+    FileWriter scrittore = new FileWriter("prova.txt");
+
+    scrittore.write("Ciao sono Daniele Gravina\n");
+    scrittore.write("Sono il vostro professore\n");
+    scrittore.append("Insegno anche Sistemi e Reti");
+
+    scrittore.close();
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+
+  <h3>Cosa succede, riga per riga</h3>
+  <ol>
+    <li><code>new FileWriter("prova.txt")</code> <strong>apre</strong> il file in scrittura. Se non c'è lo crea; se c'è già, <strong>lo svuota</strong> (vedi più sotto).</li>
+    <li><code>write("...")</code> scrive la stringa nel file. Il <code>\n</code> alla fine manda a capo: senza, la frase successiva si attacca alla precedente.</li>
+    <li><code>append("...")</code> scrive il testo <strong>dopo</strong> quello già scritto. Qui è l'ultima riga, quindi senza <code>\n</code>.</li>
+    <li><code>close()</code> <strong>chiude</strong> il file e libera le risorse.</li>
+  </ol>
+  <p>Il file <code>prova.txt</code> contiene alla fine:</p>
+<pre data-lang="testo"><code>Ciao sono Daniele Gravina
+Sono il vostro professore
+Insegno anche Sistemi e Reti</code></pre>
+
+  <h3>I tre metodi principali</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Cosa fa</th></tr></thead>
+      <tbody>
+        <tr><td><code>write(String s)</code></td><td>scrive la stringa nel file</td></tr>
+        <tr><td><code>append(String s)</code></td><td>scrive la stringa subito dopo quello che hai già scritto</td></tr>
+        <tr><td><code>close()</code></td><td>chiude il file: <strong>sempre obbligatorio</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Sovrascrivere o aggiungere?</h3>
+  <p>Questo è il punto che crea più confusione. Per <strong>aggiungere in fondo a un file che esiste già</strong>, senza cancellarlo, bisogna dirlo quando si <strong>apre</strong> il file, con un secondo argomento:</p>
+<pre data-lang="java"><code>new FileWriter("prova.txt");          // sovrascrive: il vecchio contenuto sparisce
+new FileWriter("prova.txt", true);    // aggiunge in fondo: il vecchio contenuto resta</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Costruttore</th><th>Modalità</th><th>Se il file esiste già</th></tr></thead>
+      <tbody>
+        <tr><td><code>new FileWriter("a.txt")</code></td><td><strong>sovrascrittura</strong></td><td>viene svuotato appena lo apri</td></tr>
+        <tr><td><code>new FileWriter("a.txt", true)</code></td><td><strong>append</strong></td><td>si scrive dopo il contenuto che c'è già</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione: il metodo append() inganna</span>Nelle slide si legge che <code>append()</code> "aggiunge testo alla fine del file senza cancellare il contenuto precedente". In realtà <code>append(s)</code> fa <strong>la stessa cosa di <code>write(s)</code></strong>: scrive dopo ciò che hai già scritto <strong>in quella apertura</strong>. Se il file esisteva già, con <code>new FileWriter("a.txt")</code> il vecchio contenuto è <strong>già sparito</strong> prima ancora di chiamare <code>append()</code>. Per conservarlo serve il <code>true</code> nel costruttore. Provato con un test: dopo <code>new FileWriter("prova.txt")</code> + <code>write("NUOVO")</code> il file contiene solo <code>NUOVO</code>; con <code>new FileWriter("prova.txt", true)</code> + <code>write("+AGGIUNTO")</code> contiene <code>NUOVO+AGGIUNTO</code>.</div>
+
+  <h3>Perché close() è obbligatorio</h3>
+  <p>Per essere veloce, <code>FileWriter</code> non scrive sul disco ogni carattere appena lo ricevi: li tiene in una <strong>memoria temporanea</strong> (<em>buffer</em>) e li scarica sul disco a blocchi. Con <code>close()</code> il buffer viene <strong>scaricato</strong> e il file viene <strong>rilasciato</strong>.</p>
+  <ul>
+    <li><strong>Se dimentichi <code>close()</code></strong>, parte del testo (o tutto!) può non finire mai sul disco. In una prova, un <code>write("testo")</code> senza <code>close()</code> ha lasciato il file con <strong>0 byte</strong>.</li>
+    <li>Un file lasciato aperto può restare <strong>bloccato</strong> e non si riesce a eliminarlo o aprirlo con un altro programma.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>È come scrivere una lettera: <code>write</code> è scrivere sul foglio, <code>close</code> è <strong>mettere la lettera nella busta e imbucarla</strong>. Se non la imbuchi, resta sulla tua scrivania e nessuno la riceve.</div>
+
+  <h3>Approfondimento: try-with-resources</h3>
+  <p>Per non dimenticare mai il <code>close()</code>, si può dichiarare il <code>FileWriter</code> <strong>tra parentesi dopo <code>try</code></strong>: Java lo chiude da solo, anche se c'è un errore.</p>
+<pre data-lang="java"><code>try (FileWriter scrittore = new FileWriter("prova.txt")) {
+    scrittore.write("Ciao!");
+    // il file viene chiuso automaticamente alla fine del blocco
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+  <p><em>Questa forma è un'aggiunta alle slide.</em> Funziona allo stesso modo anche con <code>FileReader</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Leggere un file con FileReader</h2>
+  <p><code>FileReader</code> legge il contenuto di un file di testo <strong>un carattere alla volta</strong>.</p>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+try {
+    FileReader lettore = new FileReader("prova.txt");
+    int data = lettore.read();               // legge il primo carattere (come numero)
+
+    while (data != -1) {                     // -1 = fine del file
+        System.out.print((char) data);       // lo converte in carattere leggibile
+        data = lettore.read();               // legge il carattere successivo
+    }
+
+    lettore.close();
+} catch (FileNotFoundException e) {
+    e.printStackTrace();
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+
+  <h3>Il ciclo di lettura, passo per passo</h3>
+  <ol>
+    <li><code>new FileReader("prova.txt")</code> <strong>apre</strong> il file. Se non esiste lancia <code>FileNotFoundException</code>.</li>
+    <li><code>lettore.read()</code> legge <strong>un solo carattere</strong> e lo restituisce come <code>int</code>. La prima volta è il primo carattere del file.</li>
+    <li>Il <code>while</code> controlla: la lettura ha dato <code>-1</code>? Se sì, il file è finito. Altrimenti si entra nel ciclo.</li>
+    <li><code>(char) data</code> trasforma il numero in carattere, e <code>print</code> lo stampa.</li>
+    <li><code>read()</code> viene chiamato di nuovo <strong>in fondo al ciclo</strong> per prendere il carattere successivo, e si torna al punto 3.</li>
+    <li>Quando <code>read()</code> restituisce <code>-1</code>, il ciclo termina e <code>close()</code> chiude il file.</li>
+  </ol>
+
+  <h3>Perché read() restituisce un int?</h3>
+  <p>Ogni carattere è memorizzato come un <strong>numero</strong> (il suo codice: <code>'C'</code> è 67, <code>'a'</code> è 97). <code>read()</code> restituisce proprio quel numero, per questo il tipo è <code>int</code> e per leggerlo come lettera serve il <strong>cast</strong> <code>(char)</code>.</p>
+<pre data-lang="java"><code>int data = lettore.read();            // 67
+System.out.println(data);             // 67
+System.out.println((char) data);      // C</code></pre>
+  <p>Ma perché non <code>char</code>? Perché serve un valore che <strong>non sia nessun carattere</strong> per dire "il file è finito": quel valore è <code>-1</code>, e un <code>char</code> non può essere negativo. Il tipo <code>int</code> ha lo spazio per tutti i caratteri <strong>più</strong> il <code>-1</code>.</p>
+  <div class="callout def"><span class="callout-title">EOF</span><strong>EOF</strong> significa <em>End Of File</em>, fine del file. In Java <code>read()</code> lo segnala restituendo <code>-1</code>. Il ciclo di lettura è sempre lo stesso schema: <strong>leggi, controlla se è -1, usa il dato, leggi di nuovo</strong>.</div>
+
+  <div class="callout warn"><span class="callout-title">Errore classico: due read() per giro</span>Non scrivere <code>while (lettore.read() != -1) { System.out.print((char) lettore.read()); }</code>. Ogni chiamata a <code>read()</code> <strong>consuma</strong> un carattere: la condizione ne legge uno (e lo butta) e il <code>print</code> ne legge un altro, quindi stampi <strong>solo un carattere su due</strong>. Il carattere va letto <strong>una volta sola</strong>, salvato in una variabile (<code>data</code>) e usato da lì.</div>
+
+  <h3>Due catch, in che ordine?</h3>
+  <p>Il codice ha due <code>catch</code>: <code>FileNotFoundException</code> (file mancante) e <code>IOException</code> (qualsiasi altro problema di lettura). <code>FileNotFoundException</code> è <strong>figlia</strong> di <code>IOException</code>, quindi va scritta <strong>per prima</strong>: se mettessi <code>IOException</code> davanti, la seconda non sarebbe mai raggiungibile e il codice <strong>non compilerebbe</strong> (regola dei <code>catch</code> dal più specifico al più generale).</p>
+  <div class="callout info"><span class="callout-title">Puoi anche usarne uno solo</span>Se non vuoi trattare diversamente "file mancante" e "altro errore", basta un solo <code>catch (IOException e)</code>: copre anche <code>FileNotFoundException</code>.</div>
+
+  <h3>Leggere per righe: BufferedReader</h3>
+  <p><em>Aggiunta alle slide.</em> Leggere carattere per carattere è semplice ma lento e scomodo. La classe <code>BufferedReader</code> avvolge il <code>FileReader</code> e permette di leggere una <strong>riga intera</strong> con <code>readLine()</code>, che restituisce <code>null</code> alla fine del file.</p>
+<pre data-lang="java"><code>import java.io.BufferedReader;
+
+try (BufferedReader lettore = new BufferedReader(new FileReader("prova.txt"))) {
+    String riga = lettore.readLine();
+    while (riga != null) {
+        System.out.println(riga);
+        riga = lettore.readLine();
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+  <p>Lo schema è identico: la sentinella di fine file è <code>null</code> invece di <code>-1</code>. Per ora ti basta riconoscerlo: il capitolo si basa su <code>FileReader</code> e <code>read()</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Eliminare un file con delete()</h2>
+  <p>Il metodo <code>delete()</code> della classe <code>File</code> rimuove il file dal disco. Restituisce <code>true</code> se l'eliminazione riesce, <code>false</code> altrimenti.</p>
+<pre data-lang="java"><code>File documento2 = new File("prova2.txt");
+
+if (documento2.exists()) {
+    if (documento2.delete()) {
+        System.out.println("File eliminato!");
+    } else {
+        System.out.println("Errore nell'eliminazione");
+    }
+} else {
+    System.out.println("Il file non esiste");
+}</code></pre>
+  <p>Ci sono <strong>tre possibili esiti</strong>, e il programma li distingue tutti:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Situazione</th><th>Cosa stampa</th></tr></thead>
+      <tbody>
+        <tr><td>Il file esiste e viene eliminato</td><td><code>File eliminato!</code></td></tr>
+        <tr><td>Il file esiste ma <code>delete()</code> fallisce (aperto altrove, niente permessi)</td><td><code>Errore nell'eliminazione</code></td></tr>
+        <tr><td>Il file non esiste</td><td><code>Il file non esiste</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Regole importanti</h3>
+  <ul>
+    <li><strong>Verifica prima</strong> con <code>exists()</code>, come nell'esempio. (Senza il controllo, <code>delete()</code> su un file inesistente restituisce semplicemente <code>false</code>, senza errori: non puoi distinguere "non c'era" da "non ci sono riuscito".)</li>
+    <li><strong>Controlla il risultato:</strong> <code>delete()</code> non lancia eccezioni, restituisce solo <code>true</code> o <code>false</code>. Se non guardi il valore, non sai se ha funzionato.</li>
+    <li><strong>Un file aperto da un altro programma</strong> (o da un tuo <code>FileWriter</code> non chiuso) può non essere eliminabile, soprattutto su Windows.</li>
+    <li>Una <strong>cartella</strong> si elimina con <code>delete()</code> solo se è <strong>vuota</strong>.</li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">L'eliminazione è permanente</span>I file eliminati con <code>delete()</code> <strong>non vanno nel cestino</strong>: spariscono subito e non c'è modo di recuperarli. Scrivi con attenzione il nome del file, specialmente se lo prendi da tastiera.</div>
+
+  <!-- ============================================================= -->
+  <h2>Gestione delle eccezioni: try-catch</h2>
+  <p>Le operazioni sui file sono <strong>rischiose</strong>: il file potrebbe non esistere, i permessi potrebbero essere insufficienti, il disco potrebbe essere pieno, la cartella potrebbe non esserci. Non è colpa del tuo codice, è il mondo esterno. Per questo <code>FileWriter</code> e <code>FileReader</code> lanciano eccezioni <strong>checked</strong> e Java ti <strong>obbliga</strong> a gestirle.</p>
+  <div class="compare">
+    <div>
+      <h4>Blocco try</h4>
+      <p>Contiene il codice <strong>rischioso</strong>: apertura, lettura, scrittura e chiusura del file.</p>
+    </div>
+    <div>
+      <h4>Blocco catch</h4>
+      <p>Cattura l'eccezione se si verifica e la <strong>gestisce</strong>, senza far crollare il programma.</p>
+    </div>
+  </div>
+<pre data-lang="java"><code>try {
+    // codice rischioso
+    FileWriter scrittore = new FileWriter("prova.txt");
+    scrittore.write("Ciao!");
+    scrittore.close();
+} catch (IOException e) {
+    e.printStackTrace();   // stampa l'errore completo sulla console
+}</code></pre>
+  <p><code>printStackTrace()</code> stampa il <strong>percorso completo dell'errore</strong>, dalla causa fino al punto del programma in cui si è verificato. È utile per <strong>capire</strong> cosa è andato storto mentre scrivi il programma.</p>
+
+  <h3>Quali eccezioni lanciano</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Istruzione</th><th>Quando lancia</th><th>Eccezione</th></tr></thead>
+      <tbody>
+        <tr><td><code>new FileReader(nome)</code></td><td>il file non esiste (o è una cartella)</td><td><code>FileNotFoundException</code></td></tr>
+        <tr><td><code>new FileWriter(nome)</code></td><td>la cartella non esiste, o non hai i permessi</td><td><code>FileNotFoundException</code> (o altra <code>IOException</code>)</td></tr>
+        <tr><td><code>read()</code>, <code>write()</code>, <code>close()</code></td><td>errore durante l'operazione (disco pieno…)</td><td><code>IOException</code></td></tr>
+        <tr><td><code>exists()</code>, <code>delete()</code>, <code>isFile()</code>, <code>getPath()</code></td><td><strong>mai</strong></td><td>nessuna: restituiscono <code>true</code>/<code>false</code> o una stringa</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Per questo i metodi di <code>File</code> (<code>exists</code>, <code>delete</code>…) si possono usare <strong>anche fuori da un <code>try</code></strong>, mentre <code>FileReader</code> e <code>FileWriter</code> no. Una prova: <code>new FileReader("nonc.txt")</code> lancia <code>java.io.FileNotFoundException: nonc.txt (No such file or directory)</code> (il testo tra parentesi dipende dal sistema operativo).</p>
+
+  <h3>La chiusura è parte del rischio</h3>
+  <p>Anche <code>close()</code> può lanciare <code>IOException</code>, ed è per questo che sta <strong>dentro</strong> il <code>try</code>. C'è però un limite del codice delle slide: se un errore avviene <em>prima</em> del <code>close()</code> (per esempio in una <code>write</code>), il <code>close()</code> viene saltato e il file resta aperto. Le due soluzioni sono il blocco <code>finally</code> oppure, più semplice, il <strong>try-with-resources</strong> visto prima.</p>
+
+  <!-- ============================================================= -->
+  <h2>Un programma completo: il diario</h2>
+  <p>Mettiamo insieme tutto. Il programma chiede una frase, la <strong>aggiunge in fondo</strong> a <code>diario.txt</code> e poi <strong>stampa tutto il diario</strong>. Ogni volta che lo esegui il diario si allunga.</p>
+<pre data-lang="java"><code>import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Diario {
+    public static void main(String[] args) {
+        Scanner tastiera = new Scanner(System.in);
+        System.out.print("Cosa vuoi scrivere oggi? ");
+        String riga = tastiera.nextLine();
+
+        // 1) scrittura in modalità append
+        try {
+            FileWriter scrittore = new FileWriter("diario.txt", true);
+            scrittore.write(riga + "\n");
+            scrittore.close();
+        } catch (IOException e) {
+            System.out.println("Impossibile scrivere il diario: " + e.getMessage());
+            return;
+        }
+
+        // 2) lettura di tutto il file
+        System.out.println("--- Il tuo diario ---");
+        try {
+            FileReader lettore = new FileReader("diario.txt");
+            int c = lettore.read();
+            while (c != -1) {
+                System.out.print((char) c);
+                c = lettore.read();
+            }
+            lettore.close();
+        } catch (IOException e) {
+            System.out.println("Impossibile leggere il diario: " + e.getMessage());
+        }
+
+        tastiera.close();
+    }
+}</code></pre>
+  <p>Eseguito due volte (scrivendo prima <em>Oggi ho studiato Java</em> e poi <em>Domani verifica</em>), la seconda volta stampa:</p>
+<pre data-lang="testo"><code>Cosa vuoi scrivere oggi? Domani verifica
+--- Il tuo diario ---
+Oggi ho studiato Java
+Domani verifica</code></pre>
+  <ul>
+    <li>Il <code>true</code> in <code>new FileWriter("diario.txt", true)</code> è ciò che fa <strong>crescere</strong> il diario invece di ripartire da zero.</li>
+    <li>Scrittura e lettura hanno <strong>due <code>try-catch</code> separati</strong>: se uno fallisce, l'altro non ne risente. Il <code>return</code> nel primo evita di leggere un diario che non è stato aggiornato.</li>
+    <li>Il <code>"\n"</code> dopo <code>riga</code> serve a far andare a capo la frase successiva.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>File e Path: due modi a confronto</h2>
+  <p>Nel capitolo <a href="java-eccezioni-e-file.html">Java: eccezioni e file</a> abbiamo visto <code>Path</code> e <code>Files</code>. Eccoli accanto a quelli di questo capitolo:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>Modo classico (questo capitolo)</th><th>Modo moderno (<code>Path</code> / <code>Files</code>)</th></tr></thead>
+      <tbody>
+        <tr><td>Indirizzo del file</td><td><code>new File("a.txt")</code></td><td><code>Path.of("a.txt")</code></td></tr>
+        <tr><td>Esiste?</td><td><code>f.exists()</code></td><td><code>Files.exists(p)</code></td></tr>
+        <tr><td>Scrivere</td><td><code>FileWriter</code> + <code>write()</code> + <code>close()</code></td><td><code>Files.writeString(p, testo)</code></td></tr>
+        <tr><td>Aggiungere in fondo</td><td><code>new FileWriter(nome, true)</code></td><td><code>CREATE, APPEND</code></td></tr>
+        <tr><td>Leggere</td><td><code>FileReader</code> + ciclo <code>read()</code> fino a <code>-1</code></td><td><code>Files.readString(p)</code> o <code>readAllLines(p)</code></td></tr>
+        <tr><td>Eliminare</td><td><code>f.delete()</code> (restituisce un booleano)</td><td><code>Files.deleteIfExists(p)</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Il modo moderno è più breve perché legge e scrive <strong>tutto il file in una sola istruzione</strong>; il modo classico ti fa vedere <strong>cosa succede davvero</strong> (apri, leggi un carattere alla volta, chiudi) ed è ancora ovunque nel codice già scritto e nei libri di testo.</p>
+
+  <!-- ============================================================= -->
+  <h2>Riepilogo: i metodi chiave</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Classe</th><th>Descrizione</th></tr></thead>
+      <tbody>
+        <tr><td><code>exists()</code></td><td><code>File</code></td><td>verifica se il file o la directory esiste</td></tr>
+        <tr><td><code>getPath()</code></td><td><code>File</code></td><td>restituisce il percorso relativo del file</td></tr>
+        <tr><td><code>getAbsolutePath()</code></td><td><code>File</code></td><td>restituisce il percorso assoluto completo</td></tr>
+        <tr><td><code>isFile()</code></td><td><code>File</code></td><td>verifica se il percorso punta a un file regolare</td></tr>
+        <tr><td><code>delete()</code></td><td><code>File</code></td><td>elimina il file dal disco (restituisce un booleano)</td></tr>
+        <tr><td><code>write(String s)</code></td><td><code>FileWriter</code></td><td>scrive una stringa nel file</td></tr>
+        <tr><td><code>append(String s)</code></td><td><code>FileWriter</code></td><td>scrive la stringa dopo quella già scritta</td></tr>
+        <tr><td><code>read()</code></td><td><code>FileReader</code></td><td>legge un carattere (restituisce il suo codice, <code>-1</code> a fine file)</td></tr>
+        <tr><td><code>close()</code></td><td><code>FileWriter</code> / <code>FileReader</code></td><td>chiude il file e libera le risorse</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>I <strong>file</strong> conservano i dati sul disco; le variabili spariscono a fine programma.</li>
+    <li><code>File</code> è solo un <strong>indirizzo</strong> con metodi: non apre, non legge, non crea. Percorso <strong>relativo</strong> (<code>"prova.txt"</code>) o <strong>assoluto</strong> (completo).</li>
+    <li><code>exists()</code> controlla la presenza; <code>getPath()</code> dà il percorso come scritto, <code>getAbsolutePath()</code> quello completo; <code>isFile()</code> distingue file e cartelle.</li>
+    <li><strong><code>FileWriter</code></strong>: <code>write</code> scrive, <code>close</code> è obbligatorio. <code>new FileWriter(nome)</code> <strong>sovrascrive</strong>; <code>new FileWriter(nome, true)</code> <strong>aggiunge in fondo</strong>.</li>
+    <li><strong><code>FileReader</code></strong>: <code>read()</code> restituisce un carattere come <code>int</code>; <code>-1</code> = fine file; si converte con <code>(char)</code>. Schema: <em>leggi, controlla -1, usa, leggi di nuovo</em>.</li>
+    <li><strong><code>delete()</code></strong> restituisce <code>true</code>/<code>false</code>, non lancia eccezioni, è <strong>permanente</strong> (niente cestino).</li>
+    <li><code>FileReader</code> e <code>FileWriter</code> lanciano <code>IOException</code> (<strong>checked</strong>): vanno in un <code>try-catch</code>. <code>FileNotFoundException</code> è figlia di <code>IOException</code> e va prima.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Cosa stampa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>File f = new File("misterioso.txt");   // il file NON esiste sul disco
+System.out.println(f.exists());
+System.out.println(f.getPath());
+System.out.println(f.isFile());</code></pre>
+      <p>Cosa stampa? Il programma si ferma con un errore?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Stampa, una per riga: <code>false</code>, <code>misterioso.txt</code>, <code>false</code>. Nessun errore.</p>
+      <p>Creare un oggetto <code>File</code> non crea né apre il file: è solo un indirizzo. <code>exists()</code> e <code>isFile()</code> rispondono <code>false</code> perché sul disco non c'è niente, e <code>getPath()</code> restituisce il nome <strong>così come è stato scritto</strong> nel costruttore, anche se il file non c'è. Nessuno di questi metodi lancia eccezioni.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Cosa contiene il file? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>// Esecuzione 1
+FileWriter w1 = new FileWriter("x.txt");
+w1.write("uno ");
+w1.close();
+
+// Esecuzione 2
+FileWriter w2 = new FileWriter("x.txt");
+w2.write("due");
+w2.close();</code></pre>
+      <p>Cosa contiene <code>x.txt</code> alla fine? Come cambia se nell'Esecuzione 2 si scrive <code>new FileWriter("x.txt", true)</code>? E se la seconda volta si usasse <code>w2.append("due")</code> con il costruttore senza <code>true</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li>Così com'è: <code>due</code>. Il secondo <code>new FileWriter("x.txt")</code> <strong>svuota</strong> il file, quindi <code>uno </code> sparisce.</li>
+        <li>Con <code>new FileWriter("x.txt", true)</code>: <code>uno due</code>. Il <code>true</code> attiva la modalità append e il vecchio contenuto resta.</li>
+        <li>Con <code>append("due")</code> senza <code>true</code>: ancora <code>due</code>. Il file era già stato svuotato all'apertura, e <code>append</code> scrive solo dopo ciò che hai scritto in <strong>quella</strong> apertura.</li>
+      </ul>
+      <p>La modalità si sceglie quando si <strong>apre</strong> il file, non con il metodo <code>write</code> o <code>append</code>. (Il codice va messo in un <code>try-catch</code>.)</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Mancano delle lettere <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>FileReader lettore = new FileReader("a.txt");   // a.txt contiene: abcdef
+while (lettore.read() != -1) {
+    System.out.print((char) lettore.read());
+}
+lettore.close();</code></pre>
+      <p>Cosa stampa? Perché? Correggi il codice perché stampi <code>abcdef</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Stampa <code>bdf</code>. Ogni chiamata a <code>read()</code> <strong>avanza di un carattere</strong>: la condizione del <code>while</code> legge <code>a</code> e lo scarta, il <code>print</code> legge e stampa <code>b</code>; poi la condizione scarta <code>c</code>, il <code>print</code> stampa <code>d</code>; e così via. Si stampa un carattere su due.</p>
+      <p>Il carattere va letto <strong>una volta sola</strong> e salvato in una variabile:</p>
+<pre data-lang="java"><code>int data = lettore.read();
+while (data != -1) {
+    System.out.print((char) data);
+    data = lettore.read();
+}</code></pre>
+      <p>(Oppure, in forma compatta: <code>while ((data = lettore.read()) != -1) { ... }</code>.)</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Elimina in sicurezza <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Scrivi un metodo <code>static void elimina(String nome)</code> che elimina il file con quel nome e stampa uno tra tre messaggi: <em>"File eliminato!"</em>, <em>"Errore nell'eliminazione"</em> oppure <em>"Il file non esiste"</em>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static void elimina(String nome) {
+    File f = new File(nome);
+    if (!f.exists()) {
+        System.out.println("Il file non esiste");
+    } else if (f.delete()) {
+        System.out.println("File eliminato!");
+    } else {
+        System.out.println("Errore nell'eliminazione");
+    }
+}</code></pre>
+      <p>Chiamandolo due volte di fila con lo stesso file esistente, la prima stampa <code>File eliminato!</code> e la seconda <code>Il file non esiste</code>. Non serve alcun <code>try-catch</code>: né <code>exists()</code> né <code>delete()</code> lanciano eccezioni. L'<code>else if (f.delete())</code> <strong>esegue</strong> l'eliminazione e ne controlla il risultato nello stesso passaggio.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Copia un file <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi un metodo <code>static void copia(String da, String a)</code> che copia il contenuto del file <code>da</code> in un nuovo file <code>a</code>, carattere per carattere. Se il file di origine non esiste, stampa un messaggio e non fa altro.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static void copia(String da, String a) {
+    File origine = new File(da);
+    if (!origine.exists()) {
+        System.out.println("Il file di origine non esiste.");
+        return;
+    }
+    try {
+        FileReader lettore = new FileReader(origine);
+        FileWriter scrittore = new FileWriter(a);
+
+        int c = lettore.read();
+        while (c != -1) {
+            scrittore.write(c);       // write accetta anche il codice del carattere
+            c = lettore.read();
+        }
+
+        lettore.close();
+        scrittore.close();
+        System.out.println("Copiato.");
+    } catch (IOException e) {
+        System.out.println("Errore: " + e.getMessage());
+    }
+}</code></pre>
+      <ul>
+        <li>Si aprono <strong>due</strong> file insieme: uno in lettura e uno in scrittura, e vanno chiusi <strong>entrambi</strong>.</li>
+        <li><code>FileWriter.write(int)</code> scrive direttamente il carattere con quel codice, quindi non serve nessun cast.</li>
+        <li>Il costruttore <code>new FileReader(origine)</code> accetta anche un oggetto <code>File</code>, non solo una stringa.</li>
+        <li>Basta un solo <code>catch (IOException e)</code>, perché <code>FileNotFoundException</code> è una sua figlia.</li>
+        <li>Se <code>a</code> esiste già, <code>new FileWriter(a)</code> lo <strong>sovrascrive</strong>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Statistiche di un file <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi un metodo <code>static void statistiche(String nome)</code> che legge un file di testo e stampa quanti <strong>caratteri</strong>, quante <strong>righe</strong> (cioè quanti <code>\n</code>) e quante <strong>vocali</strong> contiene. Se il file contiene <code>Ciao a tutti</code> e <code>buona giornata</code> su due righe, il risultato è <em>28 caratteri, 2 righe, 13 vocali</em>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static void statistiche(String nome) {
+    int caratteri = 0, righe = 0, vocali = 0;
+    try (FileReader lettore = new FileReader(nome)) {
+        int c;
+        while ((c = lettore.read()) != -1) {
+            caratteri++;
+            char ch = Character.toLowerCase((char) c);
+            if (ch == '\n') {
+                righe++;
+            }
+            if ("aeiou".indexOf(ch) != -1) {
+                vocali++;
+            }
+        }
+        System.out.println(caratteri + " caratteri, " + righe + " righe, " + vocali + " vocali");
+    } catch (IOException e) {
+        System.out.println("Errore: " + e.getMessage());
+    }
+}</code></pre>
+      <ul>
+        <li>Il ciclo si ripete <strong>una volta per carattere</strong>: è il punto in cui si aggiornano i contatori.</li>
+        <li>Anche l'a capo <code>\n</code> è un carattere e viene contato in <code>caratteri</code> (28 = 12 + 1 + 14 + 1).</li>
+        <li><code>Character.toLowerCase</code> trasforma in minuscolo, così <code>A</code> e <code>a</code> contano allo stesso modo.</li>
+        <li><code>"aeiou".indexOf(ch)</code> dà la posizione della lettera nella stringa, o <code>-1</code> se non c'è: diverso da <code>-1</code> significa "è una vocale".</li>
+        <li>Se l'ultima riga non finisce con <code>\n</code> non viene contata come riga: le righe contate sono i <code>\n</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Il diario con la data <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body"><p>Modifica il programma <em>Diario</em> in modo che, <strong>prima di aggiungere la frase</strong>, controlli se <code>diario.txt</code> esiste già. Se non esiste, stampi <em>"Creo un nuovo diario."</em>; se esiste, stampi <em>"Aggiungo al diario esistente (N byte)."</em>, dove N è la dimensione del file.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>File diario = new File("diario.txt");
+if (diario.exists()) {
+    System.out.println("Aggiungo al diario esistente (" + diario.length() + " byte).");
+} else {
+    System.out.println("Creo un nuovo diario.");
+}
+
+try {
+    FileWriter scrittore = new FileWriter(diario, true);
+    scrittore.write(riga + "\n");
+    scrittore.close();
+} catch (IOException e) {
+    System.out.println("Impossibile scrivere il diario: " + e.getMessage());
+    return;
+}</code></pre>
+      <ul>
+        <li>Il controllo con <code>exists()</code> va fatto <strong>prima</strong> di aprire il <code>FileWriter</code>: aprendolo, il file verrebbe creato e risulterebbe sempre esistente.</li>
+        <li><code>length()</code> restituisce la dimensione in <strong>byte</strong>; con testo senza accenti 1 carattere = 1 byte.</li>
+        <li>Anche <code>FileWriter</code> accetta un oggetto <code>File</code> nel costruttore, con lo stesso secondo argomento <code>true</code> per la modalità append.</li>
+        <li>Il resto del programma (la lettura e la stampa) non cambia.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Gestione dei File in Java", dispense a cura del prof. Daniele Gravina, a.s. 2026/2027 (ITCG Galilei, classe 5°). Le spiegazioni passo passo, i paragoni, il confronto con <code>Path</code> e <code>Files</code>, <code>BufferedReader</code>, i metodi aggiuntivi di <code>File</code>, il programma Diario, tutti gli esercizi e le soluzioni sono aggiunte per aiutare lo studio. Ho corretto un punto delle slide: <code>append()</code> non conserva il contenuto che il file aveva già prima dell'apertura (lo fa il <code>true</code> nel costruttore). Ho aggiunto anche perché <code>close()</code> è necessario e l'errore del doppio <code>read()</code>. Gli esempi sono stati compilati ed eseguiti in Java 21.</p>
+</main>
+</body>
+</html>

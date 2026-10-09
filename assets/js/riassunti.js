@@ -468,6 +468,85 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-gestione-dei-file.html": {
+    breve: "Creare, leggere, scrivere ed eliminare file di testo con File, FileWriter e FileReader.",
+    sezioni: [
+      {
+        titolo: "Perché servono i file",
+        punti: [
+          "Le variabili vivono nella RAM e <strong>spariscono</strong> a fine programma; un <strong>file</strong> resta sul disco.",
+        ],
+      },
+      {
+        titolo: "La classe File",
+        punti: [
+          "Un oggetto <code>File</code> è solo un <strong>indirizzo con metodi</strong>: non apre, non legge e non crea il file.",
+          "Percorso <strong>relativo</strong> (<code>\"prova.txt\"</code>, parte dalla cartella del progetto) o <strong>assoluto</strong> (completo, dalla radice del disco).",
+          "Su Windows nelle stringhe servono due barre (<code>\\\\</code>) oppure la barra normale <code>/</code>.",
+        ],
+      },
+      {
+        titolo: "Verificare se un file esiste",
+        punti: [
+          "<code>exists()</code> dà <code>true</code> o <code>false</code> e non lancia mai eccezioni: evita errori e permette di scegliere cosa fare.",
+          "Il controllo non sostituisce il <code>try-catch</code>: il file può sparire tra il controllo e l'uso.",
+        ],
+      },
+      {
+        titolo: "Informazioni sul file: getPath(), getAbsolutePath(), isFile()",
+        punti: [
+          "<code>getPath()</code>: percorso come scritto nel costruttore. <code>getAbsolutePath()</code>: percorso completo. <code>isFile()</code>: <code>true</code> solo per un file regolare, non per una cartella.",
+          "Altri metodi: <code>getName()</code>, <code>length()</code> (byte), <code>isDirectory()</code>, <code>createNewFile()</code>, <code>mkdir()</code>.",
+        ],
+      },
+      {
+        titolo: "Scrivere in un file con FileWriter",
+        punti: [
+          "<code>write(s)</code> scrive, <code>close()</code> è <strong>obbligatorio</strong>: senza, il testo può restare nel buffer e non arrivare sul disco.",
+          "<code>new FileWriter(nome)</code> <strong>sovrascrive</strong> (svuota il file all'apertura); <code>new FileWriter(nome, true)</code> <strong>aggiunge in fondo</strong>.",
+          "<code>append(s)</code> scrive dopo ciò che hai già scritto in quell'apertura: da solo <strong>non conserva</strong> il vecchio contenuto del file.",
+          "Il <code>\\n</code> manda a capo. Il <strong>try-with-resources</strong> chiude il file da solo.",
+        ],
+      },
+      {
+        titolo: "Leggere un file con FileReader",
+        punti: [
+          "<code>read()</code> legge <strong>un carattere</strong> e lo restituisce come <code>int</code> (il suo codice): per stamparlo serve il cast <code>(char)</code>.",
+          "Alla fine del file <code>read()</code> restituisce <strong>-1</strong> (EOF). Schema: leggi, controlla -1, usa, leggi di nuovo.",
+          "Errore classico: due <code>read()</code> per giro stampano un carattere su due. <code>FileNotFoundException</code> va prima di <code>IOException</code>.",
+          "<code>BufferedReader.readLine()</code> legge una riga alla volta e restituisce <code>null</code> a fine file.",
+        ],
+      },
+      {
+        titolo: "Eliminare un file con delete()",
+        punti: [
+          "<code>delete()</code> restituisce <code>true</code>/<code>false</code>, non lancia eccezioni: controlla il risultato e usa prima <code>exists()</code>.",
+          "L'eliminazione è <strong>permanente</strong> (niente cestino); un file aperto altrove può non essere eliminabile; una cartella solo se vuota.",
+        ],
+      },
+      {
+        titolo: "Gestione delle eccezioni: try-catch",
+        punti: [
+          "<code>FileReader</code> e <code>FileWriter</code> lanciano eccezioni <strong>checked</strong> (<code>IOException</code>): vanno in un <code>try-catch</code>.",
+          "I metodi di <code>File</code> (<code>exists</code>, <code>delete</code>, <code>isFile</code>, <code>getPath</code>…) non lanciano eccezioni.",
+          "<code>printStackTrace()</code> stampa il percorso completo dell'errore.",
+        ],
+      },
+      {
+        titolo: "Un programma completo: il diario",
+        punti: [
+          "Il <code>true</code> in <code>new FileWriter(\"diario.txt\", true)</code> fa <strong>crescere</strong> il file a ogni esecuzione; scrittura e lettura hanno due <code>try-catch</code> separati.",
+        ],
+      },
+      {
+        titolo: "File e Path: due modi a confronto",
+        punti: [
+          "Classico: <code>File</code> + <code>FileWriter</code>/<code>FileReader</code>, carattere per carattere. Moderno: <code>Path</code> + <code>Files</code>, tutto il file in un'istruzione.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
