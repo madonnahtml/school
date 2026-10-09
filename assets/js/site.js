@@ -42,6 +42,7 @@
         pages: [
           { title: "Panoramica", path: "materie/informatica/index.html", type: "panoramica" },
           { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
+          { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
         ],
       },
       {

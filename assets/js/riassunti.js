@@ -327,6 +327,77 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/informatica/java-programmazione-a-oggetti.html": {
+    breve: "Si raggruppano dati e azioni in oggetti: la classe è il modello, gli oggetti sono le copie concrete.",
+    sezioni: [
+      {
+        titolo: "Che cos'è la programmazione a oggetti",
+        punti: [
+          "<strong>OOP</strong>: il codice è organizzato in <strong>oggetti</strong> che hanno <strong>attributi</strong> (cosa sono) e <strong>metodi</strong> (cosa fanno).",
+          "Trucco: i <strong>sostantivi</strong> diventano attributi, i <strong>verbi</strong> diventano metodi.",
+        ],
+      },
+      {
+        titolo: "Classe e oggetto",
+        punti: [
+          "La <strong>classe</strong> è il modello (lo stampino); l'<strong>oggetto</strong> è un'istanza concreta con valori propri.",
+          "Da una classe si creano infiniti oggetti, <strong>indipendenti</strong> tra loro.",
+        ],
+      },
+      {
+        titolo: "Creare una classe e gli attributi",
+        punti: [
+          "Gli attributi si dichiarano nel corpo della classe, <strong>fuori dai metodi</strong>: <code>String nome; int eta;</code>",
+          "Classi con la maiuscola (<code>Studente</code>), attributi e metodi con la minuscola.",
+        ],
+      },
+      {
+        titolo: "Creare oggetti e accedere agli attributi",
+        punti: [
+          "<code>new</code> crea l'oggetto: <code>Studente s = new Studente();</code>",
+          "L'<strong>operatore punto</strong> raggiunge attributi e metodi: <code>s.nome</code>, <code>s.studia()</code>.",
+          "Senza assegnazione gli attributi valgono <code>0</code>, <code>false</code> o <code>null</code>.",
+          "<code>b = a</code> non copia l'oggetto: crea un secondo nome per lo <strong>stesso</strong> oggetto.",
+        ],
+      },
+      {
+        titolo: "I metodi: cosa può fare un oggetto",
+        punti: [
+          "Tre forme: <code>void</code> (non restituisce nulla), con <strong>parametri</strong>, con <code>return</code> (restituisce un valore).",
+          "Il metodo lavora sugli attributi dell'oggetto su cui viene chiamato.",
+        ],
+      },
+      {
+        titolo: "Il costruttore e la parola chiave this",
+        punti: [
+          "Il <strong>costruttore</strong> ha lo stesso nome della classe, <strong>nessun tipo di ritorno</strong>, ed è eseguito da <code>new</code> per inizializzare l'oggetto.",
+          "<code>this.nome</code> è l'<strong>attributo</strong>, <code>nome</code> è il <strong>parametro</strong>: <code>this.nome = nome;</code>",
+          "Senza <code>this</code>, <code>nome = nome;</code> assegna il parametro a se stesso e l'attributo resta <code>null</code>.",
+        ],
+      },
+      {
+        titolo: "Overload dei costruttori",
+        punti: [
+          "Più costruttori con parametri diversi (<strong>constructor overloading</strong>): Java sceglie in base agli argomenti di <code>new</code>.",
+          "Se scrivi almeno un costruttore, Java <strong>non fornisce più</strong> quello vuoto: va dichiarato esplicitamente.",
+          "<code>this(...)</code> come prima riga richiama un altro costruttore (approfondimento).",
+        ],
+      },
+      {
+        titolo: "Scope delle variabili",
+        punti: [
+          "<strong>Attributi</strong>: visibili in tutta la classe. <strong>Parametri</strong>: solo nel metodo. <strong>Variabili locali</strong>: solo nel blocco <code>{ }</code> in cui sono dichiarate.",
+        ],
+      },
+      {
+        titolo: "Array di oggetti",
+        punti: [
+          "<code>new Studente[5]</code> crea solo <strong>5 riferimenti <code>null</code></strong>, non 5 studenti: ogni elemento va creato con <code>new</code>.",
+          "Usare un elemento <code>null</code> provoca la <strong>NullPointerException</strong>: si riempie tutto prima di scorrere, o si controlla <code>s != null</code>.",
+        ],
+      },
+    ],
+  },
 
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {

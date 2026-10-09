@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: programmazione a oggetti · Scuola</title>
+  <meta name="description" content="Informatica, Java OOP: classi e oggetti, attributi, new e operatore punto, metodi, costruttori e this, overload dei costruttori, scope, array di oggetti. Esercitazione sulla classe Automobile con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=5">
+  <script src="../../assets/js/site.js?v=5"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: programmazione a oggetti</h1>
+  <p class="lead">Fino a ora i programmi erano fatti di variabili e metodi sparsi. Con la <strong>programmazione a oggetti</strong> si raggruppano i dati e le azioni che li riguardano in un'unica "scatola": prima si disegna il modello (la <strong>classe</strong>), poi si costruiscono tante copie concrete (gli <strong>oggetti</strong>).</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · Classe e oggetto</strong><p>Il modello e le sue realizzazioni; attributi, <code>new</code> e operatore punto.</p></div>
+    <div class="card"><strong>02 · Metodi</strong><p>Cosa sa fare un oggetto: <code>void</code>, parametri, <code>return</code>.</p></div>
+    <div class="card"><strong>03 · Costruttori</strong><p>Inizializzare un oggetto alla nascita; la parola chiave <code>this</code>; l'overload.</p></div>
+    <div class="card"><strong>04 · Scope e array</strong><p>Dove vive una variabile; array di oggetti e il valore <code>null</code>.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Servono gli array e i metodi: se li hai dimenticati, ripassali in <a href="java-array-wrapper-metodi-overload.html">Java: array, wrapper, metodi e overload</a>. Qui useremo anche l'overload, ma applicato ai costruttori.</div>
+
+  <!-- ============================================================= -->
+  <h2>Che cos'è la programmazione a oggetti</h2>
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    La <strong>OOP</strong> (<em>Object Oriented Programming</em>) è un modo di scrivere programmi che organizza il codice attorno a <strong>oggetti</strong>: elementi del mondo reale o concetti astratti. Ogni oggetto ha <strong>proprietà</strong> (gli <em>attributi</em>) e <strong>comportamenti</strong> (i <em>metodi</em>).
+  </div>
+  <div class="compare">
+    <div>
+      <h4>Proprietà (attributi)</h4>
+      <p>Descrivono <strong>com'è</strong> l'oggetto: nome, età, colore, velocità…</p>
+      <p class="hand">Sono i sostantivi e gli aggettivi.</p>
+    </div>
+    <div>
+      <h4>Comportamenti (metodi)</h4>
+      <p>Descrivono <strong>cosa sa fare</strong>: <code>studia()</code>, <code>accelera()</code>, <code>calcolaMedia()</code>…</p>
+      <p class="hand">Sono i verbi.</p>
+    </div>
+  </div>
+  <p>Esempi di oggetti: <strong>Studente</strong>, <strong>Automobile</strong>, <strong>Computer</strong>, <strong>Libro</strong>, <strong>ContoBancario</strong>, <strong>Persona</strong>.</p>
+  <div class="callout tip"><span class="callout-title">Un trucco per cominciare</span>Per progettare una classe, descrivi la cosa a parole e sottolinea: i <strong>sostantivi</strong> diventano attributi ("lo studente ha un nome, un'età e una media"), i <strong>verbi</strong> diventano metodi ("lo studente studia, saluta, calcola la media").</div>
+
+  <!-- ============================================================= -->
+  <h2>Classe e oggetto</h2>
+  <p>È la distinzione più importante di tutta la OOP:</p>
+  <div class="compare">
+    <div>
+      <h4>La classe (il modello)</h4>
+      <p>Descrive <strong>come sarà fatto</strong> un oggetto: quali attributi possiede e quali metodi può eseguire. Esiste una volta sola.</p>
+      <p class="hand">È lo stampino dei biscotti.</p>
+    </div>
+    <div>
+      <h4>L'oggetto (l'istanza)</h4>
+      <p>È una <strong>realizzazione concreta</strong> della classe, con valori propri. Da una classe si possono creare infiniti oggetti.</p>
+      <p class="hand">Sono i biscotti.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Classe <code>Automobile</code></th><th>Oggetti (istanze)</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">Attributi: <code>marca</code>, <code>modello</code>, <code>colore</code>, <code>velocita</code><br>Metodi: <code>accelera()</code>, <code>frena()</code>, <code>stampaInfo()</code></td><td>Fiat Panda, rossa, 120 km/h</td></tr>
+        <tr><td>BMW Serie 1, nera, 180 km/h</td></tr>
+        <tr><td>Toyota Yaris, bianca, 90 km/h</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tre automobili diverse, ma tutte costruite con lo stesso stampino: hanno gli stessi attributi, con valori diversi. <strong>Cambiare la velocità della Panda non cambia quella della BMW.</strong></p>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>La classe è la <strong>ricetta</strong> della torta; gli oggetti sono le torte che ne escono. Nessuno mangia una ricetta, e da una ricetta si possono fare quante torte vuoi.</div>
+
+  <!-- ============================================================= -->
+  <h2>Creare una classe e gli attributi</h2>
+  <p>Gli <strong>attributi</strong> sono le caratteristiche dell'oggetto. In Java si dichiarano <strong>dentro la classe ma fuori dai metodi</strong>, direttamente nel corpo. Ogni oggetto ha i <strong>suoi</strong> valori indipendenti.</p>
+<pre data-lang="java"><code>public class Studente {
+    String nome;
+    String cognome;
+    int eta;
+    double media;
+}</code></pre>
+  <p>Questa classe è solo un modello: da sola non fa niente, descrive soltanto com'è fatto uno studente. Due studenti creati da qui avranno dati propri, ad esempio:</p>
+  <ul>
+    <li><strong>Studente 1</strong>: Marco Rossi, 18 anni, media 7.5</li>
+    <li><strong>Studente 2</strong>: Luca Bianchi, 19 anni, media 8.2</li>
+  </ul>
+  <div class="callout info"><span class="callout-title">Regola da ricordare</span>Per convenzione i nomi delle <strong>classi</strong> iniziano con la <strong>maiuscola</strong> (<code>Studente</code>, <code>ContoBancario</code>); i nomi di attributi, metodi e variabili con la <strong>minuscola</strong> (<code>nome</code>, <code>calcolaMedia</code>). Una classe <code>public</code> sta in un file con lo stesso nome: <code>Studente.java</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Creare oggetti e accedere agli attributi</h2>
+  <p>Per creare un oggetto si usa la parola chiave <strong><code>new</code></strong>. Per raggiungere un attributo o un metodo di quell'oggetto si usa l'<strong>operatore punto</strong> <code>.</code>.</p>
+<pre data-lang="java"><code>Studente studente1 = new Studente();
+Studente studente2 = new Studente();
+Studente studente3 = new Studente();</code></pre>
+  <p>Ogni oggetto è un'<strong>istanza indipendente</strong> della classe <code>Studente</code>. Si possono creare quanti se ne vogliono.</p>
+  <div class="anatomy" aria-label="Creazione di un oggetto scomposta">
+    <span class="k3" data-l="tipo">Studente</span> <span class="k4" data-l="nome variabile">studente1</span> = <span class="k5" data-l="crea l'oggetto">new</span> <span class="k1" data-l="costruttore">Studente()</span>;
+  </div>
+<pre data-lang="java"><code>studente1.nome = "Marco";
+studente1.cognome = "Rossi";
+studente1.eta = 18;
+
+System.out.println(studente1.nome);
+// Output: Marco</code></pre>
+  <p>Il punto <strong>collega l'oggetto al suo attributo o metodo</strong>: si legge "il <code>nome</code> di <code>studente1</code>".</p>
+
+  <h3>Un programma completo</h3>
+  <p>Le due classi stanno in due file (o in uno solo, se la seconda non è <code>public</code>). La classe con il metodo <code>main</code> è quella da cui parte il programma.</p>
+<pre data-lang="java"><code>// Studente.java
+public class Studente {
+    String nome;
+    int eta;
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        Studente s1 = new Studente();
+        s1.nome = "Marco";
+        s1.eta = 18;
+
+        Studente s2 = new Studente();
+        s2.nome = "Luca";
+        s2.eta = 19;
+
+        System.out.println(s1.nome + " ha " + s1.eta + " anni");  // Marco ha 18 anni
+        System.out.println(s2.nome + " ha " + s2.eta + " anni");  // Luca ha 19 anni
+    }
+}</code></pre>
+
+  <h3>I valori di partenza degli attributi</h3>
+  <p>Se non assegni niente, gli attributi non restano "vuoti a caso": Java li inizializza da solo.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo dell'attributo</th><th>Valore iniziale</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code>, <code>double</code>… (numeri)</td><td><code>0</code></td></tr>
+        <tr><td><code>boolean</code></td><td><code>false</code></td></tr>
+        <tr><td><code>String</code> e qualunque oggetto</td><td><code>null</code> (nessun oggetto)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><em>Questa tabella è un'aggiunta alle slide.</em></p>
+
+  <h3>Variabili che puntano agli oggetti</h3>
+  <p>Una variabile di tipo classe (<code>Studente s1</code>) non contiene l'oggetto: contiene un <strong>riferimento</strong>, cioè il "numero di telefono" per trovarlo. Per questo copiare la variabile <strong>non copia l'oggetto</strong>:</p>
+<pre data-lang="java"><code>Studente a = new Studente();
+a.nome = "Anna";
+
+Studente b = a;        // b punta allo STESSO oggetto
+b.nome = "Giulia";
+
+System.out.println(a.nome);   // Giulia  (è lo stesso oggetto!)</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione</span><code>Studente b = a;</code> <strong>non</strong> crea un secondo studente: crea un secondo nome per lo <strong>stesso</strong> studente. Un nuovo oggetto nasce solo con <code>new</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>I metodi: cosa può fare un oggetto</h2>
+  <p>Se gli attributi dicono <strong>cosa è</strong> l'oggetto, i metodi dicono <strong>cosa può fare</strong>. Un metodo può non restituire niente (<code>void</code>), ricevere dei <strong>parametri</strong> e restituire un valore con <code>return</code>. Si scrivono <strong>dentro la classe</strong>, e di solito <strong>senza <code>static</code></strong>: appartengono all'oggetto.</p>
+  <h3>1 · Metodo void</h3>
+<pre data-lang="java"><code>void studia() {
+    System.out.println(nome + " sta studiando.");
+}</code></pre>
+  <p>Fa qualcosa e non restituisce nulla.</p>
+  <h3>2 · Metodo con parametri</h3>
+<pre data-lang="java"><code>void saluta(String persona) {
+    System.out.println("Ciao " + persona);
+}</code></pre>
+  <p>Riceve dei dati da usare.</p>
+  <h3>3 · Metodo con return</h3>
+<pre data-lang="java"><code>double calcolaMedia(double v1, double v2) {
+    return (v1 + v2) / 2;
+}</code></pre>
+  <p>Restituisce un risultato a chi lo chiama.</p>
+  <p>Un metodo si chiama con l'operatore punto, sull'oggetto che deve eseguirlo. Dentro il metodo, gli attributi dell'oggetto si usano <strong>direttamente per nome</strong> (<code>nome</code> in <code>studia()</code>):</p>
+<pre data-lang="java"><code>Studente s1 = new Studente();
+s1.nome = "Marco";
+
+s1.studia();                      // Marco sta studiando.
+s1.saluta("Anna");                // Ciao Anna
+s1.media = s1.calcolaMedia(7, 8); // media = 7.5</code></pre>
+  <div class="callout tip"><span class="callout-title">Chi sta eseguendo?</span>Lo stesso metodo dà risultati diversi su oggetti diversi: <code>s1.studia()</code> stampa "Marco sta studiando", <code>s2.studia()</code> stampa "Luca sta studiando". Il metodo è uno solo, ma lavora sugli attributi dell'oggetto a cui è stato chiamato.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il costruttore e la parola chiave this</h2>
+  <p>Creare un oggetto e poi riempire gli attributi a uno a uno è lungo e ci si può dimenticare qualcosa. Per questo esiste il <strong>costruttore</strong>: un <strong>metodo speciale</strong> eseguito <strong>automaticamente</strong> quando si scrive <code>new</code>, che serve a <strong>inizializzare l'oggetto</strong>.</p>
+  <ul>
+    <li>ha <strong>lo stesso nome della classe</strong>;</li>
+    <li>non ha <strong>nessun tipo di ritorno</strong>, nemmeno <code>void</code>;</li>
+    <li>può avere dei parametri, con i dati con cui nasce l'oggetto.</li>
+  </ul>
+<pre data-lang="java"><code>public class Studente {
+    String nome;
+    int eta;
+
+    Studente(String nome, int eta) {
+        this.nome = nome;
+        this.eta = eta;
+    }
+}</code></pre>
+  <p>Ora un oggetto nasce già completo:</p>
+<pre data-lang="java"><code>Studente s1 = new Studente("Marco", 18);
+Studente s2 = new Studente("Luca", 19);</code></pre>
+
+  <h3>A cosa serve this</h3>
+  <p>Nel costruttore sopra, il parametro si chiama <code>nome</code> e anche l'attributo si chiama <code>nome</code>. Per Java, dentro il costruttore, <code>nome</code> è il <strong>parametro</strong> (la variabile più vicina). La parola chiave <strong><code>this</code></strong> significa "<em>questo oggetto</em>" e risolve l'ambiguità:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Scrittura</th><th>Cosa indica</th></tr></thead>
+      <tbody>
+        <tr><td><code>this.nome</code></td><td>l'<strong>attributo</strong> dell'oggetto</td></tr>
+        <tr><td><code>nome</code></td><td>il <strong>parametro</strong> ricevuto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Quindi <code>this.nome = nome;</code> si legge: "<em>l'attributo nome di questo oggetto riceve il valore del parametro nome</em>".</p>
+  <div class="callout warn"><span class="callout-title">Errore classico</span>Se scrivi solo <code>nome = nome;</code> il compilatore non protesta, ma assegni il parametro a se stesso e l'attributo resta <code>null</code>. Quando parametro e attributo hanno lo stesso nome serve sempre <code>this.</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Overload dei costruttori</h2>
+  <p>Si possono scrivere <strong>più costruttori</strong> nella stessa classe, ciascuno con una lista di parametri <strong>diversa</strong> (per numero o per tipo). Java sceglie da solo quello giusto guardando gli argomenti passati a <code>new</code>. Si chiama <strong>constructor overloading</strong>: è lo stesso overload dei metodi, applicato ai costruttori.</p>
+<pre data-lang="java"><code>public class Studente {
+    String nome;
+    int eta;
+
+    // 1 · costruttore vuoto
+    Studente() {
+        nome = "Sconosciuto";
+        eta = 0;
+    }
+
+    // 2 · solo il nome
+    Studente(String nome) {
+        this.nome = nome;
+        eta = 0;
+    }
+
+    // 3 · completo
+    Studente(String nome, int eta) {
+        this.nome = nome;
+        this.eta = eta;
+    }
+}</code></pre>
+<pre data-lang="java"><code>Studente a = new Studente();               // usa il costruttore 1
+Studente b = new Studente("Marco");        // usa il costruttore 2
+Studente c = new Studente("Marco", 18);    // usa il costruttore 3</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione: il costruttore vuoto sparisce</span>Se in una classe <strong>non scrivi nessun costruttore</strong>, Java ne crea uno vuoto per te (per questo <code>new Studente()</code> funzionava all'inizio). Ma appena ne definisci <strong>almeno uno tuo</strong>, Java <strong>non fornisce più</strong> quello vuoto: se lo vuoi usare, devi scriverlo tu.</div>
+<pre data-lang="java"><code>public class Studente {
+    String nome;
+    Studente(String nome) { this.nome = nome; }
+}
+
+Studente s = new Studente();   // ERRORE di compilazione: manca il costruttore vuoto</code></pre>
+
+  <h3>Approfondimento: this(...) per non ripetere il codice</h3>
+  <p>I tre costruttori ripetono quasi le stesse righe. Con <code>this(...)</code> un costruttore può <strong>chiamarne un altro</strong> della stessa classe (deve essere la <strong>prima riga</strong>):</p>
+<pre data-lang="java"><code>Studente() {
+    this("Sconosciuto", 0);      // chiama il costruttore completo
+}
+
+Studente(String nome) {
+    this(nome, 0);
+}
+
+Studente(String nome, int eta) {  // l'unico che assegna davvero
+    this.nome = nome;
+    this.eta = eta;
+}</code></pre>
+  <p><em>Questa parte è un'aggiunta alle slide: non è richiesta per capire il resto.</em></p>
+
+  <!-- ============================================================= -->
+  <h2>Scope delle variabili</h2>
+  <p>Lo <strong>scope</strong> (ambito) indica la <strong>zona del programma in cui una variabile è visibile</strong>, cioè dove la puoi usare.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo di variabile</th><th>Dove è visibile</th><th>Dove si dichiara</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Attributi</strong></td><td>in <strong>tutta la classe</strong> (in tutti i suoi metodi)</td><td>nel corpo della classe, fuori dai metodi</td></tr>
+        <tr><td><strong>Parametri</strong></td><td>solo <strong>dentro il metodo</strong> che li riceve</td><td>nell'intestazione del metodo</td></tr>
+        <tr><td><strong>Variabili locali</strong></td><td>solo nel <strong>blocco</strong> <code>{ }</code> in cui sono dichiarate</td><td>dentro un metodo, un <code>if</code>, un <code>for</code>…</td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="java"><code>public class Studente {
+    String nome;                          // attributo: visibile ovunque nella classe
+
+    void presenta(String saluto) {        // saluto: parametro, visibile solo qui
+        String frase = saluto + " " + nome;   // frase: variabile locale
+        System.out.println(frase);
+    }
+
+    void altro() {
+        // System.out.println(frase);     // ERRORE: frase esiste solo in presenta()
+        System.out.println(nome);         // OK: è un attributo
+    }
+}</code></pre>
+  <div class="callout tip"><span class="callout-title">Per ricordarlo</span>Una variabile <strong>nasce</strong> alla sua dichiarazione e <strong>muore</strong> alla graffa <code>}</code> che chiude il blocco in cui è nata. Gli attributi vivono quanto l'oggetto; parametri e variabili locali, solo il tempo di esecuzione del metodo.</div>
+
+  <!-- ============================================================= -->
+  <h2>Array di oggetti</h2>
+  <p>Come si fa con i numeri, anche gli oggetti si possono mettere in un <strong>array</strong>: utile per gestire una classe intera, un elenco di auto, un catalogo di libri.</p>
+<pre data-lang="java"><code>Studente[] classe = new Studente[5];
+
+// Ogni elemento va inizializzato!
+classe[0] = new Studente("Marco", 18);
+classe[1] = new Studente("Luca", 19);
+
+// Accesso con ciclo for-each
+for (Studente s : classe) {
+    System.out.println(s.nome);
+}</code></pre>
+  <div class="callout warn"><span class="callout-title">Il trabocchetto dei riferimenti</span><code>new Studente[5]</code> crea <strong>solo 5 caselle vuote</strong> (i riferimenti, inizialmente <code>null</code>), <strong>non</strong> 5 studenti. Gli oggetti veri vanno creati uno per uno con <code>new Studente(...)</code>.</div>
+  <p>Nell'esempio sopra le caselle 2, 3 e 4 sono ancora <code>null</code>: il ciclo <code>for-each</code> arriva alla casella 2 e il programma si ferma con un errore, la <strong><code>NullPointerException</code></strong> (si è provato a usare <code>.nome</code> su "nessun oggetto").</p>
+<pre data-lang="java"><code>Studente[] classe = new Studente[5];
+System.out.println(classe[0]);       // null
+System.out.println(classe[0].nome);  // NullPointerException!</code></pre>
+  <p>Due soluzioni: riempire <strong>tutte</strong> le caselle prima di scorrere l'array, oppure controllare prima di usare l'elemento:</p>
+<pre data-lang="java"><code>for (Studente s : classe) {
+    if (s != null) {                 // salta le caselle vuote
+        System.out.println(s.nome);
+    }
+}</code></pre>
+  <div class="callout info"><span class="callout-title">Collegamento</span>Anche <code>String[]</code> è un array di oggetti: una casella non inizializzata vale <code>null</code>, non la stringa vuota <code>""</code>. Gli array in generale sono nella <a href="java-array-wrapper-metodi-overload.html#che-cos-e-un-array">pagina precedente</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>OOP</strong>: il codice è organizzato in <strong>oggetti</strong> con <strong>attributi</strong> (cosa sono) e <strong>metodi</strong> (cosa fanno).</li>
+    <li><strong>Classe</strong> = modello, <strong>oggetto</strong> = istanza concreta con valori propri. Da una classe nascono infiniti oggetti.</li>
+    <li><strong>Attributi</strong>: dichiarati nel corpo della classe, fuori dai metodi.</li>
+    <li><strong><code>new</code></strong> crea l'oggetto, l'<strong>operatore punto</strong> <code>.</code> raggiunge attributi e metodi.</li>
+    <li>Metodi: <code>void</code> (non restituisce), con <strong>parametri</strong>, con <code>return</code>.</li>
+    <li><strong>Costruttore</strong>: stesso nome della classe, <strong>nessun tipo di ritorno</strong>, eseguito da <code>new</code> per inizializzare l'oggetto.</li>
+    <li><strong><code>this</code></strong> = questo oggetto: <code>this.nome</code> è l'attributo, <code>nome</code> il parametro.</li>
+    <li><strong>Overload dei costruttori</strong>: più costruttori con parametri diversi; se ne scrivi uno, Java <strong>non</strong> crea più quello vuoto.</li>
+    <li><strong>Scope</strong>: attributi (tutta la classe), parametri (il metodo), variabili locali (il blocco).</li>
+    <li><strong>Array di oggetti</strong>: <code>new Studente[5]</code> crea solo riferimenti <code>null</code>; ogni elemento va creato con <code>new</code>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Classe o oggetto? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ogni coppia, di' quale è la classe e quale l'oggetto: a) <code>Libro</code> / "I promessi sposi"; b) la tua bicicletta / <code>Bicicletta</code>; c) <code>Studente</code> / <code>new Studente("Luca", 19)</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) classe <code>Libro</code>, oggetto "I promessi sposi". b) classe <code>Bicicletta</code>, oggetto la tua bicicletta. c) classe <code>Studente</code>, oggetto quello creato da <code>new Studente("Luca", 19)</code>.</p>
+      <p>La classe è il <strong>modello</strong> (un concetto generale, scritto con la maiuscola), l'oggetto è <strong>un caso concreto</strong>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Cosa stampa? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>Studente a = new Studente("Anna", 17);
+Studente b = new Studente("Anna", 17);
+Studente c = a;
+
+c.nome = "Giulia";
+b.eta = 20;
+
+System.out.println(a.nome);
+System.out.println(b.nome);
+System.out.println(a.eta);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Stampa <code>Giulia</code>, poi <code>Anna</code>, poi <code>17</code>.</p>
+      <ul>
+        <li><code>c = a</code> non crea un nuovo oggetto: <code>c</code> e <code>a</code> puntano allo <strong>stesso</strong> studente, quindi cambiare <code>c.nome</code> cambia anche <code>a.nome</code>.</li>
+        <li><code>b</code> è un oggetto <strong>diverso</strong> (creato con un suo <code>new</code>): il suo nome resta <code>Anna</code>, e cambiare <code>b.eta</code> non tocca <code>a.eta</code>, che resta 17.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Trova gli errori <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>public class Libro {
+    String titolo;
+    int pagine;
+
+    void Libro(String titolo, int pagine) {
+        titolo = titolo;
+        this.pagine = pagine;
+    }
+}
+
+Libro l = Libro("Dune", 600);</code></pre>
+      <p>Trova i <strong>tre</strong> errori e scrivi la versione corretta.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><code>void Libro(...)</code>: un costruttore <strong>non ha tipo di ritorno</strong>, nemmeno <code>void</code>. Con <code>void</code> è un metodo normale che per caso si chiama come la classe, e non viene eseguito da <code>new</code>.</li>
+        <li><code>titolo = titolo;</code>: assegna il parametro a se stesso; serve <code>this.titolo = titolo;</code>.</li>
+        <li><code>Libro("Dune", 600)</code>: manca <code>new</code>. Si scrive <code>new Libro("Dune", 600)</code>.</li>
+      </ol>
+<pre data-lang="java"><code>public class Libro {
+    String titolo;
+    int pagine;
+
+    Libro(String titolo, int pagine) {
+        this.titolo = titolo;
+        this.pagine = pagine;
+    }
+}
+
+Libro l = new Libro("Dune", 600);</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Il costruttore sparito <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>public class Persona {
+    String nome;
+    Persona(String nome) { this.nome = nome; }
+}
+
+Persona p1 = new Persona("Sara");
+Persona p2 = new Persona();</code></pre>
+      <p>Quale riga non compila e perché? Come si risolve?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Non compila <code>new Persona()</code>. Appena la classe ha un costruttore scritto da noi, Java <strong>non fornisce più</strong> quello vuoto. Si risolve aggiungendolo (overload):</p>
+<pre data-lang="java"><code>Persona() {
+    nome = "Sconosciuto";
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>La classe Libro <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi la classe <code>Libro</code> con gli attributi <code>titolo</code> (String), <code>autore</code> (String) e <code>pagine</code> (int); un costruttore con i tre parametri; un metodo <code>descrizione()</code> che <strong>restituisce</strong> una stringa del tipo <code>"Dune di Frank Herbert (600 pagine)"</code>. Nel <code>main</code> crea due libri e stampa le loro descrizioni.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>public class Libro {
+    String titolo;
+    String autore;
+    int pagine;
+
+    Libro(String titolo, String autore, int pagine) {
+        this.titolo = titolo;
+        this.autore = autore;
+        this.pagine = pagine;
+    }
+
+    String descrizione() {
+        return titolo + " di " + autore + " (" + pagine + " pagine)";
+    }
+
+    public static void main(String[] args) {
+        Libro l1 = new Libro("Dune", "Frank Herbert", 600);
+        Libro l2 = new Libro("Lo Hobbit", "J.R.R. Tolkien", 310);
+        System.out.println(l1.descrizione());
+        System.out.println(l2.descrizione());
+    }
+}</code></pre>
+      <p><code>descrizione()</code> usa <code>return</code> perché restituisce il testo a chi lo chiama, che poi decide cosa farne (qui lo stampa). Gli attributi si usano per nome, senza <code>this</code>, perché nel metodo non ci sono parametri con lo stesso nome.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>La media della classe <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>Studente[] classe = new Studente[4];
+classe[0] = new Studente("Marco", 18);
+classe[1] = new Studente("Luca", 19);
+
+double somma = 0;
+for (Studente s : classe) {
+    somma += s.eta;
+}
+System.out.println(somma / classe.length);</code></pre>
+      <p>a) Cosa succede eseguendo il programma? b) Correggilo per calcolare l'età media dei soli studenti presenti.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) Il ciclo funziona per Marco e Luca, ma alla terza casella <code>s</code> vale <code>null</code> e <code>s.eta</code> provoca una <strong><code>NullPointerException</code></strong>: <code>new Studente[4]</code> ha creato solo 4 caselle vuote.</p>
+      <p>b) Si saltano le caselle vuote e si divide per il numero di studenti <strong>veri</strong>, non per <code>classe.length</code>:</p>
+<pre data-lang="java"><code>double somma = 0;
+int presenti = 0;
+for (Studente s : classe) {
+    if (s != null) {
+        somma += s.eta;
+        presenti++;
+    }
+}
+System.out.println(somma / presenti);   // 18.5</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Esercitazione pratica: la classe Automobile <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p>Mettiamo tutto insieme. Crea la classe <strong>Automobile</strong> con attributi, costruttori in overload, metodi e un array di oggetti nel <code>main</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><strong>Attributi</strong></td><td><code>String marca</code>, <code>String modello</code>, <code>int anno</code>, <code>double velocita</code></td></tr>
+            <tr><td><strong>Costruttori</strong></td><td><code>Automobile()</code>, <code>Automobile(marca, modello)</code>, <code>Automobile(marca, modello, anno)</code> — usa <code>this</code>!</td></tr>
+            <tr><td><strong>Metodi</strong></td><td><code>accelera(incremento)</code>, <code>frena(decremento)</code>, <code>stampaInfo()</code></td></tr>
+            <tr><td><strong>Nel main</strong></td><td><code>Automobile[] auto = new Automobile[3];</code>, poi <code>auto[0] = new Automobile("Fiat", "Panda", 2020);</code> e così via; infine un ciclo <code>for-each</code> per stampare tutte le auto</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Come procedere:</strong> 1) scrivi attributi e un costruttore alla volta, controllando che compili; 2) aggiungi i tre metodi; 3) nel <code>main</code> crea l'array e <strong>riempi tutte le caselle</strong> prima di stampare; 4) fai accelerare e frenare qualche auto e stampa il risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>public class Automobile {
+    String marca;
+    String modello;
+    int anno;
+    double velocita;
+
+    Automobile() {
+        this.marca = "Sconosciuta";
+        this.modello = "Sconosciuto";
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    Automobile(String marca, String modello) {
+        this.marca = marca;
+        this.modello = modello;
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    Automobile(String marca, String modello, int anno) {
+        this.marca = marca;
+        this.modello = modello;
+        this.anno = anno;
+        this.velocita = 0;
+    }
+
+    void accelera(double incremento) {
+        velocita = velocita + incremento;
+    }
+
+    void frena(double decremento) {
+        velocita = velocita - decremento;
+        if (velocita &lt; 0) {          // una macchina non va in retromarcia frenando
+            velocita = 0;
+        }
+    }
+
+    void stampaInfo() {
+        System.out.println(marca + " " + modello + " (" + anno + "), " + velocita + " km/h");
+    }
+
+    public static void main(String[] args) {
+        Automobile[] auto = new Automobile[3];
+        auto[0] = new Automobile("Fiat", "Panda", 2020);
+        auto[1] = new Automobile("BMW", "Serie 1");
+        auto[2] = new Automobile();
+
+        auto[0].accelera(50);
+        auto[0].accelera(70);
+        auto[1].accelera(30);
+        auto[1].frena(100);          // sarebbe -70: il metodo la riporta a 0
+
+        for (Automobile a : auto) {
+            a.stampaInfo();
+        }
+    }
+}</code></pre>
+      <p>Output:</p>
+<pre data-lang="testo"><code>Fiat Panda (2020), 120.0 km/h
+BMW Serie 1 (0), 0.0 km/h
+Sconosciuta Sconosciuto (0), 0.0 km/h</code></pre>
+      <ul>
+        <li>I tre costruttori hanno parametri diversi (0, 2 e 3): Java sceglie da solo in base agli argomenti di <code>new</code>.</li>
+        <li><code>this.marca = marca</code> distingue l'attributo dal parametro; in <code>accelera</code> non serve <code>this</code> perché il parametro si chiama <code>incremento</code>, non <code>velocita</code>.</li>
+        <li><code>new Automobile[3]</code> crea tre caselle vuote: le abbiamo riempite tutte e tre prima del ciclo, quindi niente <code>NullPointerException</code>.</li>
+        <li>Il controllo in <code>frena</code> (velocità mai negativa) è un'aggiunta nostra: le slide non lo chiedono, ma rende il modello più realistico.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Programmazione a Oggetti in Java", dispense a cura del prof. Daniele Gravina, a.s. 2026/2027. Nelle slide, negli esempi dei costruttori in overload, compaiono <code>this.nome = Daniele;</code> e <code>this.eta = 42;</code>: sono refusi (il nome andrebbe tra apici e il valore dovrebbe venire dal parametro), qui sono scritti correttamente. Le regole di convenzione, i valori iniziali degli attributi, i riferimenti, <code>this(...)</code>, la <code>NullPointerException</code>, gli esercizi 01–06 e tutte le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>
