@@ -44,6 +44,7 @@
           { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
           { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
           { title: "Java: gestione dei file", path: "materie/informatica/java-gestione-dei-file.html", type: "teoria" },
+          { title: "Java: eccezioni e file", path: "materie/informatica/java-eccezioni-e-file.html", type: "teoria" },
         ],
       },
       {

@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: eccezioni e file · Scuola</title>
+  <meta name="description" content="Informatica, Java: cosa sono le eccezioni, try-catch-finally, l'oggetto Exception, più catch, checked e unchecked, throw e throws, Path e Files per leggere e scrivere file, mini-progetto Registro studenti. Esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=8">
+  <script src="../../assets/js/site.js?v=8"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: eccezioni e file</h1>
+  <p class="lead">Un programma serio deve prevedere che qualcosa vada storto: un numero diviso per zero, un file che non c'è, un utente che scrive "abc" dove serviva un numero. Le <strong>eccezioni</strong> sono il modo di Java per accorgersene e reagire, senza che il programma si fermi di colpo.</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · Le eccezioni</strong><p>Cosa sono, <code>try</code>, <code>catch</code> e <code>finally</code>.</p></div>
+    <div class="card"><strong>02 · Catch multipli</strong><p>L'oggetto eccezione e l'ordine dei <code>catch</code>.</p></div>
+    <div class="card"><strong>03 · Checked e unchecked</strong><p>Quando il compilatore obbliga a gestirle; <code>throw</code> e <code>throws</code>.</p></div>
+    <div class="card"><strong>04 · File con Path e Files</strong><p>Il modo moderno di leggere e scrivere, e un mini-progetto completo.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Questo capitolo riprende e completa <a href="java-gestione-dei-file.html">Java: gestione dei file</a>, dove hai già visto un primo <code>try-catch</code> con <code>FileWriter</code> e <code>FileReader</code>. Qui capiamo meglio <strong>come funzionano</strong> le eccezioni e impariamo le classi <code>Path</code> e <code>Files</code>, più comode.</div>
+
+  <!-- ============================================================= -->
+  <h2>Cosa sono le eccezioni</h2>
+  <div class="callout def"><span class="callout-title">In una frase</span>Un'<strong>eccezione</strong> è un evento imprevisto che si verifica durante l'esecuzione e <strong>interrompe il normale flusso</strong> del programma. Java la gestisce in modo strutturato, evitando la terminazione improvvisa dell'applicazione.</div>
+  <p>L'esempio classico è la <strong>divisione per zero</strong>:</p>
+<pre data-lang="java"><code>int a = 10;
+int b = 0;
+int risultato = a / b;   // genera ArithmeticException</code></pre>
+<pre data-lang="testo"><code>Exception in thread "main" java.lang.ArithmeticException: / by zero</code></pre>
+  <p>Senza nessuna protezione, il programma <strong>si ferma</strong> in quella riga e le istruzioni successive non vengono mai eseguite. Il messaggio dice il <strong>tipo</strong> di errore (<code>ArithmeticException</code>) e il <strong>motivo</strong> (<code>/ by zero</code>).</p>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Un'eccezione è come l'allarme antincendio: appena qualcosa va storto, suona e <em>tutto si ferma</em>. Il <code>try-catch</code> è il responsabile della sicurezza: sente l'allarme, decide cosa fare e fa ripartire le attività in modo ordinato.</div>
+
+  <h3>L'eccezione è un oggetto</h3>
+  <p>Dal punto di vista formale, un'eccezione è un <strong>oggetto Java</strong> che viene <strong>"lanciato"</strong> (<em>thrown</em>) quando si verifica una condizione anomala. Ogni tipo di errore ha la <strong>sua classe</strong>:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Classe</th><th>Quando succede</th></tr></thead>
+      <tbody>
+        <tr><td><code>ArithmeticException</code></td><td>operazione matematica impossibile (<code>10 / 0</code>)</td></tr>
+        <tr><td><code>NullPointerException</code></td><td>si usa un oggetto che vale <code>null</code> (vedi <a href="java-programmazione-a-oggetti.html">programmazione a oggetti</a>)</td></tr>
+        <tr><td><code>ArrayIndexOutOfBoundsException</code></td><td>indice fuori da un array (<code>n[10]</code> in un array di 3)</td></tr>
+        <tr><td><code>NumberFormatException</code></td><td>testo non convertibile in numero (<code>Integer.parseInt("abc")</code>)</td></tr>
+        <tr><td><code>IOException</code></td><td>problema di input/output, per esempio con i file</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>try, catch e finally</h2>
+  <p>Il meccanismo si basa su tre blocchi: <code>try</code> contiene il codice <strong>rischioso</strong>, <code>catch</code> <strong>gestisce</strong> l'errore, <code>finally</code> esegue le <strong>operazioni finali</strong>.</p>
+<pre data-lang="java"><code>try {
+    // codice rischioso
+} catch (TipoEccezione e) {
+    // gestione dell'errore
+} finally {
+    // operazioni finali
+}</code></pre>
+  <h3>Un esempio completo</h3>
+<pre data-lang="java"><code>try {
+    int r = 10 / 0;
+    System.out.println(r);
+} catch (ArithmeticException e) {
+    System.out.println("Non puoi dividere per zero!");
+} finally {
+    System.out.println("Esecuzione terminata.");
+}</code></pre>
+<pre data-lang="testo"><code>Non puoi dividere per zero!
+Esecuzione terminata.</code></pre>
+  <p>Cosa è successo, in ordine:</p>
+  <ol>
+    <li>Java entra nel <code>try</code> e prova <code>10 / 0</code>: <strong>lancia</strong> un'<code>ArithmeticException</code>.</li>
+    <li>La riga <code>System.out.println(r)</code> viene <strong>saltata</strong>: dopo l'errore il <code>try</code> si interrompe subito.</li>
+    <li>Il controllo passa al <code>catch</code> che gestisce quel tipo di eccezione, e stampa il messaggio.</li>
+    <li>Infine si esegue il <code>finally</code>, e poi il programma <strong>prosegue</strong> normalmente.</li>
+  </ol>
+  <div class="callout def"><span class="callout-title">Il blocco finally</span>Viene eseguito <strong>sempre</strong>: sia se l'eccezione c'è, sia se non c'è, sia se nel <code>try</code> c'è un <code>return</code>. Serve per <strong>rilasciare risorse</strong>, chiudere file o connessioni, fare pulizia. È facoltativo: si può scrivere <code>try-catch</code> senza <code>finally</code> (o anche <code>try-finally</code> senza <code>catch</code>).</div>
+  <div class="callout info"><span class="callout-title">Quasi "sempre"</span>L'unico modo di saltare il <code>finally</code> è fermare del tutto il programma, per esempio con <code>System.exit(0)</code> dentro il <code>try</code>, o se il computer si spegne. <em>(Precisazione aggiunta alle slide.)</em></div>
+
+  <h3>finally per chiudere un file</h3>
+  <p>L'uso classico è la chiusura di una risorsa: se <code>close()</code> sta nel <code>try</code> e prima c'è un errore, il file resta aperto; nel <code>finally</code> invece viene sempre eseguito.</p>
+<pre data-lang="java"><code>FileReader lettore = null;
+try {
+    lettore = new FileReader("prova.txt");
+    System.out.println((char) lettore.read());
+} catch (IOException e) {
+    System.out.println("Problema con il file");
+} finally {
+    try {
+        if (lettore != null) {
+            lettore.close();
+        }
+    } catch (IOException e) {
+        System.out.println("Impossibile chiudere il file");
+    }
+}</code></pre>
+  <p>È una forma lunga e noiosa: per questo Java ha introdotto il <strong><code>try-with-resources</code></strong>, che chiude da solo la risorsa (<code>try (FileReader lettore = new FileReader("prova.txt")) { ... }</code>). <em>(Extra rispetto alle slide.)</em></p>
+
+  <!-- ============================================================= -->
+  <h2>L'oggetto Exception e più catch</h2>
+  <h3>L'oggetto eccezione</h3>
+  <p>Nel <code>catch</code> la lettera <code>e</code> è una <strong>variabile</strong> che contiene l'oggetto eccezione: si può interrogare per avere informazioni.</p>
+<pre data-lang="java"><code>try {
+    int x = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println(e);              // tipo + messaggio
+    System.out.println(e.getMessage()); // solo il messaggio
+    e.printStackTrace();                // stack trace (debug)
+}</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Istruzione</th><th>Cosa stampa</th></tr></thead>
+      <tbody>
+        <tr><td><code>System.out.println(e)</code></td><td><code>java.lang.ArithmeticException: / by zero</code> (tipo e messaggio)</td></tr>
+        <tr><td><code>e.getMessage()</code></td><td><code>/ by zero</code> (solo il messaggio)</td></tr>
+        <tr><td><code>e.printStackTrace()</code></td><td>l'<strong>intero percorso</strong> dell'errore, riga per riga, fino al punto in cui è nato</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><code>printStackTrace()</code> è prezioso durante il <strong>debug</strong> perché mostra esattamente <em>dove</em> si è verificato l'errore: cerca la riga con il nome del tuo file e il numero di riga (per esempio <code>Main.java:5</code>).</p>
+  <div class="callout tip"><span class="callout-title">Quale usare?</span><code>printStackTrace()</code> è utilissimo a te che programmi; <code>getMessage()</code> (o un messaggio tuo) è meglio per l'<strong>utente</strong>, che non deve vedere pagine di errori tecnici.</div>
+
+  <h3>Gestire più eccezioni</h3>
+  <p>Un <code>try</code> può avere <strong>più blocchi <code>catch</code></strong>, uno per ogni tipo di errore. I <code>catch</code> <strong>più specifici</strong> vanno <strong>prima</strong> di quelli generici.</p>
+<pre data-lang="java"><code>try {
+    int[] n = {10, 20, 30};
+    System.out.println(n[10]);
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Indice non valido!");
+} catch (Exception e) {
+    System.out.println("Errore generico.");
+}</code></pre>
+  <p>Qui l'indice 10 non esiste (l'array ha 3 elementi, indici 0, 1, 2): viene scelto il <strong>primo <code>catch</code> compatibile</strong>, cioè quello dell'array, e gli altri vengono ignorati.</p>
+  <div class="callout def"><span class="callout-title">Le eccezioni sono parenti</span><code>Exception</code> è la classe "madre" di quasi tutte le eccezioni: <code>ArithmeticException</code>, <code>IOException</code>… sono sue figlie. Un <code>catch (Exception e)</code> prende <strong>qualunque</strong> eccezione, ed è per questo che deve stare <strong>in fondo</strong>, come rete di sicurezza.</div>
+  <div class="callout warn"><span class="callout-title">L'ordine conta</span>Se metti <code>catch (Exception e)</code> <strong>prima</strong> di <code>catch (ArrayIndexOutOfBoundsException e)</code>, il programma <strong>non compila</strong> (errore: <em>exception has already been caught</em>): il primo prenderebbe già tutto e il secondo non verrebbe mai raggiunto. Regola: <strong>dal più specifico al più generico</strong>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Checked e unchecked exceptions</h2>
+  <p>Java divide le eccezioni in due grandi famiglie, che si comportano in modo diverso con il <strong>compilatore</strong>.</p>
+  <div class="compare">
+    <div>
+      <h4>Unchecked (non controllate)</h4>
+      <p>Derivano da <code>RuntimeException</code>. Il compilatore <strong>non obbliga</strong> a gestirle.</p>
+      <ul>
+        <li><code>ArithmeticException</code></li>
+        <li><code>NullPointerException</code></li>
+        <li><code>ArrayIndexOutOfBoundsException</code></li>
+        <li><code>NumberFormatException</code></li>
+      </ul>
+<pre data-lang="java"><code>String s = "abc";
+int n = Integer.parseInt(s);
+// NumberFormatException</code></pre>
+      <p class="hand">Di solito sono errori di programmazione.</p>
+    </div>
+    <div>
+      <h4>Checked (controllate)</h4>
+      <p>Il compilatore <strong>obbliga</strong> a gestirle con <code>try-catch</code> o a dichiararle con <code>throws</code>.</p>
+      <ul>
+        <li><code>IOException</code> (file)</li>
+        <li><code>FileNotFoundException</code></li>
+        <li><code>SQLException</code> (database)</li>
+      </ul>
+<pre data-lang="java"><code>public static void leggi()
+        throws IOException {
+    // il chiamante deve gestire
+}</code></pre>
+      <p class="hand">Di solito sono problemi del mondo esterno.</p>
+    </div>
+  </div>
+  <p>Il criterio è questo:</p>
+  <ul>
+    <li><strong>Unchecked</strong>: dipendono da <em>come hai scritto il programma</em> (dividere per zero, usare un <code>null</code>, sbagliare indice). Si <strong>prevengono</strong> scrivendo codice corretto: per esempio con un <code>if (b != 0)</code>.</li>
+    <li><strong>Checked</strong>: dipendono da <em>cose fuori dal tuo controllo</em> (un file cancellato, il disco pieno, la rete caduta). Non si possono evitare del tutto, quindi Java <strong>ti costringe</strong> a pensarci.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Per riconoscerle</span>Una eccezione <strong>checked</strong> è una figlia di <code>Exception</code> <em>ma non</em> di <code>RuntimeException</code>. Se il compilatore si lamenta con <em>"unreported exception … must be caught or declared to be thrown"</em>, hai una checked non gestita: o la racchiudi in un <code>try-catch</code> o la dichiari con <code>throws</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>throw e throws</h2>
+  <div class="compare">
+    <div>
+      <h4><code>throw</code>: generare un'eccezione</h4>
+      <p>Permette di <strong>generare esplicitamente</strong> un'eccezione nel proprio codice: tu stesso "lanci l'allarme" quando un dato non è valido.</p>
+    </div>
+    <div>
+      <h4><code>throws</code>: dichiarare un'eccezione</h4>
+      <p>Si scrive nella <strong>firma del metodo</strong> per avvisare chi lo chiama che può verificarsi un'eccezione <em>checked</em>.</p>
+    </div>
+  </div>
+
+  <h3>throw</h3>
+<pre data-lang="java"><code>public static void controllaEta(int eta) {
+    if (eta &lt; 0) {
+        throw new IllegalArgumentException("Età non valida");
+    }
+    System.out.println("Età: " + eta);
+}
+
+// chiamata:
+controllaEta(-5);   // genera l'eccezione</code></pre>
+  <p><code>throw new ...</code> crea l'oggetto eccezione (con un messaggio) e lo lancia: il metodo <strong>si interrompe subito</strong> e la riga <code>System.out.println("Età: ...")</code> non viene eseguita. Chi chiama il metodo può intercettare l'errore:</p>
+<pre data-lang="java"><code>try {
+    controllaEta(-5);
+} catch (IllegalArgumentException e) {
+    System.out.println("Errore: " + e.getMessage());   // Errore: Età non valida
+}</code></pre>
+  <div class="callout info"><span class="callout-title">Attenzione alla differenza</span><code>throw</code> (senza <em>s</em>) è un'<strong>istruzione</strong> che lancia un'eccezione <em>adesso</em>; <code>throws</code> (con la <em>s</em>) è una <strong>dichiarazione</strong> nella firma del metodo. Una agisce, l'altra avvisa. <code>IllegalArgumentException</code> è unchecked, quindi qui non serve <code>throws</code>.</div>
+
+  <h3>throws</h3>
+<pre data-lang="java"><code>public static void leggiFile() throws IOException {
+    // codice che può generare IOException
+    Path p = Path.of("dati.txt");
+    String testo = Files.readString(p);
+}</code></pre>
+  <p>Chi chiama <code>leggiFile()</code> dovrà <strong>gestire l'eccezione</strong> con <code>try-catch</code> oppure <strong>dichiararla a sua volta</strong>:</p>
+<pre data-lang="java"><code>// 1) la gestisce qui
+public static void main(String[] args) {
+    try {
+        leggiFile();
+    } catch (IOException e) {
+        System.out.println("Impossibile leggere il file");
+    }
+}
+
+// 2) la passa a chi lo chiama (anche al sistema)
+public static void main(String[] args) throws IOException {
+    leggiFile();
+}</code></pre>
+  <p>Con <code>throws</code> il metodo dice: <em>"io non so come gestire questo problema, ci pensi tu che mi hai chiamato"</em>. L'eccezione "risale" la catena delle chiamate finché qualcuno la intercetta. Se nessuno lo fa, arriva fino a <code>main</code> e il programma si ferma.</p>
+
+  <!-- ============================================================= -->
+  <h2>Lavorare con i file: Path e Files</h2>
+  <p>Il package <code>java.nio.file</code> offre le classi <strong><code>Path</code></strong> e <strong><code>Files</code></strong> per gestire i file in modo moderno e sicuro. Rispetto a <code>FileWriter</code>/<code>FileReader</code> del <a href="java-gestione-dei-file.html">capitolo precedente</a> servono <strong>molte meno righe</strong>: una riga per scrivere, una per leggere tutto.</p>
+  <div class="compare">
+    <div>
+      <h4><code>Path</code></h4>
+      <p>Rappresenta <strong>il percorso</strong> di un file o di una cartella. Come <code>File</code>, indica dove si trova qualcosa ma non lo legge.</p>
+    </div>
+    <div>
+      <h4><code>Files</code></h4>
+      <p>Contiene i <strong>metodi</strong> (tutti <code>static</code>) che lavorano su un <code>Path</code>: leggere, scrivere, controllare, eliminare.</p>
+    </div>
+  </div>
+
+  <h3>Creare un Path</h3>
+<pre data-lang="java"><code>import java.nio.file.Path;
+
+Path file = Path.of("dati.txt");
+Path percorso = Path.of("dati", "file.txt");   // dati/file.txt</code></pre>
+  <p>Con più argomenti Java <strong>unisce i pezzi</strong> usando il separatore giusto del sistema (<code>/</code> o <code>\</code>): non devi preoccuparti di quale sia. La seconda riga non crea nulla sul disco: indica soltanto il file <code>file.txt</code> dentro la cartella <code>dati</code>.</p>
+
+  <h3>Scrivere e leggere</h3>
+<pre data-lang="java"><code>Files.writeString(file, "Ciao Java!");     // crea il file se non esiste
+
+String testo = Files.readString(file);              // tutto il file in una String
+List&lt;String&gt; righe = Files.readAllLines(file);      // una String per ogni riga</code></pre>
+  <div class="callout warn"><span class="callout-title">Tutti questi metodi lanciano IOException</span><code>writeString</code>, <code>readString</code>, <code>readAllLines</code> e gli altri sono <strong>checked</strong>: vanno dentro un <code>try-catch</code> oppure il metodo deve dichiarare <code>throws IOException</code>. Per <code>readAllLines</code> serve anche <code>import java.util.List;</code>.</div>
+
+  <h3>Le altre operazioni</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>Istruzione</th></tr></thead>
+      <tbody>
+        <tr><td>Controllare l'esistenza</td><td><code>if (Files.exists(file)) { ... }</code></td></tr>
+        <tr><td>Aggiungere testo in fondo</td><td><code>Files.writeString(file, "Nuova riga\n", StandardOpenOption.CREATE, StandardOpenOption.APPEND);</code></td></tr>
+        <tr><td>Eliminare un file</td><td><code>Files.deleteIfExists(file);</code></td></tr>
+        <tr><td>Creare una cartella</td><td><code>Files.createDirectory(Path.of("dati"));</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn"><span class="callout-title">Sovrascrivere o aggiungere</span>
+    <code>Files.writeString(file, "testo")</code> <strong>sovrascrive</strong> tutto il contenuto del file: se contiene già qualcosa, lo perdi. Per <strong>aggiungere in coda</strong> serve l'opzione <code>StandardOpenOption.APPEND</code>.<br>
+    Ma attenzione, c'è un dettaglio che le slide non dicono: con la sola <code>APPEND</code>, se il file <strong>non esiste ancora</strong>, Java lancia una <code>NoSuchFileException</code>. Per averlo creato al primo salvataggio e aggiunto dopo, bisogna indicare <strong>entrambe</strong> le opzioni: <code>StandardOpenOption.CREATE, StandardOpenOption.APPEND</code>. <em>(Correzione aggiunta alle slide.)</em>
+  </div>
+<pre data-lang="java"><code>// il file potrebbe non esistere ancora: CREATE lo crea, APPEND aggiunge in coda
+Files.writeString(file, "Nuova riga\n",
+        StandardOpenOption.CREATE, StandardOpenOption.APPEND);</code></pre>
+
+  <div class="callout info"><span class="callout-title">Quale eccezione per un file mancante?</span>Con <code>FileReader</code> un file mancante dà una <code>FileNotFoundException</code>; con <code>Files.readString</code> e <code>Files.readAllLines</code> dà una <strong><code>NoSuchFileException</code></strong>. Entrambe sono figlie di <code>IOException</code>, quindi un <code>catch (IOException e)</code> le prende tutte; se vuoi trattare a parte il caso "file mancante", metti prima <code>catch (NoSuchFileException e)</code>. <em>(Aggiunta alle slide.)</em></div>
+
+  <h3>Confronto con il capitolo precedente</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>Vecchio stile</th><th>Con <code>Path</code> e <code>Files</code></th></tr></thead>
+      <tbody>
+        <tr><td>Scrivere</td><td><code>FileWriter</code> + <code>write</code> + <code>close</code></td><td><code>Files.writeString</code></td></tr>
+        <tr><td>Leggere</td><td><code>FileReader</code> + ciclo su <code>read()</code> fino a <code>-1</code></td><td><code>Files.readString</code> / <code>readAllLines</code></td></tr>
+        <tr><td>Esiste?</td><td><code>file.exists()</code></td><td><code>Files.exists(path)</code></td></tr>
+        <tr><td>Eliminare</td><td><code>file.delete()</code> (restituisce booleano)</td><td><code>Files.deleteIfExists(path)</code> (lancia eccezioni se fallisce)</td></tr>
+        <tr><td>Chiudere</td><td><code>close()</code> a mano</td><td>non serve: il file si chiude da solo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Mini-progetto: Registro studenti</h2>
+  <p>Mettiamo insieme eccezioni e file in un programma completo con <strong>menu interattivo</strong>, che salva i dati su file e gestisce tutti gli errori.</p>
+  <div class="cards">
+    <div class="card"><strong>1 · Inserisci studente</strong><p>Legge un nome da tastiera e lo aggiunge a <code>studenti.txt</code> con <code>APPEND</code>.</p></div>
+    <div class="card"><strong>2 · Visualizza studenti</strong><p>Legge tutte le righe e le stampa numerate. Gestisce il file assente.</p></div>
+    <div class="card"><strong>3 · Cancella registro</strong><p>Elimina il file con <code>deleteIfExists()</code> e gestisce gli errori di I/O.</p></div>
+    <div class="card"><strong>4 · Esci</strong><p>Termina il programma chiudendo lo <code>Scanner</code>.</p></div>
+  </div>
+  <h3>La struttura del menu</h3>
+<pre data-lang="java"><code>do {
+    System.out.println("1. Inserisci");
+    System.out.println("2. Visualizza");
+    System.out.println("3. Cancella");
+    System.out.println("4. Esci");
+    scelta = Integer.parseInt(scanner.nextLine());
+    // switch sulle scelte
+} while (scelta != 4);</code></pre>
+  <p>Il menu è in un ciclo <code>do-while</code>: viene mostrato <strong>almeno una volta</strong> e si ripete finché l'utente non sceglie 4. Se l'utente scrive "abc", <code>Integer.parseInt</code> lancia una <code>NumberFormatException</code>, che il programma intercetta così:</p>
+<pre data-lang="java"><code>} catch (NumberFormatException e) {
+    System.out.println("Devi inserire un numero.");
+    scelta = 0;
+}</code></pre>
+  <p>Mettere <code>scelta = 0</code> evita che il ciclo si fermi per sbaglio e fa ricominciare il menu. Ogni operazione sul file è avvolta in un blocco <code>try-catch</code> <strong>separato</strong>, per <strong>isolare gli errori</strong>: se la lettura fallisce, l'inserimento può continuare a funzionare.</p>
+
+  <h3>Il programma completo</h3>
+<pre data-lang="java"><code>import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.Scanner;
+
+public class Registro {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Path file = Path.of("studenti.txt");
+        int scelta = 0;
+
+        do {
+            System.out.println("1. Inserisci");
+            System.out.println("2. Visualizza");
+            System.out.println("3. Cancella");
+            System.out.println("4. Esci");
+            try {
+                scelta = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Devi inserire un numero.");
+                scelta = 0;
+            }
+
+            switch (scelta) {
+                case 1:
+                    System.out.print("Nome: ");
+                    String nome = scanner.nextLine();
+                    try {
+                        Files.writeString(file, nome + "\n",
+                                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                        System.out.println("Salvato.");
+                    } catch (IOException e) {
+                        System.out.println("Errore di scrittura: " + e.getMessage());
+                    }
+                    break;
+                case 2:
+                    try {
+                        List&lt;String&gt; righe = Files.readAllLines(file);
+                        for (int i = 0; i &lt; righe.size(); i++) {
+                            System.out.println((i + 1) + ". " + righe.get(i));
+                        }
+                    } catch (NoSuchFileException e) {
+                        System.out.println("Il registro non esiste ancora.");
+                    } catch (IOException e) {
+                        System.out.println("Errore di lettura: " + e.getMessage());
+                    }
+                    break;
+                case 3:
+                    try {
+                        Files.deleteIfExists(file);
+                        System.out.println("Registro cancellato.");
+                    } catch (IOException e) {
+                        System.out.println("Errore di cancellazione: " + e.getMessage());
+                    }
+                    break;
+                case 4:
+                    System.out.println("Ciao!");
+                    break;
+                default:
+                    System.out.println("Scelta non valida.");
+            }
+        } while (scelta != 4);
+
+        scanner.close();
+    }
+}</code></pre>
+  <p>Esempio di esecuzione (scegliendo 2, 1 con "Marco", 1 con "Luca", 2, 3, 2, 4):</p>
+<pre data-lang="testo"><code>Il registro non esiste ancora.
+Salvato.
+Salvato.
+1. Marco
+2. Luca
+Registro cancellato.
+Il registro non esiste ancora.
+Ciao!</code></pre>
+  <ul>
+    <li><code>NoSuchFileException</code> sta <strong>prima</strong> di <code>IOException</code> perché ne è un caso particolare: è la regola "dal più specifico al più generico".</li>
+    <li>Inserendo un testo non numerico, dopo "Devi inserire un numero." compare anche "Scelta non valida.": è il ramo <code>default</code> dello <code>switch</code>, raggiunto perché <code>scelta</code> vale <code>0</code>. È voluto e innocuo, ma si può togliere con un <code>continue</code> se non piace.</li>
+    <li>Il file <code>studenti.txt</code> viene creato nella cartella da cui parte il programma.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Concetto fondamentale</span>Un programma reale combina sempre <strong>eccezioni + file</strong>. Prevedere che qualcosa possa andare storto rende il software <strong>robusto</strong> e professionale.</div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>Eccezione</strong> = oggetto lanciato quando succede un evento anomalo; interrompe il flusso normale del programma.</li>
+    <li><code>try</code> (codice rischioso) · <code>catch</code> (gestione) · <code>finally</code> (si esegue <strong>sempre</strong>, per le pulizie).</li>
+    <li>Nel <code>catch</code>: <code>e</code>, <code>e.getMessage()</code>, <code>e.printStackTrace()</code>.</li>
+    <li>Più <code>catch</code>: <strong>dal più specifico al più generico</strong>, <code>Exception</code> per ultimo.</li>
+    <li><strong>Unchecked</strong> (<code>RuntimeException</code>): non obbligano a gestirle. <strong>Checked</strong> (<code>IOException</code>…): obbligo di <code>try-catch</code> o <code>throws</code>.</li>
+    <li><code>throw new ...</code> <strong>lancia</strong> un'eccezione; <code>throws</code> nella firma <strong>dichiara</strong> che il metodo può lanciarla.</li>
+    <li><code>Path.of(...)</code> + <code>Files.writeString</code>, <code>readString</code>, <code>readAllLines</code>, <code>exists</code>, <code>deleteIfExists</code>, <code>createDirectory</code>.</li>
+    <li>Per aggiungere in coda: <code>StandardOpenOption.CREATE, StandardOpenOption.APPEND</code>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Quale eccezione? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Di' quale eccezione si verifica e se è checked o unchecked: a) <code>Integer.parseInt("12a")</code>; b) <code>String s = null; s.length();</code>; c) <code>new FileReader("assente.txt")</code>; d) <code>int[] v = new int[3]; v[3] = 1;</code>; e) <code>5 / 0</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <code>NumberFormatException</code>, unchecked. b) <code>NullPointerException</code>, unchecked. c) <code>FileNotFoundException</code>, <strong>checked</strong> (figlia di <code>IOException</code>). d) <code>ArrayIndexOutOfBoundsException</code>, unchecked (l'array ha indici 0, 1, 2). e) <code>ArithmeticException</code>, unchecked.</p>
+      <p>Solo la c) obbliga a un <code>try-catch</code> o a un <code>throws</code>: tocca il mondo esterno (il disco).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Cosa stampa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>try {
+    System.out.println("A");
+    int x = 5 / 0;
+    System.out.println("B");
+} catch (ArithmeticException e) {
+    System.out.println("C");
+} finally {
+    System.out.println("D");
+}
+System.out.println("E");</code></pre>
+      <p>Cosa stampa? E se la riga della divisione fosse <code>int x = 5 / 1;</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Con <code>5 / 0</code>: <code>A</code>, <code>C</code>, <code>D</code>, <code>E</code> (una per riga). La "B" non compare: dopo l'errore il <code>try</code> si interrompe.</p>
+      <p>Con <code>5 / 1</code>: <code>A</code>, <code>B</code>, <code>D</code>, <code>E</code>. Nessun errore, quindi il <code>catch</code> è saltato, ma il <code>finally</code> gira comunque.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Trova l'errore di compilazione <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>try {
+    int[] n = {1, 2, 3};
+    System.out.println(n[5]);
+} catch (Exception e) {
+    System.out.println("Errore generico");
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Indice non valido");
+}</code></pre>
+      <p>Perché non compila? Come si corregge?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>Exception</code> è la classe generale e prende <strong>qualsiasi</strong> eccezione: il secondo <code>catch</code> non potrebbe mai essere raggiunto, e il compilatore lo segnala come errore. Basta <strong>invertire l'ordine</strong>, mettendo prima il caso specifico:</p>
+<pre data-lang="java"><code>} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Indice non valido");
+} catch (Exception e) {
+    System.out.println("Errore generico");
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Leggere un numero dalla tastiera <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi un programma che chiede un numero intero e lo stampa raddoppiato. Se l'utente scrive qualcosa che non è un numero, deve stampare "Non è un numero!" e <strong>richiedere</strong> il valore, finché non è corretto.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean valido = false;
+
+        while (!valido) {
+            System.out.print("Inserisci un numero: ");
+            try {
+                int n = Integer.parseInt(scanner.nextLine());
+                System.out.println("Il doppio è " + (n * 2));
+                valido = true;               // arriviamo qui solo se parseInt è riuscito
+            } catch (NumberFormatException e) {
+                System.out.println("Non è un numero!");
+            }
+        }
+        scanner.close();
+    }
+}</code></pre>
+      <p>La riga <code>valido = true</code> è <strong>dopo</strong> <code>parseInt</code> dentro il <code>try</code>: se <code>parseInt</code> lancia l'eccezione viene saltata, e il ciclo ricomincia.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Un metodo che lancia <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi il metodo <code>static double dividi(double a, double b)</code> che lancia una <code>ArithmeticException</code> con messaggio "Divisione per zero" se <code>b</code> vale 0, altrimenti restituisce il quoziente. Nel <code>main</code> chiamalo con <code>(10, 4)</code> e con <code>(5, 0)</code>, intercettando l'errore.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>public class Main {
+    static double dividi(double a, double b) {
+        if (b == 0) {
+            throw new ArithmeticException("Divisione per zero");
+        }
+        return a / b;
+    }
+
+    public static void main(String[] args) {
+        try {
+            System.out.println(dividi(10, 4));   // 2.5
+            System.out.println(dividi(5, 0));    // lancia l'eccezione
+        } catch (ArithmeticException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+}</code></pre>
+      <p>Output: <code>2.5</code> e poi <code>Errore: Divisione per zero</code>. Serve il controllo perché con i <code>double</code> <code>5.0 / 0</code> <strong>non</strong> lancia nessuna eccezione (dà <code>Infinity</code>): con i numeri interi sì, con quelli decimali no. Qui <code>ArithmeticException</code> è unchecked, quindi non serve <code>throws</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>throws o try-catch? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>static String leggi(String nome) {
+    return Files.readString(Path.of(nome));
+}</code></pre>
+      <p>Il codice non compila. Perché? Dai due correzioni diverse.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>Files.readString</code> può lanciare <code>IOException</code>, una eccezione <strong>checked</strong>: va gestita o dichiarata.</p>
+<pre data-lang="java"><code>// Correzione 1: la dichiaro, la gestirà chi chiama
+static String leggi(String nome) throws IOException {
+    return Files.readString(Path.of(nome));
+}
+
+// Correzione 2: la gestisco io, restituendo un valore di ripiego
+static String leggi(String nome) {
+    try {
+        return Files.readString(Path.of(nome));
+    } catch (IOException e) {
+        return "";
+    }
+}</code></pre>
+      <p>Nel primo caso il metodo "passa il problema" a chi lo chiama; nel secondo lo risolve da solo. Quale scegliere dipende da chi ha le informazioni per decidere cosa fare in caso di errore.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Il diario <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p>Con <code>Path</code> e <code>Files</code> scrivi un programma che:</p>
+      <ol>
+        <li>aggiunge a <code>diario.txt</code> la riga "Oggi ho studiato Java" (anche se il file non esiste ancora);</li>
+        <li>aggiunge una seconda riga "Ho imparato le eccezioni";</li>
+        <li>rilegge il file e lo stampa con le righe numerate;</li>
+        <li>gestisce gli errori di I/O stampando un messaggio.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        Path diario = Path.of("diario.txt");
+
+        try {
+            Files.writeString(diario, "Oggi ho studiato Java\n",
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            Files.writeString(diario, "Ho imparato le eccezioni\n",
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+
+            List&lt;String&gt; righe = Files.readAllLines(diario);
+            for (int i = 0; i &lt; righe.size(); i++) {
+                System.out.println((i + 1) + ". " + righe.get(i));
+            }
+        } catch (IOException e) {
+            System.out.println("Errore con il file: " + e.getMessage());
+        }
+    }
+}</code></pre>
+      <p>Alla prima esecuzione stampa le due righe; se lo rilanci, il diario <strong>cresce</strong> (4 righe, poi 6…) perché si usa <code>APPEND</code>. Senza <code>CREATE</code> la prima esecuzione darebbe <code>NoSuchFileException</code>; senza <code>APPEND</code> la seconda <code>writeString</code> cancellerebbe la prima riga.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Eccezioni e Gestione dei File in Java", dispense a cura del prof. Daniele Gravina, a.s. 2026/2027 (ITCG Galilei, classe 5ª). Nelle slide l'esempio di aggiunta con <code>StandardOpenOption.APPEND</code> è scritto senza <code>CREATE</code>: con il file mancante darebbe errore, qui è corretto. Le spiegazioni sul <code>finally</code>, sul criterio checked/unchecked, su <code>NoSuchFileException</code>, il <code>try-with-resources</code>, il confronto con il capitolo precedente e gli esercizi 01–07 con le soluzioni sono aggiunte per aiutare lo studio. Il programma Registro studenti è stato completato (le slide ne mostrano solo i pezzi), compilato ed eseguito.</p>
+</main>
+</body>
+</html>

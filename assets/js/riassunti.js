@@ -467,6 +467,64 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-eccezioni-e-file.html": {
+    breve: "Le eccezioni permettono di reagire agli errori senza fermare il programma; con Path e Files si leggono e scrivono i file in poche righe.",
+    sezioni: [
+      {
+        titolo: "Cosa sono le eccezioni",
+        punti: [
+          "Un'<strong>eccezione</strong> è un evento imprevisto che interrompe il normale flusso del programma; è un <strong>oggetto</strong> \"lanciato\" (<em>thrown</em>).",
+          "Ogni errore ha la sua classe: <code>ArithmeticException</code>, <code>NullPointerException</code>, <code>IOException</code>…",
+          "Senza gestione, il programma si ferma nel punto dell'errore.",
+        ],
+      },
+      {
+        titolo: "try, catch e finally",
+        punti: [
+          "<code>try</code>: codice rischioso. <code>catch</code>: gestione dell'errore. <code>finally</code>: operazioni finali.",
+          "Dopo l'errore il <code>try</code> si interrompe e si passa al <code>catch</code>; poi il programma prosegue.",
+          "<code>finally</code> viene eseguito <strong>sempre</strong> (salvo <code>System.exit</code>): serve a chiudere file e risorse.",
+        ],
+      },
+      {
+        titolo: "L'oggetto Exception e più catch",
+        punti: [
+          "Nel <code>catch</code>: <code>e</code> (tipo + messaggio), <code>e.getMessage()</code> (solo messaggio), <code>e.printStackTrace()</code> (percorso completo, per il debug).",
+          "Più <code>catch</code>: <strong>dal più specifico al più generico</strong>; <code>Exception</code> prende tutto e va per ultimo, altrimenti non compila.",
+        ],
+      },
+      {
+        titolo: "Checked e unchecked exceptions",
+        punti: [
+          "<strong>Unchecked</strong> (derivano da <code>RuntimeException</code>): il compilatore non obbliga a gestirle. Sono errori di programmazione: <code>ArithmeticException</code>, <code>NullPointerException</code>, <code>NumberFormatException</code>…",
+          "<strong>Checked</strong> (<code>IOException</code>, <code>FileNotFoundException</code>, <code>SQLException</code>): obbligo di <code>try-catch</code> o <code>throws</code>. Dipendono dal mondo esterno.",
+        ],
+      },
+      {
+        titolo: "throw e throws",
+        punti: [
+          "<code>throw new IllegalArgumentException(\"...\")</code> <strong>lancia</strong> un'eccezione adesso: il metodo si interrompe.",
+          "<code>throws IOException</code> nella firma <strong>dichiara</strong> che il metodo può lanciarla: chi lo chiama la gestisce o la dichiara a sua volta.",
+        ],
+      },
+      {
+        titolo: "Lavorare con i file: Path e Files",
+        punti: [
+          "<code>Path.of(\"dati.txt\")</code> indica il percorso; la classe <code>Files</code> ha i metodi: <code>writeString</code>, <code>readString</code>, <code>readAllLines</code>, <code>exists</code>, <code>deleteIfExists</code>, <code>createDirectory</code>.",
+          "<code>writeString</code> <strong>sovrascrive</strong>. Per aggiungere in coda: <code>StandardOpenOption.CREATE, StandardOpenOption.APPEND</code> (con la sola <code>APPEND</code> un file mancante dà errore).",
+          "Tutti lanciano <code>IOException</code> (checked). File mancante in lettura: <code>NoSuchFileException</code>, figlia di <code>IOException</code>.",
+        ],
+      },
+      {
+        titolo: "Mini-progetto: Registro studenti",
+        punti: [
+          "Menu in un <code>do-while</code> con <code>switch</code>: inserisci (APPEND), visualizza, cancella, esci.",
+          "Ogni operazione sul file ha il suo <code>try-catch</code>; <code>NumberFormatException</code> gestisce una scelta non numerica.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
