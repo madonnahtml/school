@@ -14,7 +14,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "6",
+    version: "7",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -43,6 +43,7 @@
           { title: "Panoramica", path: "materie/informatica/index.html", type: "panoramica" },
           { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
           { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
+          { title: "Java: gestione dei file", path: "materie/informatica/java-gestione-dei-file.html", type: "teoria" },
         ],
       },
       {
