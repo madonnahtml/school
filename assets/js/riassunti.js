@@ -467,8 +467,8 @@ SITE.riassunti = {
     ],
   },
 
-  "materie/informatica/java-eccezioni-e-file.html": {
-    breve: "Le eccezioni permettono di reagire agli errori senza fermare il programma; con Path e Files si leggono e scrivono i file in poche righe.",
+  "materie/informatica/java-eccezioni.html": {
+    breve: "Le eccezioni permettono di reagire agli errori senza fermare il programma: try, catch, finally, checked e unchecked, throw e throws.",
     sezioni: [
       {
         titolo: "Cosa sono le eccezioni",
@@ -505,21 +505,6 @@ SITE.riassunti = {
         punti: [
           "<code>throw new IllegalArgumentException(\"...\")</code> <strong>lancia</strong> un'eccezione adesso: il metodo si interrompe.",
           "<code>throws IOException</code> nella firma <strong>dichiara</strong> che il metodo può lanciarla: chi lo chiama la gestisce o la dichiara a sua volta.",
-        ],
-      },
-      {
-        titolo: "Lavorare con i file: Path e Files",
-        punti: [
-          "<code>Path.of(\"dati.txt\")</code> indica il percorso; la classe <code>Files</code> ha i metodi: <code>writeString</code>, <code>readString</code>, <code>readAllLines</code>, <code>exists</code>, <code>deleteIfExists</code>, <code>createDirectory</code>.",
-          "<code>writeString</code> <strong>sovrascrive</strong>. Per aggiungere in coda: <code>StandardOpenOption.CREATE, StandardOpenOption.APPEND</code> (con la sola <code>APPEND</code> un file mancante dà errore).",
-          "Tutti lanciano <code>IOException</code> (checked). File mancante in lettura: <code>NoSuchFileException</code>, figlia di <code>IOException</code>.",
-        ],
-      },
-      {
-        titolo: "Mini-progetto: Registro studenti",
-        punti: [
-          "Menu in un <code>do-while</code> con <code>switch</code>: inserisci (APPEND), visualizza, cancella, esci.",
-          "Ogni operazione sul file ha il suo <code>try-catch</code>; <code>NumberFormatException</code> gestisce una scelta non numerica.",
         ],
       },
     ],

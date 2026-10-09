@@ -47,7 +47,7 @@ tools/pagine.py                  rigenera home, cerca, riassunti, ripasso e pano
 
 `componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni e file*; TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio JSON*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
+Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni*; TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio JSON*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 
