@@ -259,29 +259,70 @@ SITE.riassunti = {
   },
 
   /* ---------------- Informatica ---------------- */
-  "materie/informatica/cicli-in-c.html": {
-    breve: "I tre modi per ripetere delle istruzioni in C: for, while e do-while.",
+  "materie/informatica/java-array-wrapper-metodi-overload.html": {
+    breve: "Array per tenere tanti valori insieme, wrapper per trattare i numeri come oggetti, metodi per dividere il programma, overload per riusare lo stesso nome.",
     sezioni: [
       {
-        titolo: "Il ciclo for",
+        titolo: "Che cos'è un array",
         punti: [
-          "Si usa quando sai <strong>quante volte</strong> ripetere.",
-          "L'intestazione ha tre parti: <strong>inizializzazione</strong>, <strong>condizione</strong>, <strong>aggiornamento</strong>, come in <code>for (int i = 1; i &lt;= 5; i++)</code>.",
+          "Un <strong>array</strong> contiene più valori dello <strong>stesso tipo</strong> in una sola variabile: <code>int[] voti = {7, 8, 6, 9};</code>",
+          "La dimensione è <strong>fissa</strong>: si decide alla creazione e non cambia più.",
         ],
       },
       {
-        titolo: "Il ciclo while",
+        titolo: "Creare un array e usare gli indici",
         punti: [
-          "Controlla la condizione <strong>prima</strong> di ogni giro: se è falsa subito, il corpo non viene mai eseguito.",
-          "Si usa quando <strong>non sai</strong> quante volte ripetere.",
+          "Due modi: con i valori <code>{10, 20, 30}</code> oppure vuoto con <code>new int[5]</code> (ogni elemento parte da <code>0</code>, <code>false</code> o <code>null</code>).",
+          "Gli indici vanno da <strong>0</strong> a <strong>length − 1</strong>: <code>numeri[0]</code> è il primo.",
+          "Un indice fuori dai limiti ferma il programma con <code>ArrayIndexOutOfBoundsException</code>.",
         ],
       },
       {
-        titolo: "Il ciclo do-while",
+        titolo: "length, for e foreach",
         punti: [
-          "Controlla la condizione <strong>dopo</strong> ogni giro, quindi il corpo viene eseguito <strong>almeno una volta</strong>. Ideale per menu e controllo dell'input.",
-          "Un <strong>ciclo infinito</strong> non diventa mai falso, come <code>while (1)</code>.",
-          "<code>break</code> esce subito dal ciclo, <code>continue</code> salta al giro successivo.",
+          "<code>numeri.length</code> dà il numero di elementi, <strong>senza parentesi</strong> (per le stringhe invece è <code>length()</code>).",
+          "<code>for (int i = 0; i &lt; numeri.length; i++)</code>: serve l'indice, per <strong>modificare</strong> o per posizioni precise.",
+          "<code>for (int x : numeri)</code> (foreach): più compatto, per <strong>leggere</strong> tutti gli elementi; non modifica l'array.",
+        ],
+      },
+      {
+        titolo: "Esempio guidato: somma, media e massimo",
+        punti: [
+          "La somma parte da 0; il massimo parte dal <strong>primo elemento</strong>.",
+          "Media: <code>(double) somma / numeri.length</code>. Senza cast, intero diviso intero perde i decimali.",
+        ],
+      },
+      {
+        titolo: "Wrapper classes",
+        punti: [
+          "Le <strong>wrapper</strong> sono oggetti che avvolgono i primitivi: <code>int</code>→<code>Integer</code>, <code>double</code>→<code>Double</code>, <code>boolean</code>→<code>Boolean</code>, <code>char</code>→<code>Character</code>.",
+          "Servono nelle collezioni (<code>ArrayList&lt;Integer&gt;</code>) e per i loro metodi.",
+          "<strong>Autoboxing</strong> (primitivo → wrapper) e <strong>unboxing</strong> (wrapper → primitivo) sono automatici.",
+          "<code>Integer.parseInt(\"25\")</code>, <code>Double.parseDouble(\"12.5\")</code>, <code>Integer.toString(100)</code>.",
+        ],
+      },
+      {
+        titolo: "I metodi",
+        punti: [
+          "Un <strong>metodo</strong> è un blocco di codice con un nome e un compito: evita ripetizioni e rende il programma leggibile.",
+          "<code>void</code>: fa un'azione e non restituisce nulla. Con un tipo di ritorno: consegna un valore con <code>return</code>.",
+          "<strong>Parametro</strong> = variabile nell'intestazione; <strong>argomento</strong> = valore concreto passato nella chiamata.",
+        ],
+      },
+      {
+        titolo: "Metodi e array: un programma strutturato",
+        punti: [
+          "Un metodo può ricevere un array: <code>static int calcolaSomma(int[] n)</code>, chiamato con <code>calcolaSomma(numeri)</code>.",
+          "<strong>Ogni metodo fa una sola cosa</strong>; i metodi possono riusarsi a vicenda.",
+          "Se il metodo modifica un elemento dell'array ricevuto, cambia anche l'array originale.",
+        ],
+      },
+      {
+        titolo: "Overload dei metodi",
+        punti: [
+          "<strong>Overload</strong>: più metodi con lo <strong>stesso nome</strong> e <strong>parametri diversi</strong> (tipo, numero o ordine).",
+          "Java sceglie la versione giusta in base agli argomenti passati.",
+          "Cambiare <strong>solo il tipo di ritorno</strong> non è overload: è un errore di compilazione.",
         ],
       },
     ],

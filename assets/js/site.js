@@ -41,7 +41,7 @@
         icon: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
         pages: [
           { title: "Panoramica", path: "materie/informatica/index.html", type: "panoramica" },
-          { title: "I cicli in C", path: "materie/informatica/cicli-in-c.html", type: "esercizi" },
+          { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
         ],
       },
       {
