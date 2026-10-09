@@ -14,7 +14,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "4",
+    version: "5",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
