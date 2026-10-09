@@ -1,4 +1,4 @@
-"""Rigenera le pagine "struttura" del sito (home, cerca, ripasso, panoramiche materie).
+"""Rigenera le pagine "struttura" del sito (home, cerca, riassunti, ripasso, panoramiche materie).
 Le pagine degli argomenti NON vengono toccate. Uso: python3 tools/pagine.py"""
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,13 +10,12 @@ HEAD = '''<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{title}</title>
   <meta name="description" content="{desc}">
-  <meta name="theme-color" content="#fbfcfe" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1b2723" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#faf8f3">
   <link rel="manifest" href="{r}manifest.webmanifest">
   <link rel="icon" href="{r}assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{r}assets/img/icon-180.png">
-  <link rel="stylesheet" href="{r}assets/css/style.css?v=3">
-  <script src="{r}assets/js/site.js?v=3"></script>
+  <link rel="stylesheet" href="{r}assets/css/style.css?v=8">
+  <script src="{r}assets/js/site.js?v=8"></script>
 </head>
 <body>
 <main id="content">
@@ -33,46 +32,35 @@ def page(path, title, desc, body, attrs='', r=''):
     with open(full, 'w') as f:
         f.write(HEAD.format(attrs=attrs, title=title, desc=desc, r=r) + body + FOOT)
 
-page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca, progressi e ripasso.', f'''
+page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca, riassunti e progressi.', '''
   <header class="home-head">
-    <span class="home-date" data-today></span>
-    <h1>Cosa studiamo oggi?</h1>
-    <p>Appunti ed esercizi di tutte le materie. Cerca una parola e la trovi ovunque sia scritta.</p>
-    <form class="field" action="cerca.html" method="get" role="search">
-      {SEARCH}
-      <input id="home-q" type="search" name="q" placeholder="Cavour, router, present perfect…" aria-label="Cerca negli appunti" autocomplete="off" enterkeyhint="search">
-      <button class="btn" type="submit">Cerca</button>
-    </form>
+    <h1>Materie</h1>
+    <p class="lead">Scegli il quaderno da aprire.</p>
   </header>
 
-  <div class="home-grid">
-    <section>
-      <div class="block-title"><h2>Materie</h2><span>argomenti studiati</span></div>
-      <div class="subject-list" data-subject-grid></div>
-    </section>
+  <div data-recent hidden></div>
 
-    <aside class="home-side">
-      <section class="panel review-panel" data-review-summary data-feature="ripasso">
-        <h2>Ripasso di oggi</h2>
-        <p class="review-big"><strong data-due>–</strong><span data-due-label>carte da ripassare oggi</span></p>
-        <p class="review-sub"><span data-quiz-n>–</span> domande di quiz disponibili</p>
-        <a class="btn" href="ripasso.html">Apri il ripasso</a>
-      </section>
+  <div class="covers" data-subject-grid></div>
 
-      <section class="panel" data-recent hidden>
-        <h2>Riprendi da qui</h2>
-        <div class="recent-list" data-recent-list></div>
-      </section>
+  <a class="home-sum" href="riassunti.html">
+    <span class="home-sum-text"><strong>Riassunti</strong><span>Tutti i capitoli in breve, paragrafo per paragrafo.</span></span>
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
 
-      <section class="panel home-shortcuts">
-        <h2>Scorciatoie</h2>
-        <ul class="home-tips">
-          <li><kbd>Ctrl</kbd> <kbd>K</kbd> o <kbd>/</kbd> apre la ricerca</li>
-          <li><code>"frase esatta"</code> tra virgolette</li>
-          <li><code>perche</code> trova anche <em>perché</em></li>
-        </ul>
-      </section>
-    </aside>
+  <section class="panel review-panel" data-review-summary data-feature="ripasso">
+    <h2>Ripasso di oggi</h2>
+    <p class="review-big"><strong data-due>–</strong><span data-due-label>carte da ripassare oggi</span></p>
+    <p class="review-sub"><span data-quiz-n>–</span> domande di quiz disponibili</p>
+    <a class="btn" href="ripasso.html">Apri il ripasso</a>
+  </section>
+''', attrs=' data-toc="off"')
+
+page('riassunti.html', 'Riassunti · Scuola', 'I riassunti di tutti i capitoli, paragrafo per paragrafo.', '''
+  <div class="riassunti" data-riassunti>
+    <h1>Riassunti</h1>
+    <p class="lead">Le idee da ricordare di ogni capitolo, divise per paragrafo. Tocca un capitolo per aprirlo.</p>
+    <div class="search-filters" data-sum-filters aria-label="Filtra per materia"></div>
+    <div data-sum-list></div>
   </div>
 ''', attrs=' data-toc="off"')
 
@@ -129,8 +117,7 @@ for sid, short, name, desc, intro, steps in SUBJECTS:
     li = "\n".join(f"      <li>{s}</li>" for s in steps)
     page(f'materie/{sid}/index.html', f'{name} · Scuola', desc, f'''
   <header class="subject-header">
-    <span class="subject-tab" aria-hidden="true">{short}</span>
-    <div>
+    <div class="subject-label">
       <h1>{name}</h1>
       <p class="lead">{desc}</p>
       <div data-subject-progress></div>
@@ -139,11 +126,11 @@ for sid, short, name, desc, intro, steps in SUBJECTS:
 
   <p>{intro}</p>
 
-  <h2>Argomenti</h2>
+  <h2>Capitoli</h2>
   <div data-subject-pages></div>
 
   <h2>Come studiare</h2>
   <ol>
 {li}
   </ol>
-''', attrs=f' data-subject="{sid}"', r='../../')
+''', attrs=f' data-subject="{sid}" data-toc="off"', r='../../')

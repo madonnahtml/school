@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: array, wrapper, metodi e overload · Scuola</title>
+  <meta name="description" content="Informatica, Java: array (creazione, indici, length, for e foreach), wrapper classes (autoboxing, unboxing, parseInt), metodi void e con return, parametri, overload. Esempi ed esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=8">
+  <script src="../../assets/js/site.js?v=8"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: array, wrapper, metodi e overload</h1>
+  <p class="lead">Quattro strumenti che servono in qualsiasi programma Java: gli <strong>array</strong> per tenere tanti valori insieme, le <strong>wrapper classes</strong> per trasformare i numeri in oggetti, i <strong>metodi</strong> per dividere il programma in pezzi e l'<strong>overload</strong> per dare lo stesso nome a metodi che fanno la stessa cosa in modi diversi.</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · Array</strong><p>Creare, riempire e scorrere un array con <code>for</code> e <code>foreach</code>; usare <code>length</code>.</p></div>
+    <div class="card"><strong>02 · Wrapper classes</strong><p>Differenza tra tipi primitivi e oggetti: <code>Integer</code>, <code>Double</code>, <code>Boolean</code>… e i loro metodi.</p></div>
+    <div class="card"><strong>03 · Metodi</strong><p>Scrivere metodi con parametri e valore di ritorno; distinguere <code>void</code> da <code>return</code>.</p></div>
+    <div class="card"><strong>04 · Overload</strong><p>Scrivere più versioni dello stesso metodo con parametri diversi.</p></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Che cos'è un array</h2>
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    Un <strong>array</strong> è una variabile che contiene <strong>più valori dello stesso tipo</strong>, messi in fila uno dopo l'altro. Ogni valore si raggiunge con il suo <strong>numero di posizione</strong>, l'<strong>indice</strong>.
+  </div>
+  <p>Immagina di dover salvare i voti di uno studente. Senza array devi inventare una variabile per ogni voto; se i voti diventano trenta, servono trenta variabili e trenta righe per stamparli.</p>
+  <div class="compare">
+    <div>
+      <h4>Senza array</h4>
+<pre data-lang="java"><code>int voto1 = 7;
+int voto2 = 8;
+int voto3 = 6;
+int voto4 = 9;</code></pre>
+      <p>Quattro variabili separate: per calcolare la media bisogna scriverle tutte a mano.</p>
+    </div>
+    <div>
+      <h4>Con array</h4>
+<pre data-lang="java"><code>int[] voti = {7, 8, 6, 9};</code></pre>
+      <p>Una sola variabile, <code>voti</code>, che contiene tutti i valori in ordine. Con un ciclo si scorrono tutti, che siano 4 o 400.</p>
+    </div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Un array è come una <strong>fila di armadietti</strong> della palestra: hanno tutti la stessa forma (stesso tipo), sono numerati e per aprirne uno basta conoscere il numero. Il numero degli armadietti si decide quando si costruisce la fila e <strong>non cambia più</strong>.</div>
+  <ul>
+    <li>Tutti gli elementi sono dello <strong>stesso tipo</strong>: un <code>int[]</code> contiene solo <code>int</code>, un <code>String[]</code> solo stringhe.</li>
+    <li>La <strong>dimensione è fissa</strong>: si decide alla creazione e poi non si può allungare né accorciare. (Per liste che crescono si usa <code>ArrayList</code>, che vediamo con le wrapper.)</li>
+    <li>Le parentesi quadre <code>[]</code> dopo il tipo dicono "questo è un array di…": <code>int[]</code> si legge "array di interi".</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Creare un array e usare gli indici</h2>
+  <p>Ci sono due modi per creare un array.</p>
+  <div class="compare">
+    <div>
+      <h4>1 · Con i valori già dentro</h4>
+<pre data-lang="java"><code>int[] numeri = {10, 20, 30, 40, 50};</code></pre>
+      <p>Si usa quando i valori si conoscono già mentre si scrive il programma. La dimensione (5) la calcola Java contando i valori.</p>
+    </div>
+    <div>
+      <h4>2 · Vuoto, con <code>new</code></h4>
+<pre data-lang="java"><code>int[] numeri = new int[5];</code></pre>
+      <p>Si usa quando i valori arriveranno dopo (dall'utente, da un calcolo…). Si dice solo <strong>quanti</strong> posti servono.</p>
+    </div>
+  </div>
+  <p>Un array creato con <code>new</code> non è davvero "vuoto": Java riempie ogni posto con un <strong>valore predefinito</strong>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo dell'array</th><th>Valore iniziale di ogni elemento</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code>, <code>long</code>, <code>short</code>, <code>byte</code></td><td><code>0</code></td></tr>
+        <tr><td><code>double</code>, <code>float</code></td><td><code>0.0</code></td></tr>
+        <tr><td><code>boolean</code></td><td><code>false</code></td></tr>
+        <tr><td><code>char</code></td><td>il carattere nullo <code>'\u0000'</code></td></tr>
+        <tr><td>oggetti (<code>String</code>, <code>Integer</code>…)</td><td><code>null</code> (nessun oggetto)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Gli indici partono da 0</h3>
+  <p>In Java (come in C) il <strong>primo</strong> elemento ha indice <strong>0</strong>. Quindi in un array di 5 elementi gli indici vanno da <strong>0 a 4</strong>: l'ultimo indice è sempre <strong>lunghezza − 1</strong>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Indice</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Valore</strong></td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Per <strong>leggere</strong> o <strong>modificare</strong> un elemento si scrive il nome dell'array e l'indice tra quadre:</p>
+<pre data-lang="java"><code>System.out.println(numeri[0]);  // 10 (il primo)
+System.out.println(numeri[4]);  // 50 (l'ultimo)
+
+numeri[2] = 100;                // modifica: ora l'array è {10, 20, 100, 40, 50}</code></pre>
+  <div class="callout warn"><span class="callout-title">Errore classico</span>Usare un indice che non esiste, come <code>numeri[5]</code> in un array di 5 elementi, <strong>non</strong> dà errore quando compili, ma quando il programma gira si ferma con <code>ArrayIndexOutOfBoundsException</code> ("indice fuori dai limiti"). Succede quasi sempre per aver scritto <code>&lt;=</code> invece di <code>&lt;</code> in un ciclo.</div>
+
+  <!-- ============================================================= -->
+  <h2>length, for e foreach</h2>
+  <p>Per lavorare con tutti gli elementi di un array si usano tre strumenti.</p>
+
+  <h3>La proprietà <code>length</code></h3>
+<pre data-lang="java"><code>int[] numeri = {10, 20, 30, 40, 50};
+System.out.println(numeri.length);  // 5</code></pre>
+  <p><code>length</code> dice <strong>quanti elementi</strong> ha l'array. Si scrive <strong>senza parentesi</strong> perché è una <em>proprietà</em> (un dato), non un metodo.</p>
+  <div class="callout warn"><span class="callout-title">Non confondere</span>Array: <code>numeri.length</code> (senza parentesi). Stringa: <code>nome.length()</code> (con le parentesi, è un metodo). ArrayList: <code>lista.size()</code>. È un errore molto comune nelle verifiche.</div>
+
+  <h3>Il ciclo <code>for</code> classico</h3>
+<pre data-lang="java"><code>for (int i = 0; i &lt; numeri.length; i++) {
+    numeri[i] = numeri[i] * 2;   // raddoppia ogni elemento
+}
+// ora numeri è {20, 40, 60, 80, 100}</code></pre>
+  <p>La variabile <code>i</code> parte da 0 e arriva a <code>length − 1</code>: è proprio l'<strong>indice</strong>. Si usa quando serve sapere <strong>in che posizione</strong> si è, ad esempio per <strong>modificare</strong> gli elementi, per scorrere l'array al contrario o per guardare solo alcune posizioni.</p>
+  <div class="callout tip"><span class="callout-title">Perché <code>i &lt; numeri.length</code></span>Scrivere <code>numeri.length</code> invece di <code>5</code> rende il ciclo giusto per <strong>qualsiasi</strong> dimensione: se domani l'array ha 7 elementi, il ciclo non va cambiato.</div>
+
+  <h3>Il ciclo <code>foreach</code> (for "migliorato")</h3>
+<pre data-lang="java"><code>for (int numero : numeri) {
+    System.out.println(numero);
+}</code></pre>
+  <p>Si legge: "<strong>per ogni</strong> <code>numero</code> <strong>in</strong> <code>numeri</code>". A ogni giro la variabile <code>numero</code> contiene un elemento, dal primo all'ultimo. È più corto e non si può sbagliare l'indice.</p>
+  <div class="callout warn"><span class="callout-title">Il foreach non modifica l'array</span><code>numero</code> è una <strong>copia</strong> dell'elemento: scrivere <code>numero = numero * 2;</code> dentro il foreach cambia solo la copia, l'array resta uguale. Per modificare serve il <code>for</code> con l'indice.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th><code>for</code> classico</th><th><code>foreach</code></th></tr></thead>
+      <tbody>
+        <tr><td>Conosco l'indice?</td><td>Sì, è <code>i</code></td><td>No</td></tr>
+        <tr><td>Posso modificare gli elementi?</td><td>Sì, con <code>numeri[i] = …</code></td><td>No</td></tr>
+        <tr><td>Posso scorrere al contrario o saltare elementi?</td><td>Sì</td><td>No, sempre dal primo all'ultimo</td></tr>
+        <tr><td>Quando lo uso</td><td>Modificare, posizioni precise</td><td>Solo <strong>leggere</strong> tutti gli elementi (somme, stampe, ricerche)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esempio guidato: somma, media e massimo</h2>
+  <p>Mettiamo tutto insieme: un programma che, dato un array di numeri, calcola la <strong>somma</strong>, la <strong>media</strong> e trova il <strong>valore massimo</strong>.</p>
+<pre data-lang="java"><code>public class Main {
+    public static void main(String[] args) {
+        int[] numeri = {10, 20, 15, 30, 25};
+        int somma = 0;
+        int massimo = numeri[0];          // parto dal primo elemento
+
+        for (int numero : numeri) {
+            somma += numero;              // somma = somma + numero
+            if (numero &gt; massimo) {
+                massimo = numero;         // ho trovato un valore più grande
+            }
+        }
+
+        double media = (double) somma / numeri.length;
+        System.out.println("Somma: " + somma);      // 100
+        System.out.println("Media: " + media);      // 20.0
+        System.out.println("Massimo: " + massimo);  // 30
+    }
+}</code></pre>
+  <h3>Come funziona, passo per passo</h3>
+  <ol>
+    <li><code>somma</code> parte da <strong>0</strong>: è l'"accumulatore", a ogni giro ci si aggiunge un numero.</li>
+    <li><code>massimo</code> parte dal <strong>primo elemento</strong>, non da 0: se tutti i numeri fossero negativi, partendo da 0 il risultato sarebbe sbagliato.</li>
+    <li>Il foreach guarda un numero alla volta: lo aggiunge alla somma e, se è più grande del massimo trovato finora, lo prende come nuovo massimo.</li>
+    <li>Alla fine si divide la somma per il numero di elementi.</li>
+  </ol>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Giro</th><th><code>numero</code></th><th><code>somma</code></th><th><code>massimo</code></th></tr></thead>
+      <tbody>
+        <tr><td>inizio</td><td>–</td><td>0</td><td>10</td></tr>
+        <tr><td>1</td><td>10</td><td>10</td><td>10</td></tr>
+        <tr><td>2</td><td>20</td><td>30</td><td>20</td></tr>
+        <tr><td>3</td><td>15</td><td>45</td><td>20</td></tr>
+        <tr><td>4</td><td>30</td><td>75</td><td>30</td></tr>
+        <tr><td>5</td><td>25</td><td>100</td><td>30</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Il cast <code>(double)</code> è fondamentale</span>In Java <strong>intero diviso intero dà un intero</strong>: i decimali vengono buttati via. Con <code>somma = 101</code> e 5 elementi, <code>101 / 5</code> vale <code>20</code>, non <code>20.2</code>. Scrivendo <code>(double) somma / numeri.length</code> trasformi la somma in decimale <strong>prima</strong> della divisione, e il risultato è <code>20.2</code>.<br>Attenzione: <code>(double) (somma / numeri.length)</code> è sbagliato, perché fa prima la divisione intera e poi converte un numero già troncato.</div>
+
+  <!-- ============================================================= -->
+  <h2>Wrapper classes</h2>
+  <p>Java ha due famiglie di tipi:</p>
+  <div class="compare">
+    <div>
+      <h4>Tipi primitivi</h4>
+      <p><code>int</code>, <code>double</code>, <code>boolean</code>, <code>char</code>… Sono <strong>valori semplici</strong>: veloci, leggeri, ma <strong>non sono oggetti</strong>. Non hanno metodi e non possono valere <code>null</code>.</p>
+      <p class="hand">Una moneta in tasca.</p>
+    </div>
+    <div>
+      <h4>Wrapper classes</h4>
+      <p><code>Integer</code>, <code>Double</code>, <code>Boolean</code>, <code>Character</code>… Sono <strong>classi</strong> che "avvolgono" (<em>to wrap</em> = incartare) un primitivo dentro un <strong>oggetto</strong>.</p>
+      <p class="hand">La stessa moneta, dentro una bustina con l'etichetta.</p>
+    </div>
+  </div>
+  <h3>Perché servono</h3>
+  <ul>
+    <li>Le <strong>collezioni</strong> di Java, come <code>ArrayList</code>, possono contenere <strong>solo oggetti</strong>. Non si può scrivere <code>ArrayList&lt;int&gt;</code>: si scrive <code>ArrayList&lt;Integer&gt;</code>.</li>
+    <li>Le wrapper hanno <strong>metodi utili</strong>, per esempio per trasformare un testo in un numero.</li>
+    <li>Un oggetto può valere <code>null</code>, cioè "nessun valore", cosa impossibile per un primitivo.</li>
+  </ul>
+
+  <h3>Tabella di corrispondenza</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Primitivo</th><th>Wrapper</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code></td><td><code>Integer</code></td></tr>
+        <tr><td><code>double</code></td><td><code>Double</code></td></tr>
+        <tr><td><code>float</code></td><td><code>Float</code></td></tr>
+        <tr><td><code>boolean</code></td><td><code>Boolean</code></td></tr>
+        <tr><td><code>char</code></td><td><code>Character</code></td></tr>
+        <tr><td><code>long</code>, <code>short</code>, <code>byte</code></td><td><code>Long</code>, <code>Short</code>, <code>Byte</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Trucco per ricordarle: il nome della wrapper è il nome del primitivo con la <strong>maiuscola</strong>. Le due eccezioni sono <code>int</code> → <code>Integer</code> e <code>char</code> → <code>Character</code>.</p>
+
+  <h3>Autoboxing e unboxing</h3>
+  <p>Non serve convertire a mano: Java passa da primitivo a wrapper e viceversa <strong>da solo</strong>.</p>
+<pre data-lang="java"><code>// Autoboxing: int → Integer (Java "mette nella scatola")
+int n = 10;
+Integer val = n;
+
+// Unboxing: Integer → int (Java "toglie dalla scatola")
+Integer v = 20;
+int num = v;</code></pre>
+  <p>È proprio l'autoboxing che permette di scrivere in modo naturale con un <code>ArrayList</code>:</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+
+ArrayList&lt;Integer&gt; voti = new ArrayList&lt;&gt;();
+voti.add(8);              // autoboxing: l'int 8 diventa un Integer
+voti.add(7);
+int primo = voti.get(0);  // unboxing: l'Integer torna int
+System.out.println(voti.size());  // 2</code></pre>
+
+  <h3>Metodi utili</h3>
+<pre data-lang="java"><code>int a = Integer.parseInt("25");          // 25     da testo a int
+double b = Double.parseDouble("12.5");   // 12.5   da testo a double
+String c = Integer.toString(100);        // "100"  da int a testo
+int max = Integer.MAX_VALUE;             // 2147483647, il più grande int possibile</code></pre>
+  <p><code>parseInt</code> serve tantissimo: tutto quello che l'utente scrive (da tastiera, in un campo di un modulo, da un file) arriva come <strong>testo</strong>. Per farci dei calcoli bisogna prima trasformarlo in numero.</p>
+<pre data-lang="java"><code>String testo = "7";
+System.out.println(testo + 1);                    // "71"  (unisce due testi)
+System.out.println(Integer.parseInt(testo) + 1);  // 8     (somma due numeri)</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>
+    <ul>
+      <li><code>Integer.parseInt("ciao")</code> o <code>Integer.parseInt("12.5")</code> fermano il programma con <code>NumberFormatException</code>: il testo deve essere un intero valido.</li>
+      <li>Se un <code>Integer</code> vale <code>null</code>, l'unboxing (<code>int x = valoreNull;</code>) causa una <code>NullPointerException</code>.</li>
+      <li>Per confrontare due <code>Integer</code> usa <code>a.equals(b)</code>, non <code>a == b</code>: con gli oggetti <code>==</code> controlla se sono lo <strong>stesso oggetto</strong>, non se hanno lo stesso valore, e con numeri grandi dà <code>false</code> anche se i valori sono uguali.</li>
+    </ul>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>I metodi</h2>
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    Un <strong>metodo</strong> è un blocco di codice con un <strong>nome</strong> che svolge un <strong>compito preciso</strong>. Lo si scrive una volta e lo si può <strong>chiamare</strong> (usare) tutte le volte che serve.
+  </div>
+  <p>I metodi servono a <strong>non ripetere</strong> lo stesso codice, a <strong>organizzare</strong> il programma in pezzi piccoli e a renderlo <strong>più leggibile</strong>: <code>calcolaMedia(voti)</code> si capisce subito, dieci righe di cicli no. Il <code>main</code> stesso è un metodo: quello da cui parte il programma.</p>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Un metodo è come una <strong>ricetta</strong>: ha un nome ("torta di mele"), degli <strong>ingredienti</strong> da ricevere (i parametri) e alla fine può <strong>consegnare</strong> qualcosa (il valore di ritorno). Chi la usa non deve sapere come è fatta dentro.</div>
+
+  <h3>Com'è fatta l'intestazione</h3>
+<pre data-lang="java"><code>static int quadrato(int n) {
+    return n * n;
+}</code></pre>
+  <div class="cards">
+    <div class="card"><strong><code>static</code></strong><p>Permette di chiamare il metodo direttamente dal <code>main</code> (che è anch'esso <code>static</code>), senza creare oggetti. Per ora mettilo sempre.</p></div>
+    <div class="card"><strong><code>int</code></strong><p>Il <strong>tipo di ritorno</strong>: che tipo di valore consegna il metodo. <code>void</code> se non consegna niente.</p></div>
+    <div class="card"><strong><code>quadrato</code></strong><p>Il <strong>nome</strong>: di solito un verbo, in <em>camelCase</em> (<code>calcolaSomma</code>, <code>stampaArray</code>).</p></div>
+    <div class="card"><strong><code>(int n)</code></strong><p>I <strong>parametri</strong>: i dati che il metodo riceve, ognuno con tipo e nome. Le parentesi vuote <code>()</code> se non ne riceve.</p></div>
+  </div>
+
+  <h3>Metodi <code>void</code> e metodi con <code>return</code></h3>
+  <div class="compare">
+    <div>
+      <h4>Metodo <code>void</code></h4>
+<pre data-lang="java"><code>static void saluta() {
+    System.out.println("Ciao!");
+}
+
+saluta();   // stampa: Ciao!</code></pre>
+      <p><code>void</code> = "vuoto": non restituisce nulla. <strong>Fa un'azione</strong> (stampa, modifica un array…) e basta.</p>
+    </div>
+    <div>
+      <h4>Metodo con <code>return</code></h4>
+<pre data-lang="java"><code>static int quadrato(int n) {
+    return n * n;
+}
+
+int r = quadrato(5);   // r vale 25</code></pre>
+      <p><strong>Calcola</strong> un valore e lo <strong>restituisce</strong> a chi l'ha chiamato, che può salvarlo, stamparlo o usarlo in un altro calcolo.</p>
+    </div>
+  </div>
+  <ul>
+    <li>Il valore dopo <code>return</code> deve essere del <strong>tipo dichiarato</strong> nell'intestazione.</li>
+    <li><code>return</code> <strong>termina subito</strong> il metodo: le righe scritte dopo non vengono eseguite.</li>
+    <li>Un metodo con tipo di ritorno deve arrivare a un <code>return</code> <strong>in ogni caso</strong>, altrimenti il compilatore dà errore (<em>missing return statement</em>).</li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">Errore classico</span>Chiamare un metodo con <code>return</code> e "dimenticare" il risultato: <code>quadrato(5);</code> da solo calcola 25 e lo butta via. Bisogna usarlo: <code>int r = quadrato(5);</code> oppure <code>System.out.println(quadrato(5));</code>.</div>
+
+  <h3>Parametri e argomenti</h3>
+<pre data-lang="java"><code>static void saluta(String nome) {      // nome è il PARAMETRO
+    System.out.println("Ciao " + nome);
+}
+
+saluta("Marco");   // "Marco" è l'ARGOMENTO → stampa: Ciao Marco
+saluta("Giulia");  // stampa: Ciao Giulia</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parametro</th><th>Argomento</th></tr></thead>
+      <tbody>
+        <tr><td>La <strong>variabile</strong> scritta nell'intestazione del metodo (<code>String nome</code>).</td><td>Il <strong>valore concreto</strong> passato quando si chiama il metodo (<code>"Marco"</code>).</td></tr>
+        <tr><td>È come la casella vuota di un modulo.</td><td>È quello che ci scrivi dentro.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Gli argomenti devono essere <strong>tanti quanti</strong> i parametri, dello <strong>stesso tipo</strong> e nello <strong>stesso ordine</strong>. Con più parametri si separano con la virgola:</p>
+<pre data-lang="java"><code>static double area(double base, double altezza) {
+    return base * altezza / 2;
+}
+
+System.out.println(area(6, 4));   // 12.0</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Metodi e array: un programma strutturato</h2>
+  <p>Un programma ben scritto divide il lavoro in metodi, ognuno con <strong>un solo compito</strong>. Un metodo può ricevere un <strong>array</strong> come parametro e restituire un risultato calcolato su di esso.</p>
+<pre data-lang="java"><code>public class Main {
+
+    static int calcolaSomma(int[] n) {
+        int s = 0;
+        for (int x : n) s += x;
+        return s;
+    }
+
+    static double calcolaMedia(int[] n) {
+        return (double) calcolaSomma(n) / n.length;   // riusa calcolaSomma!
+    }
+
+    static int trovaMassimo(int[] n) {
+        int max = n[0];
+        for (int x : n) {
+            if (x &gt; max) max = x;
+        }
+        return max;
+    }
+
+    public static void main(String[] args) {
+        int[] numeri = {10, 20, 30, 40};
+
+        int somma = calcolaSomma(numeri);
+        double media = calcolaMedia(numeri);
+
+        System.out.println("Somma = " + somma);                  // 100
+        System.out.println("Media = " + media);                  // 25.0
+        System.out.println("Max = " + trovaMassimo(numeri));     // 40
+    }
+}</code></pre>
+  <ul>
+    <li>Il parametro si dichiara con le quadre: <code>int[] n</code>. Nella chiamata si passa solo il nome: <code>calcolaSomma(numeri)</code>, <strong>senza</strong> quadre.</li>
+    <li>Dentro il metodo l'array si chiama <code>n</code>, fuori <code>numeri</code>: i nomi possono essere diversi, conta l'ordine.</li>
+    <li><code>calcolaMedia</code> <strong>riusa</strong> <code>calcolaSomma</code>: non riscriviamo lo stesso ciclo due volte.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Ogni metodo fa una sola cosa</span>Così è più facile da <strong>leggere</strong> (il <code>main</code> sembra un elenco di passi), da <strong>controllare</strong> (se la media è sbagliata, guardo solo <code>calcolaMedia</code>) e da <strong>riusare</strong> in altri programmi.</div>
+  <div class="callout info"><span class="callout-title">Un array passato a un metodo può essere modificato</span>Quando passi un <code>int</code> a un metodo, il metodo riceve una <strong>copia</strong> del valore: se lo cambia, fuori non cambia niente. Con un array invece il metodo riceve il <strong>riferimento</strong> allo stesso array: se modifica <code>n[0]</code>, cambia anche l'array del <code>main</code>.
+<pre data-lang="java"><code>static void azzeraPrimo(int[] n) { n[0] = 0; }
+
+int[] numeri = {10, 20, 30};
+azzeraPrimo(numeri);
+System.out.println(numeri[0]);   // 0</code></pre></div>
+
+  <!-- ============================================================= -->
+  <h2>Overload dei metodi</h2>
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    L'<strong>overload</strong> (sovraccaricamento) è la possibilità di scrivere <strong>più metodi con lo stesso nome</strong> ma con <strong>parametri diversi</strong>. Quando lo chiami, Java sceglie da solo la versione giusta guardando gli <strong>argomenti</strong> che passi.
+  </div>
+  <p>Senza overload dovremmo inventare nomi come <code>sommaInteri</code>, <code>sommaDecimali</code>, <code>sommaTreNumeri</code>… Con l'overload il nome è uno solo, <code>somma</code>, e chi usa il metodo non deve ricordarsi niente. Lo usi già senza saperlo: <code>System.out.println</code> ha una versione per <code>int</code>, una per <code>double</code>, una per <code>String</code> e così via.</p>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Il verbo "aprire": si apre una porta, una bottiglia, un file. L'azione ha lo stesso nome, ma <strong>come</strong> si fa dipende da <strong>cosa</strong> ti danno in mano.</div>
+
+  <p>I parametri sono "diversi" se cambia almeno una di queste cose:</p>
+  <div class="compare">
+    <div>
+      <h4>1 · Il tipo</h4>
+<pre data-lang="java"><code>static int somma(int a, int b) {
+    return a + b;
+}
+
+static double somma(double a, double b) {
+    return a + b;
+}
+
+somma(2, 3);       // usa la versione int    → 5
+somma(2.5, 1.5);   // usa la versione double → 4.0</code></pre>
+    </div>
+    <div>
+      <h4>2 · Il numero</h4>
+<pre data-lang="java"><code>static int somma(int a, int b) {
+    return a + b;
+}
+
+static int somma(int a, int b, int c) {
+    return a + b + c;
+}
+
+somma(2, 3);      // 2 argomenti → 5
+somma(2, 3, 4);   // 3 argomenti → 9</code></pre>
+    </div>
+  </div>
+  <p>Conta anche l'<strong>ordine</strong> dei tipi: <code>f(int a, String s)</code> e <code>f(String s, int a)</code> sono due versioni diverse.</p>
+
+  <h3>Cosa NON è overload</h3>
+<pre data-lang="java"><code>static int somma(int a, int b) { ... }
+static double somma(int a, int b) { ... }   // ERRORE di compilazione</code></pre>
+  <div class="callout warn"><span class="callout-title">Cambiare solo il tipo di ritorno non basta</span>Davanti alla chiamata <code>somma(2, 3)</code>, Java guarda solo il nome e gli argomenti: due <code>int</code>. Entrambe le versioni vanno bene e non c'è modo di scegliere, quindi il compilatore dà errore (<em>method somma(int,int) is already defined</em>). <strong>L'overload si basa sui parametri, non sul tipo restituito.</strong> Allo stesso modo, cambiare solo il <strong>nome</strong> dei parametri (<code>somma(int x, int y)</code>) non crea una nuova versione.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Cosa cambia tra le due versioni</th><th>È overload?</th></tr></thead>
+      <tbody>
+        <tr><td>Tipo dei parametri: <code>(int, int)</code> e <code>(double, double)</code></td><td>Sì</td></tr>
+        <tr><td>Numero dei parametri: <code>(int, int)</code> e <code>(int, int, int)</code></td><td>Sì</td></tr>
+        <tr><td>Ordine dei tipi: <code>(int, String)</code> e <code>(String, int)</code></td><td>Sì</td></tr>
+        <tr><td>Solo il tipo di ritorno</td><td><strong>No</strong>, errore</td></tr>
+        <tr><td>Solo il nome dei parametri</td><td><strong>No</strong>, errore</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>Array</strong> = più valori dello <strong>stesso tipo</strong> in una variabile; dimensione <strong>fissa</strong>. Si crea con <code>{…}</code> o con <code>new int[n]</code> (valori iniziali a 0).</li>
+    <li>Indici da <strong>0</strong> a <strong>length − 1</strong>; fuori da lì → <code>ArrayIndexOutOfBoundsException</code>.</li>
+    <li><code>length</code> senza parentesi. <code>for</code> con indice per modificare; <code>foreach</code> per leggere tutto.</li>
+    <li>Media: <code>(double) somma / n.length</code>, altrimenti la divisione è intera.</li>
+    <li><strong>Wrapper</strong> = oggetti che avvolgono i primitivi (<code>Integer</code>, <code>Double</code>, <code>Boolean</code>, <code>Character</code>…). Servono per <code>ArrayList</code> e per metodi come <code>Integer.parseInt</code>.</li>
+    <li><strong>Autoboxing</strong> primitivo → wrapper, <strong>unboxing</strong> wrapper → primitivo: automatici.</li>
+    <li><strong>Metodo</strong> = blocco con nome e un compito. <code>void</code> fa un'azione; con tipo di ritorno usa <code>return</code> per consegnare un valore.</li>
+    <li><strong>Parametro</strong> = variabile nell'intestazione; <strong>argomento</strong> = valore passato nella chiamata.</li>
+    <li><strong>Overload</strong> = stesso nome, parametri diversi (tipo, numero, ordine). Il solo tipo di ritorno non basta.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Cosa stampa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>int[] a = new int[4];
+a[1] = 5;
+a[3] = a[1] * 2;
+System.out.println(a.length);
+System.out.println(a[0] + a[1] + a[3]);
+System.out.println(a[a.length - 1]);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>4</code>, poi <code>15</code>, poi <code>10</code>. L'array dopo le assegnazioni è <code>{0, 5, 0, 10}</code>: <code>a[0]</code> vale 0 perché un array di <code>int</code> creato con <code>new</code> parte tutto a zero. <code>a[a.length - 1]</code> è il modo sicuro per prendere l'<strong>ultimo</strong> elemento.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Trova l'errore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>int[] voti = {6, 7, 8};
+for (int i = 0; i &lt;= voti.length; i++) {
+    System.out.println(voti[i]);
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Con <code>&lt;=</code> l'ultimo giro ha <code>i = 3</code>, ma gli indici validi sono 0, 1, 2: il programma stampa 6, 7, 8 e poi si ferma con <code>ArrayIndexOutOfBoundsException</code>. La condizione giusta è <code>i &lt; voti.length</code>. In alternativa, visto che si legge soltanto, un foreach: <code>for (int v : voti) System.out.println(v);</code></p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Contare i promossi <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi un metodo <code>contaSufficienti(int[] voti)</code> che restituisce quanti voti sono maggiori o uguali a 6. Provalo nel <code>main</code> con l'array <code>{4, 6, 7, 5, 9, 6}</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static int contaSufficienti(int[] voti) {
+    int conta = 0;
+    for (int v : voti) {
+        if (v &gt;= 6) conta++;
+    }
+    return conta;
+}
+
+public static void main(String[] args) {
+    int[] voti = {4, 6, 7, 5, 9, 6};
+    System.out.println(contaSufficienti(voti));   // 4
+}</code></pre>
+      <p>È lo stesso schema della somma: un contatore che parte da 0 e cresce di 1 solo quando la condizione è vera. Il metodo restituisce un numero intero, quindi il tipo di ritorno è <code>int</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Raddoppiare un array <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi un metodo <code>void raddoppia(int[] n)</code> che moltiplica per 2 ogni elemento dell'array, e un metodo <code>void stampa(int[] n)</code> che lo stampa su una riga. Perché in <code>raddoppia</code> non si può usare il foreach?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static void raddoppia(int[] n) {
+    for (int i = 0; i &lt; n.length; i++) {
+        n[i] = n[i] * 2;
+    }
+}
+
+static void stampa(int[] n) {
+    for (int x : n) System.out.print(x + " ");
+    System.out.println();
+}
+
+public static void main(String[] args) {
+    int[] numeri = {1, 2, 3};
+    raddoppia(numeri);
+    stampa(numeri);   // 2 4 6
+}</code></pre>
+      <p>Nel foreach la variabile contiene una <strong>copia</strong> dell'elemento: cambiarla non cambia l'array. Serve l'indice <code>i</code> per scrivere in <code>n[i]</code>. I metodi sono <code>void</code> perché non devono restituire niente: <code>raddoppia</code> modifica direttamente l'array del <code>main</code>, perché riceve il riferimento allo stesso array.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Da testo a numero <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Hai l'array <code>String[] dati = {"12", "7", "30"};</code> (per esempio letto da un file). Calcola la somma dei numeri. Poi spiega cosa stampano <code>dati[0] + dati[1]</code> e perché.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>String[] dati = {"12", "7", "30"};
+int somma = 0;
+for (String d : dati) {
+    somma += Integer.parseInt(d);
+}
+System.out.println(somma);              // 49
+System.out.println(dati[0] + dati[1]);  // 127</code></pre>
+      <p>Gli elementi sono <strong>stringhe</strong>: con <code>+</code> due stringhe vengono <strong>attaccate</strong>, quindi <code>"12" + "7"</code> dà <code>"127"</code>. Per sommare i valori bisogna prima trasformarli con <code>Integer.parseInt</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Overload: quale versione viene usata? <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>static void info(int x)            { System.out.println("intero"); }
+static void info(double x)         { System.out.println("decimale"); }
+static void info(String s)         { System.out.println("testo"); }
+static void info(int x, int y)     { System.out.println("due interi"); }</code></pre>
+      <p>Cosa stampano <code>info(5)</code>, <code>info(5.0)</code>, <code>info("5")</code>, <code>info(5, 6)</code>? E se aggiungessi <code>static int info(int x) { return x; }</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>intero</code>, <code>decimale</code>, <code>testo</code>, <code>due interi</code>: Java sceglie guardando <strong>tipo e numero</strong> degli argomenti. <code>5</code> senza punto è un <code>int</code>, <code>5.0</code> è un <code>double</code>, <code>"5"</code> tra virgolette è una <code>String</code>.</p>
+      <p>Aggiungere <code>static int info(int x)</code> è un <strong>errore</strong>: ha gli stessi parametri di <code>void info(int x)</code> e cambia solo il tipo di ritorno, che non basta per l'overload.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Il metodo massimo, in tre versioni <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Scrivi tre metodi tutti chiamati <code>massimo</code>: uno che riceve due <code>int</code>, uno che ne riceve tre e uno che riceve un array di <code>int</code>. Cerca di riusare il primo dentro gli altri.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static int massimo(int a, int b) {
+    if (a &gt; b) return a;
+    return b;
+}
+
+static int massimo(int a, int b, int c) {
+    return massimo(massimo(a, b), c);
+}
+
+static int massimo(int[] n) {
+    int max = n[0];
+    for (int x : n) max = massimo(max, x);
+    return max;
+}
+
+public static void main(String[] args) {
+    System.out.println(massimo(3, 8));            // 8
+    System.out.println(massimo(3, 8, 5));         // 8
+    System.out.println(massimo(new int[]{4, 9, 2})); // 9
+}</code></pre>
+      <p>Sono tre overload perché cambiano <strong>numero</strong> o <strong>tipo</strong> dei parametri. La versione a tre parametri e quella con l'array chiamano quella a due: la logica del confronto è scritta <strong>una volta sola</strong>. <code>new int[]{4, 9, 2}</code> crea un array "al volo" da passare come argomento.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Dispense "Lezione pratica di Java – Array, Wrapper Classes, Metodi &amp; Overload", prof. Daniele Gravina, a.s. 2026/2027. Le analogie, la tabella dei valori predefiniti, il confronto for/foreach, la traccia passo passo del programma, gli errori tipici (indice fuori dai limiti, <code>length</code>/<code>length()</code>, cast, <code>NumberFormatException</code>, <code>==</code> tra <code>Integer</code>), l'esempio con <code>ArrayList</code>, il passaggio di array ai metodi, gli esercizi e tutte le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>

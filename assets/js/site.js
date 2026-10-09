@@ -5,7 +5,7 @@
  * `pages` della materia: menu, elenco argomenti, progressi, ricerca e ripasso
  * si aggiornano da soli.
  *
- * Va caricato in modo sincrono nell'<head>: applica subito tema e colore della
+ * Va caricato in modo sincrono nell'<head>: applica subito il colore della
  * materia (niente "lampeggio") e poi carica gli altri script nell'ordine giusto.
  */
 (function () {
@@ -13,8 +13,8 @@
 
   var SITE = {
     title: "Scuola",
-    tagline: "Quaderno di appunti, esercizi e ripasso",
-    version: "3",
+    tagline: "Quaderno di appunti, esercizi e riassunti",
+    version: "8",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -41,7 +41,9 @@
         icon: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
         pages: [
           { title: "Panoramica", path: "materie/informatica/index.html", type: "panoramica" },
-          { title: "I cicli in C", path: "materie/informatica/cicli-in-c.html", type: "esercizi" },
+          { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
+          { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
+          { title: "Java: gestione dei file", path: "materie/informatica/java-gestione-dei-file.html", type: "teoria" },
         ],
       },
       {
@@ -124,7 +126,8 @@
   // Radice del sito, ricavata dalla posizione di questo script (assets/js/site.js).
   var script = document.currentScript;
   SITE.root = script ? new URL("../../", script.src).href : new URL("./", location.href).href;
-  SITE.url = function (path) { return new URL(path, SITE.root).href; };
+  // La home è la radice del sito ("./"), così funziona anche dove "index.html" non è un percorso valido.
+  SITE.url = function (path) { return new URL(path === "index.html" ? "./" : path, SITE.root).href; };
 
   function clean(u) { return u.split(/[?#]/)[0].replace(/index\.html$/, ""); }
   SITE.isHere = function (path) { return clean(SITE.url(path)) === clean(location.href); };
@@ -250,21 +253,18 @@
   };
 
   var html = document.documentElement;
-  var theme = SITE.store.get("theme");
-  if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
   var current = SITE.subject(html.getAttribute("data-subject"));
   if (current) html.style.setProperty("--accent-subject", current.color);
 
   // Font
   var fonts = document.createElement("link");
   fonts.rel = "stylesheet";
-  fonts.href = "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400" +
-    "&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800" +
-    "&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400;700&display=swap";
+  fonts.href = "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;0,800;1,400" +
+    "&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Kalam:wght@400;700&display=swap";
   document.head.appendChild(fonts);
 
   // Script del sito, eseguiti nell'ordine indicato
-  var scripts = ["layout", "components", "search"].concat((html.getAttribute("data-scripts") || "").split(/\s+/).filter(Boolean));
+  var scripts = ["riassunti", "layout", "components", "search"].concat((html.getAttribute("data-scripts") || "").split(/\s+/).filter(Boolean));
   scripts.forEach(function (name) {
     var s = document.createElement("script");
     s.src = SITE.url("assets/js/" + name + ".js?v=" + SITE.version);
