@@ -399,6 +399,75 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-eccezioni-e-file.html": {
+    breve: "Gestire gli imprevisti con try, catch e finally, e leggere e scrivere file con Path e Files.",
+    sezioni: [
+      {
+        titolo: "Cosa sono le eccezioni",
+        punti: [
+          "Un'<strong>eccezione</strong> è un evento imprevisto <strong>durante l'esecuzione</strong> che interrompe il normale flusso del programma.",
+          "È un <strong>oggetto</strong> \"lanciato\" (<em>thrown</em>): risale i metodi finché qualcuno lo cattura, altrimenti il programma si ferma.",
+          "La divisione per zero lancia <code>ArithmeticException</code> solo con gli <strong>interi</strong>; con i <code>double</code> dà <code>Infinity</code>.",
+        ],
+      },
+      {
+        titolo: "La gerarchia delle eccezioni",
+        punti: [
+          "<code>Throwable</code> → <code>Error</code> (guasti gravi, non si gestiscono) e <code>Exception</code>.",
+          "<code>RuntimeException</code> e le sue figlie sono le <strong>unchecked</strong>. Catturare una classe cattura anche tutte le sue figlie.",
+        ],
+      },
+      {
+        titolo: "try, catch e finally",
+        punti: [
+          "<code>try</code>: codice rischioso. <code>catch</code>: gestione dell'errore. <code>finally</code>: eseguito <strong>sempre</strong>, anche con un <code>return</code> nel <code>try</code>.",
+          "Quando nasce l'eccezione il <code>try</code> si interrompe subito; dopo il <code>catch</code> e il <code>finally</code> il programma continua.",
+          "Se il tipo non corrisponde a nessun <code>catch</code>, il <code>finally</code> gira ma poi il programma si ferma.",
+          "Mai un <code>catch</code> vuoto. <strong>try-with-resources</strong> chiude da solo <code>Scanner</code> e file.",
+        ],
+      },
+      {
+        titolo: "L'oggetto Exception e più catch",
+        punti: [
+          "<code>e.getMessage()</code> dà il messaggio; <code>e.printStackTrace()</code> mostra la catena di chiamate: <strong>si legge dall'alto</strong>, la prima riga è dove è nato l'errore.",
+          "Più <code>catch</code>: se ne esegue <strong>uno solo</strong>; i più <strong>specifici prima</strong>, <code>Exception</code> per ultimo (altrimenti non compila).",
+          "Con <code>|</code> si gestiscono più tipi nello stesso <code>catch</code>.",
+        ],
+      },
+      {
+        titolo: "Checked e Unchecked Exceptions",
+        punti: [
+          "<strong>Unchecked</strong> (<code>RuntimeException</code>): errori del programmatore; il compilatore <strong>non obbliga</strong> a gestirle.",
+          "<strong>Checked</strong> (<code>IOException</code>, <code>SQLException</code>): imprevisti del mondo esterno; il compilatore <strong>obbliga</strong> a gestirle con <code>try-catch</code> o a dichiararle con <code>throws</code>.",
+        ],
+      },
+      {
+        titolo: "throw e throws",
+        punti: [
+          "<code>throw new ...(...)</code> <strong>genera</strong> un'eccezione e interrompe il metodo; si usa quando si scopre un dato non valido.",
+          "<code>throws</code> nella firma del metodo <strong>avvisa</strong> che può lanciare un'eccezione checked: il chiamante deve gestirla o dichiararla a sua volta.",
+        ],
+      },
+      {
+        titolo: "Lavorare con i file: Path e Files",
+        punti: [
+          "<code>Path.of(\"dati.txt\")</code> è l'<strong>indirizzo</strong>; <code>Files</code> fa le operazioni (serve Java 11+).",
+          "<code>writeString</code> scrive e <strong>sovrascrive</strong>; <code>readString</code> legge tutto; <code>readAllLines</code> dà una lista di righe.",
+          "Per aggiungere in fondo: <code>StandardOpenOption.CREATE, StandardOpenOption.APPEND</code> (<code>APPEND</code> da solo non crea il file).",
+          "<code>exists</code>, <code>deleteIfExists</code>, <code>createDirectory</code>. I metodi di <code>Files</code> lanciano <code>IOException</code> (checked).",
+        ],
+      },
+      {
+        titolo: "Mini-progetto: Registro studenti",
+        punti: [
+          "Menu con <code>do-while</code> (inserisci, visualizza, cancella, esci); i dati stanno in <code>studenti.txt</code>.",
+          "<code>NumberFormatException</code> sul menu: si avvisa e si rimette <code>scelta = 0</code>, così il ciclo continua.",
+          "Ogni operazione sul file ha il <strong>suo <code>try-catch</code></strong>: un programma robusto prevede che qualcosa possa andare storto.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
