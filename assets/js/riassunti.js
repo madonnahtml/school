@@ -399,6 +399,74 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-gestione-dei-file.html": {
+    breve: "Con Java si controlla, si scrive, si legge e si elimina un file sul disco; ogni operazione rischiosa va in un try-catch.",
+    sezioni: [
+      {
+        titolo: "Perché servono i file",
+        punti: [
+          "Le variabili stanno nella memoria e spariscono a fine programma; un <strong>file</strong> resta sul disco.",
+          "Cinque operazioni: <strong>verificare</strong>, <strong>esplorare il percorso</strong>, <strong>scrivere</strong>, <strong>leggere</strong>, <strong>eliminare</strong>.",
+        ],
+      },
+      {
+        titolo: "La classe File",
+        punti: [
+          "<code>java.io.File</code> rappresenta un file o una cartella, ma <strong>non ne legge il contenuto</strong>: è il \"ponte\" con il file system.",
+          "<code>new File(\"prova.txt\")</code> <strong>non crea</strong> il file sul disco: indica soltanto un percorso.",
+          "Percorso <strong>relativo</strong> (rispetto alla cartella del progetto) o <strong>assoluto</strong> (completo, dalla radice). Su Windows la <code>\\</code> va raddoppiata.",
+        ],
+      },
+      {
+        titolo: "Verificare se un file esiste",
+        punti: [
+          "<code>exists()</code> restituisce <code>true</code> se il file c'è: evita la <code>FileNotFoundException</code>.",
+          "Non sostituisce il <code>try-catch</code>: il file potrebbe sparire subito dopo il controllo.",
+        ],
+      },
+      {
+        titolo: "Informazioni sul file: getPath, getAbsolutePath, isFile",
+        punti: [
+          "<code>getPath()</code> = percorso <strong>relativo</strong> (come scritto nel costruttore); <code>getAbsolutePath()</code> = percorso <strong>assoluto</strong> completo.",
+          "<code>isFile()</code> è <code>true</code> se è un file regolare, non una cartella.",
+        ],
+      },
+      {
+        titolo: "Scrivere in un file con FileWriter",
+        punti: [
+          "<code>new FileWriter(\"prova.txt\")</code> apre il file (lo crea se manca) e ne <strong>svuota</strong> il contenuto.",
+          "<code>write(s)</code> scrive la stringa, <code>append(s)</code> aggiunge in coda; <code>\\n</code> va a capo.",
+          "Per <strong>non perdere</strong> il contenuto esistente: <code>new FileWriter(nome, true)</code> (modalità append).",
+          "<code>close()</code> è <strong>obbligatorio</strong>: svuota il buffer e libera il file. Alternativa: <code>try-with-resources</code>.",
+        ],
+      },
+      {
+        titolo: "Leggere un file con FileReader",
+        punti: [
+          "<code>read()</code> legge <strong>un carattere</strong> alla volta e lo restituisce come <code>int</code> (codice ASCII): si converte con <code>(char)</code>.",
+          "A fine file <code>read()</code> restituisce <strong><code>-1</code></strong> (EOF): <code>while (data != -1)</code>.",
+          "Si legge una volta prima del ciclo e una volta alla fine di ogni giro; senza, il ciclo è infinito.",
+          "Se il file non esiste, <code>new FileReader</code> lancia <code>FileNotFoundException</code>.",
+        ],
+      },
+      {
+        titolo: "Eliminare un file con delete",
+        punti: [
+          "<code>delete()</code> restituisce <code>true</code> se ha eliminato il file, <code>false</code> altrimenti: si controlla il risultato.",
+          "L'eliminazione è <strong>permanente</strong> (niente cestino). Un file ancora aperto non si elimina; una cartella solo se è vuota.",
+        ],
+      },
+      {
+        titolo: "Gestione delle eccezioni: try-catch",
+        punti: [
+          "Nel <code>try</code> il codice rischioso; nel <code>catch</code> si gestisce l'errore senza far crashare il programma. Java <strong>obbliga</strong> a farlo.",
+          "<code>printStackTrace()</code> stampa il percorso completo dell'errore.",
+          "Con più <code>catch</code>: <strong>prima il caso specifico</strong> (<code>FileNotFoundException</code>), poi il generale (<code>IOException</code>), altrimenti non compila.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
