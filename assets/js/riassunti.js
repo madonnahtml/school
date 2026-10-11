@@ -173,6 +173,94 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/tpsit/xml.html": {
+    breve: "Un insieme di regole per scrivere dati in un file di testo, con tag scelti da chi lo crea.",
+    sezioni: [
+      {
+        titolo: "Perché serve XML",
+        punti: [
+          "<strong>XML</strong> (<em>eXtensible Markup Language</em>) è un insieme di regole per creare formati di <strong>testo</strong> facili da generare e da elaborare.",
+          "Sistemi e database hanno formati incompatibili: convertire in XML <strong>semplifica lo scambio</strong> di dati.",
+          "È <strong>senza ambiguità</strong>, <strong>estendibile</strong> (i tag li sceglie il programmatore) e <strong>indipendente dalla piattaforma</strong>.",
+        ],
+      },
+      {
+        titolo: "Un metalinguaggio di markup",
+        punti: [
+          "Un <strong>linguaggio di markup</strong> inserisce dei <strong>tag</strong> nel testo per distinguere le parti di un documento.",
+          "XML è un <strong>metalinguaggio</strong>: serve a definire altri linguaggi di markup. Non ha tag predefiniti.",
+          "Lo standard è del <strong>W3C</strong>; un documento XML è un file di testo con estensione <code>.xml</code>.",
+          "<strong>Non è</strong> un linguaggio di presentazione, di programmazione, un protocollo di trasporto né un DBMS.",
+        ],
+      },
+      {
+        titolo: "XML e HTML a confronto",
+        punti: [
+          "XML <strong>descrive</strong> i dati, HTML li <strong>presenta</strong>.",
+          "In XML i tag sono <strong>definiti dall'autore</strong>, in HTML sono <strong>standard</strong>.",
+          "I dati restano <strong>separati dalla rappresentazione grafica</strong>.",
+        ],
+      },
+      {
+        titolo: "I file XML: vantaggi e svantaggi",
+        punti: [
+          "Vantaggi: linguaggi <strong>ad hoc</strong>, formato testuale leggibile e modificabile, indipendente dalla piattaforma, trasportabile con <strong>HTTP</strong>.",
+          "Svantaggi: file <strong>più ingombranti</strong> dei formati binari e più costosi in risorse (trasmissione, memoria, CPU).",
+        ],
+      },
+      {
+        titolo: "La sintassi: prologo e corpo",
+        punti: [
+          "Un documento ha un <strong>prologo</strong> (dichiarazione XML con versione e codifica) e un <strong>corpo</strong>.",
+          "Esempio di prologo: <code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;</code>.",
+          "Il corpo è una <strong>gerarchia di tag non sovrapposti</strong> con <strong>un solo elemento radice</strong> (root).",
+        ],
+      },
+      {
+        titolo: "I tag e gli elementi",
+        punti: [
+          "Un <strong>elemento</strong> = tag di apertura + contenuto + tag di chiusura: <code>&lt;nome&gt;Paolo&lt;/nome&gt;</code>.",
+          "I tag sono <strong>case sensitive</strong>: <code>&lt;Nome&gt;</code> e <code>&lt;nome&gt;</code> sono diversi.",
+          "Un elemento vuoto si può scrivere in forma abbreviata: <code>&lt;nometag/&gt;</code>.",
+        ],
+      },
+      {
+        titolo: "Gli attributi",
+        punti: [
+          "Danno <strong>informazioni aggiuntive</strong> sul tag: <code>nome=\"valore\"</code>, nel <strong>tag di apertura</strong>.",
+          "Il valore va sempre tra <strong>apici</strong>. Si usano per identificativi e metadati.",
+        ],
+      },
+      {
+        titolo: "Commenti e caratteri speciali",
+        punti: [
+          "I commenti si scrivono <code>&lt;!-- così --&gt;</code>.",
+          "I caratteri <code>&lt;</code> e <code>&amp;</code> si scrivono con le entità <code>&amp;lt;</code> e <code>&amp;amp;</code>.",
+        ],
+      },
+      {
+        titolo: "Documento ben formato e documento valido",
+        punti: [
+          "<strong>Ben formato</strong> = rispetta le regole <strong>sintattiche</strong> (obbligatorie). <strong>Valido</strong> = rispetta anche le regole <strong>semantiche</strong> (DTD o XSD).",
+          "Un documento valido è sempre ben formato; un documento ben formato può non essere valido.",
+          "Nomi dei tag: non iniziano con numero o underscore e non hanno spazi. Apertura e chiusura coincidono e sono ben nidificate.",
+        ],
+      },
+      {
+        titolo: "La gerarchia degli elementi",
+        punti: [
+          "Gli elementi sono <strong>nodi di un albero</strong>: una <strong>radice</strong>, che ha figli, che possono avere altri figli.",
+        ],
+      },
+      {
+        titolo: "Un esempio completo",
+        punti: [
+          "Nella rubrica la radice è <code>rubrica</code>, che contiene più elementi <code>persona</code>, ognuno con <code>nome</code>, <code>cognome</code>, telefoni ed email.",
+          "Per scrivere un XML: trova la <strong>radice</strong>, gli elementi che si <strong>ripetono</strong> (le righe) e i <strong>campi</strong> di ognuno (le colonne).",
+        ],
+      },
+    ],
+  },
   "materie/tpsit/json.html": {
     breve: "Un formato di testo semplice e leggero per scrivere dati e scambiarli tra programmi.",
     sezioni: [

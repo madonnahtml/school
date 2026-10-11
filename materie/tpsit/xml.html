@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il linguaggio XML · Scuola</title>
+  <meta name="description" content="TPSIT: il linguaggio XML. Che cos'è, metalinguaggio di markup, confronto con HTML, prologo, tag, attributi, documenti ben formati e validi, struttura ad albero, esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=8">
+  <script src="../../assets/js/site.js?v=8"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il linguaggio XML</h1>
+  <p class="lead">XML è un modo di scrivere dei dati in un file di testo, usando dei tag che ne spiegano il significato. Vediamo a cosa serve, come si scrive e quali regole rispettare perché un programma riesca a leggerlo.</p>
+
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    <strong>XML</strong> (<em>eXtensible Markup Language</em>, "linguaggio di marcatura estensibile") è un <strong>insieme di regole</strong> per creare <strong>formati di testo</strong> facili da generare e facili da elaborare da un computer. Serve a <strong>descrivere e organizzare i dati</strong>, non a mostrarli.
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Perché serve XML</h2>
+  <p>I programmi, i database e i fogli elettronici di solito memorizzano i dati ognuno a modo suo, in formati <strong>incompatibili tra loro</strong>. Se due sistemi diversi devono scambiarsi delle informazioni, uno dei due dovrebbe capire il formato dell'altro.</p>
+  <p>La soluzione è mettersi d'accordo su <strong>un solo formato comune</strong>: ogni sistema converte i suoi dati in XML e legge gli XML degli altri. Così la comunicazione diventa molto più semplice.</p>
+  <figure class="seq" data-attori="Database | Foglio elettronico"
+    data-passi="Database > Foglio elettronico : file XML con i dati; = il foglio legge i tag e mostra i dati; Foglio elettronico > Database : file XML con le modifiche; = il database importa i dati aggiornati">
+    <figcaption>Due sistemi diversi si scambiano lo stesso file XML: XML fa da "lingua comune".</figcaption>
+  </figure>
+  <div class="cards">
+    <div class="card"><strong>Senza ambiguità</strong><p>I dati sono scritti in modo strutturato e leggibile: si capisce sempre dove inizia e dove finisce ogni informazione.</p></div>
+    <div class="card"><strong>Estendibile</strong><p>I <strong>tag li inventa il programmatore</strong>, in base al significato dei dati. Si possono aggiungere nuovi campi o cambiare la struttura <strong>senza rompere</strong> i programmi che già leggono il file.</p></div>
+    <div class="card"><strong>Indipendente dalla piattaforma</strong><p>Non dipende né dall'hardware né dal software: serve per <strong>memorizzare, trasportare e scambiare</strong> informazioni tra programmi diversi.</p></div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>XML è come una <strong>scheda con le etichette</strong>: accanto a ogni dato c'è scritto cos'è ("nome", "prezzo", "email"). Chi la riceve non deve indovinare, basta che legga le etichette.</div>
+
+  <!-- ============================================================= -->
+  <h2>Un metalinguaggio di markup</h2>
+  <h3>Cos'è un linguaggio di markup</h3>
+  <p>Un <strong>linguaggio di markup</strong> è un insieme di convenzioni per decidere quali parti di un documento vanno trattate in modo diverso dalle altre. È come quando a scuola sottolinei i titoli e metti in evidenziatore le parole chiave: stai "marcando" il testo.</p>
+  <p>L'idea è di inserire nel testo dei codici speciali, detti <strong>markup tag</strong> o semplicemente <strong>tag</strong>, che permettono ai programmi di distinguere le varie parti del documento (per esempio per decidere come visualizzarlo).</p>
+  <h3>E XML?</h3>
+  <ul>
+    <li>XML è un <strong>metalinguaggio di markup</strong>: un linguaggio che permette di <strong>definire altri linguaggi di markup</strong>.</li>
+    <li>Non ha <strong>tag predefiniti</strong>: i nomi dei tag li scegli tu.</li>
+    <li>Non serve né a programmare né a costruire pagine web: è <strong>un insieme standard di regole sintattiche</strong> per descrivere la struttura di documenti e dati.</li>
+    <li>Rappresenta contenuti testuali organizzati in modo <strong>gerarchico</strong> (uno dentro l'altro, ad albero).</li>
+    <li>Le specifiche ufficiali sono definite dal <strong>W3C</strong> (<em>World Wide Web Consortium</em>).</li>
+    <li>Un documento XML è un <strong>documento di testo</strong>: si legge e si modifica con qualsiasi editor di testo e ha estensione <code>.xml</code>.</li>
+  </ul>
+  <div class="callout info"><span class="callout-title">Perché "meta"?</span>HTML ha una lista fissa di tag (<code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;img&gt;</code>…). XML invece <strong>non ti dà nessun tag</strong>: ti dà solo le regole per scriverli. Con quelle regole puoi creare il tuo linguaggio, per esempio uno per le rubriche e uno per i libri di una biblioteca. Un linguaggio che serve a creare altri linguaggi è un "meta"linguaggio.</div>
+  <p>All'inizio XML nacque per risolvere un problema di standard sul Web, ma essendo molto generale venne subito usato nei contesti più diversi: dalla descrizione della struttura dei documenti allo scambio di informazioni tra sistemi diversi.</p>
+
+  <h3>Cosa NON è XML</h3>
+  <p>Per non confondersi, ecco quello che XML <strong>non</strong> è:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>XML non è…</th><th>Perché</th></tr></thead>
+      <tbody>
+        <tr><td>Un <strong>linguaggio di presentazione</strong> come HTML</td><td>Il markup XML definisce il <strong>significato</strong> dei dati e non dice nulla sul loro <strong>stile</strong>.</td></tr>
+        <tr><td>Un <strong>linguaggio di programmazione</strong> come Java</td><td>Un documento XML non è in grado di eseguire calcoli.</td></tr>
+        <tr><td>Un <strong>protocollo di trasporto</strong> come HTTP</td><td>XML non trasferisce i dati attraverso la rete: sono altri protocolli a farlo.</td></tr>
+        <tr><td>Un <strong>DBMS</strong> come Access o MySQL</td><td>XML non memorizza e non recupera i dati: li descrive soltanto.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout info"><span class="callout-title">Collegamento con HTTP</span>XML è puro testo, quindi può viaggiare dentro il corpo di una richiesta o di una risposta HTTP, con l'header <code>Content-Type: application/xml</code>. Ma è HTTP a fare il trasporto, XML è solo il "contenuto". Vedi <a href="protocollo-http.html">Il protocollo HTTP</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>XML e HTML a confronto</h2>
+  <p>XML e HTML si assomigliano perché entrambi usano i tag, ma hanno <strong>scopi diversi</strong>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>XML</th><th>HTML</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Descrive</strong> i dati</td><td><strong>Presenta</strong> i dati</td></tr>
+        <tr><td>Serve per <strong>descrivere e organizzare</strong> le informazioni</td><td>Serve per <strong>visualizzare</strong> le informazioni</td></tr>
+        <tr><td>Tag <strong>definiti dall'autore</strong></td><td>Elementi <strong>standard</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="compare">
+    <div>
+      <h4>HTML: come si vede</h4>
+<pre data-lang="html"><code>&lt;p&gt;&lt;b&gt;Paolo Canagni&lt;/b&gt;&lt;/p&gt;</code></pre>
+      <p><code>&lt;p&gt;</code> e <code>&lt;b&gt;</code> dicono al browser <strong>come mostrare</strong> il testo (paragrafo, grassetto). Non dicono cosa sia "Paolo Canagni".</p>
+    </div>
+    <div>
+      <h4>XML: cosa significa</h4>
+<pre data-lang="xml"><code>&lt;persona&gt;
+  &lt;nome&gt;Paolo&lt;/nome&gt;
+  &lt;cognome&gt;Canagni&lt;/cognome&gt;
+&lt;/persona&gt;</code></pre>
+      <p>I tag dicono <strong>cosa sono</strong> i dati (un nome, un cognome), ma non come mostrarli.</p>
+    </div>
+  </div>
+  <p>Per questo con XML <strong>i dati sono separati dalla loro rappresentazione grafica</strong>: lo stesso file XML può essere mostrato in tanti modi diversi (o non mostrato affatto, ma solo elaborato da un programma).</p>
+
+  <!-- ============================================================= -->
+  <h2>I file XML: vantaggi e svantaggi</h2>
+  <p>I file in formato XML:</p>
+  <ul>
+    <li>permettono di <strong>separare i dati dalla rappresentazione grafica</strong>;</li>
+    <li>hanno <strong>un unico insieme di regole di sintassi</strong>, che permette di leggere e scrivere i contenuti nello stesso modo e con strumenti analoghi;</li>
+    <li>sono basati su tag del tipo <code>&lt;nome&gt;&lt;/nome&gt;</code>: i tag permettono di trovare le informazioni in base al loro <strong>nome</strong> e non per forza alla loro posizione;</li>
+    <li>possono avere associata una <strong>definizione della struttura</strong>, che li rende più leggibili e permette di verificare in fretta se sono scritti correttamente.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Vantaggi</th><th>Svantaggi</th></tr></thead>
+      <tbody>
+        <tr><td>Si possono creare <strong>linguaggi ad hoc</strong> per ogni esigenza</td><td rowspan="2">Molto <strong>più ingombranti</strong> dei documenti in formato binario</td></tr>
+        <tr><td><strong>Testuale</strong>: facile da leggere e da modificare</td></tr>
+        <tr><td>Strutture dati <strong>indipendenti dalla piattaforma</strong></td><td rowspan="2"><strong>Più onerosi</strong> in termini di risorse: tempi di trasmissione, memoria e tempo di CPU per la codifica</td></tr>
+        <tr><td>Si trasporta con <strong>HTTP</strong> perché è puro testo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Il prezzo della chiarezza</span>Ogni dato porta con sé la sua etichetta, due volte (apertura e chiusura). Il file è molto leggibile ma <strong>pesa di più</strong> di un formato compatto. Per questo oggi nelle applicazioni web si usa spesso <a href="json.html">JSON</a>, che dice le stesse cose con meno caratteri.</div>
+
+  <!-- ============================================================= -->
+  <h2>La sintassi: prologo e corpo</h2>
+  <p>Un documento XML è formato da <strong>due parti</strong>:</p>
+  <ol>
+    <li><strong>Prologo</strong> (o dichiarazione): contiene la dichiarazione XML e, se serve, il riferimento ad altri documenti che ne definiscono la struttura o a direttive di elaborazione.</li>
+    <li><strong>Corpo</strong>: è il documento XML vero e proprio, cioè i dati.</li>
+  </ol>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;rubrica&gt;
+    &lt;persona&gt;
+        &lt;nome&gt;Paolo&lt;/nome&gt;
+        &lt;cognome&gt;Canagni&lt;/cognome&gt;
+        &lt;email&gt;paolo@canagni.it&lt;/email&gt;
+    &lt;/persona&gt;
+&lt;/rubrica&gt;</code></pre>
+  <div class="cards">
+    <div class="card"><strong>Dichiarazione XML</strong><p>La prima riga: indica la <strong>versione</strong> e la <strong>codifica</strong> dei caratteri del documento.</p></div>
+    <div class="card"><strong>Elemento radice</strong><p><code>&lt;rubrica&gt;</code> contiene <strong>tutto</strong> il documento.</p></div>
+    <div class="card"><strong>Elementi</strong><p><code>&lt;persona&gt;</code>, <code>&lt;nome&gt;</code>, <code>&lt;email&gt;</code>… rappresentano i dati.</p></div>
+  </div>
+
+  <h3>Il prologo</h3>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parte</th><th>Cosa indica</th></tr></thead>
+      <tbody>
+        <tr><td><code>version</code></td><td>La <strong>versione</strong> di XML usata (di solito <code>"1.0"</code>).</td></tr>
+        <tr><td><code>encoding</code></td><td>La <strong>codifica</strong> dei caratteri, cioè come sono salvate lettere e accenti. <code>UTF-8</code> è la più comune; nell'esempio della rubrica si vede anche <code>ISO-8859-1</code>.</td></tr>
+        <tr><td><code>standalone</code></td><td>Dice se il documento è <strong>autosufficiente</strong> (<code>"yes"</code>) o se ha bisogno di una <strong>definizione esterna</strong> della struttura, cioè una DTD associata (<code>"no"</code>).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout info"><span class="callout-title">Nota sulle slide</span>Nelle slide l'esempio mostra <code>standalone=«yes/no»</code> con le virgolette francesi: serve solo a dire "scegli uno dei due". Nel file vero si scrive <code>"yes"</code> <strong>oppure</strong> <code>"no"</code> con i normali doppi apici. L'attributo <code>standalone</code> è facoltativo e il prologo si può anche omettere, ma se c'è deve essere scritto bene e <strong>essere la primissima cosa del file</strong>.</div>
+
+  <h3>Il corpo</h3>
+  <p>Il corpo deve essere una <strong>gerarchia di tag non sovrapposti</strong>: i tag che si aprono per ultimi devono chiudersi per primi, e <strong>ogni tag deve avere la sua chiusura</strong>. Come le scatole dentro altre scatole: non puoi chiudere la scatola grande lasciando aperta quella piccola.</p>
+<pre data-lang="xml"><code>&lt;catalogo&gt;
+    &lt;libro&gt;
+        &lt;titolo&gt;Il nome della rosa&lt;/titolo&gt;
+        &lt;autore&gt;Umberto Eco&lt;/autore&gt;
+        &lt;anno&gt;1980&lt;/anno&gt;
+    &lt;/libro&gt;
+&lt;/catalogo&gt;</code></pre>
+  <p>Deve sempre esserci <strong>un solo tag che racchiude tutti gli altri</strong>: si chiama <strong>root</strong> (radice). Qui è <code>&lt;catalogo&gt;</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>I tag e gli elementi</h2>
+<pre data-lang="xml"><code>&lt;nome&gt;Paolo&lt;/nome&gt;
+
+&lt;persona&gt;
+    ...
+&lt;/persona&gt;</code></pre>
+  <div class="cards">
+    <div class="card"><strong>Tag di apertura</strong><p><code>&lt;nome&gt;</code> indica l'inizio dell'elemento.</p></div>
+    <div class="card"><strong>Contenuto</strong><p><code>Paolo</code> è il valore contenuto nell'elemento.</p></div>
+    <div class="card"><strong>Tag di chiusura</strong><p><code>&lt;/nome&gt;</code> chiude l'elemento. Il nome deve <strong>corrispondere</strong>.</p></div>
+  </div>
+  <p>L'insieme di <strong>tag di apertura + contenuto + tag di chiusura</strong> si chiama <strong>elemento</strong>. Il contenuto di un elemento può essere un testo (<code>Paolo</code>) oppure altri elementi (come in <code>&lt;persona&gt;</code>).</p>
+  <div class="callout warn"><span class="callout-title">Maiuscole e minuscole</span>I tag sono <strong>case sensitive</strong>: <code>&lt;Nome&gt;</code> e <code>&lt;nome&gt;</code> sono due tag <strong>diversi</strong>. Se apri con <code>&lt;Nome&gt;</code> devi chiudere con <code>&lt;/Nome&gt;</code>.</div>
+  <h3>Elementi vuoti</h3>
+  <p>Se un elemento non ha contenuto si può scrivere in <strong>forma abbreviata</strong>, con una sola parte che si chiude da sola: <code>&lt;nometag/&gt;</code>.</p>
+<pre data-lang="xml"><code>&lt;telefono_lavoro&gt;&lt;/telefono_lavoro&gt;     &lt;!-- forma estesa --&gt;
+&lt;telefono_lavoro/&gt;                          &lt;!-- forma abbreviata, equivalente --&gt;</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Gli attributi</h2>
+<pre data-lang="xml"><code>&lt;prodotto codice="1234"&gt;
+    &lt;nome&gt;Quaderno&lt;/nome&gt;
+    &lt;prezzo&gt;3.50&lt;/prezzo&gt;
+&lt;/prodotto&gt;</code></pre>
+  <div class="cards">
+    <div class="card"><strong>Attributo</strong><p>Fornisce <strong>informazioni aggiuntive</strong> associate al tag.</p></div>
+    <div class="card"><strong>Sintassi</strong><p><code>nome="valore"</code>: il valore è racchiuso tra <strong>virgolette</strong> (doppie o singole) nel <strong>tag di apertura</strong>.</p></div>
+    <div class="card"><strong>Quando usarlo</strong><p>Per le <strong>caratteristiche identificative</strong> o i <strong>metadati</strong> dell'elemento (un codice, un id, una lingua…).</p></div>
+  </div>
+  <p>Gli attributi si scrivono <strong>solo nel tag di apertura</strong>, mai in quello di chiusura. Un elemento può averne più di uno, separati da spazi: <code>&lt;libro id="7" lingua="it"&gt;</code>.</p>
+  <h3>Attributo o elemento figlio?</h3>
+  <p>Lo stesso dato si può scrivere in due modi:</p>
+  <div class="compare">
+    <div>
+      <h4>Come attributo</h4>
+<pre data-lang="xml"><code>&lt;prodotto codice="1234"&gt;
+    &lt;nome&gt;Quaderno&lt;/nome&gt;
+&lt;/prodotto&gt;</code></pre>
+    </div>
+    <div>
+      <h4>Come elemento figlio</h4>
+<pre data-lang="xml"><code>&lt;prodotto&gt;
+    &lt;codice&gt;1234&lt;/codice&gt;
+    &lt;nome&gt;Quaderno&lt;/nome&gt;
+&lt;/prodotto&gt;</code></pre>
+    </div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Regola pratica</span>Se è <strong>il dato vero e proprio</strong> (nome, prezzo, descrizione) usa un <strong>elemento</strong>. Se è un'<strong>etichetta o un identificativo</strong> che descrive l'elemento (codice, id) puoi usare un <strong>attributo</strong>. Un attributo contiene solo testo semplice e non può avere figli, mentre un elemento può contenere altri elementi.</div>
+
+  <!-- ============================================================= -->
+  <h2>Commenti e caratteri speciali</h2>
+  <p><em>Questa parte non è nelle slide: è un'aggiunta utile per scrivere file corretti.</em></p>
+  <p>I <strong>commenti</strong> si scrivono come in HTML e il programma li ignora:</p>
+<pre data-lang="xml"><code>&lt;!-- Questo è un commento --&gt;</code></pre>
+  <p>I caratteri <code>&lt;</code> e <code>&amp;</code> hanno un significato speciale (iniziano un tag o un'entità), quindi <strong>non si possono scrivere direttamente nel testo</strong>. Si usano delle sequenze al loro posto, dette <strong>entità</strong>:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Carattere</th><th>Si scrive</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;</code></td><td><code>&amp;lt;</code></td></tr>
+        <tr><td><code>&gt;</code></td><td><code>&amp;gt;</code></td></tr>
+        <tr><td><code>&amp;</code></td><td><code>&amp;amp;</code></td></tr>
+        <tr><td><code>"</code></td><td><code>&amp;quot;</code></td></tr>
+        <tr><td><code>'</code></td><td><code>&amp;apos;</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="xml"><code>&lt;azienda&gt;Rossi &amp;amp; Figli&lt;/azienda&gt;     &lt;!-- diventa: Rossi &amp; Figli --&gt;</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Documento ben formato e documento valido</h2>
+  <p>In XML ci sono due tipi di regole:</p>
+  <ul>
+    <li>le <strong>regole sintattiche</strong>: <em>come</em> bisogna scrivere le informazioni nei documenti. Sono <strong>obbligatorie</strong>;</li>
+    <li>le <strong>regole semantiche</strong>: <em>cosa</em> si può scrivere in un documento. Possono esserci, ma <strong>non è obbligatorio</strong> rispettarle.</li>
+  </ul>
+  <div class="compare">
+    <div>
+      <h4>Ben formato (<em>well-formed</em>)</h4>
+      <p>Rispetta le <strong>regole sintattiche</strong>.</p>
+      <p class="hand">È scritto in modo corretto.</p>
+    </div>
+    <div>
+      <h4>Valido</h4>
+      <p>Rispetta le regole sintattiche <strong>e</strong> le regole semantiche.</p>
+      <p class="hand">È scritto in modo corretto e dice le cose giuste.</p>
+    </div>
+  </div>
+  <div class="callout def"><span class="callout-title">Da ricordare</span>Un documento <strong>valido</strong> è per forza <strong>ben formato</strong>, ma un documento <strong>ben formato</strong> può <strong>non essere valido</strong> rispetto a una grammatica.</div>
+
+  <h3>Le regole per un documento ben formato</h3>
+  <ul>
+    <li>Deve contenere una <strong>dichiarazione corretta</strong>.</li>
+    <li>Il corpo deve avere <strong>un unico elemento radice</strong> (esclusi eventuali commenti).</li>
+    <li>Ogni elemento deve avere un <strong>tag di apertura e uno di chiusura</strong>; se l'elemento è vuoto si può usare la forma abbreviata <code>&lt;nometag/&gt;</code>.</li>
+    <li>Gli elementi devono essere <strong>nidificati</strong> bene: i tag di chiusura seguono l'ordine <strong>inverso</strong> di quelli di apertura.</li>
+    <li>I nomi dei tag di apertura e chiusura devono <strong>coincidere</strong>, anche in maiuscole e minuscole.</li>
+    <li>I nomi dei tag <strong>non</strong> devono iniziare con il carattere underscore (<code>_</code>) o con un numero e <strong>non</strong> devono contenere spazi.</li>
+    <li>I valori degli attributi devono sempre essere racchiusi tra <strong>apici singoli o doppi</strong>.</li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">Errore classico</span>Se un documento XML non è ben formato, il programma che lo legge (il <em>parser</em>) <strong>si ferma con un errore</strong> e non legge niente. XML è molto più severo di HTML: i browser perdonano molti errori nelle pagine web, un parser XML no.</div>
+
+  <h3>Come si controlla la validità: DTD e XSD</h3>
+  <p><em>Aggiunta alle slide.</em> Le regole semantiche si scrivono in un file a parte, detto <strong>grammatica</strong>, associato al documento. Le due più usate sono:</p>
+  <ul>
+    <li>la <strong>DTD</strong> (<em>Document Type Definition</em>): più antica e semplice, dice quali elementi esistono e come sono annidati;</li>
+    <li>l'<strong>XSD</strong> (<em>XML Schema</em>): più moderna e potente, può anche indicare i tipi dei dati (per esempio "<code>anno</code> deve essere un numero").</li>
+  </ul>
+  <p>Un programma di <strong>validazione</strong> confronta il documento con la grammatica e dice se la rispetta. Se la rispetta, il documento è <strong>valido</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>La gerarchia degli elementi</h2>
+  <p>Gli elementi di un documento XML sono <strong>nodi</strong> di una struttura ad <strong>albero</strong>: c'è la <strong>radice</strong>, che ha dei <strong>figli</strong>, che a loro volta possono averne altri.</p>
+<pre data-lang="testo"><code>Radice
+├── Figlio1
+│   ├── Figlio1_1
+│   └── Figlio1_2
+├── Figlio2
+│   ├── Figlio2_1
+│   ├── Figlio2_2
+│   └── Figlio2_3
+└── Figlio3
+    └── Figlio3_1</code></pre>
+  <ul>
+    <li>Il <strong>genitore</strong> (o padre) è l'elemento che ne contiene un altro: <code>&lt;persona&gt;</code> è genitore di <code>&lt;nome&gt;</code>.</li>
+    <li>I <strong>figli</strong> sono gli elementi contenuti direttamente: <code>&lt;nome&gt;</code> e <code>&lt;cognome&gt;</code> sono figli di <code>&lt;persona&gt;</code>.</li>
+    <li>Gli elementi con lo stesso genitore sono <strong>fratelli</strong>.</li>
+    <li>L'unico elemento senza genitore è la <strong>radice</strong>.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Come un albero di cartelle</span>È la stessa idea delle cartelle del computer: una cartella principale, che contiene altre cartelle, che ne contengono altre. Se sai muoverti tra le cartelle, sai muoverti in un file XML. È la stessa struttura ad albero vista in <a href="json.html#oggetti-annidati">JSON</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Un esempio completo</h2>
+  <p>Supponiamo di voler scambiare informazioni di un database su internet, per esempio un questionario compilato dagli utenti, e inviarle al server. Serve un formato che si possa <strong>personalizzare</strong> per l'uso specifico: XML è la soluzione ideale, e la sua rappresentazione è molto semplice.</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;rubrica&gt;
+    &lt;persona&gt;
+        &lt;nome&gt;Paolo&lt;/nome&gt;
+        &lt;cognome&gt;Canagni&lt;/cognome&gt;
+        &lt;telefono_casa&gt;0288888888&lt;/telefono_casa&gt;
+        &lt;telefono_lavoro&gt;0299999999&lt;/telefono_lavoro&gt;
+        &lt;indirizzo_email&gt;paolo@canagni.it&lt;/indirizzo_email&gt;
+    &lt;/persona&gt;
+    &lt;persona&gt;
+        &lt;nome&gt;Riccardo&lt;/nome&gt;
+        &lt;cognome&gt;Nikolasey&lt;/cognome&gt;
+        &lt;telefono_casa&gt;0277777777&lt;/telefono_casa&gt;
+        &lt;telefono_lavoro&gt;0299999999&lt;/telefono_lavoro&gt;
+        &lt;indirizzo_email&gt;riccardo@nikolasey.it&lt;/indirizzo_email&gt;
+    &lt;/persona&gt;
+&lt;/rubrica&gt;</code></pre>
+  <ol>
+    <li>La <strong>prima riga</strong> indica la versione di XML e il set di caratteri usato.</li>
+    <li>La riga successiva descrive l'<strong>elemento radice</strong> del documento: <code>rubrica</code>.</li>
+    <li>L'elemento <code>rubrica</code> ha come <strong>figlio</strong> <code>persona</code> (ripetuto una volta per ogni persona), che a sua volta si compone di altri elementi figli: <code>nome</code>, <code>cognome</code>, <code>telefono_casa</code> e così via.</li>
+  </ol>
+  <div class="callout info"><span class="callout-title">Perché <code>telefono_casa</code> con il trattino basso?</span>I nomi dei tag <strong>non possono contenere spazi</strong>: <code>&lt;telefono casa&gt;</code> sarebbe un errore. Per nomi di più parole si usa il trattino basso (<code>telefono_casa</code>) oppure si scrivono attaccate con le maiuscole (<code>telefonoCasa</code>). L'importante è <strong>scegliere un modo e usarlo sempre</strong>, ricordando che le maiuscole contano.</div>
+  <p>Come passare da un dato a XML? Un metodo semplice: <strong>1)</strong> trova il contenitore principale (la radice); <strong>2)</strong> cerca gli elementi che si ripetono (le "righe", come <code>persona</code>); <strong>3)</strong> per ognuno elenca i campi (le "colonne") e dai a ciascuno un tag con il suo nome.</p>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>XML</strong> = insieme di regole per creare formati di <strong>testo</strong> facili da generare e da elaborare; <strong>descrive</strong> i dati (HTML li <strong>presenta</strong>).</li>
+    <li>È un <strong>metalinguaggio di markup</strong>: non ha tag predefiniti, i tag li sceglie l'autore. Lo standard è del <strong>W3C</strong>; i file sono testo con estensione <code>.xml</code>.</li>
+    <li>Vantaggi: <strong>estendibile</strong>, testuale, <strong>indipendente dalla piattaforma</strong>, trasportabile con HTTP. Svantaggi: <strong>ingombrante</strong> e più costoso in risorse.</li>
+    <li>Non è un linguaggio di presentazione, di programmazione, un protocollo di trasporto né un DBMS.</li>
+    <li>Un documento ha un <strong>prologo</strong> (<code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code>) e un <strong>corpo</strong> con <strong>un solo elemento radice</strong>.</li>
+    <li><strong>Tag</strong> di apertura e chiusura che coincidono (<strong>case sensitive</strong>), nidificati nell'ordine giusto; i <strong>valori degli attributi</strong> sempre tra apici.</li>
+    <li><strong>Ben formato</strong> = rispetta la sintassi. <strong>Valido</strong> = rispetta anche la grammatica (DTD/XSD). Valido ⇒ ben formato, ma non viceversa.</li>
+    <li>La struttura è un <strong>albero</strong>: radice, genitori, figli.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>La tabella delle categorie <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><em>(Esercizio 1 delle slide)</em> Data la seguente tabella, costruisci il file XML corrispondente.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>NOME CATEGORIA</th><th>DESCRIZIONE</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Beverages</td><td>Soft drinks, coffees, teas, beers and ales</td></tr>
+            <tr><td>2</td><td>Condiments</td><td>Sweet and savory sauces, relishes, spreads and seasonings</td></tr>
+            <tr><td>3</td><td>Confections</td><td>Desserts, candies and sweet breads</td></tr>
+            <tr><td>4</td><td>Dairy Products</td><td>Cheeses</td></tr>
+            <tr><td>5</td><td>Grains/Cereals</td><td>Breads, crackers, pasta and cereal</td></tr>
+            <tr><td>6</td><td>Meat/Poultry</td><td>Prepared meats</td></tr>
+            <tr><td>7</td><td>Produce</td><td>Dried fruit and bean curd</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Ragionamento: la tabella intera diventa la <strong>radice</strong> (<code>categorie</code>); ogni <strong>riga</strong> diventa un elemento che si ripete (<code>categoria</code>); ogni <strong>colonna</strong> diventa un elemento figlio. I nomi dei tag non hanno spazi (<code>nome_categoria</code>).</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;categorie&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;1&lt;/id&gt;
+        &lt;nome_categoria&gt;Beverages&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Soft drinks, coffees, teas, beers and ales&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;2&lt;/id&gt;
+        &lt;nome_categoria&gt;Condiments&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Sweet and savory sauces, relishes, spreads and seasonings&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;3&lt;/id&gt;
+        &lt;nome_categoria&gt;Confections&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Desserts, candies and sweet breads&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;4&lt;/id&gt;
+        &lt;nome_categoria&gt;Dairy Products&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Cheeses&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;5&lt;/id&gt;
+        &lt;nome_categoria&gt;Grains/Cereals&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Breads, crackers, pasta and cereal&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;6&lt;/id&gt;
+        &lt;nome_categoria&gt;Meat/Poultry&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Prepared meats&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+    &lt;categoria&gt;
+        &lt;id&gt;7&lt;/id&gt;
+        &lt;nome_categoria&gt;Produce&lt;/nome_categoria&gt;
+        &lt;descrizione&gt;Dried fruit and bean curd&lt;/descrizione&gt;
+    &lt;/categoria&gt;
+&lt;/categorie&gt;</code></pre>
+      <p>Variante equivalente: l'<code>id</code> come <strong>attributo</strong>, perché identifica la categoria: <code>&lt;categoria id="1"&gt;</code>. Anche questa è corretta.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Il curriculum vitae <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>(Esercizio 2 delle slide)</em> Dato il seguente documento di testo, codificalo in XML.</p>
+<pre data-lang="testo"><code>Curriculum Vitae di Mario Rossi
+
+Dati personali
+Nome          Mario
+Cognome       Rossi
+Residenza     Via Milano, 40 - 10100 Roma
+e-mail        mario.rossi@email.it
+tel.          01-2345678
+cell.         111-222333444
+Nato il       11-6-1960 a Como (Co)
+Nazionalità   Italiana
+Stato civile  Coniugato
+
+Esperienze professionali
+1990-1995 Computer Software s.r.l – Como
+Ruolo: Analista programmatore
+Attività: Sviluppo di Sistemi Gestionali per piccole imprese tessili
+1995-2020 Docente ITIS Magistri Cumacini – Como
+Ruolo: Docente
+Attività: Tecnologie e progettazione – Corso informatica 1</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Ragionamento: il documento ha <strong>due blocchi</strong> (dati personali ed esperienze professionali) → due elementi figli della radice <code>curriculum</code>. Le esperienze sono <strong>più di una</strong> → un elemento <code>esperienza</code> che si ripete. Il periodo ("1990-1995") si può spezzare in <code>dal</code> e <code>al</code>, così è più facile da elaborare.</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;curriculum&gt;
+    &lt;dati_personali&gt;
+        &lt;nome&gt;Mario&lt;/nome&gt;
+        &lt;cognome&gt;Rossi&lt;/cognome&gt;
+        &lt;residenza&gt;Via Milano, 40 - 10100 Roma&lt;/residenza&gt;
+        &lt;email&gt;mario.rossi@email.it&lt;/email&gt;
+        &lt;telefono&gt;01-2345678&lt;/telefono&gt;
+        &lt;cellulare&gt;111-222333444&lt;/cellulare&gt;
+        &lt;nascita&gt;
+            &lt;data&gt;11-6-1960&lt;/data&gt;
+            &lt;luogo&gt;Como (Co)&lt;/luogo&gt;
+        &lt;/nascita&gt;
+        &lt;nazionalita&gt;Italiana&lt;/nazionalita&gt;
+        &lt;stato_civile&gt;Coniugato&lt;/stato_civile&gt;
+    &lt;/dati_personali&gt;
+    &lt;esperienze_professionali&gt;
+        &lt;esperienza&gt;
+            &lt;dal&gt;1990&lt;/dal&gt;
+            &lt;al&gt;1995&lt;/al&gt;
+            &lt;azienda&gt;Computer Software s.r.l&lt;/azienda&gt;
+            &lt;citta&gt;Como&lt;/citta&gt;
+            &lt;ruolo&gt;Analista programmatore&lt;/ruolo&gt;
+            &lt;attivita&gt;Sviluppo di Sistemi Gestionali per piccole imprese tessili&lt;/attivita&gt;
+        &lt;/esperienza&gt;
+        &lt;esperienza&gt;
+            &lt;dal&gt;1995&lt;/dal&gt;
+            &lt;al&gt;2020&lt;/al&gt;
+            &lt;azienda&gt;ITIS Magistri Cumacini&lt;/azienda&gt;
+            &lt;citta&gt;Como&lt;/citta&gt;
+            &lt;ruolo&gt;Docente&lt;/ruolo&gt;
+            &lt;attivita&gt;Tecnologie e progettazione - Corso informatica 1&lt;/attivita&gt;
+        &lt;/esperienza&gt;
+    &lt;/esperienze_professionali&gt;
+&lt;/curriculum&gt;</code></pre>
+      <p>Non c'è una soluzione unica: altri nomi di tag o un'altra suddivisione vanno bene, purché il documento sia <strong>ben formato</strong> e i dati siano chiari. Notare che <code>nascita</code> è un elemento <strong>annidato</strong> con due figli.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Trova gli errori <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Libreria&gt;
+    &lt;libro&gt;
+        &lt;titolo&gt;Il nome della rosa&lt;/titolo&gt;
+        &lt;autore&gt;Umberto Eco&lt;anno&gt;1980&lt;/autore&gt;&lt;/anno&gt;
+    &lt;/libro&gt;
+    &lt;libro codice=12&gt;
+        &lt;1titolo&gt;Se questo è un uomo&lt;/1titolo&gt;
+        &lt;autore&gt;Primo Levi&lt;/Autore&gt;
+    &lt;/libro&gt;
+&lt;/libreria&gt;</code></pre>
+      <p>Questo documento non è ben formato. Trova tutti gli errori.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><code>&lt;Libreria&gt;</code> si chiude con <code>&lt;/libreria&gt;</code>: maiuscole diverse, i nomi <strong>non coincidono</strong> (case sensitive).</li>
+        <li><code>&lt;autore&gt;Umberto Eco&lt;anno&gt;1980&lt;/autore&gt;&lt;/anno&gt;</code>: i tag sono <strong>sovrapposti</strong>. Si chiude prima <code>&lt;/anno&gt;</code> e poi <code>&lt;/autore&gt;</code>. In più <code>anno</code> sta dentro <code>autore</code> ma non è un dato dell'autore: va messo accanto, come figlio di <code>libro</code>.</li>
+        <li><code>codice=12</code>: il valore dell'attributo deve stare tra apici → <code>codice="12"</code>.</li>
+        <li><code>&lt;1titolo&gt;</code>: il nome di un tag non può iniziare con un numero → <code>&lt;titolo&gt;</code>.</li>
+        <li><code>&lt;/Autore&gt;</code>: maiuscola diversa dal tag di apertura <code>&lt;autore&gt;</code> → <code>&lt;/autore&gt;</code>.</li>
+      </ul>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;libreria&gt;
+    &lt;libro&gt;
+        &lt;titolo&gt;Il nome della rosa&lt;/titolo&gt;
+        &lt;autore&gt;Umberto Eco&lt;/autore&gt;
+        &lt;anno&gt;1980&lt;/anno&gt;
+    &lt;/libro&gt;
+    &lt;libro codice="12"&gt;
+        &lt;titolo&gt;Se questo è un uomo&lt;/titolo&gt;
+        &lt;autore&gt;Primo Levi&lt;/autore&gt;
+    &lt;/libro&gt;
+&lt;/libreria&gt;</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Ben formato o valido? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ogni affermazione dì se è vera o falsa: a) un documento valido è sempre ben formato; b) un documento ben formato è sempre valido; c) un documento con due elementi radice può essere ben formato; d) <code>&lt;Nome&gt;Anna&lt;/nome&gt;</code> è un elemento corretto; e) XML serve per mostrare i dati a video.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><strong>a) Vera</strong>: per essere valido deve rispettare anche le regole sintattiche. <strong>b) Falsa</strong>: può rispettare la sintassi ma non la grammatica (DTD/XSD). <strong>c) Falsa</strong>: il corpo ha un <strong>unico</strong> elemento radice. <strong>d) Falsa</strong>: apertura e chiusura devono coincidere, anche nelle maiuscole. <strong>e) Falsa</strong>: XML <strong>descrive</strong> i dati; è HTML che li presenta.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Attributi o elementi? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p>Scrivi in XML un prodotto con codice <code>A-17</code>, nome "Penna blu", prezzo 1.20 e disponibile (sì). Usa il <strong>codice come attributo</strong> e gli altri dati come elementi figli. Poi riscrivi tutto <strong>senza attributi</strong>.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="xml"><code>&lt;!-- con attributo --&gt;
+&lt;prodotto codice="A-17"&gt;
+    &lt;nome&gt;Penna blu&lt;/nome&gt;
+    &lt;prezzo&gt;1.20&lt;/prezzo&gt;
+    &lt;disponibile&gt;si&lt;/disponibile&gt;
+&lt;/prodotto&gt;
+
+&lt;!-- senza attributi --&gt;
+&lt;prodotto&gt;
+    &lt;codice&gt;A-17&lt;/codice&gt;
+    &lt;nome&gt;Penna blu&lt;/nome&gt;
+    &lt;prezzo&gt;1.20&lt;/prezzo&gt;
+    &lt;disponibile&gt;si&lt;/disponibile&gt;
+&lt;/prodotto&gt;</code></pre>
+      <p>Ricorda: in XML non esistono i tipi (tutto è testo), quindi <code>true</code> o <code>si</code> sono solo testo che i programmi devono interpretare.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Da XML a JSON <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="xml"><code>&lt;persona&gt;
+    &lt;nome&gt;Paolo&lt;/nome&gt;
+    &lt;cognome&gt;Canagni&lt;/cognome&gt;
+    &lt;email&gt;paolo@canagni.it&lt;/email&gt;
+&lt;/persona&gt;</code></pre>
+      <p>Riscrivi gli stessi dati nel formato <a href="json.html">JSON</a>.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="json"><code>{
+  "persona": {
+    "nome": "Paolo",
+    "cognome": "Canagni",
+    "email": "paolo@canagni.it"
+  }
+}</code></pre>
+      <p>Ogni elemento XML con figli diventa un <strong>oggetto</strong> JSON; ogni elemento con solo testo diventa una coppia <code>"chiave": valore</code>. Il nome del campo si scrive una volta sola invece di due.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Il linguaggio XML – eXtensible Markup Language". La spiegazione con i paragoni, la nota sul prologo, la tabella sul prologo, gli elementi vuoti, il confronto attributo/elemento, commenti e caratteri speciali, DTD e XSD, il confronto con JSON, gli esercizi 03-06 e tutte le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>

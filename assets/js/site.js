@@ -70,6 +70,7 @@
           { title: "Panoramica", path: "materie/tpsit/index.html", type: "panoramica" },
           { title: "Sistemi distribuiti", path: "materie/tpsit/sistemi-distribuiti.html", type: "teoria" },
           { title: "Il protocollo HTTP", path: "materie/tpsit/protocollo-http.html", type: "teoria" },
+          { title: "Il linguaggio XML", path: "materie/tpsit/xml.html", type: "teoria" },
           { title: "Il linguaggio JSON", path: "materie/tpsit/json.html", type: "teoria" },
         ],
       },
