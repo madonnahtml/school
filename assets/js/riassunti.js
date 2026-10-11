@@ -261,6 +261,104 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/tpsit/dtd.html": {
+    breve: "Lo schema che dice quali elementi e attributi può avere un documento XML, per poterlo controllare.",
+    sezioni: [
+      {
+        titolo: "Che cos'è un DTD",
+        punti: [
+          "Il <strong>DTD</strong> (<em>Document Type Definition</em>) definisce le regole strutturali che un documento XML deve rispettare per essere <strong>valido</strong>.",
+          "Specifica quali <strong>elementi</strong> possono comparire, il loro <strong>ordine</strong> e <strong>quantità</strong>, e gli <strong>attributi</strong>.",
+          "Non dice <strong>niente sul tipo</strong> del contenuto: non si può imporre che il prezzo sia un numero o la data una data.",
+        ],
+      },
+      {
+        titolo: "XML ben formato e XML valido",
+        punti: [
+          "<strong>Ben formato</strong>: rispetta la sintassi XML (una radice, tag annidati e chiusi, attributi tra virgolette).",
+          "<strong>Valido</strong>: è ben formato <strong>e</strong> rispetta il DTD (elementi previsti, ordine, cardinalità, attributi dichiarati).",
+          "Valido ⇒ ben formato, ma non il contrario. Si controlla prima la sintassi, poi il DTD.",
+        ],
+      },
+      {
+        titolo: "Come si collega un DTD a un documento",
+        punti: [
+          "Nel prologo, sotto la dichiarazione XML e prima della radice: <code>&lt;!DOCTYPE radice SYSTEM \"file.dtd\"&gt;</code>.",
+          "<strong>SYSTEM</strong> indica un DTD locale (un tuo file); il nome dopo <code>DOCTYPE</code> deve coincidere con l'elemento radice.",
+        ],
+      },
+      {
+        titolo: "Com'è fatto un DTD",
+        punti: [
+          "È un elenco di dichiarazioni: <code>&lt;!ELEMENT nome contenuto&gt;</code> per gli elementi, <code>&lt;!ATTLIST elemento attributo tipo default&gt;</code> per gli attributi.",
+          "Quattro modelli di contenuto: <code>EMPTY</code> (vuoto), <code>ANY</code> (qualsiasi), <strong>figli</strong> con ordine, <strong>misto</strong> (testo più figli senza ordine).",
+        ],
+      },
+      {
+        titolo: "ELEMENT: definire gli elementi",
+        punti: [
+          "<code>&lt;!ELEMENT studente (nome, cognome, classe)&gt;</code>: i figli devono comparire <strong>in questo ordine</strong>.",
+          "<code>(#PCDATA)</code> = l'elemento contiene <strong>solo testo</strong> (le parentesi sono obbligatorie).",
+          "Ogni elemento usato va dichiarato, <strong>una volta sola</strong>.",
+        ],
+      },
+      {
+        titolo: "Operatori: ordine e cardinalità",
+        punti: [
+          "<code>,</code> sequenza · <code>|</code> alternativa · <code>?</code> 0 o 1 · <code>*</code> 0 o più · <code>+</code> 1 o più.",
+          "I simboli <code>?</code> <code>*</code> <code>+</code> si scrivono subito dopo il nome o il gruppo: <code>persona+</code>, <code>(telefono | email)*</code>.",
+          "In uno stesso gruppo non si mescolano <code>,</code> e <code>|</code> senza parentesi.",
+        ],
+      },
+      {
+        titolo: "#PCDATA, EMPTY, ANY e contenuto misto",
+        punti: [
+          "<code>#PCDATA</code>: solo testo. <code>EMPTY</code>: né testo né figli (l'informazione sta negli attributi).",
+          "<strong>Misto</strong>: <code>(#PCDATA | b | i)*</code>, con <code>#PCDATA</code> per primo. <code>ANY</code>: tutto, purché dichiarato (poco usato).",
+        ],
+      },
+      {
+        titolo: "ATTLIST: gli attributi",
+        punti: [
+          "Tipi: <code>CDATA</code> (testo), enumerazione <code>(M|F)</code>, <code>ID</code> (identificatore <strong>univoco</strong>, non inizia con un numero).",
+          "Valori: <code>#REQUIRED</code> obbligatorio · <code>#IMPLIED</code> facoltativo · <code>\"valore\"</code> default · <code>#FIXED \"valore\"</code> valore fisso.",
+        ],
+      },
+      {
+        titolo: "DTD interno",
+        punti: [
+          "Scritto <strong>dentro</strong> il file XML, tra parentesi quadre: <code>&lt;!DOCTYPE studente [ ... ]&gt;</code>. Non è riutilizzabile.",
+        ],
+      },
+      {
+        titolo: "DTD esterno",
+        punti: [
+          "Scritto in un file <code>.dtd</code> a parte e richiamato con <code>SYSTEM</code>: <strong>riutilizzabile</strong> da più documenti.",
+          "Il file <code>.dtd</code> contiene solo dichiarazioni, senza radice né <code>DOCTYPE</code>.",
+        ],
+      },
+      {
+        titolo: "Un esempio completo: la scuola",
+        punti: [
+          "<code>scuola (nome, citta, laboratorio+)</code>: nome, città e almeno un laboratorio; ogni laboratorio ha <code>codice ID #REQUIRED</code>.",
+          "Non è valido: nessun laboratorio, <code>ID</code> duplicato, <code>ID</code> che inizia con un numero, attributo non dichiarato.",
+        ],
+      },
+      {
+        titolo: "Cosa non sa fare un DTD",
+        punti: [
+          "Nessun <strong>tipo di dato</strong> (tutto è testo), nessun limite numerico, un solo modello di contenuto per ogni nome di elemento, sintassi diversa da XML.",
+          "L'<strong>XSD</strong> supera questi limiti ed è scritto in XML.",
+        ],
+      },
+      {
+        titolo: "Come si controlla la validità",
+        punti: [
+          "La controlla un <strong>parser validante</strong> (editor XML, validatori online, <code>xmllint --noout --valid file.xml</code>); i browser di solito non validano.",
+        ],
+      },
+    ],
+  },
   "materie/tpsit/json.html": {
     breve: "Un formato di testo semplice e leggero per scrivere dati e scambiarli tra programmi.",
     sezioni: [
