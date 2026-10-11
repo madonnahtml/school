@@ -44,6 +44,7 @@
           { title: "Java: array, wrapper, metodi e overload", path: "materie/informatica/java-array-wrapper-metodi-overload.html", type: "teoria" },
           { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
           { title: "Java: gestione dei file", path: "materie/informatica/java-gestione-dei-file.html", type: "teoria" },
+          { title: "Java: eccezioni", path: "materie/informatica/java-eccezioni.html", type: "teoria" },
         ],
       },
       {
@@ -69,6 +70,7 @@
           { title: "Panoramica", path: "materie/tpsit/index.html", type: "panoramica" },
           { title: "Sistemi distribuiti", path: "materie/tpsit/sistemi-distribuiti.html", type: "teoria" },
           { title: "Il protocollo HTTP", path: "materie/tpsit/protocollo-http.html", type: "teoria" },
+          { title: "Il linguaggio XML", path: "materie/tpsit/xml.html", type: "teoria" },
           { title: "Il linguaggio JSON", path: "materie/tpsit/json.html", type: "teoria" },
         ],
       },
