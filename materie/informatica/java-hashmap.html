@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: HashMap · Scuola</title>
+  <meta name="description" content="Informatica, Java: HashMap e coppie chiave-valore. put, get, containsKey, containsValue, remove, clear, size, come scorrerla, come funziona dentro (hash e bucket), quando usarla. Esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=8">
+  <script src="../../assets/js/site.js?v=8"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: HashMap</h1>
+  <p class="lead">In una lista trovi un dato per <strong>posizione</strong>: "dammi il terzo". Molto spesso però vuoi trovarlo per <strong>nome</strong>: "dammi l'età di Marco", "dammi il prezzo del caffè". Per questo esiste la <strong>HashMap</strong>, che tiene i dati a coppie <strong>chiave → valore</strong> e li ritrova in un attimo.</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · L'idea</strong><p>Coppie chiave → valore e come si crea una HashMap.</p></div>
+    <div class="card"><strong>02 · I metodi</strong><p><code>put</code>, <code>get</code>, <code>containsKey</code>, <code>containsValue</code>, <code>remove</code>, <code>clear</code>, <code>size</code>.</p></div>
+    <div class="card"><strong>03 · Scorrere e capire</strong><p>Come si scorre una mappa e come fa a essere così veloce.</p></div>
+    <div class="card"><strong>04 · Usarla bene</strong><p>Esempio completo, quando sceglierla, mappa riassuntiva e 7 esercizi.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Servono le <a href="java-array-wrapper-metodi-overload.html">wrapper classes</a> (<code>Integer</code> al posto di <code>int</code>) e aiuta aver letto <a href="java-collections-liste.html">Collections, ArrayList, Vector e LinkedList</a>: la HashMap fa parte dello stesso Collections Framework. Le parti segnate <em>(extra)</em> non sono nelle slide: sono aggiunte per capire meglio.</div>
+
+  <!-- ============================================================= -->
+  <h2>Cosa sono le HashMap</h2>
+  <div class="callout def"><span class="callout-title">In una frase</span>Una <strong>HashMap</strong> è una struttura dati che memorizza le informazioni in <strong>coppie chiave → valore</strong>. Ogni elemento è identificato da una <strong>chiave</strong> unica, a cui è associato un <strong>valore</strong>.</div>
+  <p>Un esempio: l'età di alcuni studenti.</p>
+<pre data-lang="testo"><code>"Marco" → 18
+"Luca"  → 20
+"Anna"  → 17</code></pre>
+  <p>Il <strong>nome</strong> è la chiave, l'<strong>età</strong> è il valore. Per sapere l'età di Anna non devi scorrere tutto l'elenco: chiedi direttamente "Anna" e ottieni 17.</p>
+  <div class="compare">
+    <div>
+      <h4>Chiave (key)</h4>
+      <p>Identifica l'elemento. <strong>Non può essere duplicata</strong>: in una mappa c'è al massimo un "Marco".</p>
+    </div>
+    <div>
+      <h4>Valore (value)</h4>
+      <p>L'informazione associata alla chiave. <strong>Può essere duplicato</strong>: Marco e Giulia possono avere entrambi 18 anni.</p>
+    </div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Una HashMap è come la <strong>rubrica del telefono</strong>: cerchi per <em>nome</em> (la chiave) e trovi il <em>numero</em> (il valore). Due contatti possono avere lo stesso numero, ma non puoi avere due contatti con lo stesso identico nome: se salvi di nuovo "Mamma", sostituisci quello vecchio. Altri esempi: il dizionario (parola → definizione), il registro (studente → voto), il menù del bar (prodotto → prezzo).</div>
+  <p>La classe si trova nel pacchetto <code>java.util</code> e va <strong>importata</strong>: <code>import java.util.HashMap;</code></p>
+
+  <!-- ============================================================= -->
+  <h2>Creare una HashMap</h2>
+  <p>A differenza di una lista, servono <strong>due tipi</strong>: quello della chiave e quello del valore.</p>
+<pre data-lang="java"><code>HashMap&lt;TipoChiave, TipoValore&gt; nome = new HashMap&lt;&gt;();</code></pre>
+  <p>Per l'esempio degli studenti la chiave è il nome (testo, <code>String</code>) e il valore è l'età (numero, <code>Integer</code>):</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; studenti = new HashMap&lt;&gt;();
+    }
+}</code></pre>
+  <ul>
+    <li>HashMap è una classe <strong>generic</strong>: i tipi tra <code>&lt; &gt;</code> fanno controllare tutto al compilatore. Se provi a fare <code>studenti.put("Marco", "diciotto")</code> il programma non compila.</li>
+    <li>Come per le liste, dentro <code>&lt; &gt;</code> vanno solo <strong>classi</strong>: <code>Integer</code>, non <code>int</code>; <code>Double</code>, non <code>double</code>.</li>
+    <li>Chiave e valore possono essere di <strong>qualsiasi tipo</strong>: <code>String</code>, <code>Integer</code>, anche oggetti tuoi (per esempio <code>HashMap&lt;String, Studente&gt;</code>) o perfino liste (<code>HashMap&lt;String, List&lt;Integer&gt;&gt;</code> per i voti di ogni studente).</li>
+  </ul>
+  <div class="callout info"><span class="callout-title">Map a sinistra <em>(extra)</em></span>Come si scrive <code>List</code> a sinistra e <code>ArrayList</code> a destra, per le mappe si può scrivere l'interfaccia <code>Map</code>: <code>Map&lt;String, Integer&gt; studenti = new HashMap&lt;&gt;();</code> (con <code>import java.util.Map;</code>). Funziona tutto uguale; nelle slide si usa <code>HashMap</code> da entrambe le parti, ed è corretto lo stesso.</div>
+
+  <!-- ============================================================= -->
+  <h2>Aggiungere e modificare con put()</h2>
+  <p>Il metodo <code>put(chiave, valore)</code> inserisce una coppia nella mappa. Primo parametro la <strong>chiave</strong>, secondo il <strong>valore</strong>.</p>
+<pre data-lang="java"><code>studenti.put("Marco", 18);
+studenti.put("Luca", 20);
+studenti.put("Anna", 17);
+System.out.println(studenti);</code></pre>
+<pre data-lang="testo"><code>{Marco=18, Luca=20, Anna=17}</code></pre>
+  <p>Stampando la mappa, Java mostra le coppie tra graffe nella forma <code>chiave=valore</code>.</p>
+
+  <h3>put() ha un doppio ruolo</h3>
+  <p>Se la chiave è <strong>nuova</strong>, <code>put</code> aggiunge una coppia. Se la chiave <strong>esiste già</strong>, <code>put</code> <strong>sostituisce</strong> il vecchio valore: le chiavi non possono essere duplicate, quindi non c'è un secondo "Marco".</p>
+<pre data-lang="java"><code>studenti.put("Marco", 18);   // aggiunge Marco con 18
+studenti.put("Marco", 19);   // Marco esiste già: ora vale 19
+
+System.out.println(studenti.get("Marco"));   // 19
+System.out.println(studenti.size());         // Marco conta una volta sola</code></pre>
+  <p>Per "modificare" un valore quindi non c'è un metodo apposta: si rifà <code>put</code> con la stessa chiave.</p>
+  <div class="callout tip"><span class="callout-title">Aggiornare partendo dal vecchio valore <em>(extra)</em></span>Per fare "Marco compie gli anni" leggi il vecchio valore e rimetti quello nuovo: <code>studenti.put("Marco", studenti.get("Marco") + 1);</code>. Funziona solo se Marco c'è: altrimenti <code>get</code> restituisce <code>null</code> e il <code>+ 1</code> lancia <code>NullPointerException</code> (vedi la trappola più sotto).</div>
+
+  <div class="callout warn"><span class="callout-title">L'ordine non è garantito</span>La HashMap <strong>non mantiene l'ordine di inserimento</strong>: quando la stampi o la scorri, le coppie possono uscire in un ordine diverso da quello in cui le hai messe. Nell'esempio sopra l'ordine coincide per caso; con altre chiavi no. Non scrivere mai un programma che conta sull'ordine di una HashMap.</div>
+
+  <!-- ============================================================= -->
+  <h2>Leggere con get() e controllare</h2>
+  <h3>get(): il valore di una chiave</h3>
+  <p><code>get(chiave)</code> restituisce il valore associato a quella chiave. Se la chiave <strong>non esiste</strong>, restituisce <code>null</code> (cioè "niente").</p>
+<pre data-lang="java"><code>System.out.println(studenti.get("Marco"));   // 18
+
+int eta = studenti.get("Luca");
+System.out.println(eta);                     // 20
+
+System.out.println(studenti.get("Paolo"));   // null: Paolo non c'è</code></pre>
+  <div class="callout warn"><span class="callout-title">La trappola del null <em>(extra)</em></span>Stampare <code>null</code> non fa danni, ma <strong>metterlo in un <code>int</code></strong> sì:
+<pre data-lang="java"><code>int eta = studenti.get("Paolo");   // NullPointerException!</code></pre>
+  Java prova a trasformare l'<code>Integer</code> in <code>int</code> (unboxing), ma <code>null</code> non è un numero. Per questo prima di usare <code>get</code> si controlla con <code>containsKey</code>, oppure si usa <code>getOrDefault</code>.</div>
+
+  <h3>containsKey(): la chiave c'è?</h3>
+  <p>Restituisce <code>true</code> se la chiave è presente, <code>false</code> altrimenti. È buona abitudine usarlo <strong>prima</strong> di <code>get</code>.</p>
+<pre data-lang="java"><code>if (studenti.containsKey("Marco")) {
+    System.out.println("Marco è presente!");
+}
+
+System.out.println(studenti.containsKey("Marco"));   // true
+System.out.println(studenti.containsKey("Paolo"));   // false</code></pre>
+
+  <h3>containsValue(): il valore c'è?</h3>
+  <p>Controlla se un certo <strong>valore</strong> è presente, qualunque sia la chiave.</p>
+<pre data-lang="java"><code>if (studenti.containsValue(20)) {
+    System.out.println("C'è uno studente di 20 anni.");
+}</code></pre>
+  <div class="callout info"><span class="callout-title">Uno veloce, uno lento <em>(extra)</em></span><code>containsKey</code> è <strong>velocissimo</strong>, O(1): la mappa sa subito dove guardare. <code>containsValue</code> invece deve <strong>controllare tutte le coppie</strong> una per una, O(n): la mappa è organizzata per chiave, non per valore. Come nella rubrica: cercare per nome è immediato, cercare "chi ha questo numero?" vuol dire leggerla tutta.</div>
+
+  <h3>getOrDefault(): un valore di riserva <em>(extra)</em></h3>
+  <p>Se la chiave c'è restituisce il suo valore, altrimenti il valore "di riserva" che scegli tu. Niente <code>null</code>, niente <code>if</code>:</p>
+<pre data-lang="java"><code>int eta = studenti.getOrDefault("Paolo", 0);   // 0, perché Paolo non c'è</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Rimuovere, svuotare e contare</h2>
+  <h3>remove(): togliere una coppia</h3>
+  <p><code>remove(chiave)</code> elimina la coppia con quella chiave (chiave e valore insieme).</p>
+<pre data-lang="java"><code>// Prima: {Marco=18, Luca=20, Anna=17}
+studenti.remove("Luca");
+// Dopo:  {Marco=18, Anna=17}
+
+// Rimozione "sicura"
+if (studenti.containsKey("Luca")) {
+    studenti.remove("Luca");
+}</code></pre>
+  <p class="hand">Nota: se la chiave non c'è, <code>remove</code> non lancia errori, semplicemente non fa niente (e restituisce <code>null</code>). Il controllo con <code>containsKey</code> serve se vuoi <em>sapere</em> se c'era, per esempio per stampare "Luca non è in elenco".</p>
+
+  <h3>clear(): svuotare tutto</h3>
+<pre data-lang="java"><code>studenti.clear();
+System.out.println(studenti);   // {}</code></pre>
+  <p>L'oggetto mappa <strong>continua a esistere</strong>, ma è vuoto: puoi rimetterci dentro altre coppie. Dopo <code>clear()</code>, <code>size()</code> vale 0 e <code>containsKey</code> dà <code>false</code> per qualunque chiave.</p>
+
+  <h3>size(): quante coppie ci sono</h3>
+  <p><code>size()</code> restituisce il numero di <strong>coppie</strong> chiave-valore. Seguendo l'esempio:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Momento</th><th><code>size()</code></th></tr></thead>
+      <tbody>
+        <tr><td>dopo aver aggiunto Marco, Luca e Anna con <code>put</code></td><td>3</td></tr>
+        <tr><td>dopo <code>remove("Luca")</code></td><td>2</td></tr>
+        <tr><td>dopo <code>clear()</code></td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Per sapere se è vuota c'è anche <code>isEmpty()</code>, che equivale a <code>size() == 0</code> <em>(extra)</em>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Scorrere una HashMap</h2>
+  <p><em>(Extra rispetto alle slide, ma serve quasi in ogni esercizio.)</em> Una mappa non ha indici, quindi niente <code>for (int i = 0; ...)</code>. Si scorre in tre modi, a seconda di cosa ti serve:</p>
+<pre data-lang="java"><code>// 1) solo le chiavi
+for (String nome : studenti.keySet()) {
+    System.out.println(nome);
+}
+
+// 2) solo i valori
+for (int eta : studenti.values()) {
+    System.out.println(eta);
+}
+
+// 3) chiave e valore insieme
+for (Map.Entry&lt;String, Integer&gt; coppia : studenti.entrySet()) {
+    System.out.println(coppia.getKey() + " ha " + coppia.getValue() + " anni");
+}</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Restituisce</th><th>Usalo quando</th></tr></thead>
+      <tbody>
+        <tr><td><code>keySet()</code></td><td>l'insieme delle chiavi</td><td>ti servono i nomi (e magari fai <code>get</code>)</td></tr>
+        <tr><td><code>values()</code></td><td>tutti i valori</td><td>vuoi sommare, fare la media, trovare il massimo</td></tr>
+        <tr><td><code>entrySet()</code></td><td>tutte le coppie (<code>Map.Entry</code>)</td><td>ti servono chiave e valore insieme</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Un <code>Map.Entry</code> è una singola coppia: <code>getKey()</code> dà la chiave, <code>getValue()</code> il valore. Per usare <code>Map.Entry</code> serve <code>import java.util.Map;</code>.</p>
+  <div class="callout warn"><span class="callout-title">Ricorda l'ordine</span>In tutti e tre i casi l'ordine di uscita <strong>non è garantito</strong>. Se ti serve un ordine, vedi <code>TreeMap</code> e <code>LinkedHashMap</code> più sotto.</div>
+
+  <!-- ============================================================= -->
+  <h2>Come funziona dentro</h2>
+  <p><em>(Extra: non è nelle slide, ma spiega perché la HashMap è veloce e perché non ha ordine.)</em></p>
+  <p>Dentro una HashMap c'è un array di "cassetti", chiamati <strong>bucket</strong>. Quando fai <code>put("Anna", 17)</code>:</p>
+  <ol>
+    <li>Java calcola l'<strong>hash</strong> della chiave con il metodo <code>hashCode()</code>: un numero intero ricavato da "Anna". La stessa stringa dà <strong>sempre</strong> lo stesso numero.</li>
+    <li>Da quel numero ricava il <strong>cassetto</strong> in cui mettere la coppia (all'inizio i cassetti sono 16, e il numero viene "ridotto" tra 0 e 15, un po' come il resto di una divisione).</li>
+    <li>Mette la coppia in quel cassetto.</li>
+  </ol>
+<pre data-lang="testo"><code>"Anna".hashCode()  → 2045632   → cassetto 15
+"Luca".hashCode()  → 2379719   → cassetto 3
+"Marco".hashCode() → 74113578  → cassetto 0
+
+cassetti (16): [0: Marco=18] [1] [2] [3: Luca=20] … [15: Anna=17]</code></pre>
+  <p>Quando fai <code>get("Anna")</code> rifà lo stesso calcolo, va <strong>dritto</strong> al cassetto 15 e trova la coppia. Non scorre niente: per questo <code>put</code>, <code>get</code>, <code>containsKey</code> e <code>remove</code> sono in media <strong>O(1)</strong>, veloci con 10 elementi come con un milione.</p>
+  <ul>
+    <li><strong>Perché non c'è ordine</strong>: le coppie stanno nel cassetto deciso dall'hash, non in fila nell'ordine in cui sono arrivate.</li>
+    <li><strong>Collisioni</strong>: due chiavi diverse possono finire nello stesso cassetto. Nessun problema: il cassetto ne tiene più di una e Java le distingue con <code>equals()</code>. Se succede di rado, resta tutto veloce.</li>
+    <li>Il nome <strong>Hash</strong>Map viene proprio da qui.</li>
+  </ul>
+  <div class="callout def"><span class="callout-title">Oggetti tuoi come chiave: hashCode() ed equals()</span>Con <code>String</code> e <code>Integer</code> come chiavi va tutto bene, perché Java sa già calcolarne l'hash e confrontarle. Se usi come chiave un oggetto di una <strong>tua classe</strong> (per esempio <code>Punto</code> con <code>x</code> e <code>y</code>), devi <strong>sovrascrivere</strong> sia <code>hashCode()</code> sia <code>equals()</code>. Altrimenti due oggetti <code>new Punto(1, 2)</code> creati separatamente vengono considerati chiavi <strong>diverse</strong>, e <code>get</code> non trova quello che hai messo con <code>put</code>. Regola: due oggetti uguali per <code>equals</code> devono avere lo stesso <code>hashCode</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Esempio completo</h2>
+  <p>Tutte le operazioni principali in un solo programma. Leggi il codice e prova a prevedere l'output prima di guardarlo.</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        // Creazione
+        HashMap&lt;String, Integer&gt; studenti = new HashMap&lt;&gt;();
+
+        // Aggiunta
+        studenti.put("Marco", 18);
+        studenti.put("Luca", 20);
+        studenti.put("Anna", 17);
+        System.out.println(studenti);
+
+        // Accesso
+        System.out.println("Età di Marco: " + studenti.get("Marco"));
+
+        // Controllo chiave
+        if (studenti.containsKey("Anna")) {
+            System.out.println("Anna è presente.");
+        }
+
+        // Modifica
+        studenti.put("Marco", 19);
+        System.out.println("Nuova età di Marco: " + studenti.get("Marco"));
+
+        // Rimozione
+        studenti.remove("Luca");
+        System.out.println(studenti);
+
+        // Numero di elementi
+        System.out.println("Numero studenti: " + studenti.size());
+
+        // Pulizia
+        studenti.clear();
+        System.out.println("HashMap dopo clear: " + studenti);
+    }
+}</code></pre>
+<pre data-lang="testo"><code>{Marco=18, Luca=20, Anna=17}
+Età di Marco: 18
+Anna è presente.
+Nuova età di Marco: 19
+{Marco=19, Anna=17}
+Numero studenti: 2
+HashMap dopo clear: {}</code></pre>
+  <p>Nota la riga 5: Marco vale <strong>19</strong>, non 18, perché il secondo <code>put</code> ha sostituito il valore. E le stampe della mappa potrebbero avere un ordine diverso su un altro computer o con altre chiavi.</p>
+
+  <!-- ============================================================= -->
+  <h2>HashMap o lista?</h2>
+  <div class="compare">
+    <div>
+      <h4>ArrayList</h4>
+      <ul>
+        <li>trovi i dati per <strong>posizione</strong> (<code>get(3)</code>)</li>
+        <li>mantiene l'<strong>ordine</strong></li>
+        <li>ammette duplicati</li>
+        <li>cercare un elemento (<code>contains</code>) è O(n)</li>
+      </ul>
+      <p class="hand">Un elenco: la fila, la classifica, i voti in ordine di data.</p>
+    </div>
+    <div>
+      <h4>HashMap</h4>
+      <ul>
+        <li>trovi i dati per <strong>chiave</strong> (<code>get("Anna")</code>)</li>
+        <li><strong>nessun ordine</strong> garantito</li>
+        <li>chiavi uniche, valori anche ripetuti</li>
+        <li>cercare per chiave (<code>containsKey</code>) è O(1)</li>
+      </ul>
+      <p class="hand">Una rubrica: nome → numero, prodotto → prezzo, parola → quante volte compare.</p>
+    </div>
+  </div>
+  <p>La domanda da farsi: <strong>"come cercherò i dati?"</strong> Per posizione o scorrendoli tutti, lista. Per un nome o un codice, mappa.</p>
+  <h3>I prossimi passi</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Classe</th><th>Cosa cambia rispetto a HashMap</th></tr></thead>
+      <tbody>
+        <tr><td><code>LinkedHashMap</code></td><td>mantiene l'<strong>ordine di inserimento</strong> <em>(extra)</em></td></tr>
+        <tr><td><code>TreeMap</code></td><td>tiene le chiavi <strong>ordinate</strong> (alfabetico, numerico); operazioni un po' più lente, O(log n)</td></tr>
+        <tr><td><code>HashSet</code></td><td>solo <strong>chiavi</strong>, senza valori: un insieme di elementi unici (funziona con lo stesso meccanismo degli hash)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Si usano tutte con gli stessi metodi visti qui: cambiando <code>new HashMap&lt;&gt;()</code> in <code>new TreeMap&lt;&gt;()</code>, la stampa esce in ordine alfabetico. Per approfondire ogni metodo c'è la documentazione ufficiale Oracle di <code>java.util.HashMap</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>Metodo</th><th>Esempio</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Aggiungere / modificare</td><td><code>put()</code></td><td><code>map.put("Mario", 20)</code></td><td>se la chiave c'è già, sostituisce</td></tr>
+        <tr><td>Accedere</td><td><code>get()</code></td><td><code>map.get("Mario")</code></td><td><code>null</code> se la chiave non c'è</td></tr>
+        <tr><td>Controllare chiave</td><td><code>containsKey()</code></td><td><code>map.containsKey("Mario")</code></td><td>veloce, O(1)</td></tr>
+        <tr><td>Controllare valore</td><td><code>containsValue()</code></td><td><code>map.containsValue(20)</code></td><td>lento, O(n)</td></tr>
+        <tr><td>Rimuovere</td><td><code>remove()</code></td><td><code>map.remove("Mario")</code></td><td>toglie chiave e valore</td></tr>
+        <tr><td>Contare elementi</td><td><code>size()</code></td><td><code>map.size()</code></td><td>numero di coppie</td></tr>
+        <tr><td>Svuotare</td><td><code>clear()</code></td><td><code>map.clear()</code></td><td>la mappa resta, vuota</td></tr>
+        <tr><td>Valore di riserva</td><td><code>getOrDefault()</code></td><td><code>map.getOrDefault("Mario", 0)</code></td><td><em>extra</em></td></tr>
+        <tr><td>Scorrere</td><td><code>keySet()</code> · <code>values()</code> · <code>entrySet()</code></td><td><code>for (String k : map.keySet())</code></td><td><em>extra</em>, ordine non garantito</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul>
+    <li><strong>HashMap</strong> = coppie <strong>chiave → valore</strong>; chiavi <strong>uniche</strong>, valori anche duplicati; <code>java.util</code>.</li>
+    <li><code>HashMap&lt;String, Integer&gt; m = new HashMap&lt;&gt;();</code>: due tipi, solo classi.</li>
+    <li><strong>Nessun ordine</strong> garantito. Dentro usa l'<strong>hash</strong> della chiave per trovare il cassetto: per questo è O(1).</li>
+    <li>Chiavi di classi tue: sovrascrivi <code>hashCode()</code> ed <code>equals()</code>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Chiave o valore? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ogni situazione di' quale sarebbe la chiave, quale il valore e i tipi Java: a) il prezzo dei prodotti di un bar; b) i voti finali degli studenti di una classe; c) il numero di giorni di ogni mese; d) le capitali degli stati europei. In quale caso i valori si ripetono?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li>a) prodotto → prezzo: <code>HashMap&lt;String, Double&gt;</code>.</li>
+        <li>b) studente → voto: <code>HashMap&lt;String, Integer&gt;</code>.</li>
+        <li>c) mese → giorni: <code>HashMap&lt;String, Integer&gt;</code>. Qui i valori si ripetono tantissimo (molti mesi hanno 30 o 31 giorni), ed è permesso.</li>
+        <li>d) stato → capitale: <code>HashMap&lt;String, String&gt;</code>.</li>
+      </ul>
+      <p>Anche in a) e b) i valori possono ripetersi (due prodotti allo stesso prezzo, due studenti con 7). Le <strong>chiavi</strong> invece sono sempre uniche: è quello con cui cerchi.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Cosa stampa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt; m = new HashMap&lt;&gt;();
+m.put("a", 1);
+m.put("b", 2);
+m.put("a", 5);
+m.put("c", 2);
+m.remove("b");
+m.remove("z");
+System.out.println(m.size());
+System.out.println(m.get("a") + " " + m.get("b"));
+System.out.println(m.containsKey("c") + " " + m.containsValue(2));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>2
+5 null
+true true</code></pre>
+      <p>Il secondo <code>put("a", 5)</code> <strong>sostituisce</strong> l'1. Dopo <code>remove("b")</code> restano "a" e "c": size 2. <code>remove("z")</code> non fa nulla. <code>get("b")</code> dà <code>null</code> perché "b" è stata tolta. Il valore 2 c'è ancora, associato a "c".</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Trova l'errore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt; voti = new HashMap&lt;&gt;();
+voti.put("Anna", 8);
+int v = voti.get("anna");
+System.out.println(v + 1);</code></pre>
+      <p>Il programma compila, ma si ferma con un errore. Quale e perché? Correggilo in due modi.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Le chiavi <code>String</code> distinguono maiuscole e minuscole: "anna" non è "Anna", quindi <code>get</code> restituisce <code>null</code>, e mettere <code>null</code> in un <code>int</code> lancia <code>NullPointerException</code>.</p>
+<pre data-lang="java"><code>// 1) controllo prima
+if (voti.containsKey("anna")) {
+    int v = voti.get("anna");
+    System.out.println(v + 1);
+} else {
+    System.out.println("Studente non trovato");
+}
+
+// 2) valore di riserva
+int v = voti.getOrDefault("anna", 0);</code></pre>
+      <p>E naturalmente, se si voleva Anna, va scritta con la maiuscola.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Il listino del bar <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Crea una mappa con i prezzi: caffè 1.20, cappuccino 1.50, cornetto 1.30, spremuta 3.00. Poi: a) aumenta di 10 centesimi il prezzo del caffè; b) togli la spremuta; c) stampa ogni prodotto con il suo prezzo; d) calcola quanto costa un ordine fatto da <code>{"caffè", "cornetto", "cornetto", "tè"}</code>, segnalando i prodotti che non ci sono.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        HashMap&lt;String, Double&gt; prezzi = new HashMap&lt;&gt;();
+        prezzi.put("caffè", 1.20);
+        prezzi.put("cappuccino", 1.50);
+        prezzi.put("cornetto", 1.30);
+        prezzi.put("spremuta", 3.00);
+
+        prezzi.put("caffè", prezzi.get("caffè") + 0.10);   // a)
+        prezzi.remove("spremuta");                         // b)
+
+        for (Map.Entry&lt;String, Double&gt; p : prezzi.entrySet()) {   // c)
+            System.out.println(p.getKey() + ": " + p.getValue() + " €");
+        }
+
+        String[] ordine = {"caffè", "cornetto", "cornetto", "tè"};   // d)
+        double totale = 0;
+        for (String prodotto : ordine) {
+            if (prezzi.containsKey(prodotto)) {
+                totale += prezzi.get(prodotto);
+            } else {
+                System.out.println("Non disponibile: " + prodotto);
+            }
+        }
+        System.out.printf("Totale: %.2f €%n", totale);
+    }
+}</code></pre>
+<pre data-lang="testo"><code>cappuccino: 1.5 €
+caffè: 1.3 €
+cornetto: 1.3 €
+Non disponibile: tè
+Totale: 3.90 €</code></pre>
+      <p>L'ordine delle righe del listino può essere diverso: è una HashMap. Il <code>printf</code> con <code>%.2f</code> stampa il totale con due decimali (con i <code>double</code> la somma potrebbe venire 3.9000000000000004).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Contare le parole <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Data la frase <code>"il gatto e il cane e il topo"</code>, conta quante volte compare ogni parola usando una HashMap e stampa il risultato. Suggerimento: <code>frase.split(" ")</code> divide la frase in un array di parole.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>String frase = "il gatto e il cane e il topo";
+HashMap&lt;String, Integer&gt; conta = new HashMap&lt;&gt;();
+
+for (String parola : frase.split(" ")) {
+    if (conta.containsKey(parola)) {
+        conta.put(parola, conta.get(parola) + 1);   // già vista: +1
+    } else {
+        conta.put(parola, 1);                       // prima volta
+    }
+}
+System.out.println(conta);</code></pre>
+<pre data-lang="testo"><code>{il=3, e=2, cane=1, gatto=1, topo=1}</code></pre>
+      <p>Le parole escono in un ordine diverso dalla frase: è una HashMap. È lo schema classico del <strong>contatore</strong> con una mappa: la parola è la chiave, il numero di volte il valore. Le tre righe dell'<code>if</code> si possono scrivere in una: <code>conta.put(parola, conta.getOrDefault(parola, 0) + 1);</code></p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Il migliore della classe <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Data una mappa studente → media (Anna 7.5, Bruno 6.0, Carla 8.25, Dario 5.5), stampa: la media della classe, lo studente con la media più alta e i nomi degli studenti insufficienti (media sotto 6).</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>HashMap&lt;String, Double&gt; medie = new HashMap&lt;&gt;();
+medie.put("Anna", 7.5);
+medie.put("Bruno", 6.0);
+medie.put("Carla", 8.25);
+medie.put("Dario", 5.5);
+
+double somma = 0;
+for (double m : medie.values()) {
+    somma += m;
+}
+System.out.println("Media della classe: " + somma / medie.size());
+
+String migliore = null;
+for (String nome : medie.keySet()) {
+    if (migliore == null || medie.get(nome) &gt; medie.get(migliore)) {
+        migliore = nome;
+    }
+}
+System.out.println("Migliore: " + migliore + " (" + medie.get(migliore) + ")");
+
+for (Map.Entry&lt;String, Double&gt; e : medie.entrySet()) {
+    if (e.getValue() &lt; 6) {
+        System.out.println("Insufficiente: " + e.getKey());
+    }
+}</code></pre>
+<pre data-lang="testo"><code>Media della classe: 6.8125
+Migliore: Carla (8.25)
+Insufficiente: Dario</code></pre>
+      <p>Tre modi di scorrere per tre scopi: <code>values()</code> per la somma (servono solo i numeri), <code>keySet()</code> per il massimo (serve sapere <em>chi</em>), <code>entrySet()</code> per il filtro (servono nome e media insieme).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>La rubrica <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p>Scrivi una classe <code>Rubrica</code> con un attributo <code>HashMap&lt;String, String&gt; contatti</code> (nome → numero) e i metodi:</p>
+      <ul>
+        <li><code>boolean aggiungi(String nome, String numero)</code>: aggiunge il contatto solo se il nome <strong>non</strong> c'è già, e dice se ci è riuscito;</li>
+        <li><code>String cerca(String nome)</code>: restituisce il numero, oppure <code>"non trovato"</code>;</li>
+        <li><code>boolean elimina(String nome)</code>: dice se il contatto c'era;</li>
+        <li><code>String chiHa(String numero)</code>: restituisce il nome di chi ha quel numero, oppure <code>null</code>.</li>
+      </ul>
+      <p>Provala nel <code>main</code>. Perché <code>chiHa</code> è più lento degli altri metodi?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.Map;
+
+class Rubrica {
+    private HashMap&lt;String, String&gt; contatti = new HashMap&lt;&gt;();
+
+    boolean aggiungi(String nome, String numero) {
+        if (contatti.containsKey(nome)) {
+            return false;               // non sovrascrivo un contatto esistente
+        }
+        contatti.put(nome, numero);
+        return true;
+    }
+
+    String cerca(String nome) {
+        return contatti.getOrDefault(nome, "non trovato");
+    }
+
+    boolean elimina(String nome) {
+        if (!contatti.containsKey(nome)) {
+            return false;
+        }
+        contatti.remove(nome);
+        return true;
+    }
+
+    String chiHa(String numero) {
+        for (Map.Entry&lt;String, String&gt; c : contatti.entrySet()) {
+            if (c.getValue().equals(numero)) {
+                return c.getKey();
+            }
+        }
+        return null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Rubrica r = new Rubrica();
+        System.out.println(r.aggiungi("Mamma", "333 111 2222"));   // true
+        System.out.println(r.aggiungi("Luca", "347 555 6666"));    // true
+        System.out.println(r.aggiungi("Mamma", "000"));            // false
+        System.out.println(r.cerca("Mamma"));                      // 333 111 2222
+        System.out.println(r.cerca("Zia"));                        // non trovato
+        System.out.println(r.chiHa("347 555 6666"));               // Luca
+        System.out.println(r.elimina("Luca"));                     // true
+        System.out.println(r.elimina("Luca"));                     // false
+    }
+}</code></pre>
+      <ul>
+        <li>In <code>aggiungi</code> il controllo con <code>containsKey</code> serve perché un semplice <code>put</code> <strong>sovrascriverebbe</strong> il numero della mamma.</li>
+        <li>I numeri sono <code>String</code>, non <code>int</code>: hanno spazi, possono iniziare con 0 o con +39, e non ci si fanno calcoli.</li>
+        <li><code>chiHa</code> cerca per <strong>valore</strong>: deve scorrere tutte le coppie, O(n). Gli altri metodi cercano per <strong>chiave</strong>, O(1). Le stringhe si confrontano con <code>equals</code>, non con <code>==</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Lezione Pratica Java: HashMap", dispense a cura del prof. Daniele Gravina, a.s. 2026/2027: coppie chiave-valore, creazione, <code>put</code>, <code>get</code>, <code>containsKey</code>, <code>containsValue</code>, <code>remove</code>, <code>clear</code>, <code>size</code>, esempio completo, tabella dei metodi e prossimi passi. Sono aggiunte per aiutare lo studio: i paragoni, l'interfaccia <code>Map</code>, la trappola del <code>null</code> con <code>int</code>, <code>getOrDefault</code>, la velocità di <code>containsKey</code> e <code>containsValue</code>, come scorrere una mappa (<code>keySet</code>, <code>values</code>, <code>entrySet</code>), come funziona dentro (hash e bucket), il confronto con le liste, <code>LinkedHashMap</code>, l'output dell'esempio completo e gli esercizi 01–07 con le soluzioni.</p>
+</main>
+</body>
+</html>

@@ -676,6 +676,66 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-hashmap.html": {
+    breve: "La HashMap tiene i dati in coppie chiave → valore e li ritrova per chiave in un attimo: put, get, containsKey, remove, size e come scorrerla.",
+    sezioni: [
+      {
+        titolo: "Cosa sono le HashMap",
+        punti: [
+          "Coppie <strong>chiave → valore</strong> (es. nome → età). Chiavi <strong>uniche</strong>, valori anche duplicati.",
+          "Come una rubrica: cerchi per nome, trovi il numero. Classe di <code>java.util</code>.",
+        ],
+      },
+      {
+        titolo: "Creare una HashMap",
+        punti: [
+          "<code>HashMap&lt;String, Integer&gt; studenti = new HashMap&lt;&gt;();</code>: due tipi, chiave e valore, solo classi.",
+          "Si può anche scrivere <code>Map</code> a sinistra (programmare per interfaccia).",
+        ],
+      },
+      {
+        titolo: "Aggiungere e modificare con put()",
+        punti: [
+          "<code>put(chiave, valore)</code> aggiunge; se la chiave c'è già <strong>sostituisce</strong> il valore.",
+          "L'ordine di inserimento <strong>non è garantito</strong>.",
+        ],
+      },
+      {
+        titolo: "Leggere con get() e controllare",
+        punti: [
+          "<code>get(chiave)</code> dà il valore, o <code>null</code> se la chiave non c'è: in un <code>int</code> diventa <code>NullPointerException</code>.",
+          "<code>containsKey</code> (veloce, O(1)) e <code>containsValue</code> (lento, O(n)); <code>getOrDefault(chiave, riserva)</code>.",
+        ],
+      },
+      {
+        titolo: "Rimuovere, svuotare e contare",
+        punti: [
+          "<code>remove(chiave)</code> toglie la coppia; <code>clear()</code> svuota (la mappa resta); <code>size()</code> conta le coppie.",
+        ],
+      },
+      {
+        titolo: "Scorrere una HashMap",
+        punti: [
+          "<code>keySet()</code> per le chiavi, <code>values()</code> per i valori, <code>entrySet()</code> per le coppie (<code>getKey()</code>, <code>getValue()</code>).",
+        ],
+      },
+      {
+        titolo: "Come funziona dentro",
+        punti: [
+          "L'<strong>hash</strong> della chiave (<code>hashCode()</code>) decide il cassetto (bucket): per questo è O(1) e non ha ordine.",
+          "Chiavi di classi tue: sovrascrivi <code>hashCode()</code> ed <code>equals()</code>.",
+        ],
+      },
+      {
+        titolo: "HashMap o lista?",
+        punti: [
+          "Cerchi per posizione o ti serve l'ordine: lista. Cerchi per nome o codice: mappa.",
+          "<code>LinkedHashMap</code> mantiene l'ordine di inserimento, <code>TreeMap</code> ordina le chiavi, <code>HashSet</code> ha solo chiavi.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
