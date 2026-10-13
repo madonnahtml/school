@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lo schema DTD · Scuola</title>
+  <meta name="description" content="TPSIT: lo schema DTD per i documenti XML. Che cos'è, XML ben formato e valido, DOCTYPE, ELEMENT, operatori, #PCDATA, EMPTY, ATTLIST, DTD interno ed esterno, limiti del DTD, come si valida. Esempi ed esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=9">
+  <script src="../../assets/js/site.js?v=9"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Lo schema DTD</h1>
+  <p class="lead">In XML i tag li inventi tu. Ma se due programmi si scambiano file XML, devono mettersi d'accordo su <strong>quali tag esistono</strong>, <strong>in che ordine</strong> vanno scritti e <strong>quali attributi</strong> hanno. Il <strong>DTD</strong> è il regolamento, scritto una volta sola, che mette nero su bianco queste regole e permette a un programma di controllarle.</p>
+
+  <div class="callout def">
+    <span class="callout-title">In una frase</span>
+    Un <strong>DTD</strong> (<em>Document Type Definition</em>, "definizione del tipo di documento") è uno <strong>schema</strong> che descrive la <strong>struttura</strong> che un documento XML deve rispettare per essere <strong>valido</strong>: quali elementi possono comparire, in che ordine e quante volte, e quali attributi possono avere.
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Questo capitolo continua <a href="xml.html">Il linguaggio XML</a>: servono i concetti di <strong>elemento</strong>, <strong>attributo</strong> e di documento <strong>ben formato</strong>. Se li hai dimenticati, ripassa prima quella pagina.</div>
+
+  <!-- ============================================================= -->
+  <h2>Che cos'è un DTD</h2>
+  <p>Immagina un modulo cartaceo, per esempio quello per iscriversi a un corso. Il modulo dice <strong>quali caselle ci sono</strong> (nome, cognome, classe), <strong>in che ordine</strong>, <strong>quali vanno compilate per forza</strong> e quali sono facoltative. Chi compila il modulo non può inventare caselle nuove.</p>
+  <p>Il DTD è il <strong>modulo vuoto</strong> di un documento XML, e il documento XML è il modulo compilato. Il DTD:</p>
+  <ul>
+    <li>specifica <strong>quali elementi</strong> possono comparire;</li>
+    <li>stabilisce l'<strong>ordine</strong> e la <strong>quantità</strong> (le <em>occorrenze</em>) degli elementi;</li>
+    <li>permette di definire gli <strong>attributi</strong> degli elementi;</li>
+    <li>serve a <strong>verificare</strong> se un file XML rispetta una struttura prestabilita.</li>
+  </ul>
+  <p>In sostanza un DTD definisce la <strong>struttura dei tag</strong> consentiti in una particolare applicazione XML (una scuola, una rubrica, un catalogo di libri…).</p>
+  <div class="callout warn"><span class="callout-title">Cosa il DTD NON dice</span>Un DTD <strong>non dice mai niente sul tipo del contenuto</strong> di un elemento o sul valore di un attributo. Non si può imporre che il <em>prezzo</em> di un prodotto sia un numero reale, che il <em>nome</em> sia una stringa o che la <em>data di nascita</em> sia una data: per il DTD è tutto "testo". Ci torniamo nel paragrafo <a href="#cosa-non-sa-fare-un-dtd">Cosa non sa fare un DTD</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>XML ben formato e XML valido</h2>
+  <p>Nel capitolo su XML abbiamo visto che un documento può essere "ben formato". Con il DTD si aggiunge un secondo livello di controllo: la <strong>validità</strong>. Sono due cose diverse.</p>
+  <div class="compare">
+    <div>
+      <h4>XML ben formato</h4>
+      <p>Rispetta la <strong>sintassi XML</strong>:</p>
+      <ul>
+        <li>un solo elemento radice;</li>
+        <li>tag correttamente annidati;</li>
+        <li>tag di apertura e di chiusura;</li>
+        <li>valori degli attributi tra virgolette.</li>
+      </ul>
+      <p class="hand">È scritto in modo corretto.</p>
+    </div>
+    <div>
+      <h4>XML valido</h4>
+      <p>È ben formato <strong>e in più</strong>:</p>
+      <ul>
+        <li>rispetta la struttura del DTD;</li>
+        <li>contiene gli elementi previsti;</li>
+        <li>rispetta ordine e cardinalità;</li>
+        <li>rispetta gli attributi dichiarati.</li>
+      </ul>
+      <p class="hand">È scritto in modo corretto e dice le cose giuste.</p>
+    </div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Un paragone con l'italiano</span>La frase <em>"Il gatto mangia il topo"</em> è <strong>ben formata</strong> (grammatica giusta). La frase <em>"Il topo mangia il gatto"</em> lo è altrettanto, ma se il "regolamento" dice che i gatti mangiano i topi e non viceversa, è <strong>non valida</strong>. E <em>"Il gatto topo il mangia"</em> non è nemmeno ben formata. Prima si controlla la grammatica (ben formato), poi il regolamento (valido).</div>
+  <p>I controlli si fanno <strong>in quest'ordine</strong>, e il secondo ha senso solo se il primo è superato:</p>
+  <figure class="seq" data-attori="Documento XML | Parser"
+    data-passi="Parser > Documento XML : legge il documento; = 1 · è ben formato? se no: errore e stop; = 2 · legge il DTD (dal DOCTYPE); = 3 · elementi e attributi rispettano il DTD?; Parser > Documento XML : valido oppure errore">
+    <figcaption>Un parser <em>validante</em> controlla prima la sintassi, poi confronta il documento con il DTD.</figcaption>
+  </figure>
+  <div class="callout def"><span class="callout-title">Da ricordare</span>Valido ⇒ ben formato, ma <strong>non</strong> il contrario. Un documento ben formato può non essere valido rispetto a un DTD. E un documento <strong>senza</strong> DTD non può essere "valido": può solo essere ben formato.</div>
+
+  <!-- ============================================================= -->
+  <h2>Come si collega un DTD a un documento</h2>
+  <p>Per applicare un DTD a un documento XML si inserisce nel <strong>prologo</strong>, <strong>sotto</strong> la riga della dichiarazione XML (<code>&lt;?xml ...?&gt;</code>) e <strong>prima</strong> dell'elemento radice, una dichiarazione con questa sintassi:</p>
+  <div class="anatomy" aria-label="Dichiarazione DOCTYPE scomposta">
+    &lt;!DOCTYPE <span class="k1" data-l="elemento radice">scuola</span> <span class="k2" data-l="tipo">SYSTEM</span> "<span class="k3" data-l="file del DTD">scuola.dtd</span>"&gt;
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parte</th><th>Cosa indica</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;!DOCTYPE</code></td><td>la parola che apre la dichiarazione ("tipo di documento"); si scrive tutta in <strong>maiuscolo</strong></td></tr>
+        <tr><td><strong>elemento radice</strong></td><td>il nome dell'elemento radice del documento; <strong>deve coincidere</strong> con il tag radice</td></tr>
+        <tr><td><code>SYSTEM</code></td><td>il DTD è un <strong>documento di utilizzo locale</strong>: un file tuo, indicato dal suo indirizzo (un percorso o un URL)</td></tr>
+        <tr><td><strong>nome del file</strong></td><td>il file che contiene il DTD, <strong>tra virgolette</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Un documento completo si presenta così (prologo, poi <code>DOCTYPE</code>, poi la radice):</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE scuola SYSTEM "scuola.dtd"&gt;
+&lt;scuola&gt;
+  ...
+&lt;/scuola&gt;</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione ai segnaposto</span>Nelle slide la sintassi è scritta come <code>&lt;!DOCTYPE &lt;root-element&gt; SYSTEM "&lt;filename&gt;"&gt;</code>: i simboli <code>&lt; &gt;</code> attorno a <em>root-element</em> e <em>filename</em> indicano <strong>"qui va il nome"</strong>, non vanno scritti. Anche le virgolette devono essere quelle <strong>dritte</strong> <code>"</code>, non quelle "ricurve" che a volte mette un programma di videoscrittura.</div>
+  <div class="callout info"><span class="callout-title">Lo conosci già</span>La riga <code>&lt;!DOCTYPE html&gt;</code> in cima a ogni pagina HTML5 è una dichiarazione dello stesso tipo: dice al browser "questo documento è di tipo <em>html</em>". (Nell'HTML5 è diventata così breve che non rimanda più a nessun DTD.)</div>
+  <p>Esiste anche la forma <code>PUBLIC</code>, usata per i DTD <strong>pubblici e standard</strong> (come quelli dell'XHTML), che oltre al file indica un nome ufficiale. Per i tuoi documenti si usa quasi sempre <code>SYSTEM</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Com'è fatto un DTD</h2>
+  <p>Lo schema DTD è un <strong>elenco di dichiarazioni</strong> (<em>markup declaration</em>) che descrivono la struttura del documento. Ogni dichiarazione definisce:</p>
+  <ul>
+    <li>gli <strong>elementi</strong> (<code>ELEMENT</code>) del documento XML;</li>
+    <li>il <strong>modello di contenuto</strong> (<em>content model</em>) di ogni elemento, cioè gli elementi che contiene e le loro relazioni;</li>
+    <li>la <strong>lista degli attributi</strong> (<code>ATTLIST</code>) associati a ciascun elemento, il loro tipo e il loro valore.</li>
+  </ul>
+  <p>La sintassi del DTD ruota soprattutto intorno a due parole: <code>ELEMENT</code> e <code>ATTLIST</code>.</p>
+  <div class="compare">
+    <div>
+      <h4><code>ELEMENT</code></h4>
+<pre data-lang="dtd"><code>&lt;!ELEMENT nome_elemento contenuto&gt;</code></pre>
+      <p>Dichiara un <strong>elemento</strong> e che cosa può contenere.</p>
+    </div>
+    <div>
+      <h4><code>ATTLIST</code></h4>
+<pre data-lang="dtd"><code>&lt;!ATTLIST nome_elemento
+  attributo tipo valore_predefinito&gt;</code></pre>
+      <p>Dichiara gli <strong>attributi</strong> di un elemento.</p>
+    </div>
+  </div>
+
+  <h3>I quattro modelli di contenuto</h3>
+  <p>Il contenuto di un elemento può essere di <strong>4 tipi</strong>:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Significato</th><th>Esempio di dichiarazione</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1 · <code>EMPTY</code></strong></td><td>parola chiave che indica l'elemento <strong>vuoto</strong></td><td><code>&lt;!ELEMENT fotografia EMPTY&gt;</code></td></tr>
+        <tr><td><strong>2 · <code>ANY</code></strong></td><td>si può inserire <strong>testo o elementi qualsiasi</strong> (purché dichiarati nel DTD)</td><td><code>&lt;!ELEMENT note ANY&gt;</code></td></tr>
+        <tr><td><strong>3 · Children</strong></td><td>un elenco di <strong>elementi figli</strong> specifici, con un <strong>ordine</strong> determinato</td><td><code>&lt;!ELEMENT studente (nome, cognome)&gt;</code></td></tr>
+        <tr><td><strong>4 · Mixed</strong></td><td>un <strong>testo</strong> più l'elenco di elementi figli, <strong>senza ordine specifico</strong></td><td><code>&lt;!ELEMENT paragrafo (#PCDATA | b | i)*&gt;</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A questi si aggiunge il caso più frequente di tutti: l'elemento che contiene <strong>solo testo</strong>, scritto <code>(#PCDATA)</code>. Lo vediamo subito.</p>
+
+  <!-- ============================================================= -->
+  <h2>ELEMENT: definire gli elementi</h2>
+  <p>Ogni elemento che compare nel documento deve essere <strong>dichiarato</strong> con <code>ELEMENT</code>. Ecco il DTD di uno studente:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT studente (nome, cognome, classe)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT cognome (#PCDATA)&gt;
+&lt;!ELEMENT classe (#PCDATA)&gt;</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Dichiarazione</th><th>Come si legge</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;!ELEMENT studente (nome, cognome, classe)&gt;</code></td><td>L'elemento <code>studente</code> contiene tre figli, che devono comparire <strong>in questo ordine</strong>: prima <code>nome</code>, poi <code>cognome</code>, poi <code>classe</code>.</td></tr>
+        <tr><td><code>&lt;!ELEMENT nome (#PCDATA)&gt;</code></td><td>L'elemento <code>nome</code> contiene <strong>solo testo</strong>. (Le parentesi intorno a <code>#PCDATA</code> sono <strong>obbligatorie</strong>.)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout def"><span class="callout-title">#PCDATA</span><em>Parsed Character DATA</em>: <strong>testo</strong> che il parser legge e interpreta. L'elemento che lo contiene non ha figli, ha solo testo: <code>&lt;nome&gt;Anna&lt;/nome&gt;</code>. Siccome il testo viene "interpretato", dentro non si possono scrivere liberamente i simboli <code>&lt;</code> e <code>&amp;</code> (vedi i caratteri speciali nel capitolo XML).</div>
+
+  <h3>Un documento valido e quattro che non lo sono</h3>
+  <p>Con il DTD <code>studente (nome, cognome)</code> (dichiarando anche <code>nome</code> e <code>cognome</code> come <code>#PCDATA</code>), vediamo cosa risponde un validatore:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Documento</th><th>Esito</th><th>Perché</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;/studente&gt;</code></td><td><strong>valido</strong></td><td>elementi giusti, ordine giusto</td></tr>
+        <tr><td><code>&lt;studente&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;/studente&gt;</code></td><td>non valido</td><td>l'<strong>ordine</strong> è sbagliato: il DTD vuole prima <code>nome</code></td></tr>
+        <tr><td><code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;/studente&gt;</code></td><td>non valido</td><td>manca <code>cognome</code></td></tr>
+        <tr><td><code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;eta&gt;18&lt;/eta&gt;&lt;/studente&gt;</code></td><td>non valido</td><td><code>eta</code> <strong>non è dichiarato</strong>: un elemento non previsto non è ammesso</td></tr>
+        <tr><td><code>&lt;studente&gt;ciao&lt;nome&gt;Marco&lt;/nome&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;/studente&gt;</code></td><td>non valido</td><td>un elemento con soli figli <strong>non può contenere testo</strong> sparso</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tutti questi documenti sono <strong>ben formati</strong>: l'errore è solo di <em>validità</em>. È la differenza della sezione precedente.</p>
+  <ul>
+    <li>Ogni elemento va dichiarato <strong>una volta sola</strong>: dichiararlo due volte è un errore.</li>
+    <li>L'ordine in cui si scrivono le dichiarazioni nel DTD <strong>non conta</strong>; conta l'ordine degli elementi <em>dentro le parentesi</em>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Operatori: ordine e cardinalità</h2>
+  <p>Nelle parentesi del modello di contenuto si possono usare dei simboli per dire <strong>in che ordine</strong> compaiono i figli e <strong>quante volte</strong> (la <em>cardinalità</em>).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Simbolo</th><th>Nome</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>,</code></td><td><strong>sequenza</strong></td><td><code>A, B</code> → A <strong>seguito da</strong> B</td><td><code>(nome, cognome)</code></td></tr>
+        <tr><td><code>|</code></td><td><strong>alternativa</strong></td><td><code>A | B</code> → A <strong>oppure</strong> B</td><td><code>(telefono | email)</code></td></tr>
+        <tr><td><code>?</code></td><td><strong>0 o 1</strong></td><td><code>A?</code> → A è <strong>opzionale</strong></td><td><code>email?</code></td></tr>
+        <tr><td><code>*</code></td><td><strong>0 o più</strong></td><td><code>A*</code> → A può <strong>ripetersi</strong>, o mancare</td><td><code>telefono*</code></td></tr>
+        <tr><td><code>+</code></td><td><strong>1 o più</strong></td><td><code>A+</code> → <strong>almeno una</strong> occorrenza</td><td><code>persona+</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Per ricordarli</span><code>?</code> è il <strong>dubbio</strong>: "forse c'è, forse no". <code>*</code> è la <strong>stellina</strong>: "quanti ne vuoi, anche nessuno". <code>+</code> è il <strong>più</strong>: "ce ne vuole almeno uno".</div>
+  <p>I simboli <code>?</code>, <code>*</code> e <code>+</code> si scrivono <strong>subito dopo</strong> il nome (senza spazio) o dopo una parentesi chiusa, e valgono per l'elemento o il gruppo che li precede.</p>
+
+  <h3>Esempio: una rubrica</h3>
+<pre data-lang="dtd"><code>&lt;!ELEMENT rubrica (persona+)&gt;
+&lt;!ELEMENT persona (nome, cognome, telefono*, email?)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT cognome (#PCDATA)&gt;
+&lt;!ELEMENT telefono (#PCDATA)&gt;
+&lt;!ELEMENT email (#PCDATA)&gt;</code></pre>
+  <ul>
+    <li><code>rubrica (persona+)</code>: la rubrica contiene <strong>almeno una</strong> persona (una rubrica vuota non è valida).</li>
+    <li><code>persona (nome, cognome, telefono*, email?)</code>: in ordine, un nome, un cognome, <strong>zero o più</strong> telefoni e <strong>al massimo una</strong> email.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Persona</th><th>Esito</th></tr></thead>
+      <tbody>
+        <tr><td>nome, cognome</td><td><strong>valida</strong> (telefoni zero, email assente)</td></tr>
+        <tr><td>nome, cognome, telefono, telefono, telefono, email</td><td><strong>valida</strong> (tre telefoni)</td></tr>
+        <tr><td>nome, cognome, email, email</td><td>non valida: <code>email?</code> ammette al massimo <strong>una</strong></td></tr>
+        <tr><td>nome, cognome, email, telefono</td><td>non valida: i telefoni vanno <strong>prima</strong> dell'email</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Alternative e gruppi</h3>
+  <p>Con <code>|</code> si sceglie <strong>una</strong> delle strade. Si possono usare le parentesi per <strong>raggruppare</strong> e applicare un operatore a un gruppo intero:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT contatto (nome, (telefono | email))&gt;   &lt;!-- o il telefono o l'email, non entrambi, non nessuno --&gt;
+&lt;!ELEMENT elenco (nome, (telefono | email)*)&gt;    &lt;!-- dopo il nome, tanti telefoni ed email, in qualsiasi ordine --&gt;</code></pre>
+  <div class="callout warn"><span class="callout-title">Errore classico: virgola e barra mescolate</span>In uno stesso gruppo <strong>non si possono mescolare</strong> <code>,</code> e <code>|</code>. <code>(b | c, d)</code> è un errore di sintassi. Bisogna dire con le parentesi cosa si intende: <code>(b | (c, d))</code> ("b oppure la coppia c, d") oppure <code>((b | c), d)</code> ("b o c, e poi d").</div>
+
+  <!-- ============================================================= -->
+  <h2>#PCDATA, EMPTY, ANY e contenuto misto</h2>
+  <p>Oltre a "solo figli", un elemento può avere altri tipi di contenuto.</p>
+
+  <h3>#PCDATA: solo testo</h3>
+<pre data-lang="dtd"><code>&lt;!ELEMENT nome (#PCDATA)&gt;</code></pre>
+  <p>L'elemento contiene <strong>testo</strong> e nessun figlio. Esempio: <code>&lt;nome&gt;Anna&lt;/nome&gt;</code>.</p>
+
+  <h3>EMPTY: elemento vuoto</h3>
+<pre data-lang="dtd"><code>&lt;!ELEMENT fotografia EMPTY&gt;</code></pre>
+  <p>L'elemento <strong>non contiene né testo né elementi figli</strong>. Si scrive <code>&lt;fotografia /&gt;</code> (oppure, equivalente, <code>&lt;fotografia&gt;&lt;/fotografia&gt;</code>). Se ci mettessi del testo dentro, il documento non sarebbe valido.</p>
+  <p>Un elemento vuoto è utile quando l'informazione sta nei suoi <strong>attributi</strong>: una foto non ha "contenuto", ha il nome del file.</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT fotografia EMPTY&gt;
+&lt;!ATTLIST fotografia file CDATA #REQUIRED&gt;</code></pre>
+<pre data-lang="xml"><code>&lt;fotografia file="anna.jpg"/&gt;</code></pre>
+
+  <h3>Contenuto misto: testo e figli insieme</h3>
+  <p>Nel <strong>contenuto misto</strong> (<em>mixed</em>) l'elemento contiene testo <strong>mescolato</strong> a elementi figli, senza un ordine fisso. È il caso di un paragrafo con parole in grassetto o corsivo:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT paragrafo (#PCDATA | b | i)*&gt;
+&lt;!ELEMENT b (#PCDATA)&gt;
+&lt;!ELEMENT i (#PCDATA)&gt;</code></pre>
+<pre data-lang="xml"><code>&lt;paragrafo&gt;Testo normale, &lt;b&gt;grassetto&lt;/b&gt; e &lt;i&gt;corsivo&lt;/i&gt;.&lt;/paragrafo&gt;</code></pre>
+  <p>La forma è <strong>rigida</strong>: <code>#PCDATA</code> <strong>per primo</strong>, i figli separati da <code>|</code>, e la parentesi chiusa seguita da <code>*</code>. Non si può dire quanti grassetti o in che ordine: si può solo elencare <strong>quali</strong> elementi sono ammessi tra il testo. Un <code>&lt;u&gt;</code> non dichiarato renderebbe il documento non valido.</p>
+
+  <h3>ANY: tutto è permesso</h3>
+<pre data-lang="dtd"><code>&lt;!ELEMENT note ANY&gt;</code></pre>
+  <p>L'elemento può contenere <strong>testo o qualsiasi elemento</strong>, purché sia <strong>dichiarato</strong> nel DTD (un tag mai dichiarato è comunque un errore). È comodo per provare, ma si usa poco: toglie al DTD il suo scopo, che è <strong>porre dei limiti</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>ATTLIST: gli attributi</h2>
+  <p>Gli attributi si dichiarano con <code>ATTLIST</code>. Si indica a <strong>quale elemento</strong> appartengono e, per ognuno, il <strong>nome</strong>, il <strong>tipo</strong> e il <strong>valore predefinito</strong>. Un solo <code>ATTLIST</code> può dichiarare più attributi:</p>
+<pre data-lang="dtd"><code>&lt;!ATTLIST studente
+  matricola ID #REQUIRED
+  genere (M|F) #IMPLIED&gt;</code></pre>
+  <div class="anatomy" aria-label="Dichiarazione di un attributo scomposta">
+    <span class="k1" data-l="nome attributo">genere</span> <span class="k2" data-l="tipo">(M|F)</span> <span class="k3" data-l="valore predefinito">#IMPLIED</span>
+  </div>
+
+  <h3>Il tipo dell'attributo</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Cosa significa</th></tr></thead>
+      <tbody>
+        <tr><td><code>CDATA</code></td><td><strong>testo</strong> qualsiasi</td></tr>
+        <tr><td><code>(en1 | en2 | … | enn)</code></td><td>un valore <strong>scelto da una lista</strong> (enumerazione), per esempio <code>(M|F)</code> o <code>(si|no)</code></td></tr>
+        <tr><td><code>ID</code></td><td>un <strong>identificatore univoco</strong> a livello di documento: due elementi <strong>non</strong> possono avere lo stesso valore. Non può iniziare con un numero, né contenere spazi, e viene in genere indicato come obbligatorio (<code>#REQUIRED</code>)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Il valore predefinito (o la presenza)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Valore</th><th>Cosa significa</th></tr></thead>
+      <tbody>
+        <tr><td><code>"valore"</code></td><td>l'attributo ha un valore di <strong>default</strong> pari a <em>valore</em> (se manca, si usa questo)</td></tr>
+        <tr><td><code>#REQUIRED</code></td><td>l'attributo <strong>deve essere presente</strong></td></tr>
+        <tr><td><code>#IMPLIED</code></td><td>l'attributo è <strong>facoltativo</strong> e non si stabilisce un valore di default</td></tr>
+        <tr><td><code>#FIXED "valore"</code></td><td>l'attributo deve avere un <strong>valore fisso</strong> pari a <em>valore</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Per ricordarli</span><code>#REQUIRED</code> = "<strong>obbligatorio</strong>", come una casella con l'asterisco rosso. <code>#IMPLIED</code> = "<strong>facoltativo</strong>", puoi lasciarla in bianco. Un valore tra virgolette = "se non scrivi niente, vale questo". <code>#FIXED</code> = "se lo scrivi, può valere solo questo".</div>
+
+  <h3>Un esempio con tutti i casi</h3>
+<pre data-lang="dtd"><code>&lt;!ELEMENT studente (#PCDATA)&gt;
+&lt;!ATTLIST studente
+  matricola ID #REQUIRED
+  genere (M|F) #IMPLIED
+  scuola CDATA #FIXED "ITIS Volta"
+  anno CDATA "1"&gt;</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Documento</th><th>Esito</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;studente matricola="S1"&gt;Marco&lt;/studente&gt;</code></td><td><strong>valido</strong> (solo la matricola è obbligatoria)</td></tr>
+        <tr><td><code>&lt;studente matricola="S1" genere="M" anno="3"&gt;Marco&lt;/studente&gt;</code></td><td><strong>valido</strong></td></tr>
+        <tr><td><code>&lt;studente genere="M"&gt;Marco&lt;/studente&gt;</code></td><td>non valido: manca l'attributo obbligatorio <code>matricola</code></td></tr>
+        <tr><td><code>&lt;studente matricola="S1" genere="X"&gt;Marco&lt;/studente&gt;</code></td><td>non valido: <code>X</code> <strong>non è nella lista</strong> (M|F)</td></tr>
+        <tr><td><code>&lt;studente matricola="S1" scuola="Altra"&gt;Marco&lt;/studente&gt;</code></td><td>non valido: <code>scuola</code> può valere <strong>solo</strong> "ITIS Volta"</td></tr>
+        <tr><td><code>&lt;studente matricola="2S"&gt;Marco&lt;/studente&gt;</code></td><td>non valido: un <code>ID</code> <strong>non può iniziare con un numero</strong></td></tr>
+        <tr><td><code>&lt;studente matricola="S1" colore="blu"&gt;Marco&lt;/studente&gt;</code></td><td>non valido: l'attributo <code>colore</code> <strong>non è dichiarato</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Un dettaglio utile: un <strong>parser validante</strong> completa da solo i valori predefiniti. Il documento <code>&lt;studente matricola="S1"&gt;Marco&lt;/studente&gt;</code>, letto con il DTD sopra, viene "visto" dal programma come <code>&lt;studente matricola="S1" scuola="ITIS Volta" anno="1"&gt;</code>: gli attributi con default o <code>#FIXED</code> compaiono anche se non li hai scritti.</p>
+
+  <h3>L'identificatore ID</h3>
+  <p>Un attributo di tipo <code>ID</code> è come il <strong>codice fiscale</strong> o la <strong>matricola</strong>: identifica un solo elemento in tutto il documento. Se due elementi hanno lo stesso valore, il documento non è valido. Questo vale <strong>nel documento intero</strong>, anche tra elementi diversi: uno studente e un laboratorio non possono avere entrambi <code>id="X1"</code>.</p>
+  <div class="callout info"><span class="callout-title">Approfondimento: IDREF</span><em>Aggiunta alle slide.</em> Il "compagno" dell'<code>ID</code> è l'<code>IDREF</code>: un attributo il cui valore deve coincidere con un <code>ID</code> <strong>esistente</strong>, per creare un collegamento ("questo libro è scritto dall'autore <code>A1</code>"). Se il valore non corrisponde a nessun <code>ID</code>, il documento non è valido.</div>
+  <div class="callout tip"><span class="callout-title">Attributo o elemento figlio?</span>Anche nel DTD ritorna la domanda vista nel capitolo XML (<a href="xml.html">attributo o elemento figlio?</a>). Un dato "di identità" o con pochi valori possibili (matricola, genere) sta bene come attributo, perché si può definire come <code>ID</code> o come enumerazione. Un testo lungo o ripetibile è meglio come elemento.</div>
+
+  <!-- ============================================================= -->
+  <h2>DTD interno</h2>
+  <p>Il DTD si può scrivere <strong>dentro</strong> lo stesso file XML, nel prologo, tra parentesi quadre dopo il <code>DOCTYPE</code>. Si chiama <strong>DTD interno</strong> (<em>internal subset</em>):</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE studente [
+  &lt;!ELEMENT studente (nome, cognome)&gt;
+  &lt;!ELEMENT nome (#PCDATA)&gt;
+  &lt;!ELEMENT cognome (#PCDATA)&gt;
+]&gt;
+&lt;studente&gt;
+  &lt;nome&gt;Marco&lt;/nome&gt;
+  &lt;cognome&gt;Rossi&lt;/cognome&gt;
+&lt;/studente&gt;</code></pre>
+  <ul>
+    <li>Dopo <code>&lt;!DOCTYPE</code> c'è il nome dell'elemento radice, poi <code>[</code>.</li>
+    <li>Tra le parentesi quadre stanno le dichiarazioni <code>ELEMENT</code> e <code>ATTLIST</code>.</li>
+    <li>La parentesi <code>]</code> e il simbolo <code>&gt;</code> chiudono il <code>DOCTYPE</code>; subito dopo comincia l'elemento radice.</li>
+  </ul>
+  <p>Non c'è la parola <code>SYSTEM</code> e non serve nessun altro file: documento e regole viaggiano insieme.</p>
+
+  <!-- ============================================================= -->
+  <h2>DTD esterno</h2>
+  <p>Il DTD si può anche scrivere in un <strong>file separato</strong> (di solito con estensione <code>.dtd</code>) e richiamare con <code>SYSTEM</code>. È il <strong>DTD esterno</strong>.</p>
+  <div class="compare">
+    <div>
+      <h4><code>scuola.xml</code></h4>
+<pre data-lang="xml"><code>&lt;!DOCTYPE scuola SYSTEM "scuola.dtd"&gt;
+&lt;scuola&gt;
+  ...
+&lt;/scuola&gt;</code></pre>
+    </div>
+    <div>
+      <h4><code>scuola.dtd</code></h4>
+<pre data-lang="dtd"><code>&lt;!ELEMENT scuola (nome, citta, laboratorio+)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT citta (#PCDATA)&gt;</code></pre>
+    </div>
+  </div>
+  <p>Il file <code>.dtd</code> contiene <strong>solo dichiarazioni</strong>: non è un documento XML, quindi niente dichiarazione <code>&lt;?xml ...?&gt;</code>, niente <code>DOCTYPE</code>, niente elemento radice. Il nome del file nel <code>DOCTYPE</code> è un percorso: <code>"scuola.dtd"</code> vuol dire "nella stessa cartella del documento XML".</p>
+  <div class="callout def"><span class="callout-title">Il vantaggio</span>Separare XML e DTD rende possibile <strong>riutilizzare lo stesso modello</strong> per più documenti: cento file di scuole diverse possono puntare allo stesso <code>scuola.dtd</code>, e se la struttura cambia si modifica <strong>un file solo</strong>.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>DTD interno</th><th>DTD esterno</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dove sta</strong></td><td>dentro il file XML</td><td>in un file <code>.dtd</code> separato</td></tr>
+        <tr><td><strong>Come si richiama</strong></td><td><code>&lt;!DOCTYPE radice [ ... ]&gt;</code></td><td><code>&lt;!DOCTYPE radice SYSTEM "file.dtd"&gt;</code></td></tr>
+        <tr><td><strong>Riutilizzabile</strong></td><td>no: vale per quel documento</td><td><strong>sì</strong>: per tutti i documenti che lo richiamano</td></tr>
+        <tr><td><strong>Quando conviene</strong></td><td>prove, esempi, un solo documento</td><td>molti documenti con la stessa struttura</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><em>Aggiunta alle slide.</em> Le due forme si possono anche <strong>combinare</strong>: <code>&lt;!DOCTYPE scuola SYSTEM "scuola.dtd" [ ... ]&gt;</code> usa il file esterno e aggiunge qualche dichiarazione locale. Se il file indicato non si trova, un validatore risponde che non ha trovato nessun DTD.</p>
+
+  <!-- ============================================================= -->
+  <h2>Un esempio completo: la scuola</h2>
+  <p>Vogliamo descrivere una <strong>scuola</strong> con il suo nome, la città e uno o più <strong>laboratori</strong>; ogni laboratorio ha un nome, un numero di postazioni e un responsabile. Prima disegniamo l'<strong>albero</strong> (il <code>+</code> vicino a <code>laboratorio</code> dice che si ripete):</p>
+<pre data-lang="testo"><code>scuola
+├── nome
+├── citta
+└── laboratorio+
+    ├── nome
+    ├── postazioni
+    └── responsabile</code></pre>
+  <p>Poi lo traduciamo in <strong>DTD</strong> (<code>scuola.dtd</code>), una dichiarazione per ogni riquadro dell'albero, e aggiungiamo un codice che identifica ogni laboratorio:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT scuola (nome, citta, laboratorio+)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT citta (#PCDATA)&gt;
+&lt;!ELEMENT laboratorio (nome, postazioni, responsabile)&gt;
+&lt;!ELEMENT postazioni (#PCDATA)&gt;
+&lt;!ELEMENT responsabile (#PCDATA)&gt;
+&lt;!ATTLIST laboratorio codice ID #REQUIRED&gt;</code></pre>
+  <p>E un documento <strong>valido</strong> (<code>scuola.xml</code>):</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE scuola SYSTEM "scuola.dtd"&gt;
+&lt;scuola&gt;
+  &lt;nome&gt;ITIS Alessandro Volta&lt;/nome&gt;
+  &lt;citta&gt;Torino&lt;/citta&gt;
+  &lt;laboratorio codice="L1"&gt;
+    &lt;nome&gt;Informatica 1&lt;/nome&gt;
+    &lt;postazioni&gt;28&lt;/postazioni&gt;
+    &lt;responsabile&gt;Prof. Bianchi&lt;/responsabile&gt;
+  &lt;/laboratorio&gt;
+  &lt;laboratorio codice="L2"&gt;
+    &lt;nome&gt;Sistemi e Reti&lt;/nome&gt;
+    &lt;postazioni&gt;24&lt;/postazioni&gt;
+    &lt;responsabile&gt;Prof.ssa Verdi&lt;/responsabile&gt;
+  &lt;/laboratorio&gt;
+&lt;/scuola&gt;</code></pre>
+
+  <h3>Come leggerlo, riga per riga</h3>
+  <ol>
+    <li><code>scuola (nome, citta, laboratorio+)</code>: la scuola ha <strong>nell'ordine</strong> un nome, una città e <strong>almeno un</strong> laboratorio.</li>
+    <li><code>nome</code> e <code>citta</code> sono <strong>testo</strong>.</li>
+    <li><code>laboratorio (nome, postazioni, responsabile)</code>: ogni laboratorio ha tre figli in quest'ordine.</li>
+    <li><code>ATTLIST laboratorio codice ID #REQUIRED</code>: ogni laboratorio <strong>deve</strong> avere un <code>codice</code> e i codici devono essere <strong>tutti diversi</strong>.</li>
+  </ol>
+  <div class="callout info"><span class="callout-title">Lo stesso nome in due posti</span>L'elemento <code>nome</code> compare sia dentro <code>scuola</code> sia dentro <code>laboratorio</code> ma è dichiarato <strong>una volta sola</strong>: va bene perché in entrambi i posti contiene solo testo. Un DTD non permette di dire "<code>nome</code> contiene testo qui e figli là": un nome di elemento ha un solo modello di contenuto in tutto il documento.</div>
+
+  <h3>Come si rompe</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Modifica al documento</th><th>Esito</th></tr></thead>
+      <tbody>
+        <tr><td>nessun <code>&lt;laboratorio&gt;</code></td><td>non valido: <code>laboratorio+</code> richiede <strong>almeno uno</strong></td></tr>
+        <tr><td>due laboratori con <code>codice="L1"</code></td><td>non valido: l'<code>ID</code> L1 è già definito</td></tr>
+        <tr><td><code>codice="2L"</code></td><td>non valido: un <code>ID</code> non può iniziare con un numero</td></tr>
+        <tr><td>un laboratorio senza <code>codice</code></td><td>non valido: attributo <code>#REQUIRED</code> mancante</td></tr>
+        <tr><td><code>&lt;laboratorio codice="L1" colore="blu"&gt;</code></td><td>non valido: <code>colore</code> non è dichiarato</td></tr>
+        <tr><td><code>&lt;!DOCTYPE school SYSTEM "scuola.dtd"&gt;</code></td><td>non valido: il nome nel <code>DOCTYPE</code> deve coincidere con la <strong>radice</strong> (<code>scuola</code>)</td></tr>
+        <tr><td><code>&lt;postazioni&gt;ventotto&lt;/postazioni&gt;</code></td><td><strong>valido</strong>! Per il DTD è solo testo (vedi sotto)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Cosa non sa fare un DTD</h2>
+  <p>Il DTD è semplice e <strong>molto limitato</strong>. Conoscere i suoi limiti ti serve per capire perché esiste anche l'<strong>XSD</strong>, che li supera.</p>
+  <ul>
+    <li><strong>Non ha tipi di dato.</strong> Il contenuto di un elemento è solo <code>#PCDATA</code>, cioè testo. Se <code>prezzo</code> è dichiarato <code>(#PCDATA)</code>, anche <code>&lt;prezzo&gt;gratis, forse&lt;/prezzo&gt;</code> è valido. Non si può dire "numero", "data" o "intero positivo".</li>
+    <li><strong>Non ha limiti numerici.</strong> Si può dire "uno", "zero o uno", "zero o più", "uno o più", ma non "al massimo tre telefoni" o "tra 1 e 5 laboratori".</li>
+    <li><strong>Un solo modello per ogni nome.</strong> Un elemento non può avere contenuti diversi in punti diversi del documento.</li>
+    <li><strong>Non è scritto in XML.</strong> Il DTD ha una sintassi tutta sua (<code>&lt;!ELEMENT ...&gt;</code>), diversa da quella dei documenti che descrive, e quindi non si può leggere con gli strumenti XML normali.</li>
+  </ul>
+  <p>L'<strong>XSD</strong> (<em>XML Schema</em>) è scritto in XML e permette di indicare tipi (numeri, date, stringhe), intervalli e occorrenze precise. Per questo è più potente, ma anche più lungo da scrivere. Il DTD resta molto usato perché è <strong>breve e facile</strong>.</p>
+  <div class="callout tip"><span class="callout-title">Un paragone</span>Il DTD è come un modulo che dice "qui c'è una casella chiamata <em>età</em>" ma <strong>non controlla cosa ci scrivi</strong>: puoi mettere "18" oppure "tanti". L'XSD è come un modulo in cui la casella <em>età</em> accetta solo numeri tra 0 e 120.</div>
+
+  <!-- ============================================================= -->
+  <h2>Come si controlla la validità</h2>
+  <p>La verifica la fa un programma chiamato <strong>parser validante</strong>: legge il documento e il DTD e confronta le due cose. Un parser <em>non validante</em> controlla solo che il documento sia ben formato e ignora le regole del DTD. I <strong>browser</strong> in genere <strong>non</strong> validano: aprire un file XML in Chrome non dice se è valido.</p>
+  <p>Per validare si può usare un <strong>editor XML</strong> che segnala gli errori mentre scrivi, un <strong>validatore online</strong> (si incolla il documento) oppure uno strumento da riga di comando come <code>xmllint</code> (presente in Linux e macOS):</p>
+<pre data-lang="bash"><code>xmllint --noout --valid scuola.xml                  # usa il DTD indicato nel DOCTYPE
+xmllint --noout --dtdvalid scuola.dtd scuola.xml    # usa un DTD a parte</code></pre>
+  <p>Se non compare nessun messaggio, il documento è <strong>valido</strong>. Altrimenti il validatore spiega l'errore (qui i messaggi di <code>xmllint</code>, in inglese):</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Messaggio</th><th>Che cosa significa</th></tr></thead>
+      <tbody>
+        <tr><td><code>Opening and ending tag mismatch</code></td><td>errore di <strong>buona formazione</strong>: un tag di chiusura non corrisponde. Non si arriva nemmeno alla validità.</td></tr>
+        <tr><td><code>Element studente content does not follow the DTD, expecting (nome , cognome), got (cognome nome)</code></td><td>i figli non rispettano il modello: qui l'<strong>ordine</strong> è sbagliato. "expecting" = cosa si aspettava, "got" = cosa ha trovato.</td></tr>
+        <tr><td><code>No declaration for element eta</code></td><td>l'elemento <code>eta</code> <strong>non è dichiarato</strong> nel DTD.</td></tr>
+        <tr><td><code>Element laboratorio does not carry attribute codice</code></td><td>manca un attributo <code>#REQUIRED</code>.</td></tr>
+        <tr><td><code>No declaration for attribute colore of element laboratorio</code></td><td>l'attributo <strong>non è dichiarato</strong>.</td></tr>
+        <tr><td><code>Value "X" for attribute genere of studente is not among the enumerated set</code></td><td>il valore non è nell'<strong>elenco</strong> dell'enumerazione.</td></tr>
+        <tr><td><code>ID L1 already defined</code></td><td>un <code>ID</code> <strong>duplicato</strong>.</td></tr>
+        <tr><td><code>root and DTD name do not match</code></td><td>il nome nel <code>DOCTYPE</code> non coincide con l'elemento radice.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>Il <strong>DTD</strong> definisce le regole strutturali che un documento XML deve rispettare per essere <strong>valido</strong>: quali elementi, in che <strong>ordine</strong> e quante <strong>volte</strong>, quali <strong>attributi</strong>.</li>
+    <li><strong>Ben formato</strong> = rispetta la sintassi XML. <strong>Valido</strong> = ben formato <strong>e</strong> rispetta il DTD. Valido ⇒ ben formato, non viceversa.</li>
+    <li>Si collega con <code>&lt;!DOCTYPE radice SYSTEM "file.dtd"&gt;</code> (esterno) oppure <code>&lt;!DOCTYPE radice [ ... ]&gt;</code> (interno), sotto la dichiarazione XML e prima della radice.</li>
+    <li>Si compone di dichiarazioni <code>&lt;!ELEMENT nome contenuto&gt;</code> e <code>&lt;!ATTLIST elemento attributo tipo default&gt;</code>.</li>
+    <li>Contenuto: <code>EMPTY</code> (vuoto), <code>ANY</code> (qualsiasi), <strong>figli</strong> con ordine <code>(a, b)</code>, <strong>misto</strong> <code>(#PCDATA | a | b)*</code>, <strong>testo</strong> <code>(#PCDATA)</code>.</li>
+    <li>Operatori: <code>,</code> sequenza · <code>|</code> alternativa · <code>?</code> 0 o 1 · <code>*</code> 0 o più · <code>+</code> 1 o più. Non si mescolano <code>,</code> e <code>|</code> senza parentesi.</li>
+    <li>Attributi: tipi <code>CDATA</code>, enumerazione <code>(a|b)</code>, <code>ID</code>; valori <code>#REQUIRED</code>, <code>#IMPLIED</code>, <code>"default"</code>, <code>#FIXED "valore"</code>.</li>
+    <li><strong>DTD interno</strong> (dentro il file, non riutilizzabile) o <strong>esterno</strong> (file <code>.dtd</code>, riutilizzabile).</li>
+    <li>Limiti: <strong>nessun tipo di dato</strong> (tutto è testo), nessun limite numerico, un solo modello per nome di elemento → per questo esiste l'<strong>XSD</strong>.</li>
+    <li>La validità la controlla un <strong>parser validante</strong> (editor XML, validatori online, <code>xmllint --valid</code>).</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Valido, ben formato o niente? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p>Il DTD è questo:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT studente (nome, cognome)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT cognome (#PCDATA)&gt;</code></pre>
+      <p>Per ognuno di questi documenti di' se è <strong>valido</strong>, <strong>ben formato ma non valido</strong>, oppure <strong>non ben formato</strong>.</p>
+      <p>A) <code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;/studente&gt;</code><br>
+      B) <code>&lt;studente&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;/studente&gt;</code><br>
+      C) <code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;/studente&gt;</code><br>
+      D) <code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/nome&gt;&lt;cognome&gt;Rossi&lt;/cognome&gt;&lt;eta&gt;18&lt;/eta&gt;&lt;/studente&gt;</code><br>
+      E) <code>&lt;studente&gt;&lt;nome&gt;Marco&lt;/studente&gt;&lt;/nome&gt;</code></p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>A: valido.</strong> Elementi giusti e nell'ordine giusto.</li>
+        <li><strong>B: ben formato ma non valido.</strong> I tag sono scritti bene, ma il DTD vuole prima <code>nome</code> e poi <code>cognome</code>.</li>
+        <li><strong>C: ben formato ma non valido.</strong> Manca <code>cognome</code>.</li>
+        <li><strong>D: ben formato ma non valido.</strong> <code>eta</code> non è dichiarato nel DTD.</li>
+        <li><strong>E: non ben formato.</strong> I tag non sono annidati correttamente (<code>&lt;/studente&gt;</code> chiude prima di <code>&lt;/nome&gt;</code>). Qui il controllo della validità non parte nemmeno.</li>
+      </ul>
+      <p>Si risponde prima alla domanda "è ben formato?" e solo dopo a "è valido?".</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Leggi il DTD del libro <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="dtd"><code>&lt;!ELEMENT libro (titolo, autore+, anno?, (isbn | issn))&gt;
+&lt;!ELEMENT titolo (#PCDATA)&gt;
+&lt;!ELEMENT autore (#PCDATA)&gt;
+&lt;!ELEMENT anno (#PCDATA)&gt;
+&lt;!ELEMENT isbn (#PCDATA)&gt;
+&lt;!ELEMENT issn (#PCDATA)&gt;
+&lt;!ATTLIST libro lingua (it|en|fr) "it"&gt;</code></pre>
+      <p>Dì quali di questi libri sono <strong>validi</strong> (scrivo solo i figli di <code>libro</code>):</p>
+      <p>a) titolo, autore, isbn<br>
+      b) <code>lingua="en"</code>: titolo, autore, autore, anno, issn<br>
+      c) titolo, isbn<br>
+      d) titolo, autore, isbn, issn<br>
+      e) autore, titolo, isbn<br>
+      f) <code>lingua="de"</code>: titolo, autore, isbn<br>
+      g) titolo, autore, anno, anno, isbn</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>a) valido.</strong> L'anno è facoltativo (<code>?</code>) e la lingua ha un default.</li>
+        <li><strong>b) valido.</strong> Due autori vanno bene (<code>+</code>), <code>en</code> è nella lista, e <code>issn</code> è l'alternativa a <code>isbn</code>.</li>
+        <li><strong>c) non valido.</strong> Manca almeno un <code>autore</code>.</li>
+        <li><strong>d) non valido.</strong> <code>(isbn | issn)</code> vuole <strong>uno</strong> dei due, non entrambi.</li>
+        <li><strong>e) non valido.</strong> Il <code>titolo</code> deve venire prima dell'autore.</li>
+        <li><strong>f) non valido.</strong> <code>de</code> non è nell'enumerazione (it|en|fr).</li>
+        <li><strong>g) non valido.</strong> <code>anno?</code> ammette <strong>al massimo uno</strong>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Che cosa dice il modello? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Spiega a parole che cosa ammette ciascun modello di contenuto:<br>
+      a) <code>&lt;!ELEMENT corso (titolo, docente+, esame?)&gt;</code><br>
+      b) <code>&lt;!ELEMENT y (a | b)+&gt;</code><br>
+      c) <code>&lt;!ELEMENT x (nome, (telefono | email)*)&gt;</code><br>
+      d) <code>&lt;!ELEMENT paragrafo (#PCDATA | b | i)*&gt;</code></p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>a)</strong> Un titolo, poi <strong>almeno un</strong> docente, poi <strong>eventualmente</strong> un esame (al massimo uno), sempre in questo ordine.</li>
+        <li><strong>b)</strong> Una sequenza di <strong>almeno un</strong> elemento, ciascuno dei quali è <code>a</code> <strong>oppure</strong> <code>b</code>, in qualsiasi combinazione: <code>a</code>, <code>b a b</code>, <code>a a</code>… Ma non vuoto.</li>
+        <li><strong>c)</strong> Un nome, poi <strong>zero o più</strong> elementi che sono ciascuno un telefono o un'email, in <strong>qualsiasi ordine</strong>: solo il nome, oppure nome, telefono, email, telefono, ecc.</li>
+        <li><strong>d)</strong> <strong>Contenuto misto</strong>: testo libero con, in mezzo, quanti <code>b</code> e <code>i</code> si vuole, in qualsiasi ordine (o nessuno).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Il DTD della rubrica <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p>Nel capitolo <a href="xml.html#un-esempio-completo">Il linguaggio XML</a> c'è un esempio di rubrica: un elemento <code>rubrica</code> che contiene delle <code>persona</code>, ognuna con <code>nome</code>, <code>cognome</code>, <code>telefono_casa</code>, <code>telefono_lavoro</code> e <code>indirizzo_email</code>.</p>
+      <p>Scrivi un DTD per quella struttura in cui: la rubrica ha <strong>almeno una</strong> persona; i due telefoni sono <strong>facoltativi</strong>; ogni persona ha <strong>almeno un</strong> indirizzo email. Poi scrivi la riga <code>DOCTYPE</code> per collegarlo (DTD esterno, file <code>rubrica.dtd</code>).</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>rubrica.dtd</code>:</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT rubrica (persona+)&gt;
+&lt;!ELEMENT persona (nome, cognome, telefono_casa?, telefono_lavoro?, indirizzo_email+)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT cognome (#PCDATA)&gt;
+&lt;!ELEMENT telefono_casa (#PCDATA)&gt;
+&lt;!ELEMENT telefono_lavoro (#PCDATA)&gt;
+&lt;!ELEMENT indirizzo_email (#PCDATA)&gt;</code></pre>
+      <p>Nel documento XML, sotto la dichiarazione e prima della radice:</p>
+<pre data-lang="xml"><code>&lt;!DOCTYPE rubrica SYSTEM "rubrica.dtd"&gt;</code></pre>
+      <p>Ragionamento: la radice <code>rubrica</code> ha figli solo di tipo <code>persona</code>, con <code>+</code>. In <code>persona</code> l'ordine è quello dell'esempio; <code>?</code> rende i telefoni facoltativi e <code>+</code> dopo <code>indirizzo_email</code> ne impone almeno uno. Gli altri cinque elementi contengono solo testo. Questo DTD rende <strong>valido</strong> il documento d'esempio del capitolo XML (con due persone, ognuna con entrambi i telefoni e un'email).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Gli attributi del prodotto <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p>Un elemento vuoto <code>prodotto</code> deve avere questi attributi: <code>codice</code> (identificatore univoco, obbligatorio); <code>categoria</code> (obbligatoria, solo <em>libri</em>, <em>musica</em> o <em>film</em>); <code>disponibile</code> (<em>si</em> o <em>no</em>, se manca vale <em>si</em>). Scrivi le dichiarazioni, poi indica quali di questi sono validi:</p>
+      <p>a) <code>&lt;prodotto codice="P01" categoria="libri"/&gt;</code><br>
+      b) <code>&lt;prodotto codice="P01" categoria="film" disponibile="no"/&gt;</code><br>
+      c) <code>&lt;prodotto categoria="libri"/&gt;</code><br>
+      d) <code>&lt;prodotto codice="P01" categoria="giochi"/&gt;</code><br>
+      e) <code>&lt;prodotto codice="01" categoria="libri"/&gt;</code><br>
+      f) <code>&lt;prodotto codice="P01"/&gt;</code></p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="dtd"><code>&lt;!ELEMENT prodotto EMPTY&gt;
+&lt;!ATTLIST prodotto
+  codice ID #REQUIRED
+  categoria (libri|musica|film) #REQUIRED
+  disponibile (si|no) "si"&gt;</code></pre>
+      <ul>
+        <li><strong>a) valido.</strong> <code>disponibile</code> manca ma ha il default <code>si</code>.</li>
+        <li><strong>b) valido.</strong></li>
+        <li><strong>c) non valido.</strong> Manca <code>codice</code> (<code>#REQUIRED</code>).</li>
+        <li><strong>d) non valido.</strong> <code>giochi</code> non è nella lista (libri|musica|film).</li>
+        <li><strong>e) non valido.</strong> Un <code>ID</code> non può iniziare con un numero: <code>01</code> no, <code>P01</code> sì.</li>
+        <li><strong>f) non valido.</strong> Manca <code>categoria</code>, che è obbligatoria.</li>
+      </ul>
+      <p>Si usa <code>EMPTY</code> perché il prodotto, in questo esercizio, ha solo attributi e nessun contenuto.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Trova gli errori nel DTD <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="dtd"><code>&lt;ELEMENT negozio (prodotto+)&gt;
+&lt;!ELEMENT prodotto nome, prezzo&gt;
+&lt;!ELEMENT nome #PCDATA&gt;
+&lt;!ELEMENT prezzo (#PCDATA)&gt;
+&lt;!ATTLIST prodotto codice ID REQUIRED&gt;</code></pre>
+      <p>Questo DTD contiene <strong>quattro</strong> errori di sintassi. Trovali e scrivi la versione corretta.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><code>&lt;ELEMENT negozio ...&gt;</code>: manca il punto esclamativo, deve essere <code>&lt;!ELEMENT</code>.</li>
+        <li><code>&lt;!ELEMENT prodotto nome, prezzo&gt;</code>: l'elenco dei figli va <strong>tra parentesi</strong>: <code>(nome, prezzo)</code>.</li>
+        <li><code>&lt;!ELEMENT nome #PCDATA&gt;</code>: anche <code>#PCDATA</code> va tra parentesi: <code>(#PCDATA)</code>.</li>
+        <li><code>REQUIRED</code>: manca il <code>#</code>, deve essere <code>#REQUIRED</code>.</li>
+      </ol>
+<pre data-lang="dtd"><code>&lt;!ELEMENT negozio (prodotto+)&gt;
+&lt;!ELEMENT prodotto (nome, prezzo)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT prezzo (#PCDATA)&gt;
+&lt;!ATTLIST prodotto codice ID #REQUIRED&gt;</code></pre>
+      <p>Una cosa che il DTD corretto <strong>non</strong> controlla: <code>&lt;prezzo&gt;gratis, forse&lt;/prezzo&gt;</code> è valido, perché per il DTD il prezzo è solo testo.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Estendi la scuola <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p>Parti dal DTD della scuola visto nel capitolo. Modificalo così: ogni laboratorio deve elencare <strong>almeno un</strong> software installato (elemento <code>software</code>); ogni laboratorio può avere un attributo facoltativo <code>tipo</code> che vale solo <em>informatica</em>, <em>scienze</em> o <em>lingue</em>. Poi scrivi un documento valido con due laboratori.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>scuola.dtd</code> (le righe nuove sono <code>software</code> e il nuovo <code>ATTLIST</code>):</p>
+<pre data-lang="dtd"><code>&lt;!ELEMENT scuola (nome, citta, laboratorio+)&gt;
+&lt;!ELEMENT nome (#PCDATA)&gt;
+&lt;!ELEMENT citta (#PCDATA)&gt;
+&lt;!ELEMENT laboratorio (nome, postazioni, responsabile, software+)&gt;
+&lt;!ELEMENT postazioni (#PCDATA)&gt;
+&lt;!ELEMENT responsabile (#PCDATA)&gt;
+&lt;!ELEMENT software (#PCDATA)&gt;
+&lt;!ATTLIST laboratorio
+  codice ID #REQUIRED
+  tipo (informatica|scienze|lingue) #IMPLIED&gt;</code></pre>
+      <p>Un documento valido:</p>
+<pre data-lang="xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE scuola SYSTEM "scuola.dtd"&gt;
+&lt;scuola&gt;
+  &lt;nome&gt;ITIS Alessandro Volta&lt;/nome&gt;
+  &lt;citta&gt;Torino&lt;/citta&gt;
+  &lt;laboratorio codice="L1" tipo="informatica"&gt;
+    &lt;nome&gt;Informatica 1&lt;/nome&gt;
+    &lt;postazioni&gt;28&lt;/postazioni&gt;
+    &lt;responsabile&gt;Prof. Bianchi&lt;/responsabile&gt;
+    &lt;software&gt;Visual Studio Code&lt;/software&gt;
+    &lt;software&gt;Python&lt;/software&gt;
+  &lt;/laboratorio&gt;
+  &lt;laboratorio codice="L2"&gt;
+    &lt;nome&gt;Sistemi e Reti&lt;/nome&gt;
+    &lt;postazioni&gt;24&lt;/postazioni&gt;
+    &lt;responsabile&gt;Prof.ssa Verdi&lt;/responsabile&gt;
+    &lt;software&gt;Cisco Packet Tracer&lt;/software&gt;
+  &lt;/laboratorio&gt;
+&lt;/scuola&gt;</code></pre>
+      <ul>
+        <li><code>software+</code> impone <strong>almeno uno</strong>: un laboratorio senza software non sarebbe valido.</li>
+        <li><code>tipo</code> è <code>#IMPLIED</code> (facoltativo): il secondo laboratorio non lo ha e va bene.</li>
+        <li>Nello stesso <code>ATTLIST</code> si dichiarano più attributi: <code>codice</code> e <code>tipo</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Vero o falso? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p>a) Un documento valido è sempre anche ben formato.<br>
+      b) Un DTD può imporre che l'elemento <code>prezzo</code> contenga un numero.<br>
+      c) Con <code>&lt;!ELEMENT a (b, c)&gt;</code> il documento <code>&lt;a&gt;&lt;c/&gt;&lt;b/&gt;&lt;/a&gt;</code> è valido.<br>
+      d) Un DTD si può scrivere dentro lo stesso file XML.<br>
+      e) Un attributo <code>#IMPLIED</code> deve comparire in ogni elemento.<br>
+      f) Due elementi diversi possono avere lo stesso valore in un attributo di tipo <code>ID</code>.<br>
+      g) Si può dichiarare <code>nome</code> con testo in un punto e con figli in un altro.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>a) Vero.</strong> Per essere valido deve prima essere ben formato.</li>
+        <li><strong>b) Falso.</strong> Il DTD non ha tipi di dato: per lui è solo testo. Serve l'XSD.</li>
+        <li><strong>c) Falso.</strong> Con la virgola l'<strong>ordine</strong> conta: prima <code>b</code>, poi <code>c</code>.</li>
+        <li><strong>d) Vero.</strong> È il DTD interno, tra parentesi quadre nel <code>DOCTYPE</code>.</li>
+        <li><strong>e) Falso.</strong> <code>#IMPLIED</code> vuol dire <strong>facoltativo</strong>; l'obbligatorio è <code>#REQUIRED</code>.</li>
+        <li><strong>f) Falso.</strong> Gli <code>ID</code> sono univoci in tutto il documento, anche tra elementi diversi.</li>
+        <li><strong>g) Falso.</strong> Ogni nome di elemento ha una sola dichiarazione e quindi un solo modello di contenuto.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Lo schema DTD delle pagine XML – Il Document Type Definition". Il paragone del modulo e dell'italiano, la spiegazione riga per riga degli esempi, la tabella degli esiti di validazione, i messaggi del validatore, il contenuto misto, <code>IDREF</code>, la combinazione di DTD interno ed esterno, la sezione sui limiti e tutti gli esercizi con soluzione sono aggiunte per aiutare lo studio. Nelle slide le parole <em>root-element</em> e <em>filename</em> compaiono tra <code>&lt; &gt;</code> e con virgolette "ricurve": sono segnaposto, nel codice vanno scritte senza e con virgolette dritte. Tutti gli esempi di DTD e di documenti, validi e non validi, sono stati provati con un validatore reale (<code>xmllint</code>, libxml2) e i risultati scritti qui sono quelli ottenuti.</p>
+</main>
+</body>
+</html>

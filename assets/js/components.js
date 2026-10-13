@@ -47,6 +47,9 @@ SITE.ready(function () {
     return out + esc(code.slice(last));
   }
 
+  // parole chiave del DTD: <!ELEMENT, <!ATTLIST, <!DOCTYPE, #PCDATA, #REQUIRED, EMPTY, CDATA, ID, SYSTEM…
+  var DTD_KW = /<!(?:ELEMENT|ATTLIST|DOCTYPE|ENTITY)\b|#(?:PCDATA|REQUIRED|IMPLIED|FIXED)\b|\b(?:EMPTY|ANY|CDATA|IDREFS?|ID|SYSTEM|PUBLIC)\b/;
+
   function highlight(code, lang) {
     if (lang === "http") {
       return tokenize(code, [
@@ -59,7 +62,13 @@ SITE.ready(function () {
     if (lang === "json") {
       return tokenize(code, [["attr", /"(?:\\.|[^"\\])*"(?=\s*:)/], ["string", STR], ["number", NUM], ["keyword", /\b(?:true|false|null)\b/]]);
     }
-    if (lang === "html" || lang === "xml") {
+    if (lang === "dtd") {
+      return tokenize(code, [["comment", /<!--[\s\S]*?-->/], ["keyword", DTD_KW], ["string", STR]]);
+    }
+    if (lang === "xml") {
+      return tokenize(code, [["comment", /<!--[\s\S]*?-->/], ["keyword", DTD_KW], ["tag", /<\/?[\w-]+|\/?>/], ["attr", /[\w-]+(?==)/], ["string", STR]]);
+    }
+    if (lang === "html") {
       return tokenize(code, [["comment", /<!--[\s\S]*?-->/], ["tag", /<\/?[\w-]+|\/?>/], ["attr", /[\w-]+(?==)/], ["string", STR]]);
     }
     var L = LANGS[lang];

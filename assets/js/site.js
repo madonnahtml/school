@@ -14,7 +14,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "8",
+    version: "9",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -73,6 +73,7 @@
           { title: "Sistemi distribuiti", path: "materie/tpsit/sistemi-distribuiti.html", type: "teoria" },
           { title: "Il protocollo HTTP", path: "materie/tpsit/protocollo-http.html", type: "teoria" },
           { title: "Il linguaggio XML", path: "materie/tpsit/xml.html", type: "teoria" },
+          { title: "Lo schema DTD", path: "materie/tpsit/dtd.html", type: "teoria" },
           { title: "Il linguaggio JSON", path: "materie/tpsit/json.html", type: "teoria" },
         ],
       },
