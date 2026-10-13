@@ -45,6 +45,8 @@
           { title: "Java: programmazione a oggetti", path: "materie/informatica/java-programmazione-a-oggetti.html", type: "teoria" },
           { title: "Java: gestione dei file", path: "materie/informatica/java-gestione-dei-file.html", type: "teoria" },
           { title: "Java: eccezioni", path: "materie/informatica/java-eccezioni.html", type: "teoria" },
+          { title: "Java: Collections, ArrayList, Vector e LinkedList", path: "materie/informatica/java-collections-liste.html", type: "teoria" },
+          { title: "Java: HashMap", path: "materie/informatica/java-hashmap.html", type: "teoria" },
         ],
       },
       {

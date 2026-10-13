@@ -598,6 +598,144 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/informatica/java-collections-liste.html": {
+    breve: "Le liste di Java crescono da sole: ArrayList (array dinamico), Vector (sincronizzato, legacy) e LinkedList (nodi collegati, anche pila e coda). Quale scegliere e perché.",
+    sezioni: [
+      {
+        titolo: "Il Java Collections Framework",
+        punti: [
+          "Il <strong>JCF</strong> (Java 1.2, <code>java.util</code>) è l'insieme di <strong>interfacce</strong>, <strong>classi</strong> e <strong>algoritmi</strong> per gestire gruppi di oggetti.",
+          "Con i <strong>generics</strong> si indica il tipo: <code>List&lt;String&gt;</code>. Solo classi: <code>List&lt;Integer&gt;</code>, mai <code>&lt;int&gt;</code>.",
+        ],
+      },
+      {
+        titolo: "L'interfaccia List",
+        punti: [
+          "<strong>List</strong> = sequenza <strong>ordinata</strong> con indice da 0; <strong>ammette duplicati</strong> e mantiene l'ordine di inserimento (un Set no).",
+          "Tre implementazioni con gli stessi metodi: <code>ArrayList</code>, <code>Vector</code>, <code>LinkedList</code>. Cambia la velocità delle operazioni.",
+        ],
+      },
+      {
+        titolo: "ArrayList: l'array dinamico",
+        punti: [
+          "Dentro c'è un <strong>array</strong>: quando è pieno se ne crea uno più grande e si copia tutto.",
+          "<code>get(i)</code> O(1) e scorrimento veloce; inserire o togliere <strong>in mezzo</strong> O(n) perché si spostano gli elementi.",
+          "Non thread-safe. <strong>size</strong> = elementi presenti, <strong>capacità</strong> = posti nell'array interno.",
+        ],
+      },
+      {
+        titolo: "Usare ArrayList: la sintassi",
+        punti: [
+          "<code>List&lt;String&gt; lista = new ArrayList&lt;&gt;();</code> (interfaccia a sinistra, classe a destra).",
+          "<code>add(e)</code>, <code>add(i, e)</code>, <code>get(i)</code>, <code>set(i, e)</code>, <code>remove(i)</code> / <code>remove(oggetto)</code>, <code>size()</code>, <code>contains(e)</code>.",
+          "Per togliere mentre scorri usa un <code>Iterator</code> (<code>hasNext</code>, <code>next</code>, <code>remove</code>), non un for-each.",
+        ],
+      },
+      {
+        titolo: "Vector: l'antenato thread-safe",
+        punti: [
+          "Come ArrayList (array dinamico) ma ogni metodo è <code>synchronized</code>: <strong>thread-safe</strong> e più lento. Java 1.0, <strong>legacy</strong>.",
+          "Ha il <code>capacityIncrement</code>. Oggi si usa <code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code> o <code>CopyOnWriteArrayList</code>.",
+        ],
+      },
+      {
+        titolo: "LinkedList: la lista concatenata",
+        punti: [
+          "Lista <strong>doppiamente collegata</strong>: ogni nodo ha <code>prev</code>, valore e <code>next</code>.",
+          "Inserire/togliere O(1) <em>una volta arrivati</em>; <code>get(i)</code> O(n); più memoria; nessun ingrandimento; non thread-safe.",
+        ],
+      },
+      {
+        titolo: "LinkedList come pila e come coda",
+        punti: [
+          "Implementa <code>Deque</code>: <code>addFirst</code>/<code>addLast</code>, <code>removeFirst</code>/<code>removeLast</code>; <code>offer</code>, <code>poll</code>, <code>peek</code> danno <code>null</code> invece dell'eccezione.",
+          "<strong>Pila</strong> (LIFO): <code>push</code>, <code>pop</code>, <code>peek</code>. <strong>Coda</strong> (FIFO): <code>offer</code>, <code>poll</code>, <code>peek</code>.",
+        ],
+      },
+      {
+        titolo: "Prestazioni: O(1) e O(n)",
+        punti: [
+          "<strong>O(1)</strong>: tempo costante. <strong>O(n)</strong>: cresce con il numero di elementi.",
+          "ArrayList/Vector: <code>get</code> O(1), inserimento in mezzo O(n). LinkedList: <code>get</code> O(n), inserimento O(1) solo dopo aver raggiunto la posizione (es. con <code>ListIterator</code>).",
+        ],
+      },
+      {
+        titolo: "Come scegliere: la regola d'oro",
+        punti: [
+          "<strong>ArrayList</strong> quasi sempre; <strong>LinkedList</strong> per code, pile e modifiche in testa; <strong>Vector</strong> da evitare.",
+          "Parti da ArrayList e cambia solo se misuri un problema reale.",
+        ],
+      },
+      {
+        titolo: "Buone abitudini",
+        punti: [
+          "Programma per interfaccia: <code>List&lt;T&gt; x = new ArrayList&lt;&gt;();</code>",
+          "Usa sempre i generics: le collezioni <strong>raw</strong> portano a <code>ClassCastException</code> a runtime.",
+        ],
+      },
+    ],
+  },
+
+  "materie/informatica/java-hashmap.html": {
+    breve: "La HashMap tiene i dati in coppie chiave → valore e li ritrova per chiave in un attimo: put, get, containsKey, remove, size e come scorrerla.",
+    sezioni: [
+      {
+        titolo: "Cosa sono le HashMap",
+        punti: [
+          "Coppie <strong>chiave → valore</strong> (es. nome → età). Chiavi <strong>uniche</strong>, valori anche duplicati.",
+          "Come una rubrica: cerchi per nome, trovi il numero. Classe di <code>java.util</code>.",
+        ],
+      },
+      {
+        titolo: "Creare una HashMap",
+        punti: [
+          "<code>HashMap&lt;String, Integer&gt; studenti = new HashMap&lt;&gt;();</code>: due tipi, chiave e valore, solo classi.",
+          "Si può anche scrivere <code>Map</code> a sinistra (programmare per interfaccia).",
+        ],
+      },
+      {
+        titolo: "Aggiungere e modificare con put()",
+        punti: [
+          "<code>put(chiave, valore)</code> aggiunge; se la chiave c'è già <strong>sostituisce</strong> il valore.",
+          "L'ordine di inserimento <strong>non è garantito</strong>.",
+        ],
+      },
+      {
+        titolo: "Leggere con get() e controllare",
+        punti: [
+          "<code>get(chiave)</code> dà il valore, o <code>null</code> se la chiave non c'è: in un <code>int</code> diventa <code>NullPointerException</code>.",
+          "<code>containsKey</code> (veloce, O(1)) e <code>containsValue</code> (lento, O(n)); <code>getOrDefault(chiave, riserva)</code>.",
+        ],
+      },
+      {
+        titolo: "Rimuovere, svuotare e contare",
+        punti: [
+          "<code>remove(chiave)</code> toglie la coppia; <code>clear()</code> svuota (la mappa resta); <code>size()</code> conta le coppie.",
+        ],
+      },
+      {
+        titolo: "Scorrere una HashMap",
+        punti: [
+          "<code>keySet()</code> per le chiavi, <code>values()</code> per i valori, <code>entrySet()</code> per le coppie (<code>getKey()</code>, <code>getValue()</code>).",
+        ],
+      },
+      {
+        titolo: "Come funziona dentro",
+        punti: [
+          "L'<strong>hash</strong> della chiave (<code>hashCode()</code>) decide il cassetto (bucket): per questo è O(1) e non ha ordine.",
+          "Chiavi di classi tue: sovrascrivi <code>hashCode()</code> ed <code>equals()</code>.",
+        ],
+      },
+      {
+        titolo: "HashMap o lista?",
+        punti: [
+          "Cerchi per posizione o ti serve l'ordine: lista. Cerchi per nome o codice: mappa.",
+          "<code>LinkedHashMap</code> mantiene l'ordine di inserimento, <code>TreeMap</code> ordina le chiavi, <code>HashSet</code> ha solo chiavi.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/modello-iso-osi.html": {
     breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
