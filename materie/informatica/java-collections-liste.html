@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Java: Collections, ArrayList, Vector e LinkedList · Scuola</title>
+  <meta name="description" content="Informatica, Java Collections Framework: l'interfaccia List, ArrayList, Vector e LinkedList. Come funzionano dentro, sintassi, pila e coda con Deque, prestazioni O(1) e O(n), come scegliere. Esercizi con soluzione.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=8">
+  <script src="../../assets/js/site.js?v=8"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Java: Collections, ArrayList, Vector e LinkedList</h1>
+  <p class="lead">Un array ha una dimensione fissa: se lo crei da 10 posti, resta da 10 posti. Nei programmi veri però non sai quasi mai in anticipo quanti dati arriveranno. Le <strong>liste</strong> di Java risolvono il problema: crescono e si accorciano da sole. Qui vediamo le tre più importanti, <strong>come funzionano dentro</strong> e <strong>quale scegliere</strong>.</p>
+
+  <div class="cards">
+    <div class="card"><strong>01 · Il framework e List</strong><p>Cos'è il Java Collections Framework e cosa promette l'interfaccia <code>List</code>.</p></div>
+    <div class="card"><strong>02 · ArrayList e Vector</strong><p>L'array che si allarga da solo, i suoi metodi e il "vecchio" Vector.</p></div>
+    <div class="card"><strong>03 · LinkedList</strong><p>La lista fatta di nodi collegati, usata anche come pila e come coda.</p></div>
+    <div class="card"><strong>04 · Scegliere</strong><p>Prestazioni O(1) e O(n), regola d'oro, buone abitudini e 7 esercizi.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Prima di cominciare</span>Servono gli <a href="java-array-wrapper-metodi-overload.html">array e le wrapper classes</a> (perché si scrive <code>Integer</code> e non <code>int</code>) e le basi della <a href="java-programmazione-a-oggetti.html">programmazione a oggetti</a> (classi, oggetti, <code>new</code>). Le parti segnate <em>(extra)</em> non sono nelle slide: sono aggiunte per capire meglio.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il Java Collections Framework</h2>
+  <div class="callout def"><span class="callout-title">In una frase</span>Il <strong>Java Collections Framework</strong> (JCF) è l'insieme standard di <strong>interfacce</strong>, <strong>classi</strong> e <strong>algoritmi</strong> che Java mette a disposizione per gestire <strong>gruppi di oggetti</strong>. È arrivato con Java 1.2 e sta nel pacchetto <code>java.util</code>.</div>
+  <p>Una <strong>collezione</strong> è semplicemente un oggetto che contiene altri oggetti: una lista di studenti, un elenco di prodotti, la coda delle stampe. Invece di riscrivere ogni volta il codice per aggiungere, togliere, cercare e ordinare, usi quello già pronto e collaudato. Nel JCF trovi:</p>
+  <ul>
+    <li>un'<strong>architettura unica</strong>: tutte le collezioni si usano in modo simile (<code>add</code>, <code>remove</code>, <code>size</code>…), quindi impari una volta e vale per tutte;</li>
+    <li>meno lavoro: niente "reinventare la ruota" a ogni progetto;</li>
+    <li><strong>algoritmi pronti</strong>, per esempio per ordinare (<code>Collections.sort</code>) e cercare;</li>
+    <li>collezioni che passano facilmente da una parte all'altra del programma e tra librerie diverse;</li>
+    <li>i <strong>generics</strong> (<code>List&lt;String&gt;</code>), che fanno controllare i tipi al compilatore.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">Interfaccia e classe, in parole semplici</span>Un'<strong>interfaccia</strong> è un <em>contratto</em>: dice <strong>cosa</strong> si può fare, non <strong>come</strong>. Una <strong>classe</strong> che la implementa è chi mantiene la promessa, ognuna a modo suo. È come la patente B: dice che sai guidare un'auto, poi l'auto può essere una Panda o una Golf, ma i pedali sono sempre quelli.</div>
+
+  <h3>I generics: il tipo tra &lt; &gt;</h3>
+  <p>Tra le parentesi angolari scrivi <strong>che tipo di oggetti</strong> contiene la collezione. Dal Java 5 in poi è il modo giusto di usarle:</p>
+<pre data-lang="java"><code>List&lt;String&gt; nomi = new ArrayList&lt;&gt;();
+nomi.add("Anna");
+nomi.add(42);              // ERRORE di compilazione: 42 non è una String
+String primo = nomi.get(0); // nessun cast: il compilatore sa che è una String</code></pre>
+  <ul>
+    <li>Dentro <code>&lt; &gt;</code> vanno solo <strong>classi</strong>: <code>List&lt;Integer&gt;</code>, mai <code>List&lt;int&gt;</code>. Grazie all'<strong>autoboxing</strong> poi scrivi <code>numeri.add(5)</code> e Java trasforma da solo <code>5</code> in un <code>Integer</code>.</li>
+    <li>A destra basta il "diamante" <code>&lt;&gt;</code> vuoto: il tipo Java lo ricava da sinistra.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>L'interfaccia List</h2>
+  <div class="callout def"><span class="callout-title">Cos'è una List</span>Una <strong>List</strong> è una <strong>sequenza ordinata</strong> di elementi, ognuno con la sua <strong>posizione</strong> (indice) a partire da 0, come in un array. A differenza di un <em>Set</em>, una List <strong>ammette duplicati</strong> e <strong>mantiene l'ordine di inserimento</strong>.</div>
+  <p>Una lista della spesa è un buon esempio: le voci hanno un ordine (prima, seconda, terza…) e puoi scrivere "latte" due volte. Un <em>insieme</em> (Set) invece è come l'elenco dei partecipanti a una gita: ogni nome compare una volta sola e l'ordine non conta.</p>
+  <p><code>List</code> è un'interfaccia, quindi non si può fare <code>new List()</code>: serve una classe che la implementi. Le tre classiche sono:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Classe</th><th>Come è fatta dentro</th><th>In una parola</th></tr></thead>
+      <tbody>
+        <tr><td><code>ArrayList</code></td><td>un array che si ingrandisce da solo</td><td><strong>array dinamico</strong></td></tr>
+        <tr><td><code>Vector</code></td><td>come ArrayList, ma con i metodi sincronizzati</td><td><strong>thread-safe</strong> (e vecchio)</td></tr>
+        <tr><td><code>LinkedList</code></td><td>una catena di nodi collegati tra loro</td><td><strong>nodi collegati</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tutte e tre hanno gli <strong>stessi metodi</strong> di <code>List</code> (<code>add</code>, <code>get</code>, <code>remove</code>, <code>size</code>…): da fuori si usano allo stesso modo. Cambia la <strong>velocità</strong> delle operazioni, perché cambia come tengono i dati in memoria. È tutto il senso del capitolo.</p>
+
+  <!-- ============================================================= -->
+  <h2>ArrayList: l'array dinamico</h2>
+  <p><code>ArrayList</code> è la collezione <strong>più usata</strong> in Java. Dentro ha un normale <strong>array</strong>, un po' più grande del necessario. Quando si riempie, Java ne crea uno <strong>più grande</strong>, ci <strong>copia</strong> tutti gli elementi e butta via quello vecchio. Tu non te ne accorgi: vedi solo una lista che cresce.</p>
+<pre data-lang="testo"><code>size = 3, capacità = 4          aggiungo "D": c'è posto
+[ "A" | "B" | "C" |     ]   →   [ "A" | "B" | "C" | "D" ]
+
+aggiungo "E": è pieno! nuovo array più grande e copia
+[ "A" | "B" | "C" | "D" | "E" |     ]</code></pre>
+  <div class="callout def"><span class="callout-title">size e capacità</span>La <strong>size</strong> è quanti elementi ci sono davvero (<code>lista.size()</code>). La <strong>capacità</strong> è quanti ne entrano nell'array interno prima di doverlo ingrandire. La capacità è un dettaglio interno: tu lavori solo con la size.</div>
+  <p>Per capire i pregi e i difetti basta ricordare che <strong>sotto c'è un array</strong>:</p>
+  <div class="compare">
+    <div>
+      <h4>Vantaggi</h4>
+      <ul>
+        <li><strong>Accesso per indice immediato</strong>, O(1): gli elementi sono uno dopo l'altro in memoria, quindi Java calcola subito dove sta l'elemento <code>i</code>, come in un array.</li>
+        <li><strong>Scorrere la lista è velocissimo</strong>: elementi vicini in memoria vengono caricati insieme nella cache del processore.</li>
+        <li>API <strong>semplice</strong> e familiare.</li>
+        <li>Puoi indicare una <strong>capacità iniziale</strong> se sai già più o meno quanti elementi arriveranno, e così eviti ingrandimenti inutili.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Svantaggi</h4>
+      <ul>
+        <li><strong>Inserire o togliere in mezzo è lento</strong>, O(n): tutti gli elementi dopo vanno <strong>spostati</strong> di un posto.</li>
+        <li><strong>Non è thread-safe</strong>: se due thread la modificano insieme possono rovinarla.</li>
+        <li>Ogni tanto paga l'<strong>ingrandimento</strong>: copiare tutto in un array nuovo costa.</li>
+      </ul>
+    </div>
+  </div>
+  <p>Perché inserire in mezzo è lento? Guarda cosa succede con <code>lista.add(1, "X")</code>:</p>
+<pre data-lang="testo"><code>prima:  [ "A" | "B" | "C" | "D" |     ]
+         "D" va avanti di uno, poi "C", poi "B"…
+dopo:   [ "A" | "X" | "B" | "C" | "D" ]</code></pre>
+  <p>Con 4 elementi non è niente; con un milione di elementi e un inserimento in testa, gli spostamenti sono un milione. Aggiungere <strong>in fondo</strong> invece non sposta nessuno, ed è per questo che è veloce.</p>
+  <div class="callout info"><span class="callout-title">Quanto cresce? <em>(precisazione alle slide)</em></span>Le slide dicono che ArrayList "raddoppia". In realtà nella versione standard di Java l'array di <code>ArrayList</code> cresce di circa il <strong>50%</strong> (da 10 a 15, poi 22…), mentre è <code>Vector</code> che di solito <strong>raddoppia</strong>. Per le verifiche conta il concetto: quando è pieno, si crea un array più grande e si copia tutto.</div>
+  <div class="callout tip"><span class="callout-title">Cosa vuol dire "thread-safe"</span>Un <strong>thread</strong> è un "filo" di esecuzione: un programma può farne girare più di uno insieme (per esempio un server che serve tanti utenti). Una struttura è <strong>thread-safe</strong> se più thread possono usarla nello stesso momento senza danni. Finché il tuo programma ha un solo thread (tutti gli esercizi di scuola), non devi preoccupartene.</div>
+
+  <!-- ============================================================= -->
+  <h2>Usare ArrayList: la sintassi</h2>
+  <h3>Dichiarare e creare</h3>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+// Buona pratica: a sinistra l'interfaccia, a destra la classe concreta
+List&lt;String&gt; lista = new ArrayList&lt;&gt;();
+
+// Con capacità iniziale (se sai che saranno circa 100 elementi)
+List&lt;Integer&gt; numeri = new ArrayList&lt;&gt;(100);</code></pre>
+  <p>Scrivere <code>List</code> a sinistra si chiama <strong>programmare per interfaccia</strong>: il resto del programma sa solo che <code>lista</code> è "una lista", non quale. Se un domani vuoi una <code>LinkedList</code>, cambi <strong>una parola</strong> e tutto il resto funziona uguale.</p>
+  <div class="callout warn"><span class="callout-title">Capacità non è size</span><code>new ArrayList&lt;&gt;(100)</code> crea una lista <strong>vuota</strong>: <code>size()</code> vale 0, e <code>lista.get(0)</code> lancia <code>IndexOutOfBoundsException</code>. Il 100 è solo lo spazio preparato in anticipo.</div>
+
+  <h3>I metodi principali</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Cosa fa</th></tr></thead>
+      <tbody>
+        <tr><td><code>add(e)</code></td><td>aggiunge <code>e</code> <strong>in fondo</strong></td></tr>
+        <tr><td><code>add(i, e)</code></td><td>inserisce <code>e</code> nella posizione <code>i</code>; quelli dopo scalano di uno</td></tr>
+        <tr><td><code>addAll(altra)</code></td><td>aggiunge in fondo tutti gli elementi di un'altra collezione</td></tr>
+        <tr><td><code>get(i)</code></td><td>restituisce l'elemento in posizione <code>i</code></td></tr>
+        <tr><td><code>set(i, e)</code></td><td><strong>sostituisce</strong> l'elemento in posizione <code>i</code> (la size non cambia)</td></tr>
+        <tr><td><code>remove(i)</code></td><td>toglie l'elemento in posizione <code>i</code> e lo restituisce</td></tr>
+        <tr><td><code>remove(oggetto)</code></td><td>toglie la <strong>prima</strong> occorrenza di quell'oggetto; restituisce <code>true</code> se l'ha trovato</td></tr>
+        <tr><td><code>size()</code></td><td>quanti elementi ci sono</td></tr>
+        <tr><td><code>contains(e)</code></td><td><code>true</code> se <code>e</code> è nella lista</td></tr>
+        <tr><td><code>indexOf(e)</code></td><td>posizione della prima occorrenza, oppure <code>-1</code> <em>(extra)</em></td></tr>
+        <tr><td><code>isEmpty()</code> · <code>clear()</code></td><td>la lista è vuota? · svuota tutto <em>(extra)</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Aggiungere e inserire</h3>
+<pre data-lang="java"><code>lista.add("Primo elemento");          // [Primo elemento]
+lista.add("Secondo elemento");        // [Primo elemento, Secondo elemento]
+lista.add(1, "Inserito in pos. 1");   // [Primo elemento, Inserito in pos. 1, Secondo elemento]
+
+List&lt;String&gt; altri = List.of("A", "B", "C");
+lista.addAll(altri);                  // ... e in fondo A, B, C</code></pre>
+  <p><code>List.of(...)</code> crea al volo una piccola lista <strong>non modificabile</strong>: comoda per dati fissi o per riempirne un'altra, ma se ci fai <code>add</code> lancia <code>UnsupportedOperationException</code>.</p>
+
+  <h3>Leggere, modificare, togliere</h3>
+<pre data-lang="java"><code>String primo = lista.get(0);             // legge per indice
+lista.set(0, "Modificato");              // sostituisce l'elemento 0
+
+lista.remove(0);                         // toglie per indice
+lista.remove("Secondo elemento");        // toglie per oggetto
+
+int dimensione = lista.size();           // quanti elementi
+boolean contiene = lista.contains("A");  // c'è "A"?</code></pre>
+  <div class="callout warn"><span class="callout-title">Trappola con List&lt;Integer&gt; <em>(extra)</em></span>Con una lista di numeri <code>remove(1)</code> è ambiguo: toglie l'elemento in <strong>posizione 1</strong> o il <strong>numero 1</strong>? Java sceglie la posizione, perché <code>1</code> è un <code>int</code>. Per togliere il valore scrivi <code>remove(Integer.valueOf(1))</code>.
+<pre data-lang="java"><code>List&lt;Integer&gt; v = new ArrayList&lt;&gt;(List.of(5, 1, 7));
+v.remove(1);                   // toglie la posizione 1 → [5, 7]
+v.remove(Integer.valueOf(7));  // toglie il valore 7   → [5]</code></pre></div>
+
+  <h3>Scorrere la lista</h3>
+<pre data-lang="java"><code>// 1) for-each: il più leggibile, da usare quasi sempre
+for (String elemento : lista) {
+    System.out.println(elemento);
+}
+
+// 2) for con indice: quando ti serve sapere la posizione
+for (int i = 0; i &lt; lista.size(); i++) {
+    System.out.println(i + ": " + lista.get(i));
+}
+
+// 3) Iterator: permette di togliere elementi mentre scorri
+Iterator&lt;String&gt; it = lista.iterator();
+while (it.hasNext()) {
+    String s = it.next();
+    if (s.isEmpty()) {
+        it.remove();               // toglie l'elemento appena letto
+    }
+}</code></pre>
+  <p>Un <strong>Iterator</strong> è un "segnalibro" che scorre la collezione: <code>hasNext()</code> chiede se c'è un altro elemento, <code>next()</code> lo prende e va avanti, <code>remove()</code> toglie l'ultimo elemento preso con <code>next()</code>. Serve <code>import java.util.Iterator;</code>.</p>
+  <div class="callout info"><span class="callout-title">L'esempio delle slide</span>Nelle slide il ciclo con l'Iterator chiama <code>it.next(); it.remove();</code> per ogni elemento, senza condizione: così <strong>svuota tutta la lista</strong>. Serve a mostrare la sintassi; nella pratica il <code>remove()</code> sta dentro un <code>if</code>, come sopra.</div>
+  <div class="callout warn"><span class="callout-title">Non togliere dentro un for-each <em>(extra)</em></span>Se dentro un for-each chiami <code>lista.remove(...)</code>, Java di solito lancia <code>ConcurrentModificationException</code>: la lista è cambiata mentre la stavi scorrendo. Per togliere mentre scorri usa l'<code>Iterator</code>, oppure <code>lista.removeIf(s -&gt; s.isEmpty());</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Vector: l'antenato thread-safe</h2>
+  <p><code>Vector</code> è una delle classi più antiche di Java: c'era già in <strong>Java 1.0</strong>, prima ancora del Collections Framework. Dentro è <strong>quasi identica</strong> ad <code>ArrayList</code>: anche lei usa un array che si ingrandisce. La differenza è una sola, ma pesa:</p>
+  <div class="callout def"><span class="callout-title">Sincronizzazione</span>Ogni metodo di <code>Vector</code> è <code>synchronized</code>: <strong>un solo thread alla volta</strong> può usarlo. È come un bagno con la chiave: chi entra chiude, gli altri aspettano. Così più thread possono usare lo stesso Vector senza rovinarlo, senza scrivere codice in più.</div>
+  <p>Il prezzo è la <strong>lentezza</strong>: "chiudere e riaprire la porta" a ogni chiamata costa tempo, <strong>anche</strong> quando il thread è uno solo e nessuno aspetta. Per questo oggi <code>Vector</code> è considerato <strong>legacy</strong> (roba vecchia, tenuta per compatibilità).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Caratteristica</th><th>Vector</th><th>ArrayList</th></tr></thead>
+      <tbody>
+        <tr><td>Struttura interna</td><td>array dinamico</td><td>array dinamico</td></tr>
+        <tr><td>Thread-safe</td><td>sì</td><td>no</td></tr>
+        <tr><td>Prestazioni</td><td>più lento</td><td>veloce</td></tr>
+        <tr><td>Quando cresce</td><td>di solito raddoppia, o di <code>capacityIncrement</code></td><td>circa +50%</td></tr>
+        <tr><td>Introdotto in</td><td>Java 1.0</td><td>Java 1.2</td></tr>
+        <tr><td>Uso oggi</td><td>sconsigliato</td><td>standard</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>La capacità incrementale</h3>
+  <p><code>Vector</code> ha una cosa che <code>ArrayList</code> non ha: puoi decidere <strong>di quanto cresce</strong> con il <code>capacityIncrement</code>.</p>
+<pre data-lang="java"><code>// capacità iniziale 10; quando è pieno cresce di 5 posti alla volta (10, 15, 20…)
+Vector&lt;String&gt; v = new Vector&lt;&gt;(10, 5);
+v.add("ciao");          // si usa come una qualsiasi List</code></pre>
+  <h3>Cosa usare al suo posto</h3>
+  <p>Se ti serve davvero una lista condivisa tra thread:</p>
+  <ul>
+    <li><code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code>: un ArrayList "con la chiave", stessa idea di Vector;</li>
+    <li><code>CopyOnWriteArrayList</code> (pacchetto <code>java.util.concurrent</code>): ottimo quando si legge spesso e si scrive raramente;</li>
+    <li>le altre collezioni di <code>java.util.concurrent</code>, pensate apposta per i thread.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>LinkedList: la lista concatenata</h2>
+  <p><code>LinkedList</code> è fatta in modo completamente diverso: niente array. Ogni elemento sta in un <strong>nodo</strong>, e ogni nodo contiene il <strong>valore</strong> più due <strong>riferimenti</strong>: uno al nodo <strong>precedente</strong> e uno al <strong>successivo</strong>. Per questo si chiama lista <strong>doppiamente collegata</strong> (<em>doubly-linked list</em>).</p>
+<pre data-lang="testo"><code> null ← [ "A" ] ⇄ [ "B" ] ⇄ [ "C" ] → null
+           ↑                   ↑
+         first                last
+
+ ogni nodo:  [ prev | valore | next ]</code></pre>
+  <p>Pensa a una <strong>caccia al tesoro</strong>: ogni biglietto dice dove trovare il prossimo (e qui anche il precedente). I biglietti possono stare ovunque in casa, non uno accanto all'altro. La lista conosce solo il <strong>primo</strong> e l'<strong>ultimo</strong> nodo.</p>
+  <p>Inserire "X" tra "A" e "B" vuol dire solo <strong>cambiare qualche freccia</strong> (quelle di A, X e B): nessun elemento si sposta.</p>
+<pre data-lang="testo"><code>prima:  "A" ⇄ "B" ⇄ "C"
+dopo:   "A" ⇄ "X" ⇄ "B" ⇄ "C"</code></pre>
+  <p>Ma per <strong>arrivare</strong> all'elemento numero 500 bisogna seguire le frecce una per una partendo da un'estremità: non si può "saltare" direttamente come in un array.</p>
+  <div class="compare">
+    <div>
+      <h4>Vantaggi</h4>
+      <ul>
+        <li><strong>Inserire e togliere è O(1)</strong> una volta <em>arrivati</em> nel punto giusto: si cambiano solo i collegamenti.</li>
+        <li><strong>Mai ingrandimenti</strong>: ogni nuovo elemento è un nodo nuovo, niente copie.</li>
+        <li>Implementa anche <code>Deque</code>: ha metodi pronti per lavorare su <strong>testa e coda</strong> (<code>addFirst</code>, <code>removeLast</code>…).</li>
+        <li>Ottima per fare <strong>code</strong> e <strong>pile</strong>.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Svantaggi</h4>
+      <ul>
+        <li><strong>Accesso per indice lento</strong>, O(n): <code>get(i)</code> deve scorrere i nodi dall'inizio o dalla fine (da quella più vicina).</li>
+        <li><strong>Più memoria</strong>: ogni nodo porta con sé due riferimenti in più (<code>prev</code> e <code>next</code>).</li>
+        <li>Nodi <strong>sparsi</strong> in memoria: la cache del processore aiuta poco, quindi anche scorrere la lista è più lento.</li>
+        <li><strong>Non thread-safe</strong>, come ArrayList.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>LinkedList come pila e come coda</h2>
+  <p>Una <code>LinkedList</code> si può usare come normale <code>List</code>, ma implementa anche l'interfaccia <strong><code>Deque</code></strong> (<em>Double-Ended Queue</em>, "coda a due estremità", si legge "deck"): una sequenza in cui si aggiunge e si toglie <strong>da entrambe le estremità</strong>.</p>
+<pre data-lang="java"><code>import java.util.LinkedList;
+import java.util.List;
+import java.util.Deque;
+
+List&lt;String&gt;  lista = new LinkedList&lt;&gt;();   // usata come lista
+Deque&lt;String&gt; coda  = new LinkedList&lt;&gt;();   // usata come deque</code></pre>
+  <p>Il tipo a sinistra decide <strong>quali metodi vedi</strong>: con <code>Deque</code> hai <code>addFirst</code>, <code>pollLast</code>, <code>push</code>…; con <code>List</code> hai <code>get(i)</code>, <code>set(i, e)</code>…</p>
+
+  <h3>Le operazioni sulle estremità</h3>
+<pre data-lang="java"><code>coda.addFirst("Inizio");             // aggiunge in testa
+coda.addLast("Fine");                // aggiunge in fondo
+
+String primo  = coda.removeFirst();  // toglie e restituisce la testa
+String ultimo = coda.removeLast();   // toglie e restituisce l'ultimo
+
+coda.offerFirst("Testa");            // come addFirst
+coda.pollLast();                     // come removeLast (null se vuota)
+coda.peekFirst();                    // legge la testa senza toglierla</code></pre>
+  <p>Ci sono due "famiglie" di metodi che fanno la stessa cosa e si comportano diversamente <strong>quando la deque è vuota</strong>:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>Se è vuota lancia un'eccezione</th><th>Se è vuota restituisce <code>null</code></th></tr></thead>
+      <tbody>
+        <tr><td>aggiungi in testa / in fondo</td><td><code>addFirst</code> / <code>addLast</code></td><td><code>offerFirst</code> / <code>offerLast</code></td></tr>
+        <tr><td>togli la testa / l'ultimo</td><td><code>removeFirst</code> / <code>removeLast</code></td><td><code>pollFirst</code> / <code>pollLast</code></td></tr>
+        <tr><td>guarda senza togliere</td><td><code>getFirst</code> / <code>getLast</code></td><td><code>peekFirst</code> / <code>peekLast</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Per ricordarle: <em>poll</em> e <em>peek</em> sono "gentili" e rispondono <code>null</code>; <em>remove</em> e <em>get</em> si arrabbiano con <code>NoSuchElementException</code>. (Gli <em>offer</em> su una LinkedList riescono sempre, perché non ha un limite di posti.)</p>
+
+  <h3>La pila (stack): l'ultimo che entra è il primo che esce</h3>
+  <div class="compare">
+    <div>
+      <p>Una <strong>pila</strong> è come una pila di piatti: appoggi sopra e prendi da sopra. Si dice <strong>LIFO</strong>: <em>Last In, First Out</em>. Esempi: il tasto "Annulla" (annulla l'ultima azione), il tasto "Indietro" del browser.</p>
+      <ul>
+        <li><code>push(e)</code>: mette in cima</li>
+        <li><code>pop()</code>: toglie e restituisce la cima</li>
+        <li><code>peek()</code>: guarda la cima senza toglierla</li>
+      </ul>
+    </div>
+    <div>
+<pre data-lang="java"><code>Deque&lt;Integer&gt; pila = new LinkedList&lt;&gt;();
+
+pila.push(1);
+pila.push(2);
+pila.push(3);          // cima: 3
+
+int cima  = pila.pop();   // 3 (e lo toglie)
+int sopra = pila.peek();  // 2 (resta lì)</code></pre>
+    </div>
+  </div>
+  <ol class="stack">
+    <li><b>3</b><strong>push(3)</strong><span>l'ultimo entrato: è il primo a uscire con pop()</span></li>
+    <li><b>2</b><strong>push(2)</strong><span>dopo il pop() è lui la cima: peek() restituisce 2</span></li>
+    <li><b>1</b><strong>push(1)</strong><span>il primo entrato: uscirà per ultimo</span></li>
+  </ol>
+
+  <h3>La coda (queue): il primo che entra è il primo che esce</h3>
+  <div class="compare">
+    <div>
+      <p>Una <strong>coda</strong> è come la fila al bar: chi arriva si mette in fondo, si serve chi è davanti. Si dice <strong>FIFO</strong>: <em>First In, First Out</em>. Esempi: la coda di stampa, i messaggi da elaborare.</p>
+      <ul>
+        <li><code>offer(e)</code>: entra in fondo alla fila (<em>enqueue</em>)</li>
+        <li><code>poll()</code>: esce il primo della fila (<em>dequeue</em>)</li>
+        <li><code>peek()</code>: guarda chi è il primo senza farlo uscire</li>
+      </ul>
+    </div>
+    <div>
+<pre data-lang="java"><code>Deque&lt;String&gt; coda = new LinkedList&lt;&gt;();
+
+coda.offer("Alice");
+coda.offer("Bob");
+coda.offer("Charlie");
+
+String prossimo = coda.poll();  // "Alice"
+String testa    = coda.peek();  // "Bob"</code></pre>
+    </div>
+  </div>
+<pre data-lang="testo"><code>esce ←  [ Alice | Bob | Charlie ]  ← entra
+poll() → Alice esce;  ora la testa è Bob</code></pre>
+  <div class="callout tip"><span class="callout-title">Pila e coda insieme</span>Sulla stessa <code>Deque</code>, <code>push</code> e <code>pop</code> lavorano sulla <strong>testa</strong>; <code>offer</code> aggiunge in <strong>fondo</strong> e <code>poll</code> toglie dalla <strong>testa</strong>. Per non confonderti usa ogni deque per <strong>un solo scopo</strong>: o come pila o come coda.</div>
+  <div class="callout info"><span class="callout-title">E la classe Stack? <em>(extra)</em></span>Java ha anche una classe <code>Stack</code>, ma è figlia di <code>Vector</code> e quindi legacy anche lei. Oggi per pile e code si usa una <code>Deque</code>: <code>LinkedList</code> come nelle slide, oppure <code>ArrayDeque</code>, che di solito è ancora più veloce.</div>
+
+  <!-- ============================================================= -->
+  <h2>Prestazioni: O(1) e O(n)</h2>
+  <p>Per scegliere la lista giusta bisogna sapere <strong>quanto costa</strong> ogni operazione. Si usa la <strong>notazione O grande</strong> (Big O), che dice come cresce il tempo quando crescono gli elementi.</p>
+  <div class="compare">
+    <div>
+      <h4>O(1): tempo costante</h4>
+      <p>Il tempo <strong>non dipende</strong> da quanti elementi ci sono: con 10 o con 10 milioni ci mette uguale. È il caso ideale.</p>
+      <p class="hand">Come aprire un libro alla pagina 200 se sai già il numero.</p>
+    </div>
+    <div>
+      <h4>O(n): tempo lineare</h4>
+      <p>Il tempo <strong>cresce insieme</strong> al numero di elementi <em>n</em>: con un milione di elementi potresti fare un milione di passi.</p>
+      <p class="hand">Come cercare una parola sfogliando il libro pagina per pagina.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione</th><th>ArrayList</th><th>Vector</th><th>LinkedList</th><th>Perché</th></tr></thead>
+      <tbody>
+        <tr><td><code>get(i)</code> / <code>set(i, e)</code></td><td>O(1) veloce</td><td>O(1) veloce</td><td>O(n) lento</td><td>LinkedList deve scorrere i nodi</td></tr>
+        <tr><td><code>add(e)</code> in fondo</td><td>O(1)* veloce</td><td>O(1)* veloce</td><td>O(1) veloce</td><td>*in media: ogni tanto c'è l'ingrandimento</td></tr>
+        <tr><td><code>add(i, e)</code> in mezzo</td><td>O(n) lento</td><td>O(n) lento</td><td>O(1)** veloce</td><td>array: spostare gli elementi</td></tr>
+        <tr><td><code>remove(i)</code> in mezzo</td><td>O(n) lento</td><td>O(n) lento</td><td>O(1)** veloce</td><td>array: spostare gli elementi</td></tr>
+        <tr><td>aggiungere/togliere in testa</td><td>O(n) lento</td><td>O(n) lento</td><td>O(1) veloce</td><td>LinkedList conosce il primo nodo <em>(extra)</em></td></tr>
+        <tr><td>scorrere tutta la lista</td><td>veloce</td><td>veloce</td><td>più lenta</td><td>memoria contigua contro nodi sparsi</td></tr>
+        <tr><td>thread-safe</td><td>no</td><td>sì</td><td>no</td><td>solo Vector è sincronizzato</td></tr>
+        <tr><td>memoria</td><td>bassa</td><td>bassa</td><td>alta</td><td>2 riferimenti in più per nodo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>* <strong>Ammortizzato</strong>: quasi sempre c'è posto e costa pochissimo; raramente bisogna ingrandire e costa O(n). In media, su tante aggiunte, viene O(1).<br>** Solo <strong>dopo essere arrivati</strong> nella posizione: vedi sotto.</p>
+  <div class="callout warn"><span class="callout-title">Il costo nascosto di LinkedList</span>Nella tabella <code>add(i, e)</code> su LinkedList è O(1), ma è un mezzo trucco: prima bisogna <strong>raggiungere</strong> la posizione <code>i</code>, e per farlo si scorrono i nodi, cioè O(n). Quindi <code>lista.add(500, x)</code> su una LinkedList costa comunque O(n). Il vero vantaggio si vede quando <strong>sei già lì</strong>: in testa, in fondo, oppure scorrendo con un <code>ListIterator</code>, che ricorda la posizione e permette più inserimenti di seguito senza ripartire ogni volta dall'inizio.</div>
+<pre data-lang="java"><code>// Inserisce "-" dopo ogni elemento, in una sola passata
+ListIterator&lt;String&gt; it = lista.listIterator();
+while (it.hasNext()) {
+    it.next();
+    it.add("-");     // su LinkedList: O(1), siamo già nel punto giusto
+}</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Come scegliere: la regola d'oro</h2>
+  <p>Non esiste una lista migliore in assoluto: dipende da <strong>cosa fai più spesso</strong>.</p>
+  <div class="cards">
+    <div class="card"><strong>ArrayList · quasi sempre</strong><p>La scelta di default (circa il 90% dei casi). Quando accedi spesso per indice, scorri la lista con il for-each, aggiungi soprattutto in fondo. Esempi: elenco di prodotti, risultati di una ricerca, voti di uno studente.</p></div>
+    <div class="card"><strong>LinkedList · casi specifici</strong><p>Quando aggiungi e togli spesso <strong>in testa</strong>, ti serve una <strong>coda</strong> o una <strong>pila</strong>, o modifichi la lista mentre la scorri con un <code>ListIterator</code>. Esempi: coda di task, cronologia annulla/ripeti.</p></div>
+    <div class="card"><strong>Vector · da evitare</strong><p>È obsoleto per il codice nuovo. Se serve la sicurezza tra thread: <code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code>, <code>CopyOnWriteArrayList</code> o le collezioni di <code>java.util.concurrent</code>.</p></div>
+  </div>
+  <div class="callout tip"><span class="callout-title">Regola pratica</span>Parti <strong>sempre</strong> da <code>ArrayList</code>. Solo se misuri il programma e scopri che è lento proprio sugli inserimenti in testa o in mezzo, valuta <code>LinkedList</code>. Non ottimizzare <em>prima</em> di avere un problema.</div>
+  <p>Una domanda veloce che risolve quasi tutti gli esercizi: <strong>"leggo per posizione?"</strong> Se sì, ArrayList. <strong>"Lavoro sulle estremità, come in una fila o in una pila?"</strong> Se sì, LinkedList (come <code>Deque</code>).</p>
+
+  <!-- ============================================================= -->
+  <h2>Buone abitudini</h2>
+  <h3>1. Programma per interfaccia</h3>
+  <p>Dichiara le variabili come <code>List&lt;T&gt;</code>, non come <code>ArrayList&lt;T&gt;</code>. Così puoi cambiare implementazione senza toccare il resto del codice, e anche i metodi accettano qualsiasi lista.</p>
+<pre data-lang="java"><code>List&lt;String&gt; nomi = new ArrayList&lt;&gt;();
+
+// Il metodo funziona con ArrayList, LinkedList, Vector…
+static void stampa(List&lt;String&gt; l) {
+    for (String s : l) System.out.println(s);
+}</code></pre>
+  <h3>2. Usa sempre i generics</h3>
+  <p>Scrivi sempre il tipo tra <code>&lt; &gt;</code>. Una collezione <strong>raw</strong> (senza tipo) accetta qualsiasi cosa: gli errori saltano fuori solo durante l'esecuzione, come <code>ClassCastException</code>, invece che quando compili.</p>
+<pre data-lang="java"><code>List&lt;Integer&gt; numeri = new ArrayList&lt;&gt;();   // giusto
+
+List grezza = new ArrayList();               // raw: da non fare
+grezza.add("ciao");
+grezza.add(3);                               // il compilatore non dice niente
+String s = (String) grezza.get(1);           // ClassCastException a runtime!</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li><strong>JCF</strong> = interfacce, classi e algoritmi di <code>java.util</code> per gestire gruppi di oggetti. Con i <strong>generics</strong> (<code>List&lt;Integer&gt;</code>, mai <code>&lt;int&gt;</code>).</li>
+    <li><strong>List</strong> = sequenza <strong>ordinata</strong> con indice da 0, <strong>ammette duplicati</strong>. Implementazioni: ArrayList, Vector, LinkedList.</li>
+    <li><strong>ArrayList</strong> = array che si ingrandisce copiando. <code>get(i)</code> O(1), aggiunta in fondo O(1) ammortizzata, inserimento/rimozione in mezzo O(n). Non thread-safe. <strong>La scelta di default.</strong></li>
+    <li><strong>Vector</strong> = come ArrayList ma <code>synchronized</code>: thread-safe e più lento. Legacy (Java 1.0). Ha il <code>capacityIncrement</code>.</li>
+    <li><strong>LinkedList</strong> = nodi con <code>prev</code> e <code>next</code>. <code>get(i)</code> O(n); inserire/togliere O(1) <em>una volta arrivati</em>; più memoria. Implementa <strong>Deque</strong>.</li>
+    <li><strong>Pila</strong> (LIFO): <code>push</code>, <code>pop</code>, <code>peek</code>. <strong>Coda</strong> (FIFO): <code>offer</code>, <code>poll</code>, <code>peek</code>.</li>
+    <li>Metodi base: <code>add</code>, <code>add(i, e)</code>, <code>get</code>, <code>set</code>, <code>remove</code>, <code>size</code>, <code>contains</code>. Per togliere mentre scorri: <code>Iterator</code>.</li>
+    <li>Buone abitudini: <code>List&lt;T&gt; x = new ArrayList&lt;&gt;()</code> e mai collezioni raw.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Quale lista? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ogni situazione scegli tra ArrayList, LinkedList (come Deque) e una lista sincronizzata, e spiega perché in una riga: a) i voti di uno studente, che leggi spesso per calcolare la media; b) la coda delle richieste di stampa; c) il tasto "Annulla" di un editor; d) l'elenco dei prodotti di un negozio, mostrati per pagina (dal 21° al 40°); e) una lista di utenti connessi, modificata da più thread di un server.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li>a) <strong>ArrayList</strong>: si scorre e si aggiunge in fondo, il caso tipico.</li>
+        <li>b) <strong>LinkedList come coda</strong> (FIFO): <code>offer</code> per mettere in fila, <code>poll</code> per stampare il prossimo.</li>
+        <li>c) <strong>LinkedList come pila</strong> (LIFO): <code>push</code> a ogni azione, <code>pop</code> per annullare l'ultima.</li>
+        <li>d) <strong>ArrayList</strong>: serve l'accesso per indice (<code>get(20)</code>…<code>get(39)</code>), che è O(1).</li>
+        <li>e) <strong>Lista sincronizzata</strong>: <code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code> o <code>CopyOnWriteArrayList</code>, non <code>Vector</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Cosa stampa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>List&lt;String&gt; l = new ArrayList&lt;&gt;();
+l.add("rosso");
+l.add("verde");
+l.add(0, "blu");
+l.add("giallo");
+l.set(2, "nero");
+l.remove("rosso");
+System.out.println(l);
+System.out.println(l.size() + " " + l.get(1) + " " + l.contains("verde"));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>[blu, nero, giallo]
+3 nero false</code></pre>
+      <p>Passo passo: <code>[rosso, verde]</code> → <code>add(0, "blu")</code> → <code>[blu, rosso, verde]</code> → <code>[blu, rosso, verde, giallo]</code> → <code>set(2, "nero")</code> sostituisce "verde" → <code>[blu, rosso, nero, giallo]</code> → tolto "rosso" → <code>[blu, nero, giallo]</code>. "verde" non c'è più, quindi <code>contains</code> dà <code>false</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Pila e coda <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>Deque&lt;Integer&gt; pila = new LinkedList&lt;&gt;();
+Deque&lt;Integer&gt; coda = new LinkedList&lt;&gt;();
+for (int i = 1; i &lt;= 4; i++) {
+    pila.push(i);
+    coda.offer(i);
+}
+System.out.println(pila.pop() + " " + pila.pop() + " " + pila.peek());
+System.out.println(coda.poll() + " " + coda.poll() + " " + coda.peek());</code></pre>
+      <p>Cosa stampa? Quanti elementi restano in ciascuna?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>4 3 2
+1 2 3</code></pre>
+      <p>La pila restituisce prima l'<strong>ultimo</strong> entrato (LIFO), la coda il <strong>primo</strong> (FIFO). <code>peek</code> guarda senza togliere: in entrambe restano <strong>2 elementi</strong> (pila: 2 e 1; coda: 3 e 4).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Trappola remove <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="java"><code>List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(10, 20, 30, 2));
+n.remove(2);
+System.out.println(n);
+n.remove(Integer.valueOf(2));
+System.out.println(n);</code></pre>
+      <p>Cosa stampa? Perché i due <code>remove</code> si comportano in modo diverso?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>[10, 20, 2]
+[10, 20]</code></pre>
+      <p><code>remove(2)</code> riceve un <code>int</code>, quindi Java usa <code>remove(int indice)</code>: toglie l'elemento in <strong>posizione 2</strong>, cioè 30. <code>remove(Integer.valueOf(2))</code> riceve un <strong>oggetto</strong>, quindi usa <code>remove(Object)</code>: toglie il <strong>valore</strong> 2. È un caso di <a href="java-array-wrapper-metodi-overload.html">overload</a>: stesso nome, parametri diversi.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Togliere i voti insufficienti <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Data <code>List&lt;Integer&gt; voti = new ArrayList&lt;&gt;(List.of(7, 4, 8, 5, 6, 3));</code> togli tutti i voti <strong>minori di 6</strong> usando un <code>Iterator</code>, poi stampa la lista e la media dei voti rimasti. Perché non si può fare con un for-each?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; voti = new ArrayList&lt;&gt;(List.of(7, 4, 8, 5, 6, 3));
+
+        Iterator&lt;Integer&gt; it = voti.iterator();
+        while (it.hasNext()) {
+            if (it.next() &lt; 6) {
+                it.remove();
+            }
+        }
+
+        int somma = 0;
+        for (int v : voti) {
+            somma += v;
+        }
+        System.out.println(voti);
+        System.out.println("Media: " + (double) somma / voti.size());
+    }
+}</code></pre>
+<pre data-lang="testo"><code>[7, 8, 6]
+Media: 7.0</code></pre>
+      <p>Con un for-each e <code>voti.remove(...)</code> la lista cambierebbe mentre la stai scorrendo e Java lancerebbe <code>ConcurrentModificationException</code>. L'<code>Iterator</code> invece sa di aver tolto l'elemento e continua dal punto giusto. Il cast <code>(double)</code> serve per non fare la divisione tra interi.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Parentesi bilanciate <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Scrivi il metodo <code>static boolean bilanciata(String s)</code> che usa una <strong>pila</strong> per dire se le parentesi tonde di <code>s</code> sono bilanciate. Esempi: <code>"(a+b)*(c)"</code> → <code>true</code>; <code>"((a)"</code> → <code>false</code>; <code>")("</code> → <code>false</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>static boolean bilanciata(String s) {
+    Deque&lt;Character&gt; pila = new LinkedList&lt;&gt;();
+    for (int i = 0; i &lt; s.length(); i++) {
+        char c = s.charAt(i);
+        if (c == '(') {
+            pila.push(c);
+        } else if (c == ')') {
+            if (pila.isEmpty()) {
+                return false;          // chiusa senza nessuna aperta
+            }
+            pila.pop();
+        }
+    }
+    return pila.isEmpty();             // nessuna aperta rimasta senza chiusura
+}</code></pre>
+      <p>Ogni <code>(</code> va nella pila, ogni <code>)</code> ne toglie una. Due errori possibili: una <code>)</code> quando la pila è vuota (<code>")("</code>), oppure qualche <code>(</code> rimasta alla fine (<code>"((a)"</code>). Con un solo tipo di parentesi basterebbe un contatore; la pila diventa indispensabile con più tipi, <code>( [ {</code>: lì si fa <code>push</code> della parentesi aperta e al momento della chiusa si controlla che <code>pop()</code> sia quella giusta.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>La coda della segreteria <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p>Scrivi una classe <code>Segreteria</code> che gestisce la fila degli studenti allo sportello, con un attributo <code>Deque&lt;String&gt; fila</code> e i metodi:</p>
+      <ul>
+        <li><code>arriva(String nome)</code>: lo studente si mette in fondo alla fila;</li>
+        <li><code>arrivaUrgente(String nome)</code>: lo studente passa <strong>davanti a tutti</strong>;</li>
+        <li><code>servi()</code>: restituisce il nome del prossimo da servire e lo toglie dalla fila, oppure <code>"Nessuno in fila"</code> se è vuota;</li>
+        <li><code>quanti()</code>: quanti studenti aspettano.</li>
+      </ul>
+      <p>Nel <code>main</code> fai arrivare Anna, Bruno e Carla, poi Dario urgente, e servi 5 volte stampando il risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="java"><code>import java.util.Deque;
+import java.util.LinkedList;
+
+class Segreteria {
+    private Deque&lt;String&gt; fila = new LinkedList&lt;&gt;();
+
+    void arriva(String nome) {
+        fila.offerLast(nome);
+    }
+
+    void arrivaUrgente(String nome) {
+        fila.offerFirst(nome);
+    }
+
+    String servi() {
+        String prossimo = fila.pollFirst();
+        if (prossimo == null) {
+            return "Nessuno in fila";
+        }
+        return prossimo;
+    }
+
+    int quanti() {
+        return fila.size();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Segreteria s = new Segreteria();
+        s.arriva("Anna");
+        s.arriva("Bruno");
+        s.arriva("Carla");
+        s.arrivaUrgente("Dario");
+        System.out.println("In fila: " + s.quanti());
+
+        for (int i = 0; i &lt; 5; i++) {
+            System.out.println("Servo: " + s.servi());
+        }
+    }
+}</code></pre>
+<pre data-lang="testo"><code>In fila: 4
+Servo: Dario
+Servo: Anna
+Servo: Bruno
+Servo: Carla
+Servo: Nessuno in fila</code></pre>
+      <ul>
+        <li>Si usa una <code>Deque</code> perché servono <strong>entrambe le estremità</strong>: in fondo per chi arriva, in testa per l'urgente e per servire.</li>
+        <li><code>pollFirst()</code> restituisce <code>null</code> quando la fila è vuota, invece di lanciare un'eccezione come <code>removeFirst()</code>: comodo per il quinto <code>servi()</code>.</li>
+        <li>LinkedList è la scelta giusta: tutte le operazioni sono sulle estremità, quindi O(1).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Java Collections: ArrayList, Vector e LinkedList", dispense a cura del prof. Daniele Gravina, a.s. 2026/2027: Java Collections Framework, interfaccia <code>List</code>, ArrayList, Vector, LinkedList, operazioni <code>Deque</code>, pila e coda, tabella delle prestazioni, regola d'oro e best practices. Sono aggiunte per aiutare lo studio: gli schemi della memoria, i paragoni, i generics spiegati, la tabella dei metodi, la trappola di <code>remove</code> con <code>List&lt;Integer&gt;</code>, <code>ConcurrentModificationException</code>, la tabella <code>offer/poll/peek</code>, la classe <code>Stack</code> e <code>ArrayDeque</code>, la precisazione su quanto cresce ArrayList, l'esempio con <code>ListIterator</code> e gli esercizi 01–07 con le soluzioni.</p>
+</main>
+</body>
+</html>
