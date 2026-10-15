@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: la classe Automobile · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione Classroom di programmazione a oggetti in Java: la classe Automobile con attributi marca, modello, anno e velocita, tre costruttori in overload con this, metodi accelera, frena e stampaInfo, array di oggetti e ciclo for-each nel main. Svolta a tappe con codice compilato, output vero e domande su this, NullPointerException e velocità negativa.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: la classe Automobile</h1>
+  <p class="lead">L'esercitazione pratica dell'ultima slide della lezione "Programmazione a Oggetti in Java": costruire la classe <strong>Automobile</strong> con attributi, costruttori in overload, metodi e un array di oggetti. Qui la svolgiamo <strong>a tappe</strong>, un pezzo alla volta, e poi rispondiamo a qualche domanda sui punti in cui si sbaglia più spesso. La teoria è nel capitolo <a href="java-programmazione-a-oggetti.html">Java: programmazione a oggetti</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong> (è quella della slide), poi affronta le tappe nell'ordine: ognuna aggiunge un pezzo e produce un programma che <strong>compila e gira</strong>. Prova a scrivere ogni tappa da solo prima di aprire la <strong>risposta spiegata</strong>. L'ultima tappa è l'esercitazione completa. Ogni programma è stato compilato ed eseguito con Java 21: l'output che vedi è quello vero.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>La consegna</h2>
+  <p>Il testo della slide, così come è stato assegnato:</p>
+  <div class="table-wrap">
+    <table>
+      <tbody>
+        <tr><td><strong>Attributi</strong></td><td><code>String marca</code>, <code>String modello</code>, <code>int anno</code>, <code>double velocita</code></td></tr>
+        <tr><td><strong>Costruttori</strong></td><td><code>Automobile()</code>, <code>Automobile(marca, modello)</code>, <code>Automobile(marca, modello, anno)</code> — usa <code>this</code>!</td></tr>
+        <tr><td><strong>Metodi</strong></td><td><code>accelera(incremento)</code>, <code>frena(decremento)</code>, <code>stampaInfo()</code></td></tr>
+        <tr><td><strong>Nel main</strong></td><td><code>Automobile[] auto = new Automobile[3];</code>, poi <code>auto[0] = new Automobile("Fiat", "Panda", 2020);</code> e così via; infine un ciclo <code>for-each</code> per stampare tutte le auto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Dove sta il main</span>Per avere un unico file da copiare e provare, il <code>main</code> è scritto <strong>dentro</strong> la classe <code>Automobile</code> (file <code>Automobile.java</code>). Funzionerebbe identico in una classe a parte, per esempio <code>Main.java</code> nella stessa cartella.</div>
+
+  <!-- ============================================================= -->
+  <h2>Svolgimento a tappe</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Gli <strong>attributi</strong> si dichiarano nel corpo della classe, fuori dai metodi. Il <strong>costruttore</strong> ha lo stesso nome della classe e nessun tipo di ritorno; <code>this.marca</code> è l'attributo, <code>marca</code> il parametro. Teoria: <a href="java-programmazione-a-oggetti.html#creare-una-classe-e-gli-attributi">Creare una classe e gli attributi</a>, <a href="java-programmazione-a-oggetti.html#il-costruttore-e-la-parola-chiave-this">Il costruttore e la parola chiave this</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Tappa 1 · Attributi e primo costruttore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Automobile</code> con i quattro attributi della slide e il costruttore senza parametri <code>Automobile()</code>. Nel <code>main</code> crea un'automobile e stampa i suoi attributi, per controllare che tutto <strong>compili</strong>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Gli attributi sono le "caratteristiche" di ogni auto: li scrivo in cima alla classe, fuori da qualsiasi metodo, con i tipi esatti della slide. <code>velocita</code> senza accento: nei nomi Java è meglio non usare lettere accentate.</li>
+        <li>Il costruttore vuoto non riceve dati, quindi decido io i valori di partenza: marca e modello "Sconosciuta"/"Sconosciuto", anno 0, velocità 0 (l'auto nasce ferma).</li>
+        <li>Qui <code>this.</code> non sarebbe obbligatorio (non ci sono parametri con lo stesso nome), ma lo scrivo lo stesso: rende chiaro che sto riempiendo gli attributi di <strong>questo</strong> oggetto.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Automobile {
+    // attributi: cosa "è" un'automobile
+    String marca;
+    String modello;
+    int anno;
+    double velocita;
+
+    // costruttore vuoto: l'auto nasce con valori di partenza
+    Automobile() {
+        this.marca = "Sconosciuta";
+        this.modello = "Sconosciuto";
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    public static void main(String[] args) {
+        Automobile a = new Automobile();
+        System.out.println(a.marca + " " + a.modello + " " + a.anno + " " + a.velocita);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Sconosciuta Sconosciuto 0 0.0</code></pre>
+      <h4>Perché funziona</h4>
+      <p><code>new Automobile()</code> crea l'oggetto e <strong>esegue automaticamente</strong> il costruttore, che riempie i quattro attributi. La velocità esce come <code>0.0</code> perché è un <code>double</code>: anche assegnando <code>0</code>, Java lo converte in <code>0.0</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Tappa 2 · Gli altri due costruttori, in overload, con this <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Aggiungi i costruttori <code>Automobile(marca, modello)</code> e <code>Automobile(marca, modello, anno)</code>, usando <code>this</code>. Nel <code>main</code> crea tre automobili, una per costruttore, e stampa marca, modello e anno di ognuna.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La slide scrive i parametri senza tipo: li deduco dagli attributi. <code>marca</code> e <code>modello</code> sono <code>String</code>, <code>anno</code> è <code>int</code>.</li>
+        <li>Chiamo i parametri <strong>come gli attributi</strong>: è la situazione per cui serve <code>this</code>. <code>this.marca = marca;</code> si legge "l'attributo marca di questo oggetto riceve il parametro marca".</li>
+        <li>Gli attributi che il costruttore non riceve li inizializzo comunque: con due parametri l'anno non è noto e lo metto a 0; la velocità parte sempre da 0.</li>
+        <li>Tre costruttori con lo <strong>stesso nome</strong> ma un numero di parametri diverso (0, 2, 3): è l'<strong>overload</strong>. Java sceglie quale eseguire guardando gli argomenti di <code>new</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Automobile {
+    String marca;
+    String modello;
+    int anno;
+    double velocita;
+
+    // 1 · nessun parametro
+    Automobile() {
+        this.marca = "Sconosciuta";
+        this.modello = "Sconosciuto";
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    // 2 · marca e modello: l'anno non lo sappiamo
+    Automobile(String marca, String modello) {
+        this.marca = marca;        // attributo = parametro
+        this.modello = modello;
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    // 3 · marca, modello e anno
+    Automobile(String marca, String modello, int anno) {
+        this.marca = marca;
+        this.modello = modello;
+        this.anno = anno;
+        this.velocita = 0;
+    }
+
+    public static void main(String[] args) {
+        Automobile a = new Automobile();                         // costruttore 1
+        Automobile b = new Automobile("BMW", "Serie 1");         // costruttore 2
+        Automobile c = new Automobile("Fiat", "Panda", 2020);    // costruttore 3
+        System.out.println(a.marca + " " + a.modello + " " + a.anno);
+        System.out.println(b.marca + " " + b.modello + " " + b.anno);
+        System.out.println(c.marca + " " + c.modello + " " + c.anno);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Sconosciuta Sconosciuto 0
+BMW Serie 1 0
+Fiat Panda 2020</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>new Automobile("BMW", "Serie 1")</code> ha 2 argomenti di tipo <code>String</code>: l'unico costruttore che corrisponde è il secondo. Con 3 argomenti (<code>String</code>, <code>String</code>, <code>int</code>) Java usa il terzo.</li>
+        <li>Il costruttore vuoto l'abbiamo scritto noi nella tappa 1, ed è un bene: appena una classe ha <strong>almeno un</strong> costruttore scritto da noi, Java non regala più quello vuoto. Senza di lui, <code>new Automobile()</code> non compilerebbe. Teoria: <a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">Overload dei costruttori</a>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Tappa 3 · I metodi accelera, frena e stampaInfo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Aggiungi i tre metodi <code>accelera(incremento)</code>, <code>frena(decremento)</code> e <code>stampaInfo()</code>. Nel <code>main</code> crea una Fiat Panda del 2020, falla accelerare e frenare più volte e chiama <code>stampaInfo()</code> dopo ogni operazione.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>I tre metodi <strong>non restituiscono</strong> niente: cambiano l'oggetto o stampano. Quindi sono <code>void</code>.</li>
+        <li><code>incremento</code> e <code>decremento</code> sono velocità, quindi <code>double</code> come l'attributo <code>velocita</code>.</li>
+        <li><code>accelera</code> somma l'incremento alla velocità attuale. <code>frena</code> sottrae, ma una macchina che frena si ferma, non va "sotto zero": se il risultato è negativo lo riporto a 0 (lo spieghiamo nella domanda 08).</li>
+        <li><code>stampaInfo</code> scrive tutto su una riga. Un piccolo extra: se <code>anno</code> vale 0 (cioè non è stato indicato nel costruttore) scrivo "anno non indicato" invece di "anno 0".</li>
+        <li>Nei metodi non serve <code>this</code>: i parametri si chiamano <code>incremento</code>/<code>decremento</code>, non <code>velocita</code>, quindi non c'è ambiguità.</li>
+      </ol>
+      <h4>Codice</h4>
+      <p>Attributi e costruttori restano quelli della tappa 2; qui sotto la parte nuova (i tre metodi) e il nuovo <code>main</code>, da mettere al posto di quello di prima.</p>
+<pre data-lang="java"><code>    // aumenta la velocità
+    void accelera(double incremento) {
+        velocita = velocita + incremento;
+    }
+
+    // diminuisce la velocità, ma non sotto zero
+    void frena(double decremento) {
+        velocita = velocita - decremento;
+        if (velocita &lt; 0) {
+            velocita = 0;
+        }
+    }
+
+    // stampa tutte le informazioni su una riga
+    void stampaInfo() {
+        String annoTesto;
+        if (anno == 0) {
+            annoTesto = "anno non indicato";
+        } else {
+            annoTesto = "anno " + anno;
+        }
+        System.out.println(marca + " " + modello + " (" + annoTesto + ") - velocità: " + velocita + " km/h");
+    }
+
+    public static void main(String[] args) {
+        Automobile c = new Automobile("Fiat", "Panda", 2020);
+        c.stampaInfo();
+        c.accelera(50);
+        c.stampaInfo();
+        c.accelera(30.5);
+        c.stampaInfo();
+        c.frena(20);
+        c.stampaInfo();
+        c.frena(100);        // 60.5 - 100 sarebbe negativo
+        c.stampaInfo();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Fiat Panda (anno 2020) - velocità: 0.0 km/h
+Fiat Panda (anno 2020) - velocità: 50.0 km/h
+Fiat Panda (anno 2020) - velocità: 80.5 km/h
+Fiat Panda (anno 2020) - velocità: 60.5 km/h
+Fiat Panda (anno 2020) - velocità: 0.0 km/h</code></pre>
+      <h4>Prova a mano</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Chiamata</th><th>Calcolo</th><th>velocita dopo</th></tr></thead>
+        <tbody>
+          <tr><td>(appena creata)</td><td>costruttore</td><td>0.0</td></tr>
+          <tr><td><code>accelera(50)</code></td><td>0 + 50</td><td>50.0</td></tr>
+          <tr><td><code>accelera(30.5)</code></td><td>50 + 30.5</td><td>80.5</td></tr>
+          <tr><td><code>frena(20)</code></td><td>80.5 − 20</td><td>60.5</td></tr>
+          <tr><td><code>frena(100)</code></td><td>60.5 − 100 = −39.5 → riportata a 0</td><td>0.0</td></tr>
+        </tbody>
+      </table></div>
+      <p>Lo stesso oggetto <code>c</code> "ricorda" la sua velocità tra una chiamata e l'altra: è un <strong>attributo</strong>, e vive quanto l'oggetto. Teoria: <a href="java-programmazione-a-oggetti.html#i-metodi-cosa-puo-fare-un-oggetto">I metodi: cosa può fare un oggetto</a>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Tappa 4 · Il main con l'array e il for-each <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Nel <code>main</code> crea <code>Automobile[] auto = new Automobile[3];</code>, riempi le tre caselle (prima casella: <code>new Automobile("Fiat", "Panda", 2020)</code>) e stampa tutte le auto con un ciclo <code>for-each</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>new Automobile[3]</code> crea un array di 3 <strong>caselle vuote</strong> (valgono <code>null</code>), non 3 automobili. Le auto vanno create una per una con <code>new Automobile(...)</code>.</li>
+        <li>Per le tre caselle uso apposta i <strong>tre costruttori diversi</strong>: così l'output mostra che funzionano tutti.</li>
+        <li>Il <code>for-each</code> <code>for (Automobile a : auto)</code> si legge "per ogni automobile <code>a</code> dentro <code>auto</code>": a ogni giro <code>a</code> è la casella successiva, e su di lei chiamo <code>stampaInfo()</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+      <p>Classe uguale alla tappa 3; cambia solo il <code>main</code>:</p>
+<pre data-lang="java"><code>    public static void main(String[] args) {
+        // 3 caselle vuote (null), non 3 automobili!
+        Automobile[] auto = new Automobile[3];
+
+        // riempio TUTTE le caselle, usando i tre costruttori
+        auto[0] = new Automobile("Fiat", "Panda", 2020);
+        auto[1] = new Automobile("BMW", "Serie 1");
+        auto[2] = new Automobile();
+
+        // for-each: a prende a turno ogni automobile dell'array
+        for (Automobile a : auto) {
+            a.stampaInfo();
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Fiat Panda (anno 2020) - velocità: 0.0 km/h
+BMW Serie 1 (anno non indicato) - velocità: 0.0 km/h
+Sconosciuta Sconosciuto (anno non indicato) - velocità: 0.0 km/h</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Tutte e tre le caselle sono state riempite <strong>prima</strong> del ciclo, quindi ogni <code>a</code> è un oggetto vero. Se una casella restasse <code>null</code> il programma si fermerebbe: lo vediamo nella domanda 07. Teoria: <a href="java-programmazione-a-oggetti.html#array-di-oggetti">Array di oggetti</a>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Tappa 5 · L'esercitazione completa <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Metti insieme tutte le tappe in un unico programma: la classe con attributi, tre costruttori e tre metodi; nel <code>main</code> l'array di tre auto, una prima stampa con il <code>for-each</code>, poi fai accelerare e frenare le auto e stampale di nuovo. Come piccolo extra, trova e stampa l'auto più veloce.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La classe è quella costruita nelle tappe 1–3, senza cambiamenti.</li>
+        <li>Nel <code>main</code>: creo l'array e lo riempio (tappa 4), stampo con il <code>for-each</code> (tutte ferme), poi chiamo <code>accelera</code> e <code>frena</code> su caselle diverse e ristampo.</li>
+        <li>Per la BMW faccio apposta una frenata più forte della velocità, per vedere al lavoro il controllo in <code>frena</code>.</li>
+        <li>Per l'auto più veloce uso il solito schema del <strong>massimo</strong>: parto dalla prima, scorro tutte e se ne trovo una con velocità maggiore la tengo. La variabile <code>piuVeloce</code> è un riferimento a un'automobile, non una copia.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Automobile {
+    String marca;
+    String modello;
+    int anno;
+    double velocita;
+
+    // 1 · nessun parametro
+    Automobile() {
+        this.marca = "Sconosciuta";
+        this.modello = "Sconosciuto";
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    // 2 · marca e modello: l'anno non lo sappiamo
+    Automobile(String marca, String modello) {
+        this.marca = marca;        // attributo = parametro
+        this.modello = modello;
+        this.anno = 0;
+        this.velocita = 0;
+    }
+
+    // 3 · marca, modello e anno
+    Automobile(String marca, String modello, int anno) {
+        this.marca = marca;
+        this.modello = modello;
+        this.anno = anno;
+        this.velocita = 0;
+    }
+
+    // aumenta la velocità
+    void accelera(double incremento) {
+        velocita = velocita + incremento;
+    }
+
+    // diminuisce la velocità, ma non sotto zero
+    void frena(double decremento) {
+        velocita = velocita - decremento;
+        if (velocita &lt; 0) {
+            velocita = 0;
+        }
+    }
+
+    // stampa tutte le informazioni su una riga
+    void stampaInfo() {
+        String annoTesto;
+        if (anno == 0) {
+            annoTesto = "anno non indicato";
+        } else {
+            annoTesto = "anno " + anno;
+        }
+        System.out.println(marca + " " + modello + " (" + annoTesto + ") - velocità: " + velocita + " km/h");
+    }
+
+    public static void main(String[] args) {
+        Automobile[] auto = new Automobile[3];
+        auto[0] = new Automobile("Fiat", "Panda", 2020);
+        auto[1] = new Automobile("BMW", "Serie 1");
+        auto[2] = new Automobile();
+
+        System.out.println("=== Parcheggio: tutte ferme ===");
+        for (Automobile a : auto) {
+            a.stampaInfo();
+        }
+
+        // un po' di movimento
+        auto[0].accelera(50);
+        auto[0].accelera(70);      // 50 + 70 = 120
+        auto[0].frena(30);         // 120 - 30 = 90
+        auto[1].accelera(40);
+        auto[1].frena(100);        // 40 - 100 sarebbe -60: resta 0
+        auto[2].accelera(25.5);
+
+        System.out.println("=== Dopo accelerazioni e frenate ===");
+        for (Automobile a : auto) {
+            a.stampaInfo();
+        }
+
+        // chi va più veloce? (un for-each che cerca il massimo)
+        Automobile piuVeloce = auto[0];
+        for (Automobile a : auto) {
+            if (a.velocita &gt; piuVeloce.velocita) {
+                piuVeloce = a;
+            }
+        }
+        System.out.println("La più veloce è la " + piuVeloce.marca + " " + piuVeloce.modello
+                + " a " + piuVeloce.velocita + " km/h");
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>=== Parcheggio: tutte ferme ===
+Fiat Panda (anno 2020) - velocità: 0.0 km/h
+BMW Serie 1 (anno non indicato) - velocità: 0.0 km/h
+Sconosciuta Sconosciuto (anno non indicato) - velocità: 0.0 km/h
+=== Dopo accelerazioni e frenate ===
+Fiat Panda (anno 2020) - velocità: 90.0 km/h
+BMW Serie 1 (anno non indicato) - velocità: 0.0 km/h
+Sconosciuta Sconosciuto (anno non indicato) - velocità: 25.5 km/h
+La più veloce è la Fiat Panda a 90.0 km/h</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><strong>Ogni oggetto ha i suoi attributi</strong>: accelerare <code>auto[0]</code> non cambia la velocità di <code>auto[1]</code>. Il metodo <code>accelera</code> è uno solo, ma lavora sull'oggetto su cui è stato chiamato.</li>
+        <li>Fiat: 0 + 50 + 70 − 30 = 90. BMW: 0 + 40 − 100 = −60, riportata a 0. Terza auto: 0 + 25.5 = 25.5. Quindi la più veloce è la Fiat.</li>
+        <li>Dentro il ciclo del massimo uso <code>a.velocita</code> e <code>piuVeloce.velocita</code>: dal <code>main</code> gli attributi si raggiungono con l'operatore punto, come nella teoria (<a href="java-programmazione-a-oggetti.html#creare-oggetti-e-accedere-agli-attributi">Creare oggetti e accedere agli attributi</a>).</li>
+      </ul>
+      <h4>Rispetto alla slide</h4>
+      <p>Tutti i requisiti della consegna sono presenti: 4 attributi con i tipi giusti, 3 costruttori con <code>this</code>, 3 metodi, array di 3 elementi con la Fiat Panda del 2020 nella prima casella, stampa con <code>for-each</code>. Sono aggiunte nostre: il controllo "mai sotto zero" in <code>frena</code>, "anno non indicato" in <code>stampaInfo</code>, la seconda stampa e la ricerca dell'auto più veloce.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Domande sull'esercitazione</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Tre errori tipici di questa esercitazione: dimenticare <code>this</code>, lasciare una casella dell'array a <code>null</code>, non controllare i valori che entrano in un metodo. Teoria: <a href="java-programmazione-a-oggetti.html#il-costruttore-e-la-parola-chiave-this">this</a>, <a href="java-programmazione-a-oggetti.html#array-di-oggetti">Array di oggetti</a>, <a href="java-programmazione-a-oggetti.html#scope-delle-variabili">Scope delle variabili</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Cosa succede senza this? <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Nel costruttore con tre parametri togliamo <code>this.</code>, così:</p>
+<pre data-lang="java"><code>    // 3 · marca, modello e anno
+    Automobile(String marca, String modello, int anno) {
+        marca = marca;          // manca this.
+        modello = modello;      // manca this.
+        anno = anno;            // manca this.
+        this.velocita = 0;
+    }</code></pre>
+      <p>Il programma compila? Cosa stampa <code>System.out.println(c.marca + " " + c.modello + " " + c.anno);</code> dopo <code>Automobile c = new Automobile("Fiat", "Panda", 2020);</code>? Perché?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p><strong>Compila senza errori</strong>, ma stampa:</p>
+<pre data-lang="testo"><code>null null 0</code></pre>
+      <h4>Spiegazione</h4>
+      <ol>
+        <li>Dentro il costruttore esistono due cose che si chiamano <code>marca</code>: l'attributo e il parametro. Vince quella più vicina, cioè il <strong>parametro</strong> (è lo <a href="java-programmazione-a-oggetti.html#scope-delle-variabili">scope</a>: il parametro "copre" l'attributo).</li>
+        <li>Quindi <code>marca = marca;</code> vuol dire "parametro = parametro": il parametro viene assegnato a se stesso e l'attributo <strong>non viene toccato</strong>.</li>
+        <li>Gli attributi restano al loro valore iniziale: <code>null</code> per le <code>String</code>, <code>0</code> per l'<code>int</code>. Ecco <code>null null 0</code>.</li>
+        <li>È un errore subdolo proprio perché il compilatore non dice niente. La correzione è rimettere <code>this.</code>: <code>this.marca = marca;</code>. In alternativa si possono dare ai parametri nomi diversi (<code>m</code>, <code>mod</code>, <code>a</code>), ma la slide chiede di usare <code>this</code>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Una casella dell'array resta null <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Nel <code>main</code> della tappa 5 ci dimentichiamo di riempire l'ultima casella:</p>
+<pre data-lang="java"><code>    public static void main(String[] args) {
+        Automobile[] auto = new Automobile[3];
+        auto[0] = new Automobile("Fiat", "Panda", 2020);
+        auto[1] = new Automobile("BMW", "Serie 1");
+        // auto[2] dimenticata!
+
+        for (Automobile a : auto) {
+            a.stampaInfo();
+        }
+    }
+}</code></pre>
+      <p>Cosa succede quando si esegue? Che errore dà Java e come si corregge?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p>Il programma compila, stampa le prime due auto e poi si ferma con una <strong><code>NullPointerException</code></strong>. Output vero (classe completa della tappa 5 con questo <code>main</code>):</p>
+<pre data-lang="testo"><code>Fiat Panda (anno 2020) - velocità: 0.0 km/h
+BMW Serie 1 (anno non indicato) - velocità: 0.0 km/h
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "Automobile.stampaInfo()" because "&lt;local5&gt;" is null
+	at Automobile.main(Automobile.java:62)</code></pre>
+      <h4>Spiegazione</h4>
+      <ol>
+        <li><code>new Automobile[3]</code> crea 3 caselle che valgono <code>null</code>. Le prime due le abbiamo riempite, la terza è rimasta <code>null</code>: "nessun oggetto".</li>
+        <li>Al terzo giro del <code>for-each</code> <code>a</code> vale <code>null</code>, e <code>a.stampaInfo()</code> chiede di eseguire un metodo su un oggetto che non c'è. Java non può farlo e lancia l'eccezione.</li>
+        <li>Come si legge il messaggio: <em>Cannot invoke "Automobile.stampaInfo()" because "&lt;local5&gt;" is null</em> = "non posso chiamare <code>stampaInfo()</code> perché la variabile è <code>null</code>". La riga <code>at Automobile.main(Automobile.java:62)</code> dice dove: riga 62 del file, cioè proprio <code>a.stampaInfo();</code>.</li>
+        <li><code>&lt;local5&gt;</code> è il modo in cui Java chiama la variabile locale numero 5 quando il programma è compilato senza informazioni di debug. Compilando con <code>javac -g Automobile.java</code> il messaggio mostra il nome vero: <code>because "a" is null</code>. Molti editor compilano già con <code>-g</code>, quindi lì vedi direttamente <code>"a"</code>.</li>
+      </ol>
+      <h4>Come si corregge</h4>
+      <ul>
+        <li><strong>La soluzione giusta:</strong> riempire tutte le caselle prima del ciclo, per esempio <code>auto[2] = new Automobile();</code>.</li>
+        <li><strong>Se l'array può avere caselle vuote</strong> (per esempio un parcheggio con posti liberi), si controlla prima di usare l'elemento:</li>
+      </ul>
+<pre data-lang="java"><code>for (Automobile a : auto) {
+    if (a != null) {        // salta le caselle vuote
+        a.stampaInfo();
+    }
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Perché frena non deve andare sotto zero? <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scriviamo <code>frena</code> nel modo più semplice, senza controllo:</p>
+<pre data-lang="java"><code>    // versione SENZA controllo
+    void frena(double decremento) {
+        velocita = velocita - decremento;   // nessun controllo
+    }</code></pre>
+      <p>Cosa stampa questo frammento? Perché è un problema, e perché il controllo va messo <strong>dentro</strong> il metodo e non nel <code>main</code>?</p>
+<pre data-lang="java"><code>Automobile b = new Automobile("BMW", "Serie 1");
+b.accelera(40);
+b.frena(100);
+b.stampaInfo();</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+<pre data-lang="testo"><code>BMW Serie 1 (anno non indicato) - velocità: -60.0 km/h</code></pre>
+      <h4>Spiegazione</h4>
+      <ol>
+        <li>40 − 100 = −60: Java fa il conto senza problemi e l'auto finisce con una velocità di <strong>−60 km/h</strong>. Nella realtà non ha senso: frenando un'auto rallenta fino a fermarsi, non comincia ad andare all'indietro.</li>
+        <li>Un oggetto dovrebbe essere sempre in uno stato <strong>valido</strong>. Se la velocità diventa negativa, tutto quello che viene dopo sbaglia: <code>stampaInfo</code> scrive un valore assurdo, la ricerca dell'auto più veloce potrebbe dare risultati strani, un successivo <code>accelera(30)</code> porterebbe la velocità a −30 invece che a 30.</li>
+        <li>Per questo il controllo va <strong>dentro <code>frena</code></strong>: se il risultato è negativo, la velocità torna a 0. Così è il metodo stesso a garantire che la velocità non sia mai negativa, comunque lo si chiami. Se lo mettessimo nel <code>main</code>, bisognerebbe ricordarsi di ripeterlo dopo <strong>ogni</strong> chiamata a <code>frena</code>, in ogni programma che usa la classe.</li>
+        <li>Con la versione della tappa 3 lo stesso frammento stampa <code>velocità: 0.0 km/h</code> (si vede nell'output della tappa 5, riga della BMW). È un'aggiunta nostra: la slide non lo chiede esplicitamente, ma rende il modello realistico. Con lo stesso ragionamento si potrebbe rifiutare un <code>incremento</code> negativo in <code>accelera</code>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Programmazione a Oggetti in Java", dispense a cura del prof. Daniele Gravina: l'esercitazione è quella dell'<strong>ultima slide</strong> (consegna riportata fedelmente nella tabella in alto; nella slide i parametri dei costruttori e dei metodi sono scritti senza tipo, qui li abbiamo dedotti dagli attributi). Sono aggiunte nostre la divisione in tappe, le risposte spiegate, i programmi con il loro output vero, il controllo della velocità in <code>frena</code>, "anno non indicato" in <code>stampaInfo</code>, la ricerca dell'auto più veloce e le tre domande finali. Teoria collegata: <a href="java-programmazione-a-oggetti.html">Java: programmazione a oggetti</a>.</p>
+</main>
+</body>
+</html>
