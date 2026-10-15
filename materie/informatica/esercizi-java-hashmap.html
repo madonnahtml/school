@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: HashMap · Scuola</title>
+  <meta name="description" content="Informatica, esercizi di Java con soluzioni spiegate passo passo sulle HashMap: coppie chiave-valore, creazione, put, get, containsKey, containsValue, getOrDefault, remove, clear, size, keySet, values, entrySet, hash e bucket, HashMap o lista. Con un esercizio completo finale.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: HashMap</h1>
+  <p class="lead">Consegne ed esercizi per allenarti su tutto il capitolo <a href="java-hashmap.html">Java: HashMap</a>. Ogni soluzione spiega il ragionamento, mostra il codice completo e l'output vero del programma.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a scrivere il programma da solo (su carta o al computer) e solo dopo apri la <strong>soluzione spiegata</strong>. Gli esercizi vanno dal più facile al più difficile; l'ultimo li mette insieme tutti. Ogni programma è stato compilato ed eseguito: l'output che vedi è quello vero.</div>
+  <div class="callout warn"><span class="callout-title">Attenzione all'ordine</span>Una <code>HashMap</code> <strong>non</strong> tiene le coppie nell'ordine in cui le hai inserite. Quando un output stampa o scorre un'intera mappa, le righe che vedi qui sono quelle uscite davvero sul nostro computer, ma <strong>l'ordine può essere diverso</strong> da quello che ti aspetti: conta che ci siano tutte, non la loro posizione. Lo segnaliamo ogni volta che succede.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>L'idea chiave → valore e la creazione</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una <code>HashMap</code> tiene i dati a <strong>coppie chiave → valore</strong>. La chiave è unica (è quello con cui cerchi), il valore può ripetersi. Si crea indicando <strong>due tipi</strong>, e solo classi: <code>HashMap&lt;String, Integer&gt; m = new HashMap&lt;&gt;();</code>, con <code>import java.util.HashMap;</code>. Teoria: <a href="java-hashmap.html#cosa-sono-le-hashmap">Cosa sono le HashMap</a> e <a href="java-hashmap.html#creare-una-hashmap">Creare una HashMap</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Scegli chiave, valore e tipi <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Per ogni situazione decidi qual è la <strong>chiave</strong>, qual è il <strong>valore</strong> e scrivi la dichiarazione Java della mappa:</p>
+      <ol type="a">
+        <li>la targa di un'auto e il cognome del proprietario;</li>
+        <li>il codice di un prodotto (un numero intero, per esempio 1043) e quanti pezzi ci sono in magazzino;</li>
+        <li>una parola italiana e la sua traduzione in inglese;</li>
+        <li>uno studente e <strong>tutti</strong> i suoi voti;</li>
+        <li>domanda trabocchetto: perché "data di nascita → studente" è una pessima mappa?</li>
+      </ol>
+      <p>Poi scrivi un programma che crea le cinque mappe, mette almeno una coppia in ognuna e le stampa. Output atteso:</p>
+<pre data-lang="testo"><code>{AB123CD=Rossi}
+{1043=25}
+{gatto=cat}
+{Anna=[7, 8]}
+{12/03=Bruno}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La domanda da farsi è: <strong>con che cosa cercherò?</strong> Quello è la chiave. Quello che voglio ottenere è il valore.</li>
+        <li>La chiave deve essere <strong>unica</strong>: due auto non hanno la stessa targa, due prodotti non hanno lo stesso codice. Il valore invece può ripetersi (due auto dello stesso signor Rossi).</li>
+        <li>Tra <code>&lt; &gt;</code> vanno solo <strong>classi</strong>: il numero intero diventa <code>Integer</code>, non <code>int</code>.</li>
+        <li>Se un valore è "più cose", come i tanti voti di uno studente, il valore può essere una <strong>lista</strong>: <code>ArrayList&lt;Integer&gt;</code>.</li>
+      </ol>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Chiave</th><th>Valore</th><th>Dichiarazione</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td>targa</td><td>proprietario</td><td><code>HashMap&lt;String, String&gt;</code></td></tr>
+          <tr><td>b</td><td>codice</td><td>pezzi</td><td><code>HashMap&lt;Integer, Integer&gt;</code></td></tr>
+          <tr><td>c</td><td>parola italiana</td><td>parola inglese</td><td><code>HashMap&lt;String, String&gt;</code></td></tr>
+          <tr><td>d</td><td>studente</td><td>lista di voti</td><td><code>HashMap&lt;String, ArrayList&lt;Integer&gt;&gt;</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Tipi {
+    public static void main(String[] args) {
+        // a) targa -&gt; proprietario
+        HashMap&lt;String, String&gt; auto = new HashMap&lt;&gt;();
+        auto.put("AB123CD", "Rossi");
+
+        // b) codice prodotto -&gt; pezzi in magazzino
+        HashMap&lt;Integer, Integer&gt; magazzino = new HashMap&lt;&gt;();
+        magazzino.put(1043, 25);
+
+        // c) parola italiana -&gt; traduzione inglese
+        HashMap&lt;String, String&gt; dizionario = new HashMap&lt;&gt;();
+        dizionario.put("gatto", "cat");
+
+        // d) studente -&gt; tutti i suoi voti
+        HashMap&lt;String, ArrayList&lt;Integer&gt;&gt; registro = new HashMap&lt;&gt;();
+        registro.put("Anna", new ArrayList&lt;&gt;());
+        registro.get("Anna").add(7);
+        registro.get("Anna").add(8);
+
+        System.out.println(auto);
+        System.out.println(magazzino);
+        System.out.println(dizionario);
+        System.out.println(registro);
+
+        // e) data di nascita -&gt; studente: una cattiva idea
+        HashMap&lt;String, String&gt; nati = new HashMap&lt;&gt;();
+        nati.put("12/03", "Anna");
+        nati.put("12/03", "Bruno");
+        System.out.println(nati);
+    }
+}</code></pre>
+      <h4>Perché "data di nascita → studente" non va</h4>
+      <p>Guarda l'ultima riga dell'output: <code>{12/03=Bruno}</code>. Anna e Bruno sono nati lo stesso giorno, ma una chiave non può comparire due volte: il secondo <code>put</code> ha <strong>sostituito</strong> Anna con Bruno, senza nessun errore. Anna è sparita in silenzio. Una data di nascita <strong>non è unica</strong>, quindi non può fare da chiave. Al contrario, "studente → data di nascita" funziona benissimo: i nomi sono le chiavi (unici) e le date i valori (possono ripetersi).</p>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Nel caso d), <code>registro.get("Anna")</code> restituisce la lista di Anna, e su quella lista chiamo <code>add</code>: la lista è dentro la mappa, quindi i voti finiscono lì. La stampa mostra la lista tra quadre dentro la mappa tra graffe: <code>{Anna=[7, 8]}</code>.</li>
+        <li>Ogni mappa qui ha una sola coppia, quindi il problema dell'ordine non si pone.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Trova l'errore: tre mappe che non compilano <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nessuno di questi tre programmi compila. Per ognuno trova l'errore, spiega cosa dice il compilatore e correggilo.</p>
+      <p><strong>A</strong></p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class ErroreTipo {
+    public static void main(String[] args) {
+        HashMap&lt;String, int&gt; eta = new HashMap&lt;&gt;();
+        eta.put("Marco", 18);
+    }
+}</code></pre>
+      <p><strong>B</strong></p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class ErroreValore {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; eta = new HashMap&lt;&gt;();
+        eta.put("Marco", "diciotto");
+    }
+}</code></pre>
+      <p><strong>C</strong></p>
+<pre data-lang="java"><code>public class ErroreImport {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; eta = new HashMap&lt;&gt;();
+        eta.put("Marco", 18);
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · int al posto di Integer</h4>
+<pre data-lang="testo"><code>riga 5: error: unexpected type</code></pre>
+      <p>"unexpected type" = tipo inatteso: tra <code>&lt; &gt;</code> il compilatore vuole una <strong>classe</strong> e alla riga 5 ha trovato il primitivo <code>int</code>. Correzione: <code>HashMap&lt;String, Integer&gt;</code>. Poi nel <code>put</code> puoi scrivere tranquillamente <code>18</code>: Java lo trasforma da solo in <code>Integer</code> (autoboxing).</p>
+      <h4>B · valore del tipo sbagliato</h4>
+<pre data-lang="testo"><code>riga 6: error: incompatible types: String cannot be converted to Integer</code></pre>
+      <p>La mappa è stata dichiarata <code>&lt;String, Integer&gt;</code>: il valore deve essere un numero intero, e <code>"diciotto"</code> è una <code>String</code>. È proprio il vantaggio dei generics: l'errore lo trova il compilatore, prima ancora di eseguire. Correzione: <code>eta.put("Marco", 18);</code></p>
+      <h4>C · manca l'import</h4>
+<pre data-lang="testo"><code>riga 3: error: cannot find symbol</code></pre>
+      <p>"cannot find symbol" = non trovo questo nome. <code>HashMap</code> non fa parte del linguaggio base: sta nel pacchetto <code>java.util</code> e va importata. Correzione: aggiungere in cima <code>import java.util.HashMap;</code></p>
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>Tre controlli prima di usare una mappa: l'<strong>import</strong>, i <strong>due tipi</strong> (chiave e valore) e che siano <strong>classi</strong> (<code>Integer</code>, <code>Double</code>, <code>Boolean</code>, <code>Character</code>…).</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Aggiungere e modificare con put()</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>put(chiave, valore)</code> ha un <strong>doppio ruolo</strong>: se la chiave è nuova <strong>aggiunge</strong> una coppia, se esiste già <strong>sostituisce</strong> il valore vecchio. Per aggiornare partendo dal valore vecchio: <code>m.put(k, m.get(k) + 1)</code>. Teoria: <a href="java-hashmap.html#aggiungere-e-modificare-con-put">Aggiungere e modificare con put()</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Cosa stampa? Il punteggio che cambia <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Senza eseguirlo, scrivi su carta cosa stampa questo frammento. Quante coppie ci sono alla fine, e perché non sono 5?</p>
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt; punti = new HashMap&lt;&gt;();
+punti.put("Anna", 10);
+punti.put("Bruno", 7);
+punti.put("Anna", 12);
+punti.put("Carla", 7);
+punti.put("Bruno", punti.get("Bruno") + 5);
+
+System.out.println(punti.size());
+System.out.println(punti.get("Anna"));
+System.out.println(punti.get("Bruno"));
+System.out.println(punti.get("Carla"));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: la tabella della mappa</h4>
+      <p>Come con gli array, il modo più sicuro è disegnare la mappa e aggiornarla riga per riga. Per ogni <code>put</code> mi chiedo: <strong>la chiave c'è già?</strong></p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>La chiave c'era?</th><th>Mappa dopo</th></tr></thead>
+        <tbody>
+          <tr><td><code>put("Anna", 10)</code></td><td>no: aggiunge</td><td>Anna=10</td></tr>
+          <tr><td><code>put("Bruno", 7)</code></td><td>no: aggiunge</td><td>Anna=10, Bruno=7</td></tr>
+          <tr><td><code>put("Anna", 12)</code></td><td><strong>sì: sostituisce</strong></td><td>Anna=<strong>12</strong>, Bruno=7</td></tr>
+          <tr><td><code>put("Carla", 7)</code></td><td>no: aggiunge</td><td>Anna=12, Bruno=7, Carla=7</td></tr>
+          <tr><td><code>put("Bruno", get("Bruno") + 5)</code></td><td><strong>sì: sostituisce</strong></td><td>Anna=12, Bruno=<strong>12</strong>, Carla=7</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>3
+12
+12
+7</code></pre>
+      <h4>Perché funziona così</h4>
+      <ul>
+        <li>I <code>put</code> sono 5, ma le chiavi <strong>diverse</strong> sono solo 3 (Anna, Bruno, Carla): <code>size()</code> conta le coppie, non le chiamate a <code>put</code>.</li>
+        <li>L'ultima riga si legge da destra a sinistra: prima <code>punti.get("Bruno")</code> vale 7, più 5 fa 12, e poi <code>put</code> rimette 12 al posto di 7.</li>
+        <li>Bruno e Carla hanno avuto per un momento lo stesso valore (7), e alla fine Anna e Bruno hanno entrambi 12: i <strong>valori</strong> possono ripetersi senza problemi.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Il magazzino della cartoleria <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Una cartoleria ha in magazzino 40 penne, 25 quaderni e 10 gomme: mettili in una <code>HashMap&lt;String, Integer&gt;</code>. Poi arrivano dei pacchi, descritti da due array paralleli:</p>
+<pre data-lang="java"><code>String[] arrivi = {"quaderni", "gomme", "righelli", "gomme"};
+int[] quantita = {10, 5, 8, 15};</code></pre>
+      <p>Per ogni pacco: se il prodotto c'è già, <strong>somma</strong> la quantità a quella esistente; se è nuovo, <strong>aggiungilo</strong>. Stampa un messaggio per ogni pacco, poi l'inventario finale (penne, quaderni, gomme, righelli, in quest'ordine) e quanti prodotti diversi ci sono.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Aggiornato quaderni: ora sono 35
+Aggiornato gomme: ora sono 15
+Nuovo prodotto righelli: 8
+Aggiornato gomme: ora sono 30
+--- Inventario ---
+penne: 40
+quaderni: 35
+gomme: 30
+righelli: 8
+Prodotti diversi: 4</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Prodotto → quantità: la chiave è il nome (<code>String</code>), il valore il numero di pezzi (<code>Integer</code>).</li>
+        <li>I due array sono <strong>paralleli</strong>: <code>arrivi[i]</code> e <code>quantita[i]</code> parlano dello stesso pacco. Mi serve l'indice, quindi uso il <code>for</code> classico.</li>
+        <li>Per ogni pacco ci sono due casi. Se scrivessi solo <code>scorte.put(prodotto, quantita[i])</code>, per i quaderni metterei 10 al posto di 25: il <code>put</code> <strong>sostituisce</strong>, non somma. Devo prima leggere il vecchio valore con <code>get</code>, sommare e rimettere.</li>
+        <li>Ma <code>get</code> su un prodotto che non c'è (i righelli) darebbe <code>null</code>, e <code>null + 8</code> lancia <code>NullPointerException</code>. Per questo controllo prima con <code>containsKey</code>.</li>
+        <li>Per l'inventario non stampo la mappa intera: l'ordine non è garantito. Scorro un array con i nomi nell'ordine che voglio e per ognuno faccio <code>get</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Magazzino {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; scorte = new HashMap&lt;&gt;();
+        scorte.put("penne", 40);
+        scorte.put("quaderni", 25);
+        scorte.put("gomme", 10);
+
+        String[] arrivi = {"quaderni", "gomme", "righelli", "gomme"};
+        int[] quantita = {10, 5, 8, 15};
+
+        for (int i = 0; i &lt; arrivi.length; i++) {
+            String prodotto = arrivi[i];
+            if (scorte.containsKey(prodotto)) {
+                scorte.put(prodotto, scorte.get(prodotto) + quantita[i]);
+                System.out.println("Aggiornato " + prodotto + ": ora sono " + scorte.get(prodotto));
+            } else {
+                scorte.put(prodotto, quantita[i]);
+                System.out.println("Nuovo prodotto " + prodotto + ": " + quantita[i]);
+            }
+        }
+
+        System.out.println("--- Inventario ---");
+        String[] elenco = {"penne", "quaderni", "gomme", "righelli"};
+        for (String p : elenco) {
+            System.out.println(p + ": " + scorte.get(p));
+        }
+        System.out.println("Prodotti diversi: " + scorte.size());
+    }
+}</code></pre>
+      <h4>Prova a mano</h4>
+      <p>Le gomme arrivano due volte: la prima volta 10 + 5 = 15, la seconda 15 + 15 = 30. Funziona perché ogni volta <code>get</code> legge il valore <strong>aggiornato</strong> dal giro precedente. I righelli entrano come nuova chiave, quindi alla fine i prodotti diversi sono 4.</p>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Usare solo <code>put(prodotto, quantita[i])</code>: perderesti le scorte vecchie.</li>
+        <li>Usare solo <code>put(prodotto, scorte.get(prodotto) + quantita[i])</code> senza controllo: funziona per i prodotti già presenti ma si blocca al primo prodotto nuovo.</li>
+        <li>Le due righe dell'<code>if</code> si possono scrivere in una con <code>getOrDefault</code>: <code>scorte.put(prodotto, scorte.getOrDefault(prodotto, 0) + quantita[i]);</code> (lo vediamo nella prossima sezione).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Leggere e controllare: get, containsKey, containsValue, getOrDefault</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>get(k)</code> dà il valore della chiave, oppure <code>null</code> se la chiave non c'è. <code>containsKey(k)</code> e <code>containsValue(v)</code> rispondono <code>true</code>/<code>false</code>: il primo è velocissimo, il secondo deve guardare tutte le coppie. <code>getOrDefault(k, riserva)</code> dà il valore oppure la riserva, mai <code>null</code>. Teoria: <a href="java-hashmap.html#leggere-con-get-e-controllare">Leggere con get() e controllare</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Il traduttore parola per parola <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Crea un piccolo dizionario italiano → inglese con queste coppie: il → the, la → the, gatto → cat, mangia → eats, pesce → fish. Traduci parola per parola la frase <code>"il gatto mangia la torta"</code>: le parole che il dizionario non conosce vanno scritte tra quadre con un punto di domanda. Conta anche quante parole erano sconosciute. Infine controlla se nel dizionario c'è una parola che si traduce con "cat" e una che si traduce con "dog".</p>
+      <p><em>Suggerimento:</em> <code>frase.split(" ")</code> divide la frase in un array di parole.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>the cat eats the [torta?] 
+Parole sconosciute: 1
+Qualcosa si traduce con "cat"? true
+Qualcosa si traduce con "dog"? false</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Cerco per parola italiana, quindi la parola italiana è la <strong>chiave</strong> e quella inglese il <strong>valore</strong>. "il" e "la" hanno lo stesso valore "the": è permesso, i valori possono ripetersi.</li>
+        <li>Per ogni parola della frase chiedo prima <code>containsKey</code>: se c'è prendo la traduzione con <code>get</code>, altrimenti scrivo <code>[parola?]</code> e aumento il contatore.</li>
+        <li>Costruisco la traduzione attaccando un pezzo alla volta a una <code>String</code> che parte vuota.</li>
+        <li>"Esiste una parola che si traduce con cat?" è una domanda sul <strong>valore</strong>, non sulla chiave: serve <code>containsValue</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Traduttore {
+    public static void main(String[] args) {
+        HashMap&lt;String, String&gt; diz = new HashMap&lt;&gt;();
+        diz.put("il", "the");
+        diz.put("la", "the");
+        diz.put("gatto", "cat");
+        diz.put("mangia", "eats");
+        diz.put("pesce", "fish");
+
+        String frase = "il gatto mangia la torta";
+        String traduzione = "";
+        int sconosciute = 0;
+        for (String parola : frase.split(" ")) {
+            if (diz.containsKey(parola)) {
+                traduzione = traduzione + diz.get(parola) + " ";
+            } else {
+                traduzione = traduzione + "[" + parola + "?] ";
+                sconosciute++;
+            }
+        }
+        System.out.println(traduzione);
+        System.out.println("Parole sconosciute: " + sconosciute);
+
+        System.out.println("Qualcosa si traduce con \"cat\"? " + diz.containsValue("cat"));
+        System.out.println("Qualcosa si traduce con \"dog\"? " + diz.containsValue("dog"));
+    }
+}</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Lo stesso ciclo si può scrivere senza <code>if</code>: <code>traduzione = traduzione + diz.getOrDefault(parola, "[" + parola + "?]") + " ";</code>. Però così non potrei contare le parole sconosciute: quando serve fare <em>qualcosa in più</em> nel caso "non c'è", l'<code>if</code> con <code>containsKey</code> è più comodo.</li>
+        <li><code>containsKey("cat")</code> avrebbe dato <code>false</code>: "cat" non è una chiave, è un valore. Confondere i due metodi è un errore classico.</li>
+        <li><code>containsValue</code> è lento (O(n)): deve controllare tutte le coppie. In un dizionario vero, con 100.000 parole, per tradurre al contrario (inglese → italiano) conviene creare una <strong>seconda mappa</strong> con chiavi e valori scambiati.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Cosa stampa? null, true e false <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi cosa stampa ogni riga. Attenzione: ci sono almeno tre trabocchetti.</p>
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt; eta = new HashMap&lt;&gt;();
+eta.put("Marco", 18);
+eta.put("Giulia", 18);
+eta.put("Luca", 20);
+
+System.out.println(eta.get("marco"));
+System.out.println(eta.containsKey("Luca"));
+System.out.println(eta.containsKey("20"));
+System.out.println(eta.containsValue(20));
+System.out.println(eta.containsValue(18));
+System.out.println(eta.getOrDefault("Paolo", -1));
+System.out.println(eta.getOrDefault("Giulia", -1));
+System.out.println(eta.get("Luca") + eta.get("Marco"));
+System.out.println("Somma: " + eta.get("Luca") + eta.get("Marco"));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>null
+true
+false
+true
+true
+-1
+18
+38
+Somma: 2018</code></pre>
+      <h4>Riga per riga</h4>
+      <ol>
+        <li><code>get("marco")</code>: le chiavi <code>String</code> distinguono maiuscole e minuscole. "marco" non è "Marco", quindi la chiave non c'è e <code>get</code> restituisce <code>null</code>. Stamparlo non fa danni.</li>
+        <li><code>containsKey("Luca")</code>: la chiave c'è, <code>true</code>.</li>
+        <li><code>containsKey("20")</code>: due errori in uno. 20 è un <strong>valore</strong>, non una chiave; e comunque <code>"20"</code> tra virgolette è un testo, non il numero 20. <code>false</code>.</li>
+        <li><code>containsValue(20)</code>: Luca ha 20 anni, <code>true</code>.</li>
+        <li><code>containsValue(18)</code>: <code>true</code>. Che i valori 18 siano due non cambia niente: basta che ce ne sia almeno uno.</li>
+        <li><code>getOrDefault("Paolo", -1)</code>: Paolo non c'è, quindi esce la riserva <code>-1</code>.</li>
+        <li><code>getOrDefault("Giulia", -1)</code>: Giulia c'è, quindi esce il suo valore vero, 18. La riserva si usa <strong>solo</strong> se la chiave manca.</li>
+        <li><code>get("Luca") + get("Marco")</code>: due <code>Integer</code>, il <code>+</code> <strong>somma</strong>: 20 + 18 = 38.</li>
+        <li><code>"Somma: " + get("Luca") + get("Marco")</code>: si va da sinistra a destra. <code>"Somma: " + 20</code> è già testo, poi si attacca 18: "Somma: 2018". Per sommare servono le parentesi: <code>"Somma: " + (eta.get("Luca") + eta.get("Marco"))</code>.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Il valore di riserva va scelto bene</span>Qui <code>-1</code> funziona perché nessuno ha età negativa: se vedo -1, so che la persona non c'era. Se avessi scelto <code>0</code> come riserva per un registro di punteggi, non potrei distinguere "ha fatto 0 punti" da "non c'è".</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Trova l'errore: lo spoglio che si blocca <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Per eleggere il rappresentante di classe, ogni scheda contiene un nome. Questo programma dovrebbe contare i voti di ogni candidato, ma si ferma subito con un errore:</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class ElezioniRotto {
+    public static void main(String[] args) {
+        String[] schede = {"Sara", "Luca", "Sara", "Elia", "Sara", "Luca"};
+        HashMap&lt;String, Integer&gt; voti = new HashMap&lt;&gt;();
+
+        for (String nome : schede) {
+            voti.put(nome, voti.get(nome) + 1);
+        }
+        System.out.println(voti);
+    }
+}</code></pre>
+<pre data-lang="testo"><code>Exception in thread "main" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "java.util.HashMap.get(Object)" is null
+	at ...</code></pre>
+      <p>1) Spiega perché si ferma, e proprio <strong>al primo giro</strong>. 2) Correggilo usando <code>getOrDefault</code>. 3) Alla fine stampa quanti voti hanno preso Sara, Luca, Elia e Marta (che non ha preso voti) in quest'ordine, e quanti candidati sono stati votati almeno una volta.</p>
+      <p>Output atteso dopo la correzione:</p>
+<pre data-lang="testo"><code>Sara: 3
+Luca: 2
+Elia: 1
+Marta: 0
+Candidati votati almeno una volta: 3</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Perché si blocca</h4>
+      <ol>
+        <li>Al primo giro <code>nome</code> è "Sara" e la mappa è <strong>vuota</strong>.</li>
+        <li><code>voti.get("Sara")</code> restituisce quindi <code>null</code>.</li>
+        <li><code>null + 1</code>: per fare la somma Java deve trasformare l'<code>Integer</code> in <code>int</code> (unboxing, cioè chiamare <code>intValue()</code>), ma <code>null</code> non è un numero. Risultato: <code>NullPointerException</code>. Il messaggio lo dice in chiaro: "because the return value of HashMap.get(Object) is null".</li>
+      </ol>
+      <p>Il problema è sempre la <strong>prima volta</strong> che si incontra un nome: lì la chiave non esiste ancora.</p>
+      <h4>2 · La correzione</h4>
+      <p>Con <code>getOrDefault(nome, 0)</code> la prima volta ottengo 0 invece di <code>null</code>: 0 + 1 = 1. Dalla seconda volta in poi ottengo il valore vero e aggiungo 1. Una riga sola fa entrambe le cose.</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Elezioni {
+    public static void main(String[] args) {
+        String[] schede = {"Sara", "Luca", "Sara", "Elia", "Sara", "Luca"};
+        HashMap&lt;String, Integer&gt; voti = new HashMap&lt;&gt;();
+
+        for (String nome : schede) {
+            voti.put(nome, voti.getOrDefault(nome, 0) + 1);
+        }
+
+        String[] candidati = {"Sara", "Luca", "Elia", "Marta"};
+        for (String c : candidati) {
+            System.out.println(c + ": " + voti.getOrDefault(c, 0));
+        }
+        System.out.println("Candidati votati almeno una volta: " + voti.size());
+    }
+}</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Lo stesso <code>getOrDefault(c, 0)</code> serve anche nella stampa: Marta non è mai stata votata, quindi non è una chiave della mappa, e senza riserva stamperebbe "Marta: null".</li>
+        <li><code>voti.size()</code> vale 3 e non 4: Marta non è mai entrata nella mappa. Le schede invece sono 6: <code>size</code> conta le chiavi <strong>diverse</strong>.</li>
+        <li>Stampo seguendo l'array <code>candidati</code> e non la mappa: così l'ordine è quello che decido io.</li>
+      </ul>
+      <h4>Da ricordare</h4>
+      <p>Lo schema "contatore con una mappa" è uno dei più usati in assoluto: <code>m.put(k, m.getOrDefault(k, 0) + 1);</code>. Versione equivalente con l'<code>if</code>: se <code>containsKey(k)</code> allora <code>put(k, get(k) + 1)</code>, altrimenti <code>put(k, 1)</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Rimuovere, svuotare e contare</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>remove(chiave)</code> toglie la coppia (chiave e valore insieme); se la chiave non c'è non fa niente, senza errori. <code>clear()</code> svuota tutto ma la mappa continua a esistere. <code>size()</code> conta le coppie; <code>isEmpty()</code> equivale a <code>size() == 0</code>. Teoria: <a href="java-hashmap.html#rimuovere-svuotare-e-contare">Rimuovere, svuotare e contare</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Cosa stampa? Lo zaino <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La mappa associa ogni tasca dello zaino all'oggetto che contiene. Scrivi cosa stampa il frammento. Una delle due <code>remove</code> non fa quello che il programmatore sperava: quale, e perché?</p>
+<pre data-lang="java"><code>HashMap&lt;String, String&gt; zaino = new HashMap&lt;&gt;();   // tasca -&gt; oggetto
+zaino.put("davanti", "astuccio");
+zaino.put("centrale", "libro");
+zaino.put("laterale", "borraccia");
+System.out.println(zaino.size());
+
+zaino.remove("centrale");
+zaino.remove("borraccia");
+System.out.println(zaino.size());
+System.out.println(zaino.get("centrale"));
+
+zaino.put("centrale", "quaderno");
+System.out.println(zaino.size() + " " + zaino.isEmpty());
+
+zaino.clear();
+System.out.println(zaino.size() + " " + zaino.isEmpty());
+System.out.println(zaino);
+
+zaino.put("davanti", "merenda");
+System.out.println(zaino);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: contare le coppie a ogni passo</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>Cosa succede</th><th>size()</th></tr></thead>
+        <tbody>
+          <tr><td>tre <code>put</code></td><td>tre tasche diverse: tre coppie</td><td>3</td></tr>
+          <tr><td><code>remove("centrale")</code></td><td>"centrale" è una chiave: toglie centrale=libro</td><td>2</td></tr>
+          <tr><td><code>remove("borraccia")</code></td><td>"borraccia" è un <strong>valore</strong>, non una chiave: non trova niente e non fa niente</td><td>2</td></tr>
+          <tr><td><code>put("centrale", "quaderno")</code></td><td>"centrale" non c'è più: aggiunge</td><td>3</td></tr>
+          <tr><td><code>clear()</code></td><td>toglie tutto</td><td>0</td></tr>
+          <tr><td><code>put("davanti", "merenda")</code></td><td>la mappa esiste ancora: si può riempire</td><td>1</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>3
+2
+null
+3 false
+0 true
+{}
+{davanti=merenda}</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li><code>remove</code> vuole la <strong>chiave</strong>. Chi ha scritto <code>remove("borraccia")</code> voleva togliere la borraccia, ma doveva scrivere <code>remove("laterale")</code>. Java non segnala niente: se la chiave non c'è, <code>remove</code> semplicemente non fa nulla. Per questo è un errore subdolo.</li>
+        <li>Dopo la rimozione, <code>get("centrale")</code> dà <code>null</code>: la chiave non esiste più.</li>
+        <li><code>clear()</code> non distrugge la mappa: la svuota. La stampa di una mappa vuota è <code>{}</code>, e subito dopo ci si può rimettere dentro una coppia.</li>
+        <li>Le stampe intere della mappa hanno al massimo una coppia, quindi qui l'ordine non conta.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>I prestiti della biblioteca di classe <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La biblioteca di classe registra i prestiti in una <code>HashMap&lt;String, String&gt;</code> libro → studente. Scrivi due metodi:</p>
+      <ul>
+        <li><code>presta(prestiti, libro, studente)</code>: se il libro è già fuori stampa a chi è stato prestato e <strong>non</strong> cambia niente; altrimenti registra il prestito;</li>
+        <li><code>restituisci(prestiti, libro)</code>: se il libro era in prestito toglie la coppia e dice chi l'ha restituito; altrimenti segnala che non risulta in prestito.</li>
+      </ul>
+      <p>Nel <code>main</code> esegui le operazioni dell'output qui sotto, poi stampa quanti libri sono fuori e, a fine anno, svuota il registro.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>OK: Anna prende "Il piccolo principe"
+OK: Bruno prende "Harry Potter"
+NO: "Il piccolo principe" ce l'ha già Anna
+OK: Bruno ha restituito "Harry Potter"
+NO: "Harry Potter" non risulta in prestito
+OK: Carla prende "Harry Potter"
+OK: Dario prende "Dune"
+Libri in prestito: 3
+Fine anno, tutti i libri rientrano. In prestito: 0</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il libro è la chiave: una copia può essere in mano a una sola persona alla volta, quindi la chiave unica rispecchia la realtà. Lo studente è il valore: uno studente può avere più libri (valori ripetuti).</li>
+        <li>In <code>presta</code>, un <code>put</code> diretto sarebbe un disastro: se Carla chiede "Il piccolo principe", <code>put</code> <strong>sostituirebbe</strong> Anna con Carla, e il registro direbbe che Anna non ha più il libro. Quindi prima controllo con <code>containsKey</code>.</li>
+        <li>In <code>restituisci</code> devo leggere il nome con <code>get</code> <strong>prima</strong> del <code>remove</code>: dopo, la coppia non c'è più e <code>get</code> darebbe <code>null</code>.</li>
+        <li>La mappa viene passata ai metodi come parametro: come per gli array, il metodo riceve la <strong>stessa</strong> mappa, quindi le modifiche si vedono nel <code>main</code>.</li>
+        <li><code>size()</code> dice quanti libri sono fuori, <code>clear()</code> chiude l'anno.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Biblioteca {
+
+    static void presta(HashMap&lt;String, String&gt; prestiti, String libro, String studente) {
+        if (prestiti.containsKey(libro)) {
+            System.out.println("NO: \"" + libro + "\" ce l'ha già " + prestiti.get(libro));
+        } else {
+            prestiti.put(libro, studente);
+            System.out.println("OK: " + studente + " prende \"" + libro + "\"");
+        }
+    }
+
+    static void restituisci(HashMap&lt;String, String&gt; prestiti, String libro) {
+        if (prestiti.containsKey(libro)) {
+            String chi = prestiti.get(libro);
+            prestiti.remove(libro);
+            System.out.println("OK: " + chi + " ha restituito \"" + libro + "\"");
+        } else {
+            System.out.println("NO: \"" + libro + "\" non risulta in prestito");
+        }
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, String&gt; prestiti = new HashMap&lt;&gt;();   // libro -&gt; studente
+
+        presta(prestiti, "Il piccolo principe", "Anna");
+        presta(prestiti, "Harry Potter", "Bruno");
+        presta(prestiti, "Il piccolo principe", "Carla");
+        restituisci(prestiti, "Harry Potter");
+        restituisci(prestiti, "Harry Potter");
+        presta(prestiti, "Harry Potter", "Carla");
+        presta(prestiti, "Dune", "Dario");
+        System.out.println("Libri in prestito: " + prestiti.size());
+
+        prestiti.clear();
+        System.out.println("Fine anno, tutti i libri rientrano. In prestito: " + prestiti.size());
+    }
+}</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>La seconda restituzione di "Harry Potter" trova la chiave già tolta: <code>containsKey</code> dà <code>false</code> e il programma lo segnala. Un <code>remove</code> senza controllo non avrebbe dato errori, ma non avremmo potuto avvisare l'utente.</li>
+        <li>Alla fine sono fuori "Il piccolo principe" (Anna), "Harry Potter" (Carla) e "Dune" (Dario): 3 coppie.</li>
+        <li><code>\"</code> dentro una stringa stampa le virgolette.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Scorrere una HashMap: keySet, values, entrySet</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una mappa non ha indici: si scorre con un <code>for-each</code> su <code>keySet()</code> (le chiavi), <code>values()</code> (i valori) o <code>entrySet()</code> (le coppie, ognuna con <code>getKey()</code> e <code>getValue()</code>; serve <code>import java.util.Map;</code>). In tutti e tre i casi <strong>l'ordine non è garantito</strong>. Teoria: <a href="java-hashmap.html#scorrere-una-hashmap">Scorrere una HashMap</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Lo scontrino della spesa <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La mappa <code>spesa</code> associa ogni prodotto al suo prezzo: pane 2.5, latte 1.5, mele 3.0, cioccolato 2.0, detersivo 4.5. Scrivi un programma che:</p>
+      <ol type="a">
+        <li>stampi ogni riga dello scontrino nella forma <code>pane ... 2.5 euro</code>;</li>
+        <li>calcoli il totale;</li>
+        <li>conti i prodotti che costano <strong>più</strong> di 2 euro;</li>
+        <li>stampi su una riga sola i nomi dei prodotti comprati.</li>
+      </ol>
+      <p>Per ogni punto scegli il modo di scorrere più adatto tra <code>keySet()</code>, <code>values()</code> ed <code>entrySet()</code>.</p>
+      <p>Output atteso (le righe dello scontrino e i nomi possono uscire in un ordine diverso):</p>
+<pre data-lang="testo"><code>mele ... 3.0 euro
+cioccolato ... 2.0 euro
+detersivo ... 4.5 euro
+pane ... 2.5 euro
+latte ... 1.5 euro
+Totale: 13.5 euro
+Prodotti sopra i 2 euro: 3
+Hai comprato: mele cioccolato detersivo pane latte </code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: cosa mi serve in ogni punto?</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Punto</th><th>Mi serve</th><th>Scorro con</th></tr></thead>
+        <tbody>
+          <tr><td>a) righe dello scontrino</td><td>nome <strong>e</strong> prezzo</td><td><code>entrySet()</code></td></tr>
+          <tr><td>b) totale</td><td>solo i prezzi</td><td><code>values()</code></td></tr>
+          <tr><td>c) quanti sopra 2 euro</td><td>solo i prezzi</td><td><code>values()</code> (lo stesso ciclo del totale)</td></tr>
+          <tr><td>d) elenco dei nomi</td><td>solo i nomi</td><td><code>keySet()</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.Map;
+
+public class Scontrino {
+    public static void main(String[] args) {
+        HashMap&lt;String, Double&gt; spesa = new HashMap&lt;&gt;();
+        spesa.put("pane", 2.5);
+        spesa.put("latte", 1.5);
+        spesa.put("mele", 3.0);
+        spesa.put("cioccolato", 2.0);
+        spesa.put("detersivo", 4.5);
+
+        // a) ogni riga: chiave e valore insieme
+        for (Map.Entry&lt;String, Double&gt; riga : spesa.entrySet()) {
+            System.out.println(riga.getKey() + " ... " + riga.getValue() + " euro");
+        }
+
+        // b) e c) servono solo i prezzi
+        double totale = 0;
+        int sopraDue = 0;
+        for (double prezzo : spesa.values()) {
+            totale += prezzo;
+            if (prezzo &gt; 2) {
+                sopraDue++;
+            }
+        }
+        System.out.println("Totale: " + totale + " euro");
+        System.out.println("Prodotti sopra i 2 euro: " + sopraDue);
+
+        // d) servono solo i nomi
+        String nomi = "";
+        for (String prodotto : spesa.keySet()) {
+            nomi = nomi + prodotto + " ";
+        }
+        System.out.println("Hai comprato: " + nomi);
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li><strong>L'ordine.</strong> Ho inserito pane, latte, mele, cioccolato, detersivo, ma lo scontrino è uscito in un altro ordine. Non è un errore: la HashMap mette ogni coppia nel "cassetto" deciso dall'hash della chiave. Il totale e il conteggio invece non dipendono dall'ordine: vengono sempre 13.5 e 3.</li>
+        <li><code>for (double prezzo : spesa.values())</code>: i valori sono <code>Double</code>, ma posso metterli in una variabile <code>double</code> grazie all'unboxing.</li>
+        <li>"Più di 2" vuol dire <code>&gt; 2</code>: il cioccolato, che costa esattamente 2.0, non conta. I prodotti sopra i 2 euro sono pane, mele e detersivo.</li>
+        <li>Ho scelto prezzi "tondi" (multipli di 0.5) apposta: con prezzi come 1.20 la somma tra <code>double</code> potrebbe uscire tipo 3.9000000000000004.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Trova l'errore: togliere mentre si scorre <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questo programma vuole togliere dalla mappa gli studenti con voto insufficiente (sotto 6). Compila, ma quando lo esegui si ferma:</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class TogliErrato {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; voti = new HashMap&lt;&gt;();
+        voti.put("Anna", 7);
+        voti.put("Bruno", 5);
+        voti.put("Carla", 8);
+        voti.put("Dario", 4);
+        voti.put("Elisa", 6);
+
+        for (String nome : voti.keySet()) {
+            if (voti.get(nome) &lt; 6) {
+                voti.remove(nome);
+            }
+        }
+        System.out.println(voti);
+    }
+}</code></pre>
+<pre data-lang="testo"><code>Exception in thread "main" java.util.ConcurrentModificationException
+	at ...</code></pre>
+      <p>1) Che cosa dice l'errore e perché succede? 2) Correggilo in modo che alla fine restino solo Anna, Carla ed Elisa, e stampa quanti studenti sono stati tolti e quanti sono rimasti.</p>
+      <p>Output atteso (l'ordine della mappa stampata può essere diverso):</p>
+<pre data-lang="testo"><code>Tolti: 2
+Rimasti: 3
+Bruno c'è ancora? false
+{Carla=8, Anna=7, Elisa=6}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Che cosa succede</h4>
+      <ol>
+        <li><code>ConcurrentModificationException</code> vuol dire "modifica concorrente": la mappa è stata <strong>cambiata mentre la stavi scorrendo</strong>. È la stessa eccezione che hai visto con le liste quando togli elementi dentro un for-each.</li>
+        <li>Il for-each su <code>keySet()</code> usa dietro le quinte un <em>segnalibro</em> (un iterator) che sa a che punto è arrivato. Quando chiami <code>voti.remove(nome)</code> la mappa cambia, ma il segnalibro non lo sa. Al giro successivo se ne accorge e, invece di rischiare di saltare o ripetere elementi, si ferma con l'eccezione.</li>
+        <li>Nota che l'eccezione arriva al <strong>giro dopo</strong> la rimozione, non sulla riga del <code>remove</code>. Per questo, con dati diversi (per esempio se l'insufficiente fosse l'ultimo elemento del giro), a volte sembra funzionare: è un errore che non si vede sempre, quindi va evitato sempre.</li>
+      </ol>
+      <h4>2 · La correzione: prima segno, poi tolgo</h4>
+      <p>Divido il lavoro in due giri. Nel primo scorro la mappa e mi <strong>segno</strong> in una <code>ArrayList</code> le chiavi da togliere, senza toccare la mappa. Nel secondo scorro la <em>lista</em> (non la mappa) e faccio i <code>remove</code>: ora la mappa non è sotto scorrimento, quindi si può modificare.</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TogliGiusto {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; voti = new HashMap&lt;&gt;();
+        voti.put("Anna", 7);
+        voti.put("Bruno", 5);
+        voti.put("Carla", 8);
+        voti.put("Dario", 4);
+        voti.put("Elisa", 6);
+
+        // 1) mentre scorro, mi segno solo chi togliere
+        ArrayList&lt;String&gt; daTogliere = new ArrayList&lt;&gt;();
+        for (Map.Entry&lt;String, Integer&gt; e : voti.entrySet()) {
+            if (e.getValue() &lt; 6) {
+                daTogliere.add(e.getKey());
+            }
+        }
+
+        // 2) finito il giro, tolgo
+        for (String nome : daTogliere) {
+            voti.remove(nome);
+        }
+
+        System.out.println("Tolti: " + daTogliere.size());
+        System.out.println("Rimasti: " + voti.size());
+        System.out.println("Bruno c'è ancora? " + voti.containsKey("Bruno"));
+        System.out.println(voti);
+    }
+}</code></pre>
+      <h4>Un'altra correzione: l'Iterator</h4>
+      <p>Come per le liste, si può usare un <code>Iterator</code> e chiamare il <strong>suo</strong> <code>remove()</code>, che toglie l'ultimo elemento preso con <code>next()</code> e tiene il segnalibro aggiornato:</p>
+<pre data-lang="java"><code>Iterator&lt;Map.Entry&lt;String, Integer&gt;&gt; it = voti.entrySet().iterator();
+while (it.hasNext()) {
+    if (it.next().getValue() &lt; 6) {
+        it.remove();
+    }
+}</code></pre>
+<pre data-lang="testo"><code>Rimasti: 3</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Dentro un for-each su una mappa (o su una lista) <strong>non</strong> chiamare <code>remove</code> o <code>put</code> con chiavi nuove: leggere va bene, cambiare la struttura no.</li>
+        <li>Fare <code>put</code> su una chiave <strong>già esistente</strong> mentre scorri (per esempio alzare tutti i voti di 1) invece è permesso: cambia un valore, non il numero di coppie.</li>
+        <li>Nell'output la mappa rimasta è stampata nell'ordine dei cassetti, non in quello di inserimento.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>Studenti per classe: rovesciare il punto di vista <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La segreteria ha una mappa studente → classe:</p>
+<pre data-lang="testo"><code>Anna 3A   Bruno 3B   Carla 3A   Dario 3C
+Elisa 3B  Franco 3A  Giada 3C   Hugo 3A</code></pre>
+      <p>Scrivi un programma che:</p>
+      <ol>
+        <li>costruisca una <strong>nuova</strong> mappa classe → numero di studenti;</li>
+        <li>la stampi, dica qual è la classe più numerosa e controlli che la somma degli studenti per classe sia uguale al numero totale di studenti;</li>
+        <li>stampi i nomi degli studenti della 3B.</li>
+      </ol>
+      <p>Output atteso (le righe delle classi e i nomi della 3B possono uscire in un ordine diverso):</p>
+<pre data-lang="testo"><code>3C: 2 studenti
+3A: 4 studenti
+3B: 2 studenti
+Classe più numerosa: 3A
+Controllo: 8 = 8
+In 3B: Bruno Elisa </code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La mappa che ho è organizzata per <strong>studente</strong>; la domanda è per <strong>classe</strong>. Quindi devo costruire una seconda mappa in cui le classi diventano chiavi.</li>
+        <li>Per contare gli studenti di ogni classe mi bastano le classi, cioè i <strong>valori</strong> della prima mappa: scorro <code>values()</code> e per ognuno uso lo schema del contatore <code>put(c, getOrDefault(c, 0) + 1)</code>. "3A" compare 4 volte tra i valori, quindi arriva a 4.</li>
+        <li>Per stampare e trovare il massimo mi servono classe <strong>e</strong> numero insieme: <code>entrySet()</code>. Per il massimo tengo la chiave migliore trovata finora (parte da <code>null</code>, e al primo giro la prendo sempre).</li>
+        <li>Il controllo: ogni studente è in una sola classe, quindi la somma dei conteggi deve fare 8, cioè <code>classeDi.size()</code>. È un buon modo per scoprire errori di conteggio.</li>
+        <li>Per la 3B scorro le chiavi della prima mappa con <code>keySet()</code> e tengo quelle il cui valore è "3B". È una ricerca per valore: deve guardare tutte le coppie.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.Map;
+
+public class Classi {
+    public static void main(String[] args) {
+        HashMap&lt;String, String&gt; classeDi = new HashMap&lt;&gt;();   // studente -&gt; classe
+        classeDi.put("Anna", "3A");
+        classeDi.put("Bruno", "3B");
+        classeDi.put("Carla", "3A");
+        classeDi.put("Dario", "3C");
+        classeDi.put("Elisa", "3B");
+        classeDi.put("Franco", "3A");
+        classeDi.put("Giada", "3C");
+        classeDi.put("Hugo", "3A");
+
+        // 1) classe -&gt; quanti studenti
+        HashMap&lt;String, Integer&gt; quanti = new HashMap&lt;&gt;();
+        for (String classe : classeDi.values()) {
+            quanti.put(classe, quanti.getOrDefault(classe, 0) + 1);
+        }
+
+        // 2) stampa e classe più numerosa
+        String piuNumerosa = null;
+        int totale = 0;
+        for (Map.Entry&lt;String, Integer&gt; e : quanti.entrySet()) {
+            System.out.println(e.getKey() + ": " + e.getValue() + " studenti");
+            totale += e.getValue();
+            if (piuNumerosa == null || e.getValue() &gt; quanti.get(piuNumerosa)) {
+                piuNumerosa = e.getKey();
+            }
+        }
+        System.out.println("Classe più numerosa: " + piuNumerosa);
+        System.out.println("Controllo: " + totale + " = " + classeDi.size());
+
+        // 3) chi è in 3B?
+        System.out.print("In 3B: ");
+        for (String nome : classeDi.keySet()) {
+            if (classeDi.get(nome).equals("3B")) {
+                System.out.print(nome + " ");
+            }
+        }
+        System.out.println();
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Nella prima mappa le classi sono <strong>valori</strong> e si ripetono (3A quattro volte); nella seconda sono <strong>chiavi</strong> e compaiono una volta sola. Rovesciare una mappa "contando" è un trucco frequentissimo.</li>
+        <li>Le stringhe si confrontano con <code>equals</code>, non con <code>==</code>.</li>
+        <li>La classe più numerosa è 3A (4 studenti) qualunque sia l'ordine di uscita, perché nessun'altra classe ha 4 studenti. Se ci fosse un pareggio, il vincitore dipenderebbe dall'ordine della mappa: in quel caso bisognerebbe decidere una regola (per esempio stampare tutte le classi a pari merito).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Come funziona dentro: hash e cassetti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Dentro la HashMap c'è un array di <strong>cassetti</strong> (bucket). Con <code>hashCode()</code> Java ricava un numero dalla chiave e da quel numero sceglie il cassetto: la stessa chiave dà sempre lo stesso numero, quindi <code>get</code> va dritto al cassetto giusto (O(1)). Due chiavi diverse nello stesso cassetto sono una <strong>collisione</strong>, risolta con <code>equals()</code>. Teoria: <a href="java-hashmap.html#come-funziona-dentro">Come funziona dentro</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>Hash, cassetti e collisioni <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Esegui il programma e rispondi alle domande.</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Hash {
+    public static void main(String[] args) {
+        System.out.println("Anna -&gt; " + "Anna".hashCode());
+        System.out.println("Anna -&gt; " + "Anna".hashCode());
+        System.out.println("anna -&gt; " + "anna".hashCode());
+        System.out.println("Aa   -&gt; " + "Aa".hashCode());
+        System.out.println("BB   -&gt; " + "BB".hashCode());
+
+        HashMap&lt;String, Integer&gt; m = new HashMap&lt;&gt;();
+        m.put("Aa", 1);
+        m.put("BB", 2);
+        System.out.println(m.get("Aa") + " " + m.get("BB") + " " + m.size());
+    }
+}</code></pre>
+<pre data-lang="testo"><code>Anna -&gt; 2045632
+Anna -&gt; 2045632
+anna -&gt; 2998944
+Aa   -&gt; 2112
+BB   -&gt; 2112
+1 2 2</code></pre>
+      <ol>
+        <li>Perché le prime due righe danno lo stesso numero? Perché è <strong>indispensabile</strong> per una HashMap?</li>
+        <li>"Anna" e "anna" hanno hash diversi. Che conseguenza ha sulle chiavi?</li>
+        <li>"Aa" e "BB" hanno lo stesso hash. Come si chiama questa situazione? Perché la mappa non le confonde?</li>
+        <li>Perché tutto questo spiega che una HashMap non ha un ordine?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Stessa chiave, stesso numero</h4>
+      <p><code>hashCode()</code> è un calcolo fatto sui caratteri della stringa: con gli stessi caratteri dà sempre lo stesso risultato. È indispensabile perché <code>put("Anna", 17)</code> mette la coppia nel cassetto ricavato da quel numero, e più tardi <code>get("Anna")</code> rifà <strong>lo stesso calcolo</strong> per sapere in quale cassetto guardare. Se il numero cambiasse, <code>get</code> guarderebbe nel cassetto sbagliato e non troverebbe niente.</p>
+      <h4>2 · Maiuscole e minuscole</h4>
+      <p>'A' e 'a' sono caratteri diversi, quindi il calcolo dà numeri diversi e, in generale, cassetti diversi. Per la mappa "Anna" e "anna" sono <strong>due chiavi diverse</strong>: <code>get("anna")</code> non trova Anna e restituisce <code>null</code>.</p>
+      <h4>3 · Una collisione</h4>
+      <p>Due chiavi diverse con lo stesso hash finiscono nello stesso cassetto: è una <strong>collisione</strong>. Per le stringhe il calcolo è "codice del primo carattere × 31 + codice del secondo": per "Aa" è 65 × 31 + 97 = 2112, per "BB" è 66 × 31 + 66 = 2112. Stesso risultato per caso!</p>
+      <p>Non è un problema: il cassetto può contenere più coppie. Quando fai <code>get("BB")</code>, Java va nel cassetto e confronta la chiave cercata con quelle presenti usando <code>equals()</code>: "BB" non è uguale ad "Aa", quindi prende la coppia giusta. Infatti l'ultima riga stampa <code>1 2 2</code>: valori corretti e due coppie distinte.</p>
+      <h4>4 · Perché non c'è ordine</h4>
+      <p>Ogni coppia va nel cassetto deciso dal <strong>numero della sua chiave</strong>, non in fondo a una fila. Quando scorri la mappa, Java visita i cassetti dal primo all'ultimo: l'ordine di uscita dipende quindi dagli hash, non da quando hai fatto <code>put</code>. Per questo, nei programmi, non bisogna mai contare sull'ordine di una HashMap.</p>
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>Hash uguale <strong>non</strong> vuol dire chiavi uguali (collisione). Chiavi uguali invece devono <strong>sempre</strong> avere hash uguale: è la regola che rende possibile trovare le cose.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>La caccia al tesoro: un oggetto tuo come chiave <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> In un gioco su una griglia, una mappa associa ogni casella (un oggetto <code>Punto</code>) a cosa contiene. Il programmatore si aspetta di stampare <code>tesoro</code>, <code>true</code> e <code>1</code>. Esegui il programma: cosa succede invece e perché?</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+class Punto {
+    public int x;
+    public int y;
+
+    public Punto(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class ChiavePunto {
+    public static void main(String[] args) {
+        HashMap&lt;Punto, String&gt; mappa = new HashMap&lt;&gt;();
+        mappa.put(new Punto(1, 2), "tesoro");
+
+        System.out.println(mappa.get(new Punto(1, 2)));
+        System.out.println(mappa.containsKey(new Punto(1, 2)));
+
+        mappa.put(new Punto(1, 2), "trappola");
+        System.out.println(mappa.size());
+    }
+}</code></pre>
+      <p>Poi correggilo <strong>senza</strong> cambiare la classe <code>Punto</code>, usando come chiave una <code>String</code> costruita da un metodo <code>chiave(int x, int y)</code>. Output atteso dopo la correzione:</p>
+<pre data-lang="testo"><code>tesoro
+true
+1
+{1,2=trappola}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output del programma sbagliato</h4>
+<pre data-lang="testo"><code>null
+false
+2</code></pre>
+      <h4>Ragionamento: perché non trova il tesoro</h4>
+      <ol>
+        <li>Ogni <code>new Punto(1, 2)</code> crea un oggetto <strong>nuovo</strong>, in un posto diverso della memoria. Nel programma ce ne sono quattro, tutti diversi, anche se hanno gli stessi numeri dentro.</li>
+        <li>La classe <code>Punto</code> non dice a Java come confrontare due punti, né come calcolarne l'hash. Allora Java usa le versioni di base: <code>equals</code> controlla se è <strong>lo stesso oggetto</strong> (come <code>==</code>), e <code>hashCode</code> dà un numero legato all'oggetto, non ai valori di x e y.</li>
+        <li>Quindi <code>get(new Punto(1, 2))</code> cerca una chiave che, per Java, non è mai stata inserita: <code>null</code>. Stesso motivo per <code>containsKey</code>: <code>false</code>.</li>
+        <li>Il secondo <code>put</code> non sostituisce niente: per Java è una chiave nuova, e la mappa arriva a <strong>2</strong> coppie che a noi sembrano la stessa casella.</li>
+      </ol>
+      <h4>La correzione con una chiave String</h4>
+      <p>Le <code>String</code> sanno già confrontarsi per contenuto e calcolare l'hash dai caratteri. Se trasformo la casella nel testo <code>"1,2"</code>, due caselle con gli stessi numeri danno la stessa stringa e quindi la stessa chiave. Il metodo <code>chiave</code> evita di scrivere a mano la stringa (e di sbagliare, per esempio scrivendo una volta <code>"1,2"</code> e un'altra <code>"1, 2"</code>).</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class ChiaveTesto {
+
+    static String chiave(int x, int y) {
+        return x + "," + y;
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, String&gt; mappa = new HashMap&lt;&gt;();
+        mappa.put(chiave(1, 2), "tesoro");
+
+        System.out.println(mappa.get(chiave(1, 2)));
+        System.out.println(mappa.containsKey(chiave(1, 2)));
+
+        mappa.put(chiave(1, 2), "trappola");
+        System.out.println(mappa.size());
+        System.out.println(mappa);
+    }
+}</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>chiave(1, 2)</code> restituisce sempre <code>"1,2"</code>: stesso testo, stesso hash, <code>equals</code> vero. La mappa la riconosce.</li>
+        <li>Il secondo <code>put</code> ora <strong>sostituisce</strong> "tesoro" con "trappola", e la mappa resta di 1 coppia, come voleva il programmatore.</li>
+        <li>La virgola in mezzo serve: senza, la casella (1, 23) e la casella (12, 3) darebbero entrambe <code>"123"</code>.</li>
+      </ul>
+      <div class="callout info"><span class="callout-title">E se volessi usare proprio Punto?</span>Si può: come spiega la teoria, bisogna scrivere dentro <code>Punto</code> i metodi <code>equals()</code> e <code>hashCode()</code>, in modo che due punti con la stessa x e la stessa y risultino uguali e abbiano lo stesso hash. È la soluzione "professionale"; la chiave <code>String</code> è quella che puoi già scrivere con quello che conosci.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>HashMap o lista?</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>La domanda da farsi è: <strong>come cercherò i dati?</strong> Per posizione, in ordine, o scorrendoli tutti: <strong>lista</strong> (mantiene l'ordine, ammette duplicati). Per un nome o un codice: <strong>HashMap</strong> (chiavi uniche, ricerca per chiave O(1), nessun ordine). Teoria: <a href="java-hashmap.html#hashmap-o-lista">HashMap o lista?</a></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>HashMap o lista? Scegli la struttura <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Per ogni situazione scegli tra <code>ArrayList</code> e <code>HashMap</code>, scrivi i tipi e spiega in una frase perché.</p>
+      <ol type="a">
+        <li>L'ordine di arrivo dei corridori al traguardo.</li>
+        <li>Il codice fiscale di ogni cittadino e il suo nome.</li>
+        <li>Quante volte ogni studente è stato interrogato quest'anno.</li>
+        <li>I voti di Anna in matematica, in ordine di data.</li>
+        <li>Il carrello di un negozio online, dove ogni prodotto ha una quantità.</li>
+        <li>Le pagine visitate nel browser, per il tasto "indietro".</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <p>Per ogni caso mi faccio due domande: <strong>l'ordine conta?</strong> e <strong>cercherò per nome/codice?</strong> Se l'ordine conta, la HashMap è esclusa (non lo garantisce). Se cerco per una chiave, la HashMap è la scelta naturale.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Struttura</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td><code>ArrayList&lt;String&gt;</code></td><td>conta la <strong>posizione</strong>: il primo, il secondo… <code>get(0)</code> è il vincitore.</td></tr>
+          <tr><td>b</td><td><code>HashMap&lt;String, String&gt;</code></td><td>cerco per codice fiscale, che è <strong>unico</strong>: chiave perfetta.</td></tr>
+          <tr><td>c</td><td><code>HashMap&lt;String, Integer&gt;</code></td><td>è un <strong>contatore</strong> per nome: studente → numero di interrogazioni.</td></tr>
+          <tr><td>d</td><td><code>ArrayList&lt;Integer&gt;</code></td><td>conta l'<strong>ordine</strong> e i voti si ripetono (due 7 sono due voti diversi): in una mappa non saprei che chiave usare.</td></tr>
+          <tr><td>e</td><td><code>HashMap&lt;String, Integer&gt;</code></td><td>prodotto → quantità; se aggiungo di nuovo lo stesso prodotto non voglio una riga doppia ma aumentare la quantità.</td></tr>
+          <tr><td>f</td><td><code>LinkedList&lt;String&gt;</code> (o <code>ArrayList</code>)</td><td>serve l'<strong>ordine</strong> di visita e si torna indietro dall'ultima: è una pila, e la stessa pagina può comparire più volte.</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Indizi di <strong>lista</strong>: "in ordine", "il primo", "l'ultimo", "la cronologia", duplicati che vanno tenuti tutti.</li>
+        <li>Indizi di <strong>mappa</strong>: "ogni X ha il suo Y", "quante volte compare", "cerca per codice/nome".</li>
+        <li>Spesso nello stesso programma servono <strong>entrambe</strong>: lo vedrai nell'esercizio completo, dove un registro delle operazioni (lista) affianca il magazzino (mappa).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>Dalle liste parallele alla mappa <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Una rubrica è salvata in due array paralleli: <code>n[i]</code> è il nome e <code>t[i]</code> il numero della stessa persona.</p>
+<pre data-lang="java"><code>String[] n = {"Anna", "Bruno", "Carla", "Dario"};
+String[] t = {"333 1111", "347 2222", "320 3333", "339 4444"};</code></pre>
+      <p>Copia i dati sia in <strong>due</strong> <code>ArrayList</code> parallele sia in <strong>una</strong> <code>HashMap</code>. Scrivi un metodo <code>cercaLista</code> che trova il numero scorrendo le liste, e confrontalo con la ricerca nella mappa cercando "Carla", "Zoe" e "Anna". Quale versione è più semplice? Quale più veloce con 100.000 contatti?</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Carla (lista): 320 3333
+Carla (mappa): 320 3333
+Zoe (lista): non trovato
+Zoe (mappa): non trovato
+Anna (lista): 333 1111
+Anna (mappa): 333 1111</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Con le liste il legame nome–numero esiste solo perché stanno <strong>alla stessa posizione</strong>: per trovare il numero di Carla devo prima scoprire a che indice sta Carla (scorrendo) e poi leggere quell'indice nell'altra lista.</li>
+        <li>Con la mappa il legame è <strong>dentro</strong> la coppia: chiedo direttamente <code>rubrica.get("Carla")</code>.</li>
+        <li>Per riempire le tre strutture basta un solo <code>for</code> sull'indice <code>i</code>.</li>
+        <li>Per il "non trovato" nella mappa uso <code>getOrDefault</code>; nella lista è il <code>return</code> dopo il ciclo, che si raggiunge solo se nessun nome è uguale.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Contatti {
+
+    // versione con due liste parallele: devo scorrere
+    static String cercaLista(ArrayList&lt;String&gt; nomi, ArrayList&lt;String&gt; numeri, String chi) {
+        for (int i = 0; i &lt; nomi.size(); i++) {
+            if (nomi.get(i).equals(chi)) {
+                return numeri.get(i);
+            }
+        }
+        return "non trovato";
+    }
+
+    public static void main(String[] args) {
+        String[] n = {"Anna", "Bruno", "Carla", "Dario"};
+        String[] t = {"333 1111", "347 2222", "320 3333", "339 4444"};
+
+        ArrayList&lt;String&gt; nomi = new ArrayList&lt;&gt;();
+        ArrayList&lt;String&gt; numeri = new ArrayList&lt;&gt;();
+        HashMap&lt;String, String&gt; rubrica = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; n.length; i++) {
+            nomi.add(n[i]);
+            numeri.add(t[i]);
+            rubrica.put(n[i], t[i]);
+        }
+
+        String[] ricerche = {"Carla", "Zoe", "Anna"};
+        for (String chi : ricerche) {
+            System.out.println(chi + " (lista): " + cercaLista(nomi, numeri, chi));
+            System.out.println(chi + " (mappa): " + rubrica.getOrDefault(chi, "non trovato"));
+        }
+    }
+}</code></pre>
+      <h4>Il confronto</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Due liste</th><th>HashMap</th></tr></thead>
+        <tbody>
+          <tr><td>Codice per cercare</td><td>un metodo con un ciclo</td><td>una riga</td></tr>
+          <tr><td>Cercare "Dario" su 4 contatti</td><td>4 confronti</td><td>vado dritto al cassetto</td></tr>
+          <tr><td>Cercare su 100.000 contatti</td><td>fino a 100.000 confronti, O(n)</td><td>sempre circa uno, O(1)</td></tr>
+          <tr><td>Rischio di errore</td><td>se aggiungi a una lista e dimentichi l'altra, i dati "slittano"</td><td>nome e numero entrano insieme</td></tr>
+        </tbody>
+      </table></div>
+      <p>I risultati stampati sono identici: cambia il <strong>modo</strong> in cui si arriva alla risposta. Le liste avrebbero senso se servisse l'ordine (per esempio "i contatti in ordine di inserimento"), ma per "dammi il numero di X" la mappa vince.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: il negozio di fumetti</h2>
+  <p>Questo esercizio mette insieme <strong>tutto il capitolo</strong>: creare le mappe, <code>put</code> per aggiungere e per sostituire, <code>get</code>, <code>containsKey</code>, <code>containsValue</code>, <code>getOrDefault</code>, <code>remove</code>, <code>clear</code>, <code>size</code>, i tre modi di scorrere, la scelta tra mappa e lista. Ci sono anche una classe, i metodi, <code>split</code>, <code>parseInt</code> e un <code>try-catch</code>. È lungo come una verifica: fallo a pezzi, un metodo alla volta, e prova ogni pezzo prima di andare avanti.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">17</span>Il negozio di fumetti <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Un negozio di fumetti vuole un piccolo gestionale. Scrivi una classe <code>Negozio</code> con questi attributi pubblici:</p>
+      <ul>
+        <li><code>prezzi</code>: titolo → prezzo (<code>Double</code>);</li>
+        <li><code>scorte</code>: titolo → copie in negozio (<code>Integer</code>);</li>
+        <li><code>vendute</code>: titolo → copie vendute oggi (<code>Integer</code>);</li>
+        <li><code>registro</code>: l'elenco delle operazioni fatte, <strong>nell'ordine</strong> in cui sono avvenute (scegli tu la struttura giusta);</li>
+        <li><code>incasso</code>: il totale incassato oggi.</li>
+      </ul>
+      <p>E con questi metodi, ognuno dei quali scrive nel registro cosa ha fatto oppure un messaggio <code>ERRORE: ...</code>:</p>
+      <ol>
+        <li><code>nuovo(titolo, prezzo, copie)</code>: aggiunge un titolo, ma solo se non c'è già;</li>
+        <li><code>vendi(titolo, copie)</code>: vende se il titolo esiste e ci sono abbastanza copie; aggiorna scorte, vendute e incasso;</li>
+        <li><code>carica(titolo, copie)</code>: aggiunge copie a un titolo esistente;</li>
+        <li><code>cambiaPrezzo(titolo, nuovo)</code>: sostituisce il prezzo;</li>
+        <li><code>togli(titolo)</code>: toglie il titolo dal catalogo;</li>
+        <li><code>esegui(comando)</code>: riceve un comando di testo come <code>"VENDI Tex 2"</code>, lo divide con <code>split(" ")</code> e chiama il metodo giusto; se un numero non è valido (per esempio <code>"tre"</code>) scrive un errore senza fermare il programma;</li>
+        <li><code>report()</code>: stampa il registro numerato, il magazzino (con il valore della merce e un avviso se c'è almeno un titolo esaurito) e le vendite (copie totali, titolo più venduto, incasso).</li>
+      </ol>
+      <p>Nel <code>main</code> carica Topolino (3.0 euro, 10 copie), Tex (4.5, 6), Diabolik (3.5, 4), Naruto (5.0, 3) ed esegui questi comandi:</p>
+<pre data-lang="java"><code>"VENDI Tex 2", "VENDI Naruto 3", "VENDI Dylan 1", "CARICA Topolino 5",
+"VENDI Topolino tre", "PREZZO Tex 5.5", "VENDI Tex 4", "VENDI Diabolik 9",
+"NUOVO OnePiece 6.0 8", "VENDI OnePiece 2", "TOGLI Diabolik",
+"VENDI Topolino 1", "NUOVO Tex 4.0 3"</code></pre>
+      <p>Dopo il report, cerca il prezzo di Tex e Diabolik e quante copie di Diabolik sono state vendute; infine azzera le vendite per il giorno dopo.</p>
+      <p>Output atteso (le righe del magazzino possono uscire in un ordine diverso; tutto il resto no):</p>
+<pre data-lang="testo"><code>=== Registro (in ordine) ===
+1. nuovo titolo Topolino (10 copie a 3.0)
+2. nuovo titolo Tex (6 copie a 4.5)
+3. nuovo titolo Diabolik (4 copie a 3.5)
+4. nuovo titolo Naruto (3 copie a 5.0)
+5. venduti 2 Tex
+6. venduti 3 Naruto
+7. ERRORE: Dylan non è in catalogo
+8. arrivate 5 copie di Topolino
+9. ERRORE: numero non valido in 'VENDI Topolino tre'
+10. prezzo di Tex: 4.5 -&gt; 5.5
+11. venduti 4 Tex
+12. ERRORE: di Diabolik ci sono solo 4 copie
+13. nuovo titolo OnePiece (8 copie a 6.0)
+14. venduti 2 OnePiece
+15. tolto dal catalogo Diabolik
+16. venduti 1 Topolino
+17. ERRORE: Tex è già in catalogo
+=== Magazzino ===
+Titoli in catalogo: 4
+OnePiece: 6 copie a 6.0
+Tex: 0 copie a 5.5  ESAURITO
+Naruto: 0 copie a 5.0  ESAURITO
+Topolino: 14 copie a 3.0
+Valore della merce: 78.0
+Attenzione: almeno un titolo è esaurito, da riordinare!
+=== Vendite ===
+Copie vendute: 12
+Più venduto: Tex (6 copie)
+Incasso: 61.0
+=== Ricerche ===
+Tex costa 5.5
+Diabolik non è più in catalogo
+Copie vendute di Diabolik: 0
+=== Chiusura ===
+Vendite azzerate per domani: 0 titoli, vendute vuota? true</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <p>Prima di scrivere codice decido le <strong>strutture</strong>. Per ognuna mi chiedo: cercherò per chiave, o mi serve l'ordine?</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Attributo</th><th>Struttura</th><th>Chiave → valore</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td><code>prezzi</code></td><td><code>HashMap&lt;String, Double&gt;</code></td><td>titolo → prezzo</td><td>cerco sempre per titolo; ogni titolo ha un prezzo solo</td></tr>
+          <tr><td><code>scorte</code></td><td><code>HashMap&lt;String, Integer&gt;</code></td><td>titolo → copie</td><td>come sopra; più titoli possono avere le stesse copie (valori ripetuti)</td></tr>
+          <tr><td><code>vendute</code></td><td><code>HashMap&lt;String, Integer&gt;</code></td><td>titolo → copie vendute</td><td>è un <strong>contatore</strong> per titolo</td></tr>
+          <tr><td><code>registro</code></td><td><code>ArrayList&lt;String&gt;</code></td><td>nessuna chiave</td><td>conta l'<strong>ordine</strong> delle operazioni e le righe possono ripetersi: lista, non mappa</td></tr>
+          <tr><td><code>incasso</code></td><td><code>double</code></td><td>–</td><td>un solo numero</td></tr>
+        </tbody>
+      </table></div>
+      <p>E per ogni metodo, quali operazioni della mappa servono:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Metodo</th><th>Operazioni</th></tr></thead>
+        <tbody>
+          <tr><td><code>nuovo</code></td><td><code>containsKey</code> (evita di sovrascrivere), <code>put</code> per <strong>aggiungere</strong></td></tr>
+          <tr><td><code>vendi</code></td><td><code>containsKey</code>, <code>get</code>, <code>put</code> per <strong>sostituire</strong>, <code>getOrDefault</code> per il contatore</td></tr>
+          <tr><td><code>carica</code></td><td><code>containsKey</code>, <code>put(k, get(k) + copie)</code></td></tr>
+          <tr><td><code>cambiaPrezzo</code></td><td><code>put</code> su chiave esistente = sostituzione</td></tr>
+          <tr><td><code>togli</code></td><td><code>remove</code> su due mappe</td></tr>
+          <tr><td><code>report</code></td><td><code>size</code>, <code>entrySet</code>, <code>values</code>, <code>keySet</code>, <code>containsValue</code></td></tr>
+          <tr><td><code>main</code> (fine)</td><td><code>getOrDefault</code>, <code>clear</code>, <code>size</code>, <code>isEmpty</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · Aggiungere senza sovrascrivere</h4>
+      <p>In <code>nuovo</code> il controllo con <code>containsKey</code> è fondamentale: l'ultimo comando, <code>NUOVO Tex 4.0 3</code>, senza controllo farebbe <code>put</code> su una chiave esistente e <strong>sostituirebbe</strong> in silenzio prezzo e scorte di Tex (riga 17 del registro: invece viene rifiutato). Ogni titolo nuovo entra in <code>prezzi</code> e in <code>scorte</code> con la stessa chiave: le due mappe vanno tenute "allineate".</p>
+      <h4>Passo 3 · Vendere: tre controlli e tre aggiornamenti</h4>
+      <ol>
+        <li>Il titolo esiste? Se no (Dylan), errore. Questo controllo evita anche che <code>scorte.get</code> restituisca <code>null</code>.</li>
+        <li>Ci sono abbastanza copie? Diabolik ne ha 4 e ne chiedono 9: errore.</li>
+        <li>Se è tutto a posto: <code>scorte.put(titolo, disponibili - copie)</code> sostituisce il valore; <code>vendute.put(titolo, vendute.getOrDefault(titolo, 0) + copie)</code> è lo schema del contatore (la prima vendita di un titolo parte da 0); l'incasso aumenta di copie × prezzo <strong>attuale</strong>.</li>
+      </ol>
+      <p>Per questo Tex vende 2 copie a 4.5 (9.0) e, dopo il cambio di prezzo, 4 copie a 5.5 (22.0). Incasso totale: 9.0 + 15.0 (Naruto) + 22.0 + 12.0 (OnePiece) + 3.0 (Topolino) = 61.0.</p>
+      <h4>Passo 4 · Leggere i comandi</h4>
+      <p><code>split(" ")</code> trasforma <code>"VENDI Tex 2"</code> nell'array <code>{"VENDI", "Tex", "2"}</code>: <code>p[0]</code> è il comando, <code>p[1]</code> il titolo, <code>p[2]</code> il numero, da convertire con <code>Integer.parseInt</code> (o <code>Double.parseDouble</code> per i prezzi). <code>parseInt("tre")</code> lancia <code>NumberFormatException</code>: il <code>try-catch</code> dentro <code>esegui</code> la cattura, scrive l'errore nel registro e il ciclo del <code>main</code> passa al comando successivo. I titoli sono di una parola sola (OnePiece) proprio perché lo spazio separa i pezzi del comando.</p>
+      <h4>Passo 5 · Il report: tre modi di scorrere</h4>
+      <ul>
+        <li><strong>Registro</strong>: è una lista, quindi lo scorro con l'indice e lo stampo numerato, <strong>nell'ordine giusto</strong>.</li>
+        <li><strong>Magazzino</strong>: per ogni titolo servono nome e copie, quindi <code>entrySet()</code>; il prezzo lo prendo da un'altra mappa con <code>prezzi.get(titolo)</code>, usando la stessa chiave. Qui l'ordine di uscita è quello dei cassetti, non quello di inserimento. Il valore della merce non dipende dall'ordine: 14 × 3.0 + 6 × 6.0 = 78.0 (Tex e Naruto hanno 0 copie).</li>
+        <li><strong>Esauriti</strong>: "c'è almeno un titolo con 0 copie?" è una domanda sui valori: <code>scorte.containsValue(0)</code>.</li>
+        <li><strong>Copie vendute</strong>: servono solo i numeri, quindi <code>values()</code>: 6 + 3 + 2 + 1 = 12.</li>
+        <li><strong>Più venduto</strong>: serve sapere <em>chi</em>, quindi <code>keySet()</code> e il confronto con <code>get</code>. Tex vince con 6 copie, senza pareggi, quindi il risultato non dipende dall'ordine.</li>
+      </ul>
+      <h4>Passo 6 · Le ricerche e la chiusura</h4>
+      <p>Diabolik è stato tolto dal catalogo con <code>remove</code>, quindi <code>containsKey</code> dà <code>false</code>. Non ha mai venduto copie, quindi non è nemmeno una chiave di <code>vendute</code>: <code>getOrDefault("Diabolik", 0)</code> dà 0 invece di <code>null</code>. A fine giornata <code>vendute.clear()</code> svuota il contatore (la mappa resta, pronta per domani), mentre prezzi e scorte restano com'erano.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+class Negozio {
+    public HashMap&lt;String, Double&gt; prezzi = new HashMap&lt;&gt;();    // titolo -&gt; prezzo
+    public HashMap&lt;String, Integer&gt; scorte = new HashMap&lt;&gt;();   // titolo -&gt; copie in negozio
+    public HashMap&lt;String, Integer&gt; vendute = new HashMap&lt;&gt;();  // titolo -&gt; copie vendute oggi
+    public ArrayList&lt;String&gt; registro = new ArrayList&lt;&gt;();      // operazioni, in ordine
+    public double incasso = 0;
+
+    public void nuovo(String titolo, double prezzo, int copie) {
+        if (prezzi.containsKey(titolo)) {
+            registro.add("ERRORE: " + titolo + " è già in catalogo");
+            return;
+        }
+        prezzi.put(titolo, prezzo);
+        scorte.put(titolo, copie);
+        registro.add("nuovo titolo " + titolo + " (" + copie + " copie a " + prezzo + ")");
+    }
+
+    public void vendi(String titolo, int copie) {
+        if (!scorte.containsKey(titolo)) {
+            registro.add("ERRORE: " + titolo + " non è in catalogo");
+            return;
+        }
+        int disponibili = scorte.get(titolo);
+        if (copie &gt; disponibili) {
+            registro.add("ERRORE: di " + titolo + " ci sono solo " + disponibili + " copie");
+            return;
+        }
+        scorte.put(titolo, disponibili - copie);
+        vendute.put(titolo, vendute.getOrDefault(titolo, 0) + copie);
+        incasso += copie * prezzi.get(titolo);
+        registro.add("venduti " + copie + " " + titolo);
+    }
+
+    public void carica(String titolo, int copie) {
+        if (!scorte.containsKey(titolo)) {
+            registro.add("ERRORE: " + titolo + " non è in catalogo");
+            return;
+        }
+        scorte.put(titolo, scorte.get(titolo) + copie);
+        registro.add("arrivate " + copie + " copie di " + titolo);
+    }
+
+    public void cambiaPrezzo(String titolo, double nuovo) {
+        if (!prezzi.containsKey(titolo)) {
+            registro.add("ERRORE: " + titolo + " non è in catalogo");
+            return;
+        }
+        double vecchio = prezzi.get(titolo);
+        prezzi.put(titolo, nuovo);
+        registro.add("prezzo di " + titolo + ": " + vecchio + " -&gt; " + nuovo);
+    }
+
+    public void togli(String titolo) {
+        if (!prezzi.containsKey(titolo)) {
+            registro.add("ERRORE: " + titolo + " non è in catalogo");
+            return;
+        }
+        prezzi.remove(titolo);
+        scorte.remove(titolo);
+        registro.add("tolto dal catalogo " + titolo);
+    }
+
+    public void esegui(String comando) {
+        String[] p = comando.split(" ");
+        try {
+            if (p[0].equals("NUOVO")) {
+                nuovo(p[1], Double.parseDouble(p[2]), Integer.parseInt(p[3]));
+            } else if (p[0].equals("VENDI")) {
+                vendi(p[1], Integer.parseInt(p[2]));
+            } else if (p[0].equals("CARICA")) {
+                carica(p[1], Integer.parseInt(p[2]));
+            } else if (p[0].equals("PREZZO")) {
+                cambiaPrezzo(p[1], Double.parseDouble(p[2]));
+            } else if (p[0].equals("TOGLI")) {
+                togli(p[1]);
+            } else {
+                registro.add("ERRORE: comando sconosciuto " + p[0]);
+            }
+        } catch (NumberFormatException e) {
+            registro.add("ERRORE: numero non valido in '" + comando + "'");
+        }
+    }
+
+    public void report() {
+        System.out.println("=== Registro (in ordine) ===");
+        for (int i = 0; i &lt; registro.size(); i++) {
+            System.out.println((i + 1) + ". " + registro.get(i));
+        }
+
+        System.out.println("=== Magazzino ===");
+        System.out.println("Titoli in catalogo: " + prezzi.size());
+        double valore = 0;
+        for (Map.Entry&lt;String, Integer&gt; e : scorte.entrySet()) {
+            String titolo = e.getKey();
+            int copie = e.getValue();
+            String nota = "";
+            if (copie == 0) {
+                nota = "  ESAURITO";
+            }
+            System.out.println(titolo + ": " + copie + " copie a " + prezzi.get(titolo) + nota);
+            valore += copie * prezzi.get(titolo);
+        }
+        System.out.println("Valore della merce: " + valore);
+        if (scorte.containsValue(0)) {
+            System.out.println("Attenzione: almeno un titolo è esaurito, da riordinare!");
+        }
+
+        System.out.println("=== Vendite ===");
+        int copieTotali = 0;
+        for (int c : vendute.values()) {
+            copieTotali += c;
+        }
+        String best = null;
+        for (String titolo : vendute.keySet()) {
+            if (best == null || vendute.get(titolo) &gt; vendute.get(best)) {
+                best = titolo;
+            }
+        }
+        System.out.println("Copie vendute: " + copieTotali);
+        System.out.println("Più venduto: " + best + " (" + vendute.get(best) + " copie)");
+        System.out.println("Incasso: " + incasso);
+    }
+}
+
+public class Fumetti {
+    public static void main(String[] args) {
+        Negozio n = new Negozio();
+        n.nuovo("Topolino", 3.0, 10);
+        n.nuovo("Tex", 4.5, 6);
+        n.nuovo("Diabolik", 3.5, 4);
+        n.nuovo("Naruto", 5.0, 3);
+
+        String[] comandi = {
+            "VENDI Tex 2",
+            "VENDI Naruto 3",
+            "VENDI Dylan 1",
+            "CARICA Topolino 5",
+            "VENDI Topolino tre",
+            "PREZZO Tex 5.5",
+            "VENDI Tex 4",
+            "VENDI Diabolik 9",
+            "NUOVO OnePiece 6.0 8",
+            "VENDI OnePiece 2",
+            "TOGLI Diabolik",
+            "VENDI Topolino 1",
+            "NUOVO Tex 4.0 3",
+        };
+        for (String c : comandi) {
+            n.esegui(c);
+        }
+
+        n.report();
+
+        System.out.println("=== Ricerche ===");
+        String[] cercati = {"Tex", "Diabolik"};
+        for (String t : cercati) {
+            if (n.prezzi.containsKey(t)) {
+                System.out.println(t + " costa " + n.prezzi.get(t));
+            } else {
+                System.out.println(t + " non è più in catalogo");
+            }
+        }
+        System.out.println("Copie vendute di Diabolik: " + n.vendute.getOrDefault("Diabolik", 0));
+
+        System.out.println("=== Chiusura ===");
+        n.vendute.clear();
+        n.incasso = 0;
+        System.out.println("Vendite azzerate per domani: " + n.vendute.size() + " titoli, vendute vuota? " + n.vendute.isEmpty());
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Perché il registro è una <code>ArrayList</code> e non una mappa? (Serve l'ordine, e una mappa non lo garantisce; inoltre non c'è una chiave naturale per un'operazione.)</li>
+        <li>Perché le righe del magazzino non escono nell'ordine Topolino, Tex, Naruto, OnePiece? (Ogni coppia sta nel cassetto deciso dall'hash del titolo; scorrendo, Java visita i cassetti in fila. Se ti serve l'ordine di inserimento c'è <code>LinkedHashMap</code>, se ti serve l'ordine alfabetico <code>TreeMap</code>.)</li>
+        <li>Cosa succederebbe se in <code>vendi</code> scrivessi <code>vendute.put(titolo, vendute.get(titolo) + copie)</code>? (Alla prima vendita di ogni titolo <code>get</code> darebbe <code>null</code> e il programma si fermerebbe con <code>NullPointerException</code>.)</li>
+        <li>Dopo <code>TOGLI Diabolik</code>, quanto vale <code>prezzi.size()</code>? E perché il report dice 4 titoli anche se ne abbiamo creati 5? (4: Topolino, Tex, Naruto, OnePiece. Diabolik è stato rimosso.)</li>
+        <li>Perché <code>scorte.containsValue(0)</code> è più lento di <code>scorte.containsKey("Tex")</code>? (Il primo deve guardare tutte le coppie, O(n); il secondo va dritto al cassetto, O(1).)</li>
+      </ul>
+    </div></details>
+  </div>
+
+</main>
+</body>
+</html>

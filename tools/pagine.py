@@ -1,4 +1,4 @@
-"""Rigenera le pagine "struttura" del sito (home, cerca, riassunti, ripasso, panoramiche materie).
+"""Rigenera le pagine "struttura" del sito (home, cerca, riassunti, esercizi, ripasso, panoramiche materie).
 Le pagine degli argomenti NON vengono toccate. Uso: python3 tools/pagine.py"""
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,8 +14,8 @@ HEAD = '''<!doctype html>
   <link rel="manifest" href="{r}manifest.webmanifest">
   <link rel="icon" href="{r}assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{r}assets/img/icon-180.png">
-  <link rel="stylesheet" href="{r}assets/css/style.css?v=9">
-  <script src="{r}assets/js/site.js?v=9"></script>
+  <link rel="stylesheet" href="{r}assets/css/style.css?v=10">
+  <script src="{r}assets/js/site.js?v=10"></script>
 </head>
 <body>
 <main id="content">
@@ -42,10 +42,16 @@ page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca
 
   <div class="covers" data-subject-grid></div>
 
-  <a class="home-sum" href="riassunti.html">
-    <span class="home-sum-text"><strong>Riassunti</strong><span>Tutti i capitoli in breve, paragrafo per paragrafo.</span></span>
-    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-  </a>
+  <div class="home-links">
+    <a class="home-sum" href="riassunti.html">
+      <span class="home-sum-text"><strong>Riassunti</strong><span>Tutti i capitoli in breve, paragrafo per paragrafo.</span></span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="home-sum" href="esercizi.html">
+      <span class="home-sum-text"><strong>Esercizi</strong><span>Consegne ed esercizi per ogni argomento, con le soluzioni spiegate.</span></span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
 
   <section class="panel review-panel" data-review-summary data-feature="ripasso">
     <h2>Ripasso di oggi</h2>
@@ -61,6 +67,16 @@ page('riassunti.html', 'Riassunti · Scuola', 'I riassunti di tutti i capitoli, 
     <p class="lead">Le idee da ricordare di ogni capitolo, divise per paragrafo. Tocca un capitolo per aprirlo.</p>
     <div class="search-filters" data-sum-filters aria-label="Filtra per materia"></div>
     <div data-sum-list></div>
+  </div>
+''', attrs=' data-toc="off"')
+
+page('esercizi.html', 'Esercizi · Scuola', 'Consegne ed esercizi per ogni argomento, con le soluzioni spiegate passo passo.', '''
+  <div class="esercizi-area" data-esercizi>
+    <h1>Esercizi</h1>
+    <p class="lead">Consegne ed esercizi per ogni argomento spiegato, dal più facile al più difficile, con le <strong>soluzioni spiegate passo passo</strong>. In fondo a ogni pagina c'è un esercizio completo che mette insieme tutto il capitolo.</p>
+    <p class="ex-count" data-ex-count></p>
+    <div class="callout tip"><span class="callout-title">Come allenarsi</span>Leggi la consegna e prova da solo, su carta o al computer. Apri la soluzione solo dopo: anche un tentativo sbagliato ti fa capire molto di più che leggere subito la risposta.</div>
+    <div data-ex-list></div>
   </div>
 ''', attrs=' data-toc="off"')
 
@@ -128,6 +144,12 @@ for sid, short, name, desc, intro, steps in SUBJECTS:
 
   <h2>Capitoli</h2>
   <div data-subject-pages></div>
+
+  <section data-subject-exercises hidden>
+    <h2>Esercizi</h2>
+    <p>Consegne ed esercizi per ogni capitolo, con le soluzioni spiegate passo passo.</p>
+    <div data-list></div>
+  </section>
 
   <h2>Come studiare</h2>
   <ol>

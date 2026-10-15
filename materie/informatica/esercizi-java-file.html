@@ -1,0 +1,1271 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: gestione dei file · Scuola</title>
+  <meta name="description" content="Informatica, esercizi di Java sui file con soluzioni spiegate passo passo: classe File, percorsi relativi e assoluti, exists, getPath, getAbsolutePath, isFile, FileWriter con write, append e close, modalità append, FileReader e read fino a -1, delete, try-catch con FileNotFoundException e IOException, try-with-resources. Con un esercizio completo finale.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: gestione dei file</h1>
+  <p class="lead">Consegne ed esercizi per allenarti su tutto il capitolo <a href="java-gestione-dei-file.html">Java: gestione dei file</a>. Ogni soluzione spiega il ragionamento, mostra il codice completo, l'output vero del programma e, quando serve, il contenuto vero del file creato.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a scrivere il programma da solo (su carta o al computer) e solo dopo apri la <strong>soluzione spiegata</strong>. Gli esercizi vanno dal più facile al più difficile; l'ultimo li mette insieme tutti. Ogni programma è stato compilato ed eseguito in una cartella di prova: l'output e il contenuto dei file che vedi sono quelli veri.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>La classe File e i percorsi</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un oggetto <code>File</code> è solo un <strong>indirizzo</strong>: <code>new File("prova.txt")</code> non crea niente sul disco. Un percorso <strong>relativo</strong> (<code>"prova.txt"</code>) viene cercato nella cartella da cui parte il programma; uno <strong>assoluto</strong> parte dalla radice del disco. Su Windows la <code>\</code> dentro una stringa va raddoppiata. Teoria: <a href="java-gestione-dei-file.html#la-classe-file">La classe File</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Dove sta cercando Java? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Marco ha creato il file <code>impostazioni.txt</code> sul Desktop, ma il suo programma (che usa <code>new File("impostazioni.txt")</code>) continua a dire che il file non c'è. Scrivi un programma che:</p>
+      <ul>
+        <li>se <code>impostazioni.txt</code> esiste, stampa <code>Trovato: impostazioni.txt</code>;</li>
+        <li>altrimenti stampa che non lo trova e <strong>dove</strong> lo ha cercato, cioè il percorso completo.</li>
+      </ul>
+      <p>Poi spiega a Marco perché il suo file "non si trova".</p>
+      <p>Output atteso quando il file non c'è (il percorso è un esempio: sul tuo computer sarà diverso):</p>
+<pre data-lang="testo"><code>Non trovo impostazioni.txt
+L'ho cercato qui: C:\Users\Marco\IdeaProjects\Gioco\impostazioni.txt</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Creo l'oggetto <code>File</code> con il percorso <strong>relativo</strong> <code>"impostazioni.txt"</code>: è solo un indirizzo, il file non viene creato né aperto.</li>
+        <li>Con <code>exists()</code> chiedo se a quell'indirizzo c'è davvero qualcosa. Restituisce un <code>boolean</code>, quindi lo metto direttamente nell'<code>if</code>.</li>
+        <li>Se non c'è, <code>getPath()</code> mi ridà il nome come l'ho scritto, mentre <code>getAbsolutePath()</code> ci mette davanti la cartella da cui sta girando il programma: è proprio il posto in cui Java ha cercato.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.File;
+
+public class DoveCerca {
+    public static void main(String[] args) {
+        File impostazioni = new File("impostazioni.txt");
+
+        if (impostazioni.exists()) {
+            System.out.println("Trovato: " + impostazioni.getPath());
+        } else {
+            System.out.println("Non trovo " + impostazioni.getPath());
+            System.out.println("L'ho cercato qui: " + impostazioni.getAbsolutePath());
+        }
+    }
+}</code></pre>
+      <h4>Perché il file di Marco "non c'è"</h4>
+      <p>Un percorso relativo viene cercato nella <strong>cartella del progetto</strong> (quella da cui parte il programma), non sul Desktop e nemmeno nella cartella <code>src</code> dove sta il codice. L'output glielo dice chiaramente: Java ha cercato in <code>...\IdeaProjects\Gioco\</code>. Le soluzioni sono due: spostare il file in quella cartella, oppure scrivere nel programma il percorso <strong>assoluto</strong> del Desktop.</p>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Quando un file "non si trova", la prima cosa da fare è stampare <code>getAbsolutePath()</code>: dice dove Java sta guardando davvero.</li>
+        <li>Il percorso stampato dipende dal computer e dalla cartella da cui lanci il programma: per questo qui l'output è un esempio e non quello di una esecuzione vera.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Trova l'errore: il percorso di Windows <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questo programma vuole controllare un file sul Desktop di Windows, ma non compila. Trova l'errore, spiega il messaggio del compilatore e scrivi <strong>due</strong> correzioni diverse.</p>
+<pre data-lang="java"><code>import java.io.File;
+
+public class PercorsoWindows {
+    public static void main(String[] args) {
+        File voti = new File("C:\Users\Mario\Desktop\voti.txt");
+        System.out.println(voti.exists());
+    }
+}</code></pre>
+      <p><strong>Domanda bonus.</strong> Questa riga invece compila senza errori. Cosa stampa, e perché è comunque sbagliata se volevi il file <code>totali.txt</code> nella cartella <code>nuovi</code>?</p>
+<pre data-lang="java"><code>System.out.println("C:\nuovi\totali.txt");</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>L'errore</h4>
+<pre data-lang="testo"><code>riga 5: error: illegal escape character</code></pre>
+      <p>Dentro una stringa Java la barra rovesciata <code>\</code> è un carattere speciale: insieme alla lettera che la segue forma una <strong>sequenza di escape</strong> (<code>\n</code> = a capo, <code>\t</code> = tabulazione, <code>\"</code> = virgolette…). <code>\U</code> non esiste, quindi il compilatore protesta: "illegal escape character" significa proprio "carattere di escape non valido".</p>
+      <h4>Ragionamento per correggere</h4>
+      <ol>
+        <li>Se voglio una <code>\</code> vera nel testo, devo scriverla <strong>doppia</strong>: <code>\\</code> diventa una sola barra.</li>
+        <li>In alternativa uso la barra normale <code>/</code>, che Java accetta come separatore anche su Windows e non ha significati speciali.</li>
+      </ol>
+<pre data-lang="java"><code>File voti = new File("C:\\Users\\Mario\\Desktop\\voti.txt");   // correzione 1: barre doppie
+File voti = new File("C:/Users/Mario/Desktop/voti.txt");       // correzione 2: barre normali</code></pre>
+      <h4>Bonus: cosa stampa</h4>
+<pre data-lang="testo"><code>C:
+uovi	otali.txt</code></pre>
+      <p>Qui il compilatore non si accorge di nulla, perché <code>\n</code> e <code>\t</code> sono escape <strong>validi</strong>: <code>\n</code> va a capo e si "mangia" la <code>n</code> di <code>nuovi</code>, <code>\t</code> mette una tabulazione e si mangia la <code>t</code> di <code>totali</code>. Il percorso che arriva a Java è un'altra cosa, e il file non verrebbe mai trovato. È un errore più subdolo del primo, proprio perché compila.</p>
+      <div class="callout tip"><span class="callout-title">Regola pratica</span>Nei percorsi dentro il codice usa sempre <code>/</code> oppure <code>\\</code>. Mai una <code>\</code> da sola.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Verificare se un file esiste</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>exists()</code> restituisce <code>true</code> se a quel percorso c'è un file (o una cartella), <code>false</code> altrimenti. Si usa <strong>prima</strong> di operare sul file, per decidere cosa fare. Teoria: <a href="java-gestione-dei-file.html#verificare-se-un-file-esiste">Verificare se un file esiste</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>La lista di controllo <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Un programma di registro ha bisogno di quattro file: <code>voti.txt</code>, <code>assenze.txt</code>, <code>orario.txt</code> e <code>note.txt</code>. Metti i nomi in un array di <code>String</code> e, per ognuno, stampa <code>[OK]</code> se il file esiste o <code>[MANCA]</code> se non c'è. Alla fine stampa <code>Tutto pronto!</code> oppure quanti file mancano.</p>
+      <p>Output atteso, nella cartella in cui ci sono solo <code>voti.txt</code> e <code>orario.txt</code>:</p>
+<pre data-lang="testo"><code>[OK]    voti.txt
+[MANCA] assenze.txt
+[OK]    orario.txt
+[MANCA] note.txt
+File mancanti: 2 su 4</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>I nomi sono tanti e devo fare la stessa cosa per ognuno: li metto in un <strong>array</strong> e uso un <code>foreach</code> (mi serve solo il valore, non la posizione).</li>
+        <li>A ogni giro creo un oggetto <code>File</code> con quel nome e chiedo <code>exists()</code>.</li>
+        <li>Per sapere alla fine se manca qualcosa uso un <strong>contatore</strong> dichiarato prima del ciclo, che aumento nel ramo <code>else</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.File;
+
+public class ListaControllo {
+    public static void main(String[] args) {
+        String[] necessari = {"voti.txt", "assenze.txt", "orario.txt", "note.txt"};
+
+        int mancanti = 0;
+        for (String nome : necessari) {
+            File f = new File(nome);
+            if (f.exists()) {
+                System.out.println("[OK]    " + nome);
+            } else {
+                System.out.println("[MANCA] " + nome);
+                mancanti++;
+            }
+        }
+
+        if (mancanti == 0) {
+            System.out.println("Tutto pronto!");
+        } else {
+            System.out.println("File mancanti: " + mancanti + " su " + necessari.length);
+        }
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Non serve nessun <code>try-catch</code>: <code>new File(...)</code> ed <code>exists()</code> non lanciano eccezioni, rispondono semplicemente <code>true</code> o <code>false</code>.</li>
+        <li>Creare 4 oggetti <code>File</code> non crea 4 file: dopo l'esecuzione <code>assenze.txt</code> e <code>note.txt</code> continuano a non esistere.</li>
+        <li>Gli spazi dopo <code>[OK]</code> servono solo ad allineare i nomi in colonna.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Il primo nome libero <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Un programma salva una copia dei dati ogni giorno in file chiamati <code>backup1.txt</code>, <code>backup2.txt</code>, <code>backup3.txt</code>… e non deve <strong>mai</strong> sovrascrivere un backup vecchio. Scrivi il metodo</p>
+<pre data-lang="java"><code>static String primoNomeLibero(String base)</code></pre>
+      <p>che restituisce il primo nome della forma <code>base</code> + numero + <code>.txt</code> che <strong>non</strong> esiste ancora. Provalo nella cartella in cui ci sono già <code>backup1.txt</code>, <code>backup2.txt</code> e <code>backup3.txt</code> (e nessun file <code>foto</code>).</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Prossimo backup: backup4.txt
+Prossima foto: foto1.txt</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Non so in anticipo quanti backup ci sono, quindi non posso usare un <code>for</code> con un numero fisso di giri: uso un <code>while</code> che continua <strong>finché il nome è occupato</strong>.</li>
+        <li>Parto da <code>n = 1</code> e costruisco il nome con la concatenazione: <code>"backup" + 1 + ".txt"</code> diventa <code>"backup1.txt"</code> (c'è una stringa all'inizio, quindi il <code>+</code> unisce).</li>
+        <li>A ogni giro aumento <code>n</code> e creo un <strong>nuovo</strong> oggetto <code>File</code>: quello vecchio indica ancora il nome precedente.</li>
+        <li>Quando <code>exists()</code> dà <code>false</code> il ciclo finisce e <code>f</code> indica proprio il primo nome libero: restituisco <code>f.getName()</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.File;
+
+public class NomeLibero {
+
+    static String primoNomeLibero(String base) {
+        int n = 1;
+        File f = new File(base + n + ".txt");
+        while (f.exists()) {
+            n++;
+            f = new File(base + n + ".txt");
+        }
+        return f.getName();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Prossimo backup: " + primoNomeLibero("backup"));
+        System.out.println("Prossima foto: " + primoNomeLibero("foto"));
+    }
+}</code></pre>
+      <h4>Prova a mano</h4>
+      <p>Con <code>"backup"</code>: <code>backup1.txt</code> esiste → n = 2; <code>backup2.txt</code> esiste → n = 3; <code>backup3.txt</code> esiste → n = 4; <code>backup4.txt</code> non esiste → esco. Con <code>"foto"</code> il primo controllo dà già <code>false</code>: il ciclo non gira neanche una volta e restituisce <code>foto1.txt</code>.</p>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Dimenticare <code>f = new File(...)</code> dentro il ciclo: <code>f</code> indicherebbe sempre <code>backup1.txt</code>, che esiste, e il ciclo non finirebbe più.</li>
+        <li>Pensare che il metodo crei il file: restituisce solo il <strong>nome</strong>. Il file verrà creato da un <code>FileWriter</code>, quando ci si scrive.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Informazioni sul file: getPath, getAbsolutePath, isFile</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>getPath()</code> restituisce il percorso così come l'hai scritto, <code>getAbsolutePath()</code> quello completo dalla radice del disco, <code>getName()</code> solo il nome. <code>isFile()</code> è <code>true</code> solo se il percorso punta a un file vero (non a una cartella). Teoria: <a href="java-gestione-dei-file.html#informazioni-sul-file-getpath-getabsolutepath-isfile">Informazioni sul file</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>File, cartella o niente? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nella cartella del programma c'è il file <code>voti.txt</code>, mentre <code>pagelle.txt</code> non esiste. Il percorso <code>"."</code> (un punto) indica la <strong>cartella corrente</strong>, cioè proprio la cartella del programma.</p>
+      <p>1) Senza eseguirlo, scrivi cosa stampa questo frammento.</p>
+<pre data-lang="java"><code>File[] elenco = {new File("voti.txt"), new File("pagelle.txt"), new File(".")};
+for (File f : elenco) {
+    System.out.println(f.getPath() + " -&gt; esiste: " + f.exists() + ", file: " + f.isFile());
+}</code></pre>
+      <p>2) Guardando le risposte di <code>isFile()</code>, si può capire se <code>pagelle.txt</code> è una cartella? Scrivi un metodo <code>static String tipo(File f)</code> che restituisca <code>"file"</code>, <code>"cartella"</code> oppure <code>"non esiste"</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Output</h4>
+<pre data-lang="testo"><code>voti.txt -&gt; esiste: true, file: true
+pagelle.txt -&gt; esiste: false, file: false
+. -&gt; esiste: true, file: false</code></pre>
+      <h4>Riga per riga</h4>
+      <ol>
+        <li><code>voti.txt</code> c'è ed è un file normale: <code>true</code> e <code>true</code>.</li>
+        <li><code>pagelle.txt</code> non c'è: <code>exists()</code> è <code>false</code> e anche <code>isFile()</code> è <code>false</code>, perché non si può essere un file se non si esiste. Nota che l'oggetto <code>File</code> è stato creato senza problemi: è solo un indirizzo.</li>
+        <li><code>.</code> esiste (è la cartella in cui gira il programma) ma <strong>non</strong> è un file: <code>true</code> e <code>false</code>.</li>
+      </ol>
+      <p><code>getPath()</code> stampa esattamente quello che c'è tra le virgolette, anche il punto.</p>
+      <h4>2 · Ragionamento</h4>
+      <p>No: <code>isFile()</code> dà <code>false</code> sia per <code>pagelle.txt</code> (che non esiste) sia per <code>.</code> (che è una cartella). Da solo non basta, va combinato con <code>exists()</code>:</p>
+      <ol>
+        <li>Se il percorso <strong>non esiste</strong> → <code>"non esiste"</code>. Lo controllo per primo.</li>
+        <li>Se esiste ed è un file → <code>"file"</code>.</li>
+        <li>Se esiste ma non è un file, l'unica possibilità rimasta è che sia una <code>"cartella"</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.File;
+
+public class TipoFile {
+
+    static String tipo(File f) {
+        if (!f.exists()) {
+            return "non esiste";
+        }
+        if (f.isFile()) {
+            return "file";
+        }
+        return "cartella";
+    }
+
+    public static void main(String[] args) {
+        File[] elenco = {new File("voti.txt"), new File("pagelle.txt"), new File(".")};
+        for (File f : elenco) {
+            System.out.println(f.getPath() + ": " + tipo(f));
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>voti.txt: file
+pagelle.txt: non esiste
+.: cartella</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Il <code>!</code> davanti a <code>f.exists()</code> significa "non": l'<code>if</code> entra quando il file <strong>non</strong> esiste.</li>
+        <li>Dopo ogni <code>return</code> il metodo finisce, per questo non servono gli <code>else</code>.</li>
+        <li>La classe <code>File</code> ha anche <code>isDirectory()</code>, che risponde direttamente "è una cartella?". Con <code>exists()</code> e <code>isFile()</code>, però, si arriva allo stesso risultato.</li>
+        <li><code>File[]</code> è un array di oggetti, come un array di <code>String</code>: ogni casella contiene un oggetto <code>File</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Scrivere in un file con FileWriter</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>new FileWriter("f.txt")</code> apre il file in scrittura, lo crea se non c'è e lo <strong>svuota</strong> se c'era. <code>new FileWriter("f.txt", true)</code> invece mantiene il contenuto e scrive in fondo (modalità append). <code>write</code> e <code>append</code> mettono il testo di seguito; <code>close()</code> è obbligatorio. Teoria: <a href="java-gestione-dei-file.html#scrivere-in-un-file-con-filewriter">Scrivere in un file con FileWriter</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>La lista della spesa <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Dato l'array <code>String[] prodotti = {"latte", "pane", "mele", "pasta"};</code> scrivi nel file <code>spesa.txt</code> un titolo e poi i prodotti numerati, uno per riga. A schermo stampa solo un messaggio di conferma. Se la scrittura fallisce, stampa un messaggio chiaro.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Salvati 4 prodotti in spesa.txt</code></pre>
+      <p>Contenuto atteso di <code>spesa.txt</code>:</p>
+<pre data-lang="testo"><code>LISTA DELLA SPESA
+1. latte
+2. pane
+3. mele
+4. pasta</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Per scrivere in un file serve un <code>FileWriter</code>. Se <code>spesa.txt</code> non esiste, lo crea lui.</li>
+        <li><code>write</code> non va a capo da solo (non è un <code>println</code>): alla fine di ogni riga devo aggiungere io <code>"\n"</code>.</li>
+        <li>Per numerare i prodotti da 1 mi serve l'indice, quindi uso il <code>for</code> classico e scrivo <code>(i + 1)</code>.</li>
+        <li>Finito il ciclo, <code>close()</code>: solo così il testo arriva davvero sul disco.</li>
+        <li>Il costruttore e i metodi di <code>FileWriter</code> possono lanciare <code>IOException</code>: Java mi obbliga a metterli in un <code>try-catch</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.FileWriter;
+import java.io.IOException;
+
+public class Spesa {
+    public static void main(String[] args) {
+        String[] prodotti = {"latte", "pane", "mele", "pasta"};
+
+        try {
+            FileWriter scrittore = new FileWriter("spesa.txt");
+            scrittore.write("LISTA DELLA SPESA\n");
+            for (int i = 0; i &lt; prodotti.length; i++) {
+                scrittore.write((i + 1) + ". " + prodotti[i] + "\n");
+            }
+            scrittore.close();
+            System.out.println("Salvati " + prodotti.length + " prodotti in spesa.txt");
+        } catch (IOException e) {
+            System.out.println("Impossibile scrivere spesa.txt");
+        }
+    }
+}</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Mettere <code>new FileWriter(...)</code> <strong>dentro</strong> il ciclo: a ogni giro il file verrebbe riaperto e svuotato, e alla fine conterrebbe solo <code>4. pasta</code>.</li>
+        <li>Mettere <code>close()</code> dentro il ciclo: al secondo giro si scriverebbe su un file già chiuso e <code>write</code> lancerebbe una <code>IOException</code> ("Stream closed").</li>
+        <li>Scrivere <code>(i + 1)</code> senza parentesi: <code>i + 1 + ". "</code> qui funzionerebbe (prima somma, poi unisce), ma l'abitudine di usare le parentesi evita sorprese.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Cosa contiene log.txt? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Prima dell'esecuzione il file <code>log.txt</code> contiene una sola riga: <code>zero</code>. Il codice (dentro un <code>try-catch</code>) apre il file tre volte, in modi diversi. Scrivi cosa contiene <code>log.txt</code> alla fine e spiega il ruolo di <code>true</code>, <code>write</code> e <code>append</code>.</p>
+<pre data-lang="java"><code>FileWriter a = new FileWriter("log.txt", true);
+a.write("uno\n");
+a.close();
+
+FileWriter b = new FileWriter("log.txt");
+b.write("due\n");
+b.append("tre\n");
+b.close();
+
+FileWriter c = new FileWriter("log.txt", true);
+c.append("quattro\n");
+c.write("cinque\n");
+c.close();</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: il file dopo ogni blocco</h4>
+      <p>Il trucco è guardare <strong>come viene aperto</strong> il file, non se si usa <code>write</code> o <code>append</code>. La cancellazione avviene solo nel momento in cui si apre un <code>FileWriter</code> <em>senza</em> <code>true</code>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Blocco</th><th>Come si apre</th><th>Cosa succede</th><th>Contenuto dopo</th></tr></thead>
+        <tbody>
+          <tr><td>prima</td><td>—</td><td>—</td><td>zero</td></tr>
+          <tr><td><code>a</code></td><td><code>("log.txt", true)</code></td><td>tiene il contenuto, scrive in fondo</td><td>zero, uno</td></tr>
+          <tr><td><code>b</code></td><td><code>("log.txt")</code></td><td><strong>svuota subito</strong>, poi <code>write</code> e <code>append</code> si accodano</td><td>due, tre</td></tr>
+          <tr><td><code>c</code></td><td><code>("log.txt", true)</code></td><td>tiene il contenuto; anche <code>write</code> scrive in fondo</td><td>due, tre, quattro, cinque</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Contenuto finale di log.txt</h4>
+<pre data-lang="testo"><code>due
+tre
+quattro
+cinque</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li>Nel blocco <code>b</code> il file viene svuotato <strong>all'apertura</strong>: "zero" e "uno" spariscono anche se dopo si usa <code>append</code>. <code>append</code> non può salvare quello che è già stato cancellato.</li>
+        <li>Nel blocco <code>c</code> il file è aperto con <code>true</code>: anche <code>write</code> aggiunge in fondo e non cancella niente.</li>
+        <li>Dentro uno <strong>stesso</strong> <code>FileWriter</code> aperto, <code>write</code> e <code>append</code> fanno la stessa cosa: mettono il testo dopo quello scritto prima.</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>Vuoi ricominciare da zero? <code>new FileWriter(nome)</code>. Vuoi aggiungere senza perdere niente (un diario, un registro, un log)? <code>new FileWriter(nome, true)</code>.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Trova l'errore: due salvataggi che non funzionano <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questi due frammenti compilano e partono senza errori, ma il file che producono è sbagliato. Per ognuno spiega cosa succede e correggilo.</p>
+      <p><strong>A</strong> · Il programma dice di aver salvato la classifica, ma il controllo subito dopo trova il file vuoto.</p>
+<pre data-lang="java"><code>FileWriter w = new FileWriter("classifica.txt");
+w.write("Anna 120\n");
+w.write("Bruno 95\n");
+System.out.println("Classifica salvata!");
+
+// controllo: quanti caratteri ci sono davvero nel file?
+FileReader r = new FileReader("classifica.txt");
+int quanti = 0;
+while (r.read() != -1) {
+    quanti++;
+}
+r.close();
+System.out.println("Caratteri nel file: " + quanti);</code></pre>
+      <p>Output:</p>
+<pre data-lang="testo"><code>Classifica salvata!
+Caratteri nel file: 0</code></pre>
+      <p><strong>B</strong> · Si volevano salvare i punteggi 72, 105 e 33, uno per riga.</p>
+<pre data-lang="java"><code>int[] punti = {72, 105, 33};
+FileWriter w = new FileWriter("punti.txt");
+for (int p : punti) {
+    w.write(p);
+}
+w.close();</code></pre>
+      <p>Contenuto di <code>punti.txt</code>:</p>
+<pre data-lang="testo"><code>Hi!</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · manca close()</h4>
+      <p>Il <code>FileWriter</code> non viene mai chiuso. Per essere veloce, Java non scrive subito ogni carattere sul disco: lo tiene in un <strong>buffer</strong>, una piccola memoria d'appoggio, e lo versa nel file tutto insieme. Il buffer viene svuotato nel file quando si chiama <code>close()</code>. Qui nessuno lo chiama: il file è stato <strong>creato</strong> (lo fa il costruttore), ma è rimasto vuoto, e il <code>FileReader</code> conta 0 caratteri. Anche quando il programma finisce, il testo rimasto nel buffer va perso.</p>
+      <p>Correzione: aggiungere <code>w.close();</code> subito dopo l'ultima <code>write</code>, <strong>prima</strong> di stampare "Classifica salvata!" e prima di rileggere il file. Con la correzione il controllo stampa <code>Caratteri nel file: 18</code> (9 caratteri per riga, contando l'a capo).</p>
+      <h4>B · write con un int</h4>
+      <p>Il ragionamento da fare è: <em>che tipo sto passando a <code>write</code>?</em></p>
+      <ol>
+        <li><code>p</code> è un <code>int</code>, non una <code>String</code>.</li>
+        <li><code>write(int)</code> esiste, ma non scrive il numero: scrive il <strong>carattere</strong> che ha quel codice. È il contrario di <code>(char) data</code> che si usa con <code>read()</code>.</li>
+        <li>72 è il codice di <code>H</code>, 105 di <code>i</code>, 33 di <code>!</code>: nel file finisce la parola <code>Hi!</code>, tutta attaccata perché nessuno ha scritto <code>"\n"</code>.</li>
+      </ol>
+      <p>Correzione: trasformare il numero in testo prima di scriverlo, con <code>Integer.toString(p)</code> (oppure <code>"" + p</code>), e aggiungere l'a capo:</p>
+<pre data-lang="java"><code>int[] punti = {72, 105, 33};
+FileWriter w = new FileWriter("punti.txt");
+for (int p : punti) {
+    w.write(Integer.toString(p) + "\n");
+}
+w.close();</code></pre>
+      <p>Contenuto di <code>punti.txt</code> dopo la correzione:</p>
+<pre data-lang="testo"><code>72
+105
+33</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Niente <code>close()</code>, niente dati: il file può restare vuoto o a metà.</li>
+        <li>A <code>write</code> passa sempre una <code>String</code>. Un <code>int</code> viene preso come <strong>codice di un carattere</strong>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Leggere un file con FileReader</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>read()</code> legge <strong>un carattere alla volta</strong> e lo restituisce come <code>int</code> (il suo codice); a fine file restituisce <code>-1</code>. Per vederlo come lettera serve il cast <code>(char)</code>. Schema: leggo prima del ciclo, <code>while (data != -1)</code>, uso il carattere, leggo il successivo alla fine del giro. Teoria: <a href="java-gestione-dei-file.html#leggere-un-file-con-filereader">Leggere un file con FileReader</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Caratteri, righe e vocali <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il file <code>poesia.txt</code> contiene la poesia più corta di Ungaretti, su due righe (ognuna termina con un a capo):</p>
+<pre data-lang="testo"><code>M'illumino
+d'immenso</code></pre>
+      <p>Leggi il file con <code>FileReader</code> e conta quanti caratteri contiene in tutto, quante righe e quante vocali minuscole. Gestisci il caso in cui il file non esiste.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Caratteri: 21
+Righe: 2
+Vocali: 7</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Lo schema di lettura è sempre lo stesso: <code>read()</code> prima del ciclo, <code>while (data != -1)</code>, nuovo <code>read()</code> come <strong>ultima</strong> istruzione del giro.</li>
+        <li>A ogni giro converto <code>data</code> in <code>char</code> e lo salvo in <code>c</code>: così i confronti si leggono meglio (<code>c == 'a'</code> invece di <code>data == 97</code>).</li>
+        <li>Tre contatori: <code>caratteri</code> aumenta a ogni giro; <code>righe</code> solo quando trovo un a capo <code>'\n'</code>; <code>vocali</code> quando il carattere è una delle cinque vocali.</li>
+        <li>Due <code>catch</code>: prima <code>FileNotFoundException</code> (il caso particolare: il file non c'è), poi <code>IOException</code> (qualunque altro problema).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Contatore {
+    public static void main(String[] args) {
+        int caratteri = 0;
+        int righe = 0;
+        int vocali = 0;
+
+        try {
+            FileReader lettore = new FileReader("poesia.txt");
+            int data = lettore.read();
+            while (data != -1) {
+                char c = (char) data;
+                caratteri++;
+                if (c == '\n') {
+                    righe++;
+                }
+                if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                    vocali++;
+                }
+                data = lettore.read();
+            }
+            lettore.close();
+
+            System.out.println("Caratteri: " + caratteri);
+            System.out.println("Righe: " + righe);
+            System.out.println("Vocali: " + vocali);
+        } catch (FileNotFoundException e) {
+            System.out.println("Il file poesia.txt non esiste");
+        } catch (IOException e) {
+            System.out.println("Errore durante la lettura");
+        }
+    }
+}</code></pre>
+      <h4>Controlliamo i conti</h4>
+      <ul>
+        <li><strong>Caratteri</strong>: <code>M'illumino</code> sono 10 caratteri (l'apostrofo conta!) più l'a capo = 11; <code>d'immenso</code> sono 9 più l'a capo = 10. Totale 21: anche <code>'\n'</code> è un carattere del file.</li>
+        <li><strong>Righe</strong>: due a capo, quindi 2.</li>
+        <li><strong>Vocali</strong>: i, u, i, o in "illumino" e i, e, o in "immenso": 7.</li>
+      </ul>
+      <h4>Da notare</h4>
+      <p>I caratteri si confrontano con <code>==</code> e gli apici singoli: <code>'a'</code> è un <code>char</code>, <code>"a"</code> sarebbe una <code>String</code>. La <code>M</code> maiuscola non è contata come vocale perché è una consonante, ma anche una <code>A</code> maiuscola non verrebbe contata: <code>'A'</code> e <code>'a'</code> sono caratteri diversi.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Il ciclo che salta le lettere <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il file <code>parola.txt</code> contiene <code>PIZZA!</code> (6 caratteri, senza a capo). Uno studente ha scritto questo ciclo "più corto" per stamparlo. Cosa stampa davvero? Perché? Correggilo.</p>
+<pre data-lang="java"><code>FileReader r = new FileReader("parola.txt");
+while (r.read() != -1) {
+    System.out.print((char) r.read());
+}
+r.close();</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>IZ!</code></pre>
+      <h4>Ragionamento: contare le chiamate a read()</h4>
+      <p>Ogni chiamata a <code>read()</code> <strong>consuma</strong> un carattere: la volta dopo restituisce il successivo. Qui in ogni giro ci sono <strong>due</strong> chiamate: una nella condizione del <code>while</code> (il carattere viene confrontato con -1 e poi buttato via) e una nella stampa.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Giro</th><th><code>read()</code> nella condizione</th><th><code>read()</code> nella stampa</th><th>Stampato</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>P (buttata)</td><td>I</td><td>I</td></tr>
+          <tr><td>2</td><td>Z (buttata)</td><td>Z</td><td>Z</td></tr>
+          <tr><td>3</td><td>A (buttata)</td><td>!</td><td>!</td></tr>
+          <tr><td>—</td><td>-1 → esce</td><td></td><td></td></tr>
+        </tbody>
+      </table></div>
+      <p>Si stampa un carattere sì e uno no, a partire dal secondo: <code>IZ!</code>. Con un numero <strong>dispari</strong> di caratteri andrebbe anche peggio: all'ultimo giro la stampa riceverebbe -1 e <code>(char) -1</code> stamperebbe un simbolo strano.</p>
+      <h4>Correzione</h4>
+      <p>Il carattere letto va <strong>salvato in una variabile</strong>, così lo si può sia controllare sia stampare con una sola lettura:</p>
+<pre data-lang="java"><code>FileReader r = new FileReader("parola.txt");
+int data = r.read();
+while (data != -1) {
+    System.out.print((char) data);
+    data = r.read();
+}
+r.close();</code></pre>
+<pre data-lang="testo"><code>PIZZA!</code></pre>
+      <div class="callout tip"><span class="callout-title">Regola</span>Un solo <code>read()</code> per carattere: il risultato va in una variabile (<code>data</code>), e tutto il resto lavora su quella variabile.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Leggere riga per riga <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il file <code>nomi.txt</code> contiene un nome per riga. Attenzione: l'ultima riga <strong>non</strong> termina con un a capo.</p>
+<pre data-lang="testo"><code>Anna
+Bruno
+Carlotta
+Dario</code></pre>
+      <p><code>FileReader</code> legge solo un carattere alla volta, ma a noi servono le <strong>righe</strong>. Scrivi un metodo</p>
+<pre data-lang="java"><code>static int leggiRighe(String nomeFile, String[] righe)</code></pre>
+      <p>che mette ogni riga del file in una casella dell'array <code>righe</code> e restituisce quante righe ha letto. Nel <code>main</code> stampa i nomi numerati e il nome più lungo.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>1) Anna
+2) Bruno
+3) Carlotta
+4) Dario
+Righe lette: 4
+Nome più lungo: Carlotta</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Una riga è "tutti i caratteri fino al prossimo <code>'\n'</code>". Quindi tengo una <code>String riga</code> in cui <strong>accumulo</strong> i caratteri letti: <code>riga = riga + c</code>, come un accumulatore per le somme, ma con il testo.</li>
+        <li>Quando leggo <code>'\n'</code> la riga è completa: la salvo nella casella <code>righe[n]</code>, aumento <code>n</code> e riparto da una riga vuota <code>""</code>. L'a capo <strong>non</strong> va aggiunto alla riga.</li>
+        <li>Quando <code>read()</code> restituisce -1 il ciclo finisce. Ma se l'ultima riga non ha l'a capo (come "Dario"), i suoi caratteri sono ancora in <code>riga</code> e nessuno li ha salvati: dopo il ciclo, se <code>riga</code> non è vuota, la salvo.</li>
+        <li>Il metodo riceve l'array e lo riempie: l'array è passato per <strong>riferimento</strong>, quindi le modifiche si vedono nel <code>main</code>. Il valore restituito dice quante caselle sono state usate (le altre restano <code>null</code>).</li>
+        <li>Il nome più lungo si trova come un massimo: parto da <code>""</code> (lunghezza 0) e lo sostituisco quando trovo un nome con più caratteri.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class RigaPerRiga {
+
+    // legge il file e mette ogni riga in una casella di righe; restituisce quante righe ha letto
+    static int leggiRighe(String nomeFile, String[] righe) {
+        int n = 0;
+        String riga = "";
+        try {
+            FileReader lettore = new FileReader(nomeFile);
+            int data = lettore.read();
+            while (data != -1) {
+                char c = (char) data;
+                if (c == '\n') {
+                    righe[n] = riga;      // riga finita: la salvo
+                    n++;
+                    riga = "";            // e ne comincio una nuova
+                } else if (c != '\r') {
+                    riga = riga + c;      // aggiungo il carattere alla riga
+                }
+                data = lettore.read();
+            }
+            lettore.close();
+            if (riga.length() &gt; 0) {      // ultima riga senza a capo
+                righe[n] = riga;
+                n++;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Non trovo " + nomeFile);
+        } catch (IOException e) {
+            System.out.println("Errore durante la lettura di " + nomeFile);
+        }
+        return n;
+    }
+
+    public static void main(String[] args) {
+        String[] nomi = new String[100];
+        int quanti = leggiRighe("nomi.txt", nomi);
+
+        String piuLungo = "";
+        for (int i = 0; i &lt; quanti; i++) {
+            System.out.println((i + 1) + ") " + nomi[i]);
+            if (nomi[i].length() &gt; piuLungo.length()) {
+                piuLungo = nomi[i];
+            }
+        }
+        System.out.println("Righe lette: " + quanti);
+        System.out.println("Nome più lungo: " + piuLungo);
+    }
+}</code></pre>
+      <h4>Perché c'è quel <code>'\r'</code></h4>
+      <p>I file di testo creati con il Blocco note di Windows terminano ogni riga con <strong>due</strong> caratteri: <code>'\r'</code> e <code>'\n'</code>. Su Mac e Linux c'è solo <code>'\n'</code>. Ignorando <code>'\r'</code> il metodo funziona con entrambi; senza quel controllo, su Windows ogni nome avrebbe un carattere invisibile in fondo e "Anna" sarebbe lunga 5 invece di 4.</p>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Dimenticare il controllo dopo il ciclo: si perderebbe "Dario" e si leggerebbero solo 3 righe.</li>
+        <li>Nel <code>main</code> ciclare fino a <code>nomi.length</code> (100) invece che fino a <code>quanti</code>: dalla casella 4 in poi ci sono <code>null</code> e <code>nomi[i].length()</code> lancerebbe una <code>NullPointerException</code>.</li>
+        <li>Usare <code>riga = riga + data</code> invece di <code>riga + c</code>: si attaccherebbero i <strong>codici</strong> dei caratteri ("6511011097" invece di "Anna").</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Eliminare un file con delete</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>delete()</code> è un metodo della classe <code>File</code>: elimina il file dal disco e restituisce <code>true</code> se ci riesce, <code>false</code> altrimenti. Non lancia eccezioni, e il file non va nel cestino: sparisce per sempre. Teoria: <a href="java-gestione-dei-file.html#eliminare-un-file-con-delete">Eliminare un file con delete</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>Eliminare due volte <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nella cartella del programma esiste il file <code>temp.txt</code>. Scrivi cosa stampa ogni riga di questo frammento e spiega l'ultima.</p>
+<pre data-lang="java"><code>File f = new File("temp.txt");
+System.out.println(f.exists());
+System.out.println(f.delete());
+System.out.println(f.exists());
+System.out.println(f.delete());
+System.out.println(f.getName());</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>true
+true
+false
+false
+temp.txt</code></pre>
+      <h4>Riga per riga</h4>
+      <ol>
+        <li>Il file c'è: <code>true</code>.</li>
+        <li>Il primo <code>delete()</code> lo elimina e lo conferma restituendo <code>true</code>.</li>
+        <li>Ora il file non c'è più: <code>false</code>.</li>
+        <li>Il secondo <code>delete()</code> non ha niente da eliminare: restituisce <code>false</code>. Nessun errore, nessuna eccezione: solo una risposta "non ci sono riuscito".</li>
+        <li><code>getName()</code> funziona ancora e stampa <code>temp.txt</code>.</li>
+      </ol>
+      <h4>Perché l'ultima riga funziona</h4>
+      <p><code>delete()</code> cancella il file dal <strong>disco</strong>, non l'oggetto <code>f</code>. L'oggetto è il "foglietto con l'indirizzo": resta in memoria e conosce ancora il nome, anche se a quell'indirizzo non c'è più nessuno. Per questo, prima di usare un file dopo averlo eliminato, si ricontrolla con <code>exists()</code>.</p>
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>Il valore restituito da <code>delete()</code> va controllato: è l'unico modo per sapere se il file è stato eliminato davvero.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>Spostare un file "a mano" <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Java non ha (nel nostro capitolo) un comando per spostare un file, ma possiamo costruirlo: <strong>copiare</strong> il contenuto in un nuovo file e poi <strong>eliminare</strong> l'originale. Scrivi il metodo</p>
+<pre data-lang="java"><code>static boolean sposta(String da, String a)</code></pre>
+      <p>che sposta il file <code>da</code> nel file <code>a</code> e restituisce <code>true</code> se ci riesce. Regole di sicurezza:</p>
+      <ul>
+        <li>se <code>da</code> non esiste, non fa niente;</li>
+        <li>se <code>a</code> esiste già, si ferma (non deve sovrascrivere niente);</li>
+        <li>l'originale va eliminato <strong>solo</strong> se la copia è riuscita.</li>
+      </ul>
+      <p>Nel <code>main</code> chiama due volte <code>sposta("bozza.txt", "tema.txt")</code>. All'inizio c'è solo <code>bozza.txt</code>, con questo testo (che dopo lo spostamento dovrà ritrovarsi identico in <code>tema.txt</code>):</p>
+<pre data-lang="testo"><code>Tema di italiano
+La mia estate al mare.</code></pre>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Copiati 40 caratteri in tema.txt
+bozza.txt eliminato
+Primo tentativo: true
+Non c'è niente da spostare: bozza.txt non esiste
+Secondo tentativo: false
+bozza.txt esiste? false</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Controlli prima di tutto</strong>, con la classe <code>File</code>: <code>exists()</code> sull'origine (se non c'è, mi fermo) e sulla destinazione (se c'è, mi fermo per non cancellarla: <code>new FileWriter</code> la svuoterebbe).</li>
+        <li><strong>Copia</strong>: apro un <code>FileReader</code> sull'origine e un <code>FileWriter</code> sulla destinazione. Lo schema di lettura è il solito; per ogni carattere letto lo scrivo. Uso <code>write((char) data)</code>: il cast rende chiaro che sto scrivendo un carattere (e dall'esercizio sui punteggi sappiamo che <code>write</code> con un numero scrive proprio il carattere con quel codice).</li>
+        <li><strong>Chiudo entrambi</strong>: senza <code>close()</code> sullo scrittore la copia resterebbe nel buffer, e senza <code>close()</code> sul lettore su alcuni sistemi l'originale risulterebbe "occupato" e non si potrebbe eliminare.</li>
+        <li><strong>Elimino</strong> solo dopo il <code>try-catch</code>: se qualcosa è andato storto, il <code>catch</code> fa <code>return false</code> e non si arriva mai al <code>delete()</code>. Così nel caso peggiore ho due copie, mai zero.</li>
+        <li>Controllo il valore restituito da <code>delete()</code> per dire la verità all'utente.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Sposta {
+
+    static boolean sposta(String da, String a) {
+        File origine = new File(da);
+        File destinazione = new File(a);
+
+        if (!origine.exists()) {
+            System.out.println("Non c'è niente da spostare: " + da + " non esiste");
+            return false;
+        }
+        if (destinazione.exists()) {
+            System.out.println("Mi fermo: " + a + " esiste già e non voglio sovrascriverlo");
+            return false;
+        }
+
+        try {
+            // 1) copia carattere per carattere
+            FileReader lettore = new FileReader(origine);
+            FileWriter scrittore = new FileWriter(destinazione);
+            int data = lettore.read();
+            int copiati = 0;
+            while (data != -1) {
+                scrittore.write((char) data);
+                copiati++;
+                data = lettore.read();
+            }
+            lettore.close();
+            scrittore.close();
+            System.out.println("Copiati " + copiati + " caratteri in " + a);
+        } catch (FileNotFoundException e) {
+            System.out.println("File non trovato durante la copia");
+            return false;
+        } catch (IOException e) {
+            System.out.println("Copia non riuscita: l'originale resta dov'è");
+            return false;
+        }
+
+        // 2) solo se la copia è andata bene, elimino l'originale
+        if (origine.delete()) {
+            System.out.println(da + " eliminato");
+            return true;
+        } else {
+            System.out.println("Copia fatta, ma non riesco a eliminare " + da);
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Primo tentativo: " + sposta("bozza.txt", "tema.txt"));
+        System.out.println("Secondo tentativo: " + sposta("bozza.txt", "tema.txt"));
+        System.out.println("bozza.txt esiste? " + new File("bozza.txt").exists());
+    }
+}</code></pre>
+      <h4>Come leggere l'output</h4>
+      <ul>
+        <li>Primo tentativo: la bozza esiste, il tema no. Copia 40 caratteri (16 + 1 a capo della prima riga, 22 + 1 della seconda), chiude, elimina: <code>true</code>.</li>
+        <li>Secondo tentativo: <code>bozza.txt</code> non esiste più, quindi il primo controllo ferma tutto: <code>false</code>.</li>
+        <li>Il <code>main</code> lo conferma: <code>bozza.txt</code> non esiste. E <code>tema.txt</code> contiene esattamente il testo mostrato nella consegna: il testo mostrato lì è proprio quello letto da <code>tema.txt</code> dopo l'esecuzione.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Eliminare prima di copiare, o dentro il <code>try</code> prima delle <code>close()</code>: se la copia fallisce a metà il testo è perso per sempre (<code>delete()</code> non usa il cestino).</li>
+        <li>Saltare il controllo sulla destinazione: <code>new FileWriter("tema.txt")</code> svuoterebbe un tema già scritto.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Gestione delle eccezioni: try-catch</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Le operazioni di <code>FileWriter</code> e <code>FileReader</code> possono fallire e Java obbliga a gestirle con <code>try-catch</code>. Se una riga del <code>try</code> fallisce, le successive vengono saltate e si va al <code>catch</code> giusto. Con più <code>catch</code> va prima <code>FileNotFoundException</code> (caso particolare) e poi <code>IOException</code> (caso generale). Il <strong>try-with-resources</strong> chiude il file da solo. Teoria: <a href="java-gestione-dei-file.html#gestione-delle-eccezioni-try-catch">Gestione delle eccezioni: try-catch</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>Dove salta il programma? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il file <code>fantasma.txt</code> <strong>non</strong> esiste. Scrivi quali righe numerate vengono stampate, nell'ordine. Poi rispondi: cosa cambierebbe se il file esistesse?</p>
+<pre data-lang="java"><code>System.out.println("1. inizio");
+try {
+    System.out.println("2. apro il file");
+    FileReader r = new FileReader("fantasma.txt");
+    System.out.println("3. file aperto");
+    r.close();
+    System.out.println("4. file chiuso");
+} catch (FileNotFoundException e) {
+    System.out.println("5. il file non c'è");
+} catch (IOException e) {
+    System.out.println("6. errore di lettura");
+}
+System.out.println("7. fine");</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1. inizio
+2. apro il file
+5. il file non c'è
+7. fine</code></pre>
+      <h4>Ragionamento, seguendo il programma</h4>
+      <ol>
+        <li>La riga 1 è fuori dal <code>try</code>: viene stampata sempre.</li>
+        <li>Si entra nel <code>try</code>: la riga 2 viene stampata.</li>
+        <li><code>new FileReader("fantasma.txt")</code> non trova il file e lancia una <code>FileNotFoundException</code>. Da qui il resto del <code>try</code> (righe 3 e 4) viene <strong>saltato</strong>.</li>
+        <li>Java cerca il primo <code>catch</code> adatto: è <code>FileNotFoundException</code>, quindi stampa la 5. Il secondo <code>catch</code> viene ignorato: se ne esegue al massimo uno.</li>
+        <li>Finito il <code>catch</code>, il programma continua normalmente dopo il blocco: riga 7.</li>
+      </ol>
+      <h4>Se il file esistesse</h4>
+      <p>Nessuna eccezione: il <code>try</code> verrebbe eseguito tutto e i <code>catch</code> saltati. L'output sarebbe 1, 2, 3, 4, 7.</p>
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>Il programma non "crasha": grazie al <code>catch</code> arriva fino in fondo. Senza <code>try-catch</code> questo codice non compilerebbe nemmeno (vedi il prossimo esercizio).</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>Trova l'errore: i catch <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nessuno dei due programmi compila. Trova l'errore, spiega cosa dice il compilatore e correggilo.</p>
+      <p><strong>A</strong></p>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class OrdineCatch {
+    public static void main(String[] args) {
+        try {
+            FileReader r = new FileReader("dati.txt");
+            System.out.println((char) r.read());
+            r.close();
+        } catch (IOException e) {
+            System.out.println("Errore di lettura");
+        } catch (FileNotFoundException e) {
+            System.out.println("Il file non esiste");
+        }
+    }
+}</code></pre>
+      <p><strong>B</strong></p>
+<pre data-lang="java"><code>import java.io.FileWriter;
+
+public class SenzaTry {
+    public static void main(String[] args) {
+        FileWriter w = new FileWriter("note.txt");
+        w.write("Ricordati il compito\n");
+        w.close();
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · i catch sono nell'ordine sbagliato</h4>
+<pre data-lang="testo"><code>riga 13: error: exception FileNotFoundException has already been caught</code></pre>
+      <p>"has already been caught" significa "è già stata catturata". <code>FileNotFoundException</code> è un <strong>caso particolare</strong> di <code>IOException</code>: ogni "file non trovato" è anche un "errore di input/output". Il primo <code>catch</code> quindi prende già tutto, e il secondo non potrebbe mai essere raggiunto. Java considera codice irraggiungibile un errore.</p>
+      <p>Correzione: scambiare i due <code>catch</code>, prima il più specifico e poi il più generale.</p>
+<pre data-lang="java"><code>} catch (FileNotFoundException e) {
+    System.out.println("Il file non esiste");
+} catch (IOException e) {
+    System.out.println("Errore di lettura");
+}</code></pre>
+      <p>Un trucco per ricordarlo: è come un filtro con i buchi dal più piccolo al più grande. Se metti per primo il buco grande, passa tutto da lì.</p>
+      <h4>B · manca il try-catch</h4>
+<pre data-lang="testo"><code>riga 5: error: unreported exception IOException; must be caught or declared to be thrown</code></pre>
+      <p>"unreported exception IOException; must be caught or declared to be thrown" vuol dire: "questa riga può lanciare una <code>IOException</code> e tu non l'hai gestita: devi catturarla (<code>catch</code>) oppure dichiarare che il metodo la lancia" (con <code>throws</code>, che vedrai nel capitolo <a href="java-eccezioni.html">Java: eccezioni</a>). Il compilatore segnala la prima riga a rischio, ma anche <code>write</code> e <code>close</code> lo sono.</p>
+      <p>Correzione: mettere le tre righe in un <code>try</code>.</p>
+<pre data-lang="java"><code>try {
+    FileWriter w = new FileWriter("note.txt");
+    w.write("Ricordati il compito\n");
+    w.close();
+} catch (IOException e) {
+    System.out.println("Impossibile salvare le note");
+}</code></pre>
+      <p>(E aggiungere <code>import java.io.IOException;</code> in cima.)</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>Due metodi sicuri con try-with-resources <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi due metodi che non fanno mai fermare il programma e chiudono sempre il file, usando il <strong>try-with-resources</strong>:</p>
+      <ul>
+        <li><code>static boolean salva(String nome, String testo)</code>: scrive <code>testo</code> nel file e restituisce <code>true</code>; se non ci riesce stampa il motivo e restituisce <code>false</code>;</li>
+        <li><code>static int contaCaratteri(String nome)</code>: restituisce quanti caratteri contiene il file, <code>-1</code> se il file non esiste, <code>-2</code> per un altro errore di lettura.</li>
+      </ul>
+      <p>Provali anche con un file dentro una cartella che non esiste.</p>
+      <p>Output atteso (su Linux o Mac; su Windows il testo tra parentesi è in italiano, vedi sotto):</p>
+<pre data-lang="testo"><code>true
+Non riesco a salvare: cartella-che-non-esiste/promemoria.txt (No such file or directory)
+false
+17
+-1</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Nel try-with-resources il <code>FileWriter</code> si dichiara <strong>tra parentesi</strong> subito dopo <code>try</code>. Quando il blocco finisce, in qualunque modo (normalmente, con un <code>return</code> o con un'eccezione), Java chiama <code>close()</code> da solo.</li>
+        <li>Per questo posso scrivere <code>return true;</code> dentro il <code>try</code> senza preoccuparmi: il file viene chiuso comunque, e il testo arriva sul disco.</li>
+        <li>Se il file non si può creare, <code>new FileWriter</code> lancia un'eccezione e si va nel <code>catch</code>, che stampa il motivo e restituisce <code>false</code>. Chi chiama il metodo decide cosa fare in base al <code>boolean</code>.</li>
+        <li>In <code>contaCaratteri</code> i due tipi di errore danno due risposte diverse, quindi servono due <code>catch</code>: prima <code>FileNotFoundException</code>, poi <code>IOException</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class SalvaSicuro {
+
+    static boolean salva(String nome, String testo) {
+        try (FileWriter w = new FileWriter(nome)) {
+            w.write(testo);
+            return true;
+        } catch (IOException e) {
+            System.out.println("Non riesco a salvare: " + e.getMessage());
+            return false;
+        }
+    }
+
+    static int contaCaratteri(String nome) {
+        try (FileReader r = new FileReader(nome)) {
+            int n = 0;
+            while (r.read() != -1) {
+                n++;
+            }
+            return n;
+        } catch (FileNotFoundException e) {
+            return -1;
+        } catch (IOException e) {
+            return -2;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(salva("promemoria.txt", "Ripassare i file\n"));
+        System.out.println(salva("cartella-che-non-esiste/promemoria.txt", "Ciao\n"));
+        System.out.println(contaCaratteri("promemoria.txt"));
+        System.out.println(contaCaratteri("sparito.txt"));
+    }
+}</code></pre>
+      <h4>Come leggere l'output</h4>
+      <ul>
+        <li><code>true</code>: <code>promemoria.txt</code> è stato creato e chiuso automaticamente.</li>
+        <li>La cartella <code>cartella-che-non-esiste</code> non esiste e <code>FileWriter</code> crea i file, <strong>non</strong> le cartelle: lancia una <code>FileNotFoundException</code> (che è una <code>IOException</code>, quindi la prende l'unico <code>catch</code>). <code>e.getMessage()</code> restituisce la descrizione dell'errore: il percorso e, tra parentesi, il motivo dato dal sistema operativo ("No such file or directory" = file o cartella inesistente). Su un Windows in italiano tra parentesi leggeresti qualcosa come "Impossibile trovare il percorso specificato". Poi il metodo restituisce <code>false</code>.</li>
+        <li><code>17</code>: "Ripassare i file" sono 16 caratteri più l'a capo.</li>
+        <li><code>-1</code>: <code>sparito.txt</code> non esiste.</li>
+      </ul>
+      <h4>Da notare</h4>
+      <ul>
+        <li><code>FileWriter</code> può lanciare <code>FileNotFoundException</code> anche se "crea il file": succede quando non può crearlo (cartella inesistente, permessi mancanti).</li>
+        <li>Qui il messaggio nel <code>catch</code> è chiaro per l'utente, senza <code>printStackTrace()</code>, e il <code>catch</code> non è mai vuoto.</li>
+        <li>Confronta con la versione "classica": senza try-with-resources, per essere sicuri di chiudere il file anche in caso di errore servirebbe molto più codice.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: il registro dei voti su file</h2>
+  <p>Questo esercizio mette insieme <strong>tutto il capitolo</strong>: classe <code>File</code> e percorsi, <code>exists</code>, <code>getName</code>, <code>getPath</code>, <code>getAbsolutePath</code>, <code>isFile</code>, <code>FileWriter</code> con <code>write</code>, <code>append</code>, <code>close</code> e la modalità append, <code>FileReader</code> con <code>read</code> fino a -1, <code>delete</code>, <code>try-catch</code> con l'ordine giusto dei <code>catch</code> e il try-with-resources. Usa anche array, <code>parseInt</code> e metodi dei capitoli precedenti. È lungo come una verifica: fallo un metodo alla volta e prova ogni pezzo prima di andare avanti.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">17</span>Il registro dei voti su file <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nella cartella del programma ci sono due file. <code>voti.txt</code> è il registro: una riga per voto, nel formato <code>materia;voto</code>, e ogni riga termina con un a capo.</p>
+<pre data-lang="testo"><code>Italiano;7
+Matematica;5
+Inglese;otto
+Storia;8</code></pre>
+      <p><code>scarti.txt</code> è rimasto da una vecchia esecuzione e contiene <code>Fisica;dieci</code>. Scrivi un programma che, <strong>un metodo per ogni compito</strong>:</p>
+      <ol>
+        <li>controlli che <code>voti.txt</code> esista e sia un file, stampando nome e percorso; se non c'è, stampi dove è stato cercato e si fermi;</li>
+        <li>elimini il vecchio <code>scarti.txt</code>, se esiste;</li>
+        <li>aggiunga in fondo al registro, <strong>senza cancellare</strong> niente, i voti <code>Informatica;9</code> e <code>Matematica;7</code>;</li>
+        <li>legga il registro con <code>FileReader</code>, separando materia e voto di ogni riga;</li>
+        <li>converta i voti con <code>Integer.parseInt</code>: le righe con un voto non numerico vanno segnalate e aggiunte a <code>scarti.txt</code>;</li>
+        <li>scriva <code>pagella.txt</code> (con il try-with-resources) con i voti validi, la media e il voto migliore, e poi la stampi a schermo rileggendola dal file.</li>
+      </ol>
+      <p>Gestisci tutti gli errori con <code>try-catch</code>, con messaggi chiari.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Registro: voti.txt (percorso voti.txt)
+  trovato
+Eliminato il vecchio scarti.txt
+Righe lette: 6
+Voto non valido: Inglese;otto
+Voti validi: 5, scartati: 1
+--- pagella.txt ---
+PAGELLA
+Italiano: 7
+Matematica: 5
+Storia: 8
+Informatica: 9
+Matematica: 7
+Media: 7.2
+Voto migliore: 9 (Informatica)</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <p>Elenco i compiti e do a ognuno un metodo. Per ogni metodo decido cosa riceve, cosa restituisce e quale parte del capitolo usa.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Metodo</th><th>Riceve</th><th>Restituisce</th><th>Argomento del capitolo</th></tr></thead>
+        <tbody>
+          <tr><td><code>controlla</code></td><td><code>File</code></td><td><code>boolean</code></td><td><code>getName</code>, <code>getPath</code>, <code>exists</code>, <code>getAbsolutePath</code>, <code>isFile</code></td></tr>
+          <tr><td><code>eliminaVecchio</code></td><td><code>File</code></td><td>niente</td><td><code>exists</code> + <code>delete</code> con controllo del risultato</td></tr>
+          <tr><td><code>aggiungiRiga</code></td><td><code>File</code>, <code>String</code></td><td>niente</td><td><code>FileWriter(f, true)</code>, <code>write</code>, <code>close</code>, <code>catch (IOException)</code></td></tr>
+          <tr><td><code>leggiRegistro</code></td><td><code>File</code>, due <code>String[]</code></td><td><code>int</code> (righe, -1 se errore)</td><td><code>FileReader</code>, <code>read</code>, -1, <code>(char)</code>, due <code>catch</code> in ordine</td></tr>
+          <tr><td><code>media</code>, <code>posizioneMassimo</code></td><td><code>int[]</code>, quanti</td><td><code>double</code> / <code>int</code></td><td>array e metodi (capitolo precedente)</td></tr>
+          <tr><td><code>scriviPagella</code></td><td><code>File</code>, array, quanti</td><td><code>boolean</code></td><td>try-with-resources, <code>write</code> e <code>append</code></td></tr>
+          <tr><td><code>stampaFile</code></td><td><code>File</code></td><td>niente</td><td>lettura con try-with-resources</td></tr>
+        </tbody>
+      </table></div>
+      <p>Nel <code>main</code> creo una volta sola i tre oggetti <code>File</code> (registro, scarti, pagella) e li passo ai metodi: così il nome di ogni file è scritto in un solo punto.</p>
+      <h4>Passo 2 · Controllare il registro</h4>
+      <p><code>controlla</code> stampa nome e percorso, poi fa due controlli in ordine: se il file non esiste mostra <code>getAbsolutePath()</code> (il posto in cui Java ha cercato, utilissimo per capire l'errore) e restituisce <code>false</code>; se esiste ma è una cartella, restituisce <code>false</code>. Nel <code>main</code>, se la risposta è <code>false</code>, un <code>return</code> ferma il programma: senza registro non ha senso continuare. In questa esecuzione il file c'è, quindi il percorso assoluto non viene stampato.</p>
+      <h4>Passo 3 · Eliminare il vecchio file degli scarti</h4>
+      <p>Gli scarti verranno scritti in <strong>modalità append</strong> (uno alla volta, man mano che li trovo). Se non eliminassi il file della volta prima, <code>Fisica;dieci</code> resterebbe lì mescolato agli scarti nuovi. Prima controllo con <code>exists()</code>, poi controllo il <code>boolean</code> restituito da <code>delete()</code>.</p>
+      <h4>Passo 4 · Aggiungere i voti senza cancellare</h4>
+      <p><code>aggiungiRiga</code> apre il file con <code>new FileWriter(f, true)</code>: il <code>true</code> è fondamentale, senza il registro verrebbe svuotato e resterebbe solo l'ultimo voto. Aggiungo io <code>"\n"</code> in fondo, così ogni voto sta sulla sua riga. Lo stesso metodo serve anche per <code>scarti.txt</code>: un metodo generico si riusa.</p>
+      <h4>Passo 5 · Leggere e separare materia e voto</h4>
+      <p>Leggo carattere per carattere con lo schema solito. Ogni carattere finisce in una di due stringhe: <code>materia</code> finché non incontro il <code>';'</code>, <code>voto</code> dopo. Una variabile <code>boolean dopoPuntoEVirgola</code> ricorda in quale parte della riga mi trovo. Il <code>';'</code> non va salvato da nessuna parte: serve solo a cambiare parte. Quando arriva <code>'\n'</code> la riga è completa: salvo le due stringhe nelle caselle <code>n</code> degli array, aumento <code>n</code> e rimetto tutto come all'inizio. <code>'\r'</code> viene ignorato, per i file scritti su Windows.</p>
+      <p>I due <code>catch</code> sono nell'ordine giusto (prima <code>FileNotFoundException</code>), ed entrambi restituiscono <code>-1</code>: un valore impossibile come numero di righe, che il <code>main</code> riconosce come "errore".</p>
+      <h4>Passo 6 · Convertire i voti</h4>
+      <p>Il registro ora ha 6 righe. Per ognuna provo <code>Integer.parseInt</code>. Se funziona, copio materia e voto nella prima casella libera degli array "buoni" (indice <code>validi</code>, che è diverso da <code>i</code>: dopo uno scarto i due indici non coincidono più). Se il testo non è un numero (<code>"otto"</code>), <code>parseInt</code> lancia <code>NumberFormatException</code>: il <code>try-catch</code> è <strong>dentro</strong> il ciclo, così si salta solo quella riga, che viene segnalata e aggiunta a <code>scarti.txt</code>.</p>
+      <h4>Passo 7 · Scrivere e rileggere la pagella</h4>
+      <p><code>scriviPagella</code> usa il try-with-resources: il <code>FileWriter</code> viene chiuso da solo, anche con il <code>return true</code> dentro il <code>try</code>. È aperto <strong>senza</strong> <code>true</code>, quindi ogni esecuzione riscrive la pagella da zero, ed è giusto così. <code>media</code> e <code>posizioneMassimo</code> lavorano solo sulle prime <code>n</code> caselle. Media: (7 + 5 + 8 + 9 + 7) / 5 = 36 / 5 = 7.2. Il voto migliore si cerca per <strong>posizione</strong>, così con lo stesso indice recupero anche la materia (array paralleli). Infine <code>stampaFile</code> rilegge <code>pagella.txt</code>: quello che vedi dopo la riga <code>--- pagella.txt ---</code> è il contenuto vero del file.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class RegistroFile {
+
+    // ---------- 1. controllo: classe File ----------
+    static boolean controlla(File f) {
+        System.out.println("Registro: " + f.getName() + " (percorso " + f.getPath() + ")");
+        if (!f.exists()) {
+            System.out.println("  non esiste! L'ho cercato in " + f.getAbsolutePath());
+            return false;
+        }
+        if (!f.isFile()) {
+            System.out.println("  è una cartella, non un file!");
+            return false;
+        }
+        System.out.println("  trovato");
+        return true;
+    }
+
+    // ---------- 2. pulizia: delete ----------
+    static void eliminaVecchio(File f) {
+        if (f.exists()) {
+            if (f.delete()) {
+                System.out.println("Eliminato il vecchio " + f.getName());
+            } else {
+                System.out.println("Non riesco a eliminare " + f.getName());
+            }
+        }
+    }
+
+    // ---------- 3. aggiungere in fondo: FileWriter in modalità append ----------
+    static void aggiungiRiga(File f, String riga) {
+        try {
+            FileWriter w = new FileWriter(f, true);
+            w.write(riga + "\n");
+            w.close();
+        } catch (IOException e) {
+            System.out.println("Impossibile scrivere in " + f.getName());
+        }
+    }
+
+    // ---------- 4. leggere: FileReader carattere per carattere ----------
+    // ogni riga è "materia;voto": separa le due parti e le mette negli array
+    static int leggiRegistro(File f, String[] materie, String[] votiTesto) {
+        int n = 0;
+        String materia = "";
+        String voto = "";
+        boolean dopoPuntoEVirgola = false;
+        try {
+            FileReader r = new FileReader(f);
+            int data = r.read();
+            while (data != -1) {
+                char c = (char) data;
+                if (c == '\n') {                 // fine riga: salvo
+                    materie[n] = materia;
+                    votiTesto[n] = voto;
+                    n++;
+                    materia = "";
+                    voto = "";
+                    dopoPuntoEVirgola = false;
+                } else if (c == ';') {           // da qui in poi è il voto
+                    dopoPuntoEVirgola = true;
+                } else if (c != '\r') {
+                    if (dopoPuntoEVirgola) {
+                        voto = voto + c;
+                    } else {
+                        materia = materia + c;
+                    }
+                }
+                data = r.read();
+            }
+            r.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Il registro non esiste");
+            return -1;
+        } catch (IOException e) {
+            System.out.println("Errore durante la lettura del registro");
+            return -1;
+        }
+        return n;
+    }
+
+    // ---------- 5. calcoli ----------
+    static double media(int[] voti, int n) {
+        int somma = 0;
+        for (int i = 0; i &lt; n; i++) {
+            somma += voti[i];
+        }
+        return (double) somma / n;
+    }
+
+    static int posizioneMassimo(int[] voti, int n) {
+        int pos = 0;
+        for (int i = 1; i &lt; n; i++) {
+            if (voti[i] &gt; voti[pos]) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    // ---------- 6. scrivere la pagella: try-with-resources ----------
+    static boolean scriviPagella(File f, String[] materie, int[] voti, int n) {
+        try (FileWriter w = new FileWriter(f)) {
+            w.write("PAGELLA\n");
+            for (int i = 0; i &lt; n; i++) {
+                w.write(materie[i] + ": " + voti[i] + "\n");
+            }
+            int max = posizioneMassimo(voti, n);
+            w.append("Media: " + media(voti, n) + "\n");
+            w.append("Voto migliore: " + voti[max] + " (" + materie[max] + ")\n");
+            return true;
+        } catch (IOException e) {
+            System.out.println("Impossibile scrivere la pagella");
+            return false;
+        }
+    }
+
+    // ---------- 7. stampare un file a schermo ----------
+    static void stampaFile(File f) {
+        try (FileReader r = new FileReader(f)) {
+            int data = r.read();
+            while (data != -1) {
+                System.out.print((char) data);
+                data = r.read();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(f.getName() + " non esiste");
+        } catch (IOException e) {
+            System.out.println("Errore durante la lettura di " + f.getName());
+        }
+    }
+
+    public static void main(String[] args) {
+        File registro = new File("voti.txt");
+        File scarti = new File("scarti.txt");
+        File pagella = new File("pagella.txt");
+
+        if (!controlla(registro)) {
+            return;
+        }
+        eliminaVecchio(scarti);
+
+        aggiungiRiga(registro, "Informatica;9");
+        aggiungiRiga(registro, "Matematica;7");
+
+        String[] materie = new String[50];
+        String[] votiTesto = new String[50];
+        int righe = leggiRegistro(registro, materie, votiTesto);
+        if (righe == -1) {
+            return;
+        }
+        System.out.println("Righe lette: " + righe);
+
+        // conversione con parseInt: le righe sbagliate finiscono in scarti.txt
+        String[] materieOk = new String[righe];
+        int[] voti = new int[righe];
+        int validi = 0;
+        for (int i = 0; i &lt; righe; i++) {
+            try {
+                voti[validi] = Integer.parseInt(votiTesto[i]);
+                materieOk[validi] = materie[i];
+                validi++;
+            } catch (NumberFormatException e) {
+                System.out.println("Voto non valido: " + materie[i] + ";" + votiTesto[i]);
+                aggiungiRiga(scarti, materie[i] + ";" + votiTesto[i]);
+            }
+        }
+        System.out.println("Voti validi: " + validi + ", scartati: " + (righe - validi));
+
+        if (scriviPagella(pagella, materieOk, voti, validi)) {
+            System.out.println("--- " + pagella.getName() + " ---");
+            stampaFile(pagella);
+        }
+    }
+}</code></pre>
+      <h4>I file alla fine dell'esecuzione</h4>
+      <p><code>voti.txt</code> (con le due righe aggiunte in fondo):</p>
+<pre data-lang="testo"><code>Italiano;7
+Matematica;5
+Inglese;otto
+Storia;8
+Informatica;9
+Matematica;7</code></pre>
+      <p><code>scarti.txt</code> (il vecchio contenuto è stato eliminato):</p>
+<pre data-lang="testo"><code>Inglese;otto</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Cosa succede se esegui il programma una seconda volta? (In <code>voti.txt</code> vengono aggiunti <strong>di nuovo</strong> Informatica e Matematica: il registro cresce a ogni esecuzione, perché è aperto in modalità append. La pagella invece viene riscritta da zero.)</li>
+        <li>Cosa cambia se in <code>aggiungiRiga</code> togli il <code>true</code>? (Ogni chiamata svuota il file: alla fine <code>voti.txt</code> conterrebbe solo <code>Matematica;7</code>, e <code>scarti.txt</code> solo l'ultimo scarto.)</li>
+        <li>Perché nel <code>main</code> non serve un <code>try-catch</code> per i file? (Perché ogni metodo gestisce da solo le sue eccezioni e comunica il risultato con il valore restituito: <code>boolean</code> o <code>-1</code>.)</li>
+        <li>Se l'ultima riga di <code>voti.txt</code> non avesse l'a capo, cosa succederebbe? (Non verrebbe salvata: per gestirla serve il controllo dopo il ciclo visto nell'esercizio "Leggere riga per riga". Qui non serve perché <code>aggiungiRiga</code> mette sempre l'a capo.)</li>
+        <li>Se elimini <code>voti.txt</code> prima di eseguire, cosa stampa il programma? (Il nome, il percorso, "non esiste!" con il percorso assoluto, e poi si ferma.)</li>
+      </ul>
+    </div></details>
+  </div>
+
+</main>
+</body>
+</html>

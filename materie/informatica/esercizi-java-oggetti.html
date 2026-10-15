@@ -1,0 +1,1318 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: programmazione a oggetti · Scuola</title>
+  <meta name="description" content="Informatica, esercizi di Java sulla programmazione a oggetti con soluzioni spiegate passo passo: classi, oggetti, attributi, riferimenti, metodi, costruttori, this, overload dei costruttori, this(...), scope, array di oggetti. Con un esercizio completo finale.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: programmazione a oggetti</h1>
+  <p class="lead">Consegne ed esercizi per allenarti su tutto il capitolo <a href="java-programmazione-a-oggetti.html">Java: programmazione a oggetti</a>. Ogni soluzione spiega il ragionamento, mostra il codice completo e l'output vero del programma.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a scrivere il programma da solo (su carta o al computer) e solo dopo apri la <strong>soluzione spiegata</strong>. Gli esercizi vanno dal più facile al più difficile; l'ultimo li mette insieme tutti. Ogni programma è stato compilato ed eseguito: l'output che vedi è quello vero.</div>
+  <div class="callout tip"><span class="callout-title">Una nota sui file</span>In classe di solito ogni classe sta nel suo file (<code>Studente.java</code>, <code>Main.java</code>…). Qui, per avere ogni esercizio in un solo blocco da copiare, le classi "di supporto" sono scritte <strong>nello stesso file</strong>, prima della classe con il <code>main</code>, e <strong>senza</strong> <code>public</code>: in un file Java può esserci una sola classe <code>public</code>, quella che ha lo stesso nome del file. Il funzionamento è identico.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Classi, oggetti e attributi</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>La <strong>classe</strong> è il modello, l'<strong>oggetto</strong> è una sua realizzazione concreta, creata con <code>new</code>. Gli <strong>attributi</strong> si dichiarano nel corpo della classe, fuori dai metodi, e si raggiungono con il punto: <code>s1.nome</code>. Se non li assegni valgono <code>0</code>, <code>false</code> o <code>null</code>. Una variabile di tipo classe contiene un <strong>riferimento</strong> all'oggetto, non l'oggetto. Teoria: <a href="java-programmazione-a-oggetti.html#classe-e-oggetto">Classe e oggetto</a> e <a href="java-programmazione-a-oggetti.html#creare-oggetti-e-accedere-agli-attributi">Creare oggetti</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Dalla descrizione alla classe Film <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Leggi questa descrizione: <em>"Un film ha un titolo, un regista, un anno di uscita e una durata in minuti. Un film si può guardare, mettere in pausa e votare."</em></p>
+      <ol>
+        <li>Su carta: quali parole diventano <strong>attributi</strong> e quali diventerebbero <strong>metodi</strong>? Di che tipo è ogni attributo?</li>
+        <li>Scrivi la classe <code>Film</code> con i soli attributi (i metodi arrivano nella prossima sezione).</li>
+        <li>Nel <code>main</code> crea due film, "Inside Out" (2015, Pete Docter, 95 minuti) e "Interstellar" (2014, Christopher Nolan, 169 minuti), stampa una riga per ognuno e poi quanto dura la "maratona" dei due film in ore e minuti.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Inside Out (2015) di Pete Docter, 95 minuti
+Interstellar (2014) di Christopher Nolan, 169 minuti
+Maratona: 4 ore e 24 minuti</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Uso il trucco della teoria: i <strong>sostantivi</strong> sono attributi, i <strong>verbi</strong> sono metodi. Attributi: <code>titolo</code> e <code>regista</code> (testo, quindi <code>String</code>), <code>anno</code> e <code>durata</code> (numeri interi, quindi <code>int</code>). Metodi: <code>guarda()</code>, <code>pausa()</code>, <code>vota()</code>.</li>
+        <li>Gli attributi vanno <strong>nel corpo della classe</strong>, fuori da qualunque metodo. La classe da sola non fa niente: è solo lo stampino.</li>
+        <li>Nel <code>main</code> creo ogni film con <code>new Film()</code> e riempio gli attributi con l'operatore punto: <code>f1.titolo = ...</code> si legge "il titolo di f1".</li>
+        <li>Per le ore e i minuti uso la divisione intera e il resto: <code>264 / 60 = 4</code> ore, <code>264 % 60 = 24</code> minuti.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Film {
+    String titolo;
+    String regista;
+    int anno;
+    int durata;   // in minuti
+}
+
+public class FilmInSala {
+    public static void main(String[] args) {
+        Film f1 = new Film();
+        f1.titolo = "Inside Out";
+        f1.regista = "Pete Docter";
+        f1.anno = 2015;
+        f1.durata = 95;
+
+        Film f2 = new Film();
+        f2.titolo = "Interstellar";
+        f2.regista = "Christopher Nolan";
+        f2.anno = 2014;
+        f2.durata = 169;
+
+        System.out.println(f1.titolo + " (" + f1.anno + ") di " + f1.regista + ", " + f1.durata + " minuti");
+        System.out.println(f2.titolo + " (" + f2.anno + ") di " + f2.regista + ", " + f2.durata + " minuti");
+
+        int totale = f1.durata + f2.durata;
+        System.out.println("Maratona: " + totale / 60 + " ore e " + totale % 60 + " minuti");
+    }
+}</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li><code>f1</code> e <code>f2</code> sono due oggetti <strong>indipendenti</strong>: hanno gli stessi attributi ma con valori propri. Cambiare <code>f1.durata</code> non tocca <code>f2.durata</code>.</li>
+        <li>La classe <code>Film</code> non è <code>public</code> perché sta nello stesso file di <code>FilmInSala</code> (vedi la nota in cima alla pagina). Il nome della classe è con la maiuscola, gli attributi con la minuscola.</li>
+        <li>In <code>"Maratona: " + totale / 60</code> la divisione viene fatta <strong>prima</strong> del <code>+</code> (precedenza), quindi stampa 4 e non qualcosa di strano.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Chi punta a chi? Riferimenti e valori di partenza <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La classe è questa:</p>
+<pre data-lang="java"><code>class Zaino {
+    String colore;
+    int libri;
+    double peso;
+    boolean pieno;
+}</code></pre>
+      <p>Senza eseguirlo, scrivi cosa stampa il frammento qui sotto. Poi rispondi: quanti oggetti <code>Zaino</code> esistono alla fine? Dopo <code>a = c;</code> lo zaino blu è cambiato?</p>
+<pre data-lang="java"><code>Zaino a = new Zaino();
+System.out.println(a.colore + " " + a.libri + " " + a.peso + " " + a.pieno);
+
+a.colore = "blu";
+a.libri = 3;
+Zaino b = a;
+b.libri = b.libri + 2;
+
+Zaino c = new Zaino();
+c.colore = "rosso";
+a = c;
+a.libri = 1;
+
+System.out.println(b.colore + " " + b.libri);
+System.out.println(c.colore + " " + c.libri);
+System.out.println(a.colore + " " + a.libri);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: disegna le frecce</h4>
+      <p>Le variabili <code>a</code>, <code>b</code>, <code>c</code> non sono zaini: sono <strong>frecce</strong> (riferimenti) che puntano a uno zaino. Gli zaini veri nascono solo con <code>new</code>: qui ce ne sono <strong>due</strong>, che chiamo Z1 e Z2.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>a punta a</th><th>b punta a</th><th>c punta a</th><th>Z1</th><th>Z2</th></tr></thead>
+        <tbody>
+          <tr><td><code>a = new Zaino()</code></td><td>Z1</td><td>–</td><td>–</td><td>null, 0, 0.0, false</td><td>–</td></tr>
+          <tr><td><code>a.colore = "blu"; a.libri = 3</code></td><td>Z1</td><td>–</td><td>–</td><td>blu, 3</td><td>–</td></tr>
+          <tr><td><code>b = a</code></td><td>Z1</td><td><strong>Z1</strong></td><td>–</td><td>blu, 3</td><td>–</td></tr>
+          <tr><td><code>b.libri = b.libri + 2</code></td><td>Z1</td><td>Z1</td><td>–</td><td>blu, <strong>5</strong></td><td>–</td></tr>
+          <tr><td><code>c = new Zaino(); c.colore = "rosso"</code></td><td>Z1</td><td>Z1</td><td>Z2</td><td>blu, 5</td><td>rosso, 0</td></tr>
+          <tr><td><code>a = c</code></td><td><strong>Z2</strong></td><td>Z1</td><td>Z2</td><td>blu, 5</td><td>rosso, 0</td></tr>
+          <tr><td><code>a.libri = 1</code></td><td>Z2</td><td>Z1</td><td>Z2</td><td>blu, 5</td><td>rosso, <strong>1</strong></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>null 0 0.0 false
+blu 5
+rosso 1
+rosso 1</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li><strong>Prima riga</strong>: nessun attributo è stato assegnato, quindi valgono i valori di partenza: <code>null</code> per la <code>String</code>, <code>0</code> per l'<code>int</code>, <code>0.0</code> per il <code>double</code>, <code>false</code> per il <code>boolean</code>. Attenzione: <code>null</code> unito a una stringa viene stampato come la parola "null".</li>
+        <li><code>b = a</code> non crea un secondo zaino: dà un secondo nome allo <strong>stesso</strong> zaino. Per questo <code>b.libri + 2</code> porta i libri dello zaino blu a 5.</li>
+        <li><code>a = c</code> sposta solo la <strong>freccia</strong> <code>a</code>: ora punta allo zaino rosso. Lo zaino blu <strong>non cambia</strong> e resta raggiungibile tramite <code>b</code>.</li>
+        <li>Da quel momento <code>a</code> e <code>c</code> sono lo stesso zaino: <code>a.libri = 1</code> si vede anche da <code>c</code>. Per questo le ultime due righe sono uguali.</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Regola d'oro</span>Contare i <code>new</code> = contare gli oggetti. Un'assegnazione tra variabili (<code>b = a</code>, <code>a = c</code>) non crea e non copia oggetti: sposta frecce.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Metodi: cosa sa fare un oggetto</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>I metodi di un oggetto si scrivono dentro la classe, di solito <strong>senza</strong> <code>static</code>. Possono essere <code>void</code> (fanno qualcosa), ricevere <strong>parametri</strong> e restituire un valore con <code>return</code>. Si chiamano con il punto sull'oggetto (<code>s1.studia()</code>) e dentro il metodo gli attributi si usano direttamente per nome: sono quelli dell'oggetto su cui è stato chiamato. Teoria: <a href="java-programmazione-a-oggetti.html#i-metodi-cosa-puo-fare-un-oggetto">I metodi</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Il salvadanaio: tre tipi di metodo <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Salvadanaio</code> con gli attributi <code>proprietario</code> (<code>String</code>) e <code>soldi</code> (<code>double</code>) e tre metodi:</p>
+      <ul>
+        <li><code>mostra()</code>: stampa di chi è il salvadanaio e quanti soldi contiene;</li>
+        <li><code>inserisci(double importo)</code>: aggiunge l'importo ai soldi;</li>
+        <li><code>puoComprare(double prezzo)</code>: restituisce <code>true</code> se i soldi bastano per quel prezzo.</li>
+      </ul>
+      <p>Nel <code>main</code> crea il salvadanaio di Giulia, mostralo, inserisci 5 e 12.5 euro, mostralo di nuovo e chiedi se può comprare un libro da 15 euro e delle cuffie da 30.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Salvadanaio di Giulia: 0.0 euro
+Salvadanaio di Giulia: 17.5 euro
+Può comprare un libro da 15 euro? true
+Può comprare le cuffie da 30 euro? false</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>mostra</strong> deve solo stampare: non serve nessun dato da fuori e non restituisce niente, quindi è <code>void</code> senza parametri.</li>
+        <li><strong>inserisci</strong> ha bisogno di sapere <em>quanto</em> inserire: è un dato che arriva da fuori, quindi è un <strong>parametro</strong>. Modifica l'attributo <code>soldi</code> e non deve restituire nulla: <code>void</code>.</li>
+        <li><strong>puoComprare</strong> deve dare una <strong>risposta</strong> sì/no a chi la chiama: tipo di ritorno <code>boolean</code>. L'espressione <code>soldi &gt;= prezzo</code> è già <code>true</code> o <code>false</code>, quindi la restituisco direttamente.</li>
+        <li>Dentro i metodi scrivo <code>soldi</code> e <code>proprietario</code> senza niente davanti: sono gli attributi dell'oggetto su cui il metodo è stato chiamato (qui, il salvadanaio di Giulia).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Salvadanaio {
+    String proprietario;
+    double soldi;
+
+    void mostra() {
+        System.out.println("Salvadanaio di " + proprietario + ": " + soldi + " euro");
+    }
+
+    void inserisci(double importo) {
+        soldi = soldi + importo;
+    }
+
+    boolean puoComprare(double prezzo) {
+        return soldi &gt;= prezzo;
+    }
+}
+
+public class Risparmi {
+    public static void main(String[] args) {
+        Salvadanaio s = new Salvadanaio();
+        s.proprietario = "Giulia";
+        s.mostra();
+
+        s.inserisci(5);
+        s.inserisci(12.5);
+        s.mostra();
+
+        System.out.println("Può comprare un libro da 15 euro? " + s.puoComprare(15));
+        System.out.println("Può comprare le cuffie da 30 euro? " + s.puoComprare(30));
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Alla prima chiamata di <code>mostra()</code> stampa <code>0.0</code>: <code>soldi</code> non è mai stato assegnato e un <code>double</code> parte da 0.0.</li>
+        <li><code>s.inserisci(5)</code> passa un <code>int</code> a un parametro <code>double</code>: Java lo allarga da solo a 5.0. Dopo i due inserimenti i soldi sono 5 + 12.5 = 17.5.</li>
+        <li>Il risultato di <code>puoComprare</code> viene <strong>usato</strong> (qui stampato). Se scrivessi solo <code>s.puoComprare(15);</code> la risposta verrebbe calcolata e buttata via.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Stesso metodo, oggetti diversi <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Allo stadio ci sono due tornelli, Nord e Sud. Ecco la classe:</p>
+<pre data-lang="java"><code>class Tornello {
+    String ingresso;
+    int passaggi;
+
+    void passa() {
+        passaggi++;
+    }
+
+    void passaGruppo(int persone) {
+        for (int i = 0; i &lt; persone; i++) {
+            passa();
+        }
+    }
+
+    boolean affollato(int limite) {
+        return passaggi &gt; limite;
+    }
+}</code></pre>
+      <p>Dopo aver creato i due tornelli (<code>nord</code> e <code>sud</code>), il <code>main</code> esegue queste righe. Compila una tabella con i passaggi di ogni tornello dopo ogni istruzione e scrivi l'output.</p>
+<pre data-lang="java"><code>nord.passa();
+sud.passaGruppo(3);
+nord.passaGruppo(4);
+sud.passa();
+nord.passa();
+
+System.out.println(nord.ingresso + ": " + nord.passaggi);
+System.out.println(sud.ingresso + ": " + sud.passaggi);
+System.out.println("Totale: " + (nord.passaggi + sud.passaggi));
+System.out.println("Nord affollato? " + nord.affollato(5));
+System.out.println("Sud affollato? " + sud.affollato(5));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: la tabella</h4>
+      <p>Ogni oggetto ha il <strong>suo</strong> attributo <code>passaggi</code>, che parte da 0. Un metodo chiamato su <code>nord</code> tocca solo i passaggi di <code>nord</code>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>nord.passaggi</th><th>sud.passaggi</th></tr></thead>
+        <tbody>
+          <tr><td>(appena creati)</td><td>0</td><td>0</td></tr>
+          <tr><td><code>nord.passa()</code></td><td><strong>1</strong></td><td>0</td></tr>
+          <tr><td><code>sud.passaGruppo(3)</code></td><td>1</td><td><strong>3</strong></td></tr>
+          <tr><td><code>nord.passaGruppo(4)</code></td><td><strong>5</strong></td><td>3</td></tr>
+          <tr><td><code>sud.passa()</code></td><td>5</td><td><strong>4</strong></td></tr>
+          <tr><td><code>nord.passa()</code></td><td><strong>6</strong></td><td>4</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Nord: 6
+Sud: 4
+Totale: 10
+Nord affollato? true
+Sud affollato? false</code></pre>
+      <h4>Perché funziona così</h4>
+      <ul>
+        <li><code>passaGruppo</code> chiama <code>passa()</code> <strong>senza punto davanti</strong>: dentro un metodo, chiamare un altro metodo della stessa classe significa chiamarlo sullo <strong>stesso oggetto</strong>. Quindi <code>sud.passaGruppo(3)</code> esegue tre volte <code>passa()</code> sul tornello Sud.</li>
+        <li>Nel <code>"Totale: " + (nord.passaggi + sud.passaggi)</code> le parentesi sono indispensabili: senza, Java unirebbe i testi e stamperebbe "Totale: 64".</li>
+        <li><code>affollato(5)</code>: Nord ha 6 passaggi, 6 &gt; 5 → <code>true</code>; Sud ne ha 4 → <code>false</code>. Il metodo è lo stesso, la risposta cambia perché lavora sui dati di oggetti diversi.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Trova l'errore: metodi che non compilano <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nessuno di questi tre programmi compila. Per ognuno trova l'errore, spiega cosa dice il compilatore e correggilo.</p>
+      <p><strong>A</strong></p>
+<pre data-lang="java"><code>class Rettangolo {
+    double base;
+    double altezza;
+
+    double area() {
+        return base * altezza;
+    }
+}
+
+public class ErroreSenzaOggetto {
+    public static void main(String[] args) {
+        Rettangolo r = new Rettangolo();
+        r.base = 3;
+        r.altezza = 4;
+        System.out.println(area());
+    }
+}</code></pre>
+      <p><strong>B</strong></p>
+<pre data-lang="java"><code>class Alunno {
+    String nome;
+    double media;
+
+    boolean promosso() {
+        if (media &gt;= 6) {
+            return true;
+        }
+    }
+}
+
+public class ErrorePromosso {
+    public static void main(String[] args) {
+        Alunno a = new Alunno();
+        a.media = 7;
+        System.out.println(a.promosso());
+    }
+}</code></pre>
+      <p><strong>C</strong></p>
+<pre data-lang="java"><code>class Conto {
+    double saldo;
+
+    void versa(double importo) {
+        saldo = saldo + importo;
+    }
+}
+
+public class ErroreVersamento {
+    public static void main(String[] args) {
+        Conto c = new Conto();
+        c.versa("50");
+        System.out.println(c.saldo);
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · il metodo di chi?</h4>
+<pre data-lang="testo"><code>riga 15: error: cannot find symbol</code></pre>
+      <p>"cannot find symbol" = non trovo questo nome. <code>area()</code> è un metodo della classe <code>Rettangolo</code>, non della classe con il <code>main</code>: chiamato così, Java lo cerca in <code>ErroreSenzaOggetto</code> e non lo trova. E poi, di <strong>quale</strong> rettangolo dovrebbe calcolare l'area? Un metodo di un oggetto va chiamato <strong>sull'oggetto</strong>, con il punto. Correzione: <code>System.out.println(r.area());</code> che stampa <code>12.0</code>.</p>
+      <h4>B · e se la media è sotto il 6?</h4>
+<pre data-lang="testo"><code>riga 9: error: missing return statement</code></pre>
+      <p>"missing return statement" = manca un return. Il compilatore controlla <strong>tutte</strong> le strade: se <code>media &gt;= 6</code> il metodo restituisce <code>true</code>, ma se la condizione è falsa arriva alla graffa finale senza restituire niente, e un metodo <code>boolean</code> deve sempre restituire qualcosa. Correzione: aggiungere <code>return false;</code> dopo l'<code>if</code>, oppure scrivere tutto in una riga: <code>return media &gt;= 6;</code>.</p>
+      <h4>C · tipo dell'argomento sbagliato</h4>
+<pre data-lang="testo"><code>riga 12: error: incompatible types: String cannot be converted to double</code></pre>
+      <p>Il parametro di <code>versa</code> è un <code>double</code>, ma <code>"50"</code> tra virgolette è una <code>String</code>: un testo non diventa un numero da solo. Correzione: <code>c.versa(50);</code> (senza virgolette). Se il dato arriva davvero come testo, va convertito prima: <code>c.versa(Double.parseDouble("50"));</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il costruttore e la parola chiave this</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il <strong>costruttore</strong> ha lo stesso nome della classe, <strong>nessun tipo di ritorno</strong> (nemmeno <code>void</code>) ed è eseguito da <code>new</code> per inizializzare l'oggetto. Quando parametro e attributo hanno lo stesso nome, <code>this.nome</code> è l'attributo e <code>nome</code> il parametro: si scrive <code>this.nome = nome;</code>. Teoria: <a href="java-programmazione-a-oggetti.html#il-costruttore-e-la-parola-chiave-this">Il costruttore e this</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Il magazzino della cartoleria <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Prodotto</code> con gli attributi <code>nome</code>, <code>prezzo</code> e <code>quantita</code> (i pezzi in magazzino) e:</p>
+      <ul>
+        <li>un <strong>costruttore</strong> che riceve i tre valori, con i parametri che si chiamano come gli attributi;</li>
+        <li>un metodo <code>valore()</code> che restituisce quanto vale la merce in magazzino (prezzo × quantità);</li>
+        <li>un metodo <code>vendi(int pezzi)</code> che toglie i pezzi venduti, ma solo se ce ne sono abbastanza; altrimenti stampa un avviso.</li>
+      </ul>
+      <p>Nel <code>main</code> crea 40 quaderni da 2.5 euro e 100 penne da 1.25 euro, stampa il valore di entrambi, vendi 15 quaderni e 120 penne e stampa di nuovo i valori.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Valore quaderni: 100.0
+Valore penne: 125.0
+Venduti 15 quaderni
+Non ci sono abbastanza penne (ne restano 100)
+Valore quaderni: 62.5
+Valore penne: 125.0</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Un prodotto senza nome o senza prezzo non ha senso: il costruttore obbliga a dare i dati <strong>quando l'oggetto nasce</strong>, con <code>new Prodotto("quaderni", 2.5, 40)</code>, invece di riempire gli attributi a uno a uno.</li>
+        <li>Il costruttore si chiama <code>Prodotto</code> come la classe e <strong>non ha tipo di ritorno</strong>.</li>
+        <li>I parametri si chiamano come gli attributi, quindi dentro il costruttore uso <code>this.</code> per indicare l'attributo: <code>this.prezzo = prezzo;</code> = "il prezzo di <em>questo</em> prodotto riceve il valore del parametro prezzo".</li>
+        <li>In <code>valore()</code> e <code>vendi()</code> invece non ci sono parametri con lo stesso nome degli attributi, quindi <code>this</code> non serve.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Prodotto {
+    String nome;
+    double prezzo;
+    int quantita;
+
+    Prodotto(String nome, double prezzo, int quantita) {
+        this.nome = nome;
+        this.prezzo = prezzo;
+        this.quantita = quantita;
+    }
+
+    double valore() {
+        return prezzo * quantita;
+    }
+
+    void vendi(int pezzi) {
+        if (pezzi &lt;= quantita) {
+            quantita = quantita - pezzi;
+            System.out.println("Venduti " + pezzi + " " + nome);
+        } else {
+            System.out.println("Non ci sono abbastanza " + nome + " (ne restano " + quantita + ")");
+        }
+    }
+}
+
+public class Magazzino {
+    public static void main(String[] args) {
+        Prodotto p1 = new Prodotto("quaderni", 2.5, 40);
+        Prodotto p2 = new Prodotto("penne", 1.25, 100);
+
+        System.out.println("Valore quaderni: " + p1.valore());
+        System.out.println("Valore penne: " + p2.valore());
+
+        p1.vendi(15);
+        p2.vendi(120);
+
+        System.out.println("Valore quaderni: " + p1.valore());
+        System.out.println("Valore penne: " + p2.valore());
+    }
+}</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Valori iniziali: 2.5 × 40 = 100.0 e 1.25 × 100 = 125.0.</li>
+        <li><code>p1.vendi(15)</code>: 15 ≤ 40, quindi i quaderni scendono a 25 e il valore diventa 2.5 × 25 = 62.5.</li>
+        <li><code>p2.vendi(120)</code>: 120 &gt; 100, entra nell'<code>else</code> e la quantità <strong>non cambia</strong>: il valore delle penne resta 125.0.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Compila, ma stampa male: il this dimenticato <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questo programma <strong>compila</strong> e parte senza errori, ma stampa dati sbagliati. Prevedi l'output, trova il problema e correggilo.</p>
+<pre data-lang="java"><code>class Squadra {
+    String nome;
+    String citta;
+    int punti;
+
+    Squadra(String nome, String citta, int punti) {
+        nome = nome;
+        this.citta = citta;
+        punti = punti;
+    }
+
+    void stampa() {
+        System.out.println(nome + " (" + citta + "): " + punti + " punti");
+    }
+}
+
+public class SquadraSbagliata {
+    public static void main(String[] args) {
+        Squadra s1 = new Squadra("Lupi", "Roma", 12);
+        Squadra s2 = new Squadra("Aquile", "Torino", 9);
+        s1.stampa();
+        s2.stampa();
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output (sbagliato)</h4>
+<pre data-lang="testo"><code>null (Roma): 0 punti
+null (Torino): 0 punti</code></pre>
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La città è giusta, nome e punti no: guardo cosa c'è di diverso nelle tre righe del costruttore. Solo la riga della città ha <code>this.</code>.</li>
+        <li>Dentro il costruttore, <code>nome</code> da solo indica la variabile <strong>più vicina</strong>, cioè il <strong>parametro</strong>. Quindi <code>nome = nome;</code> copia il parametro… in sé stesso. L'attributo non viene mai toccato.</li>
+        <li>Un attributo mai assegnato tiene il valore di partenza: <code>null</code> per la <code>String</code>, <code>0</code> per l'<code>int</code>. Ecco spiegati "null" e "0 punti".</li>
+        <li>Il compilatore non protesta perché <code>nome = nome;</code> è un'istruzione valida (inutile, ma valida). Per questo è un errore subdolo.</li>
+      </ol>
+      <h4>Correzione</h4>
+<pre data-lang="java"><code>Squadra(String nome, String citta, int punti) {
+    this.nome = nome;
+    this.citta = citta;
+    this.punti = punti;
+}</code></pre>
+<pre data-lang="testo"><code>Lupi (Roma): 12 punti
+Aquile (Torino): 9 punti</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Parametro e attributo con lo stesso nome → <strong>sempre</strong> <code>this.</code> a sinistra dell'uguale.</li>
+        <li>Un'altra soluzione, meno usata, è dare ai parametri nomi diversi (<code>Squadra(String n, String c, int p)</code> con <code>nome = n;</code>): così non c'è ambiguità e <code>this</code> non serve. Ma il codice si legge peggio.</li>
+        <li>Se un oggetto appena creato ha attributi a <code>null</code> o <code>0</code> che non ti aspetti, la prima cosa da controllare è il costruttore.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Un costruttore che controlla i dati <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Verifica</code> con gli attributi <code>materia</code> e <code>voto</code> (<code>double</code>). Il costruttore riceve i due valori, ma deve impedire voti impossibili: se il voto è minore di 1 diventa 1, se è maggiore di 10 diventa 10, e in entrambi i casi stampa un avviso. Aggiungi i metodi <code>sufficiente()</code> (restituisce <code>true</code> dal 6 in su) e <code>stampa()</code>.</p>
+      <p>Prova con Storia 7.5, Fisica 12 e Latino -2.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Voto 12.0 non valido in Fisica: diventa 10
+Voto -2.0 non valido in Latino: diventa 1
+Storia: 7.5, sufficiente? true
+Fisica: 10.0, sufficiente? true
+Latino: 1.0, sufficiente? false</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il costruttore è il posto giusto per i controlli: è eseguito <strong>sempre</strong> quando nasce un oggetto, quindi nessuna <code>Verifica</code> può esistere con un voto sbagliato.</li>
+        <li>Nel costruttore ci sono <strong>due</strong> "voto": il parametro (il valore ricevuto, magari sbagliato) e l'attributo (quello che conservo). Nelle condizioni controllo il <strong>parametro</strong> (<code>voto &lt; 1</code>), mentre assegno l'<strong>attributo</strong> (<code>this.voto = 1</code>).</li>
+        <li>Uso <code>if / else if / else</code> perché i tre casi si escludono: troppo basso, troppo alto, oppure valido.</li>
+        <li><code>stampa()</code> riusa <code>sufficiente()</code> invece di riscrivere la condizione.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Verifica {
+    String materia;
+    double voto;
+
+    Verifica(String materia, double voto) {
+        this.materia = materia;
+        if (voto &lt; 1) {
+            System.out.println("Voto " + voto + " non valido in " + materia + ": diventa 1");
+            this.voto = 1;
+        } else if (voto &gt; 10) {
+            System.out.println("Voto " + voto + " non valido in " + materia + ": diventa 10");
+            this.voto = 10;
+        } else {
+            this.voto = voto;
+        }
+    }
+
+    boolean sufficiente() {
+        return voto &gt;= 6;
+    }
+
+    void stampa() {
+        System.out.println(materia + ": " + voto + ", sufficiente? " + sufficiente());
+    }
+}
+
+public class Pagella {
+    public static void main(String[] args) {
+        Verifica v1 = new Verifica("Storia", 7.5);
+        Verifica v2 = new Verifica("Fisica", 12);
+        Verifica v3 = new Verifica("Latino", -2);
+        v1.stampa();
+        v2.stampa();
+        v3.stampa();
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Gli avvisi vengono stampati <strong>per primi</strong>, perché il costruttore parte al momento del <code>new</code>, prima delle chiamate a <code>stampa()</code>.</li>
+        <li>Nell'avviso di Fisica compare <code>12.0</code> e non <code>12</code>: l'argomento <code>12</code> è un <code>int</code>, ma il parametro è <code>double</code> e Java lo ha già convertito.</li>
+        <li>Errore tipico: scrivere <code>if (this.voto &lt; 1)</code>. In quel momento l'attributo vale ancora 0.0 (non è stato assegnato), quindi la condizione sarebbe <strong>sempre</strong> vera e ogni voto diventerebbe 1.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Overload dei costruttori e this(...)</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una classe può avere <strong>più costruttori</strong> con parametri diversi (per numero, tipo o ordine): Java sceglie quello giusto guardando gli argomenti del <code>new</code>. Se scrivi almeno un costruttore, quello vuoto non c'è più (devi scriverlo tu). Con <code>this(...)</code>, come <strong>prima riga</strong>, un costruttore ne chiama un altro della stessa classe. Teoria: <a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">Overload dei costruttori</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Tre modi per ordinare una pizza <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Pizza</code> con gli attributi <code>gusto</code>, <code>diametro</code> (cm) e <code>mozzarellaExtra</code> (<code>boolean</code>) e tre costruttori:</p>
+      <ul>
+        <li><code>Pizza()</code>: una margherita da 30 cm senza extra;</li>
+        <li><code>Pizza(String gusto)</code>: il gusto scelto, 30 cm, senza extra;</li>
+        <li><code>Pizza(String gusto, int diametro, boolean mozzarellaExtra)</code>: tutto scelto dal cliente.</li>
+      </ul>
+      <p><strong>Vincolo:</strong> le assegnazioni agli attributi devono comparire <strong>una volta sola</strong>, nel costruttore completo. Aggiungi un metodo <code>prezzo()</code> (6 euro, +3 se il diametro supera i 30 cm, +1.5 per la mozzarella extra) e un metodo <code>stampa()</code>.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>margherita 30 cm: 6.0 euro
+diavola 30 cm: 6.0 euro
+capricciosa 40 cm + mozzarella: 10.5 euro</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Tre costruttori con <strong>0, 1 e 3 parametri</strong>: sono liste diverse, quindi è un overload valido. Java sceglie in base agli argomenti del <code>new</code>.</li>
+        <li>Il vincolo dice di non ripetere le assegnazioni: allora solo il costruttore completo scrive negli attributi, e gli altri due lo chiamano con <code>this(...)</code>, passando i valori "di default" al posto di quelli che mancano.</li>
+        <li><code>Pizza()</code> chiama <code>this("margherita", 30, false)</code>; <code>Pizza(String gusto)</code> chiama <code>this(gusto, 30, false)</code>, passando avanti il gusto ricevuto.</li>
+        <li><code>this(...)</code> deve essere la <strong>prima riga</strong> del costruttore.</li>
+        <li>Nel prezzo uso una variabile locale <code>p</code> che parte da 6 e a cui aggiungo i supplementi.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Pizza {
+    String gusto;
+    int diametro;   // in cm
+    boolean mozzarellaExtra;
+
+    Pizza() {
+        this("margherita", 30, false);
+    }
+
+    Pizza(String gusto) {
+        this(gusto, 30, false);
+    }
+
+    Pizza(String gusto, int diametro, boolean mozzarellaExtra) {
+        this.gusto = gusto;
+        this.diametro = diametro;
+        this.mozzarellaExtra = mozzarellaExtra;
+    }
+
+    double prezzo() {
+        double p = 6;
+        if (diametro &gt; 30) {
+            p = p + 3;
+        }
+        if (mozzarellaExtra) {
+            p = p + 1.5;
+        }
+        return p;
+    }
+
+    void stampa() {
+        String extra = "";
+        if (mozzarellaExtra) {
+            extra = " + mozzarella";
+        }
+        System.out.println(gusto + " " + diametro + " cm" + extra + ": " + prezzo() + " euro");
+    }
+}
+
+public class Pizzeria {
+    public static void main(String[] args) {
+        Pizza p1 = new Pizza();
+        Pizza p2 = new Pizza("diavola");
+        Pizza p3 = new Pizza("capricciosa", 40, true);
+        p1.stampa();
+        p2.stampa();
+        p3.stampa();
+    }
+}</code></pre>
+      <h4>Perché conviene this(...)</h4>
+      <ul>
+        <li>Se domani si aggiunge un attributo (per esempio <code>impastoIntegrale</code>), basta modificare <strong>un</strong> costruttore, quello completo. Senza <code>this(...)</code> andrebbe aggiunto in tutti e tre, con il rischio di dimenticarne uno.</li>
+        <li>Prezzi: margherita e diavola da 30 cm costano 6.0 (30 non è maggiore di 30); la capricciosa da 40 cm con mozzarella costa 6 + 3 + 1.5 = 10.5.</li>
+        <li>Nota: <code>this.gusto</code> (con il punto) indica un attributo; <code>this(...)</code> (con le parentesi) chiama un costruttore. Sono due usi diversi della stessa parola.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Quale costruttore parte, e in che ordine? <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Ecco una classe con tre costruttori che stampano un messaggio:</p>
+<pre data-lang="java"><code>class Punto {
+    int x;
+    int y;
+
+    Punto() {
+        this(0, 0);
+        System.out.println("A: punto nell'origine");
+    }
+
+    Punto(int v) {
+        this(v, v);
+        System.out.println("B: punto sulla diagonale");
+    }
+
+    Punto(int x, int y) {
+        this.x = x;
+        this.y = y;
+        System.out.println("C: punto (" + x + ", " + y + ")");
+    }
+}</code></pre>
+      <p>Scrivi esattamente cosa stampa questo <code>main</code>. Attenzione all'<strong>ordine</strong> dei messaggi e alle ultime due righe.</p>
+<pre data-lang="java"><code>Punto p = new Punto();
+Punto q = new Punto(4);
+Punto r = new Punto(2, 7);
+System.out.println(p.x + q.y + r.x);
+System.out.println("Somma: " + p.x + q.y + r.x);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>C: punto (0, 0)
+A: punto nell'origine
+C: punto (4, 4)
+B: punto sulla diagonale
+C: punto (2, 7)
+6
+Somma: 042</code></pre>
+      <h4>Ragionamento, un new alla volta</h4>
+      <ol>
+        <li><code>new Punto()</code>: zero argomenti → costruttore A. La sua prima riga è <code>this(0, 0)</code>, che <strong>salta subito</strong> nel costruttore C. C assegna e stampa "C: punto (0, 0)"; quando C finisce, si torna in A, che stampa il suo messaggio. Quindi prima C, poi A.</li>
+        <li><code>new Punto(4)</code>: un <code>int</code> → costruttore B, che chiama <code>this(4, 4)</code>: stampa C con (4, 4) e poi B.</li>
+        <li><code>new Punto(2, 7)</code>: due <code>int</code> → direttamente C. Un solo messaggio.</li>
+        <li><code>p.x + q.y + r.x</code>: sono tre <code>int</code>, quindi è una <strong>somma</strong>: 0 + 4 + 2 = 6.</li>
+        <li><code>"Somma: " + p.x + q.y + r.x</code>: Java va da sinistra a destra. <code>"Somma: " + 0</code> è già testo, e da lì ogni <code>+</code> <strong>unisce</strong>: "Somma: 0", poi "Somma: 04", poi "Somma: 042". Per avere 6 servono le parentesi: <code>"Somma: " + (p.x + q.y + r.x)</code>.</li>
+      </ol>
+      <div class="callout tip"><span class="callout-title">Come una telefonata</span><code>this(...)</code> è come mettere in attesa chi ti ha chiamato per fare un'altra telefonata: prima si conclude la chiamata interna (C), poi si riprende quella di partenza (A o B) dalla riga dopo.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Trova l'errore: costruttori in overload <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questi tre programmi non compilano. Per ognuno spiega il messaggio del compilatore e proponi una correzione.</p>
+      <p><strong>A</strong> · si vuole poter creare una persona dando solo il nome <em>oppure</em> solo il cognome.</p>
+<pre data-lang="java"><code>class Persona {
+    String nome;
+    String cognome;
+
+    Persona(String nome) {
+        this.nome = nome;
+    }
+
+    Persona(String cognome) {
+        this.cognome = cognome;
+    }
+}
+
+public class ErroreDoppione {
+    public static void main(String[] args) {
+        Persona p = new Persona("Rossi");
+    }
+}</code></pre>
+      <p><strong>B</strong></p>
+<pre data-lang="java"><code>class Orologio {
+    int ore;
+    int minuti;
+
+    Orologio(int ore, int minuti) {
+        this.ore = ore;
+        this.minuti = minuti;
+    }
+
+    Orologio(int ore) {
+        System.out.println("Creo un orologio");
+        this(ore, 0);
+    }
+}
+
+public class ErroreOrdine {
+    public static void main(String[] args) {
+        Orologio o = new Orologio(10);
+    }
+}</code></pre>
+      <p><strong>C</strong></p>
+<pre data-lang="java"><code>class Orologio {
+    int ore;
+    int minuti;
+
+    Orologio(int ore, int minuti) {
+        this.ore = ore;
+        this.minuti = minuti;
+    }
+
+    Orologio(int ore) {
+        this(ore, 0);
+    }
+}
+
+public class ErroreArgomenti {
+    public static void main(String[] args) {
+        Orologio o = new Orologio("dieci");
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · due costruttori uguali</h4>
+<pre data-lang="testo"><code>riga 9: error: constructor Persona(String) is already defined in class Persona</code></pre>
+      <p>"already defined" = già definito. Per Java i due costruttori sono <strong>identici</strong>: entrambi ricevono una <code>String</code>. Il nome del parametro (<code>nome</code> o <code>cognome</code>) non conta, contano solo <strong>numero, tipo e ordine</strong> dei parametri. Davanti a <code>new Persona("Rossi")</code> Java non saprebbe quale scegliere. Correzione: un costruttore con due parametri, <code>Persona(String nome, String cognome)</code>, e chi conosce solo uno dei due passa <code>null</code> o <code>""</code> per l'altro.</p>
+      <h4>B · this(...) non è la prima riga</h4>
+<pre data-lang="testo"><code>riga 12: error: call to this must be first statement in constructor</code></pre>
+      <p>"call to this must be first statement in constructor" = la chiamata a <code>this(...)</code> deve essere la prima istruzione del costruttore. Correzione: scambiare le due righe, prima <code>this(ore, 0);</code> e poi la stampa. (Nelle versioni più recenti di Java questa regola è stata un po' allentata, ma a scuola e nelle verifiche vale così: <code>this(...)</code> in prima riga.)</p>
+      <h4>C · argomento del tipo sbagliato</h4>
+<pre data-lang="testo"><code>riga 17: error: incompatible types: String cannot be converted to int</code></pre>
+      <p>Java guarda prima <strong>quanti</strong> argomenti ci sono: uno solo, quindi l'unico candidato è <code>Orologio(int ore)</code>. Poi controlla il tipo: il parametro vuole un <code>int</code>, ma <code>"dieci"</code> è una <code>String</code> ("incompatible types: String cannot be converted to int"). Correzione: <code>new Orologio(10)</code>. Java <strong>non</strong> converte un testo in numero da solo e non inventa un costruttore che non hai scritto: se gli argomenti non corrispondono a nessun costruttore, il programma non compila.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Scope delle variabili</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Lo <strong>scope</strong> è la zona in cui una variabile si può usare. Gli <strong>attributi</strong> sono visibili in tutta la classe e vivono quanto l'oggetto; i <strong>parametri</strong> solo dentro il loro metodo; le <strong>variabili locali</strong> solo nel blocco <code>{ }</code> in cui sono dichiarate, dalla dichiarazione alla graffa che lo chiude. Teoria: <a href="java-programmazione-a-oggetti.html#scope-delle-variabili">Scope delle variabili</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>Attributo, parametro o variabile locale? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Guarda questa classe:</p>
+<pre data-lang="java"><code>class Negozio {
+    String nome;
+    double incasso;
+
+    void registraVendita(double prezzo, int pezzi) {
+        double totale = prezzo * pezzi;
+        incasso = incasso + totale;
+        if (totale &gt; 50) {
+            String messaggio = "Vendita grande!";
+            System.out.println(messaggio);
+        }
+        System.out.println(messaggio);
+    }
+}
+
+public class ScopeNegozio {
+    public static void main(String[] args) {
+        Negozio n = new Negozio();
+        n.registraVendita(20, 3);
+    }
+}</code></pre>
+      <ol>
+        <li>Per ognuna di queste variabili di' se è un <strong>attributo</strong>, un <strong>parametro</strong> o una <strong>variabile locale</strong>, e dove è visibile: <code>nome</code>, <code>incasso</code>, <code>prezzo</code>, <code>pezzi</code>, <code>totale</code>, <code>messaggio</code>, <code>n</code>.</li>
+        <li>Il programma non compila: quale riga e perché?</li>
+        <li>Correggilo in modo che stampi sempre un messaggio con il totale (con "(grande!)" sopra i 50 euro), aggiungi un costruttore con il nome del negozio e un metodo <code>chiusura()</code> che stampa l'incasso del giorno.</li>
+      </ol>
+      <p>Output atteso del programma corretto (vendite: 3 pezzi da 20 euro e 2 pezzi da 4.5 euro):</p>
+<pre data-lang="testo"><code>Vendita da 60.0 euro (grande!)
+Vendita da 9.0 euro
+Cartoleria Arcobaleno, incasso di oggi: 69.0 euro</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · La classificazione</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variabile</th><th>Tipo di variabile</th><th>Dove è visibile</th></tr></thead>
+        <tbody>
+          <tr><td><code>nome</code>, <code>incasso</code></td><td>attributi</td><td>in tutti i metodi di <code>Negozio</code>; vivono quanto l'oggetto</td></tr>
+          <tr><td><code>prezzo</code>, <code>pezzi</code></td><td>parametri</td><td>solo dentro <code>registraVendita</code></td></tr>
+          <tr><td><code>totale</code></td><td>variabile locale</td><td>da dove è dichiarata fino alla fine di <code>registraVendita</code></td></tr>
+          <tr><td><code>messaggio</code></td><td>variabile locale</td><td>solo dentro le graffe dell'<code>if</code></td></tr>
+          <tr><td><code>n</code></td><td>variabile locale</td><td>solo nel <code>main</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>2 · L'errore</h4>
+<pre data-lang="testo"><code>riga 12: error: cannot find symbol</code></pre>
+      <p>"cannot find symbol" = questo nome non esiste qui. <code>messaggio</code> nasce dentro le graffe dell'<code>if</code> e <strong>muore</strong> alla graffa che chiude l'<code>if</code>. La riga dopo è fuori dal blocco: per Java <code>messaggio</code> non esiste più. Ed è giusto così: se il totale fosse 30, la variabile non sarebbe mai stata creata.</p>
+      <h4>3 · La correzione</h4>
+      <ol>
+        <li>Dichiaro <code>messaggio</code> <strong>prima</strong> dell'<code>if</code>, nel blocco del metodo: così è visibile fino alla fine del metodo.</li>
+        <li>Nell'<code>if</code> la modifico soltanto (senza ripetere <code>String</code>, altrimenti dichiarerei una seconda variabile).</li>
+        <li><code>incasso</code> è un attributo: <code>chiusura()</code>, che è un altro metodo, lo può leggere. <code>totale</code> invece è locale a <code>registraVendita</code> e in <code>chiusura()</code> non si potrebbe usare.</li>
+      </ol>
+<pre data-lang="java"><code>class Negozio {
+    String nome;
+    double incasso;
+
+    Negozio(String nome) {
+        this.nome = nome;
+    }
+
+    void registraVendita(double prezzo, int pezzi) {
+        double totale = prezzo * pezzi;
+        incasso = incasso + totale;
+        String messaggio = "Vendita da " + totale + " euro";
+        if (totale &gt; 50) {
+            messaggio = messaggio + " (grande!)";
+        }
+        System.out.println(messaggio);
+    }
+
+    void chiusura() {
+        System.out.println(nome + ", incasso di oggi: " + incasso + " euro");
+    }
+}
+
+public class ScopeNegozioOk {
+    public static void main(String[] args) {
+        Negozio n = new Negozio("Cartoleria Arcobaleno");
+        n.registraVendita(20, 3);
+        n.registraVendita(4.5, 2);
+        n.chiusura();
+    }
+}</code></pre>
+      <p>Prima vendita: 20 × 3 = 60.0, sopra i 50, quindi "(grande!)". Seconda: 4.5 × 2 = 9.0. Incasso: 60 + 9 = 69.0.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>L'attributo nascosto <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nella classe <code>Giocatore</code> la parola <code>punti</code> compare in tre ruoli diversi. Prevedi l'output, poi spiega perché il metodo <code>bonus()</code> non regala davvero 150 punti a Sara.</p>
+<pre data-lang="java"><code>class Giocatore {
+    String nome;
+    int punti;
+
+    Giocatore(String nome) {
+        this.nome = nome;
+    }
+
+    void bonus() {
+        int punti = 100;
+        punti = punti + 50;
+        System.out.println("Dentro bonus: " + punti);
+    }
+
+    void segna(int punti) {
+        this.punti = this.punti + punti;
+    }
+
+    void premio() {
+        for (int i = 0; i &lt; 3; i++) {
+            punti = punti + i;
+        }
+    }
+}
+
+public class Ombra {
+    public static void main(String[] args) {
+        Giocatore g = new Giocatore("Sara");
+        g.segna(10);
+        g.bonus();
+        System.out.println("Dopo bonus: " + g.punti);
+        g.premio();
+        System.out.println("Dopo premio: " + g.punti);
+        g.segna(5);
+        System.out.println("Finale: " + g.punti);
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Dentro bonus: 150
+Dopo bonus: 10
+Dopo premio: 13
+Finale: 18</code></pre>
+      <h4>Ragionamento: chi è "punti" in ogni metodo?</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Metodo</th><th><code>punti</code> indica…</th><th>Effetto sull'attributo</th></tr></thead>
+        <tbody>
+          <tr><td><code>segna(10)</code></td><td>il <strong>parametro</strong> (10); l'attributo è <code>this.punti</code></td><td>0 + 10 = <strong>10</strong></td></tr>
+          <tr><td><code>bonus()</code></td><td>una <strong>variabile locale</strong> nuova, che vale 100 e poi 150</td><td>nessuno: resta <strong>10</strong></td></tr>
+          <tr><td><code>premio()</code></td><td>l'<strong>attributo</strong> (non c'è niente di più vicino con quel nome)</td><td>10 + 0 + 1 + 2 = <strong>13</strong></td></tr>
+          <tr><td><code>segna(5)</code></td><td>il parametro (5)</td><td>13 + 5 = <strong>18</strong></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Perché bonus() non funziona</h4>
+      <ul>
+        <li><code>int punti = 100;</code> con il tipo davanti è una <strong>dichiarazione</strong>: crea una variabile locale nuova che ha lo stesso nome dell'attributo e lo "copre" (si dice che lo mette in ombra). Da lì in poi, nel metodo, <code>punti</code> è la variabile locale.</li>
+        <li>La variabile locale arriva a 150, viene stampata e <strong>muore</strong> alla fine del metodo. L'attributo non è mai stato toccato.</li>
+        <li>Correzione: togliere la dichiarazione e scrivere <code>punti = punti + 150;</code> oppure, per essere chiarissimi, <code>this.punti = this.punti + 150;</code>.</li>
+      </ul>
+      <div class="callout warn"><span class="callout-title">Regola</span>Java usa sempre la variabile <strong>più vicina</strong> con quel nome: prima le locali e i parametri, poi gli attributi. Con <code>this.</code> davanti indichi sempre e solo l'attributo.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Array di oggetti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>new Studente[5]</code> crea 5 <strong>caselle</strong> che valgono <code>null</code>, non 5 studenti: ogni oggetto va creato con <code>new Studente(...)</code>. Usare un attributo o un metodo di una casella <code>null</code> provoca una <code>NullPointerException</code>; per evitarla si riempiono tutte le caselle o si controlla <code>if (s != null)</code>. Teoria: <a href="java-programmazione-a-oggetti.html#array-di-oggetti">Array di oggetti</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>La finale dei 100 metri <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi la classe <code>Atleta</code> (nome, nazione, tempo in secondi) con un costruttore e un metodo <code>stampa()</code>. Nel <code>main</code> crea un array di 4 atleti:</p>
+      <ul>
+        <li>Marco, ITA, 10.25 · Kim, KOR, 10.5 · Lena, GER, 9.75 · Omar, MAR, 10.0</li>
+      </ul>
+      <p>Stampali tutti, poi con due metodi <code>static</code> della classe principale trova <strong>l'atleta più veloce</strong> (il metodo deve restituire l'oggetto <code>Atleta</code>, non solo il tempo) e il <strong>tempo medio</strong>.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Marco (ITA): 10.25 s
+Kim (KOR): 10.5 s
+Lena (GER): 9.75 s
+Omar (MAR): 10.0 s
+Vince Lena con 9.75 s
+Tempo medio: 10.125 s</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>new Atleta[4]</code> crea 4 caselle vuote (<code>null</code>): le riempio <strong>tutte</strong> con <code>new Atleta(...)</code> prima di scorrere l'array.</li>
+        <li>Per stampare tutti uso il <code>foreach</code>: a ogni giro <code>a</code> è un atleta e posso chiamare <code>a.stampa()</code>.</li>
+        <li><strong>piuVeloce</strong> è la ricerca del minimo che conosci già, solo che confronto <code>a.tempo</code> e mi tengo l'<strong>oggetto</strong> intero: parto da <code>atleti[0]</code> e lo sostituisco quando trovo un tempo più basso. Restituendo l'atleta, chi chiama può leggere sia il nome sia il tempo.</li>
+        <li><strong>tempoMedio</strong>: accumulatore <code>double</code> con la somma dei tempi, diviso il numero di atleti.</li>
+        <li>I due metodi sono <code>static</code> e stanno nella classe con il <code>main</code>, come quelli del capitolo sui metodi: ricevono l'array come parametro.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class Atleta {
+    String nome;
+    String nazione;
+    double tempo;   // in secondi
+
+    Atleta(String nome, String nazione, double tempo) {
+        this.nome = nome;
+        this.nazione = nazione;
+        this.tempo = tempo;
+    }
+
+    void stampa() {
+        System.out.println(nome + " (" + nazione + "): " + tempo + " s");
+    }
+}
+
+public class Gara {
+
+    static Atleta piuVeloce(Atleta[] atleti) {
+        Atleta migliore = atleti[0];
+        for (Atleta a : atleti) {
+            if (a.tempo &lt; migliore.tempo) {
+                migliore = a;
+            }
+        }
+        return migliore;
+    }
+
+    static double tempoMedio(Atleta[] atleti) {
+        double somma = 0;
+        for (Atleta a : atleti) {
+            somma = somma + a.tempo;
+        }
+        return somma / atleti.length;
+    }
+
+    public static void main(String[] args) {
+        Atleta[] gara = new Atleta[4];
+        gara[0] = new Atleta("Marco", "ITA", 10.25);
+        gara[1] = new Atleta("Kim", "KOR", 10.5);
+        gara[2] = new Atleta("Lena", "GER", 9.75);
+        gara[3] = new Atleta("Omar", "MAR", 10.0);
+
+        for (Atleta a : gara) {
+            a.stampa();
+        }
+
+        Atleta v = piuVeloce(gara);
+        System.out.println("Vince " + v.nome + " con " + v.tempo + " s");
+        System.out.println("Tempo medio: " + tempoMedio(gara) + " s");
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Il più veloce è chi ha il tempo <strong>più basso</strong>: Lena con 9.75. Usare <code>&gt;</code> invece di <code>&lt;</code> darebbe il più lento.</li>
+        <li>Media: (10.25 + 10.5 + 9.75 + 10.0) / 4 = 40.5 / 4 = 10.125.</li>
+        <li><code>v</code> non è una copia di Lena: è un altro riferimento allo <strong>stesso</strong> oggetto che sta in <code>gara[2]</code>.</li>
+        <li>Se una casella fosse rimasta <code>null</code>, <code>a.stampa()</code> o <code>a.tempo</code> provocherebbero una <code>NullPointerException</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>Il garage: caselle vuote e riferimenti <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La classe <code>Bici</code> ha gli attributi <code>colore</code> e <code>marce</code> e un costruttore con entrambi. Prevedi l'output del frammento, poi rispondi: quanti oggetti <code>Bici</code> esistono davvero? Cosa succederebbe togliendo l'<code>if (b != null)</code>?</p>
+<pre data-lang="java"><code>Bici[] garage = new Bici[4];
+garage[0] = new Bici("rossa", 21);
+garage[2] = new Bici("verde", 7);
+garage[3] = garage[0];
+garage[3].marce = 18;
+
+int stampate = 0;
+for (Bici b : garage) {
+    if (b != null) {
+        System.out.println(b.colore + " " + b.marce);
+        stampate++;
+    } else {
+        System.out.println("casella vuota");
+    }
+}
+System.out.println("Bici stampate: " + stampate);
+System.out.println(garage[1] == null);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: disegna l'array</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>[0]</th><th>[1]</th><th>[2]</th><th>[3]</th></tr></thead>
+        <tbody>
+          <tr><td><code>new Bici[4]</code></td><td>null</td><td>null</td><td>null</td><td>null</td></tr>
+          <tr><td><code>garage[0] = new Bici("rossa", 21)</code></td><td><strong>B1</strong> (rossa, 21)</td><td>null</td><td>null</td><td>null</td></tr>
+          <tr><td><code>garage[2] = new Bici("verde", 7)</code></td><td>B1</td><td>null</td><td><strong>B2</strong> (verde, 7)</td><td>null</td></tr>
+          <tr><td><code>garage[3] = garage[0]</code></td><td>B1</td><td>null</td><td>B2</td><td><strong>B1</strong></td></tr>
+          <tr><td><code>garage[3].marce = 18</code></td><td>B1 (rossa, <strong>18</strong>)</td><td>null</td><td>B2</td><td>B1</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>rossa 18
+casella vuota
+verde 7
+rossa 18
+Bici stampate: 3
+true</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li>Gli oggetti sono <strong>2</strong> (due <code>new Bici</code>), anche se il programma stampa "Bici stampate: 3": la casella 3 contiene un riferimento alla <strong>stessa</strong> bici della casella 0. Il contatore conta le caselle piene, non gli oggetti diversi.</li>
+        <li>Per lo stesso motivo <code>garage[3].marce = 18</code> cambia anche la bici di <code>garage[0]</code>: è la stessa bici rossa. Per questo entrambe le righe dicono "rossa 18".</li>
+        <li>La casella 1 non è mai stata assegnata: resta <code>null</code>, quindi l'ultima riga stampa <code>true</code>. Con gli oggetti, <code>== null</code> è il modo giusto per chiedere "c'è un oggetto qui?".</li>
+        <li>Senza l'<code>if</code>, al secondo giro <code>b</code> vale <code>null</code> e <code>b.colore</code> provocherebbe una <code>NullPointerException</code>: il programma si fermerebbe dopo aver stampato solo "rossa 18".</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: la biblioteca di classe</h2>
+  <p>Questo esercizio mette insieme <strong>tutto il capitolo</strong>: classi e attributi, valori di partenza, riferimenti, metodi <code>void</code>, con parametri e con <code>return</code>, costruttori con <code>this</code>, overload dei costruttori con <code>this(...)</code>, scope delle variabili, array di oggetti e <code>null</code>. È lungo come una verifica: fallo a pezzi, una classe e un metodo alla volta, e prova ogni pezzo prima di andare avanti.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>La biblioteca di classe <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La 3B vuole un piccolo programma per gestire i libri della sua biblioteca. Scrivi due classi.</p>
+      <p><strong>Classe <code>Libro</code></strong></p>
+      <ul>
+        <li>attributi: <code>titolo</code>, <code>autore</code>, <code>anno</code> (<code>int</code>), <code>inPrestito</code> (<code>boolean</code>);</li>
+        <li>due costruttori: <code>Libro(titolo, autore, anno)</code> e <code>Libro(titolo, autore)</code> per i libri di cui non si conosce l'anno (anno 0). Il secondo deve usare <code>this(...)</code>. Un libro nuovo non è mai in prestito;</li>
+        <li><code>descrizione()</code>: restituisce una <code>String</code> come <code>Dune di Frank Herbert (1965)</code>; l'anno compare solo se è maggiore di 0 e, se il libro è in prestito, si aggiunge <code> - IN PRESTITO</code>;</li>
+        <li><code>presta()</code>: se il libro è già in prestito restituisce <code>false</code>, altrimenti lo segna in prestito e restituisce <code>true</code>;</li>
+        <li><code>restituisci()</code>: lo segna di nuovo disponibile.</li>
+      </ul>
+      <p><strong>Classe <code>Biblioteca</code></strong></p>
+      <ul>
+        <li>attributi: <code>nome</code>, un array <code>Libro[] scaffale</code> e <code>quanti</code> (quanti libri ci sono);</li>
+        <li>costruttore <code>Biblioteca(nome, capienza)</code> che crea lo scaffale con quella capienza;</li>
+        <li><code>aggiungi(Libro libro)</code>: mette il libro nella prima casella libera e restituisce <code>true</code>; se lo scaffale è pieno stampa un avviso e restituisce <code>false</code>;</li>
+        <li><code>cerca(String titolo)</code>: restituisce il libro con quel titolo, o <code>null</code> se non c'è;</li>
+        <li><code>prestito(String titolo)</code>: stampa se il prestito è registrato, se il libro è già in prestito o se non è in catalogo;</li>
+        <li><code>disponibili()</code>: quanti libri non sono in prestito;</li>
+        <li><code>stampaCatalogo()</code>: intestazione con nome, numero di libri e disponibili, poi l'elenco numerato.</li>
+      </ul>
+      <p><strong>Nel main</strong>: crea la "Biblioteca della 3B" con capienza 4; prova ad aggiungere 5 libri (Il barone rampante, Italo Calvino, 1957 · Dune, Frank Herbert, 1965 · Il diario della 3B, Anonimo, senza anno · Il nome della rosa, Umberto Eco, 1980 · Fahrenheit 451, Ray Bradbury, 1953); stampa il catalogo; chiedi in prestito Dune due volte, poi Harry Potter e Il nome della rosa; ristampa il catalogo; infine restituisci Dune e stampa quanti libri sono disponibili.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Scaffale pieno: non posso aggiungere Fahrenheit 451
+--- Biblioteca della 3B: 4 libri, 4 disponibili ---
+1. Il barone rampante di Italo Calvino (1957)
+2. Dune di Frank Herbert (1965)
+3. Il diario della 3B di Anonimo
+4. Il nome della rosa di Umberto Eco (1980)
+"Dune": prestito registrato
+"Dune": è già in prestito
+"Harry Potter": non è in catalogo
+"Il nome della rosa": prestito registrato
+--- Biblioteca della 3B: 4 libri, 2 disponibili ---
+1. Il barone rampante di Italo Calvino (1957)
+2. Dune di Frank Herbert (1965) - IN PRESTITO
+3. Il diario della 3B di Anonimo
+4. Il nome della rosa di Umberto Eco (1980) - IN PRESTITO
+Disponibili dopo la restituzione: 3</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <p>Prima di scrivere codice decido <strong>cosa sa</strong> e <strong>cosa fa</strong> ogni classe. Il libro conosce solo sé stesso; la biblioteca conosce i suoi libri e li gestisce.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pezzo</th><th>Riceve</th><th>Restituisce</th><th>Argomento del capitolo</th></tr></thead>
+        <tbody>
+          <tr><td>attributi di <code>Libro</code> e <code>Biblioteca</code></td><td>–</td><td>–</td><td>classe, attributi, valori di partenza (<code>false</code>, <code>0</code>)</td></tr>
+          <tr><td><code>Libro(...)</code> ×2</td><td>titolo, autore, [anno]</td><td>–</td><td>costruttore, <code>this</code>, overload, <code>this(...)</code></td></tr>
+          <tr><td><code>descrizione()</code></td><td>niente</td><td><code>String</code></td><td>metodo con return, variabile locale</td></tr>
+          <tr><td><code>presta()</code> / <code>restituisci()</code></td><td>niente</td><td><code>boolean</code> / niente</td><td>metodi che cambiano un attributo</td></tr>
+          <tr><td><code>Biblioteca(nome, capienza)</code></td><td><code>String</code>, <code>int</code></td><td>–</td><td>costruttore che crea un array di oggetti</td></tr>
+          <tr><td><code>aggiungi</code></td><td><code>Libro</code></td><td><code>boolean</code></td><td>oggetto come parametro, array di oggetti</td></tr>
+          <tr><td><code>cerca</code></td><td><code>String</code></td><td><code>Libro</code> o <code>null</code></td><td>riferimenti, <code>null</code></td></tr>
+          <tr><td><code>prestito</code>, <code>stampaCatalogo</code></td><td>titolo / niente</td><td>niente</td><td>metodi <code>void</code> che usano gli altri metodi</td></tr>
+          <tr><td><code>disponibili</code></td><td>niente</td><td><code>int</code></td><td>contatore locale, scope</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · La classe Libro e i suoi costruttori</h4>
+      <p>Il costruttore completo è l'<strong>unico</strong> che assegna gli attributi, con <code>this.titolo = titolo;</code> perché parametri e attributi hanno lo stesso nome. Quello con due parametri non ripete niente: chiama <code>this(titolo, autore, 0)</code> come prima riga. <code>inPrestito</code> non viene assegnato da nessun costruttore: parte da <code>false</code>, che è proprio "disponibile".</p>
+      <h4>Passo 3 · I metodi del libro</h4>
+      <p><code>descrizione()</code> costruisce il testo un pezzo alla volta in una variabile locale <code>testo</code> e lo <strong>restituisce</strong>: sarà la biblioteca a decidere di stamparlo. <code>presta()</code> usa due <code>return</code>: se il libro è già in prestito esce subito con <code>false</code> e la riga <code>inPrestito = true</code> non viene eseguita.</p>
+      <h4>Passo 4 · Lo scaffale: un array riempito a metà</h4>
+      <p>Il costruttore di <code>Biblioteca</code> crea <code>new Libro[capienza]</code>: 4 caselle <code>null</code>, nessun libro. L'attributo <code>quanti</code> fa due lavori: dice quanti libri ci sono <strong>e</strong> qual è la prima casella libera. In <code>aggiungi</code> metto il libro in <code>scaffale[quanti]</code> e poi incremento. Quando <code>quanti == scaffale.length</code> lo scaffale è pieno: Fahrenheit 451 viene rifiutato, ed è per questo che il suo avviso è la <strong>prima</strong> riga dell'output (arriva prima del catalogo).</p>
+      <p>Tutti i cicli vanno da 0 a <code>quanti</code>, <strong>non</strong> a <code>scaffale.length</code>: così non si tocca mai una casella <code>null</code> e non c'è rischio di <code>NullPointerException</code> anche quando lo scaffale non è pieno.</p>
+      <h4>Passo 5 · Cercare e prestare</h4>
+      <p><code>cerca</code> confronta i titoli con <code>equals</code> (sono <code>String</code>, cioè oggetti) e restituisce il <strong>riferimento</strong> al libro che sta nello scaffale, non una copia. Se il ciclo finisce senza trovarlo, restituisce <code>null</code>. <code>prestito</code> gestisce i tre casi in ordine: prima controlla <code>l == null</code> (se non lo facesse, <code>l.presta()</code> su Harry Potter fermerebbe il programma), poi prova a prestarlo. La prima richiesta di Dune va a buon fine, la seconda trova <code>inPrestito</code> già a <code>true</code>.</p>
+      <h4>Passo 6 · Il catalogo e la restituzione</h4>
+      <p><code>stampaCatalogo</code> usa <code>disponibili()</code> nell'intestazione e <code>descrizione()</code> per ogni libro: nel secondo catalogo Dune e Il nome della rosa risultano in prestito e i disponibili scendono da 4 a 2. Alla fine <code>b.cerca("Dune")</code> restituisce lo <strong>stesso</strong> oggetto che sta nello scaffale: chiamando <code>restituisci()</code> su <code>dune</code> si modifica il libro della biblioteca, e i disponibili tornano 3.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>// ===================== un libro =====================
+class Libro {
+    String titolo;
+    String autore;
+    int anno;
+    boolean inPrestito;      // parte da false: nessuno lo assegna
+
+    Libro(String titolo, String autore) {
+        this(titolo, autore, 0);     // anno sconosciuto
+    }
+
+    Libro(String titolo, String autore, int anno) {
+        this.titolo = titolo;
+        this.autore = autore;
+        this.anno = anno;
+    }
+
+    String descrizione() {
+        String testo = titolo + " di " + autore;
+        if (anno &gt; 0) {
+            testo = testo + " (" + anno + ")";
+        }
+        if (inPrestito) {
+            testo = testo + " - IN PRESTITO";
+        }
+        return testo;
+    }
+
+    boolean presta() {
+        if (inPrestito) {
+            return false;
+        }
+        inPrestito = true;
+        return true;
+    }
+
+    void restituisci() {
+        inPrestito = false;
+    }
+}
+
+// ================== la biblioteca ==================
+class Biblioteca {
+    String nome;
+    Libro[] scaffale;
+    int quanti;              // caselle occupate: parte da 0
+
+    Biblioteca(String nome, int capienza) {
+        this.nome = nome;
+        this.scaffale = new Libro[capienza];
+    }
+
+    boolean aggiungi(Libro libro) {
+        if (quanti == scaffale.length) {
+            System.out.println("Scaffale pieno: non posso aggiungere " + libro.titolo);
+            return false;
+        }
+        scaffale[quanti] = libro;
+        quanti++;
+        return true;
+    }
+
+    Libro cerca(String titolo) {
+        for (int i = 0; i &lt; quanti; i++) {
+            if (scaffale[i].titolo.equals(titolo)) {
+                return scaffale[i];
+            }
+        }
+        return null;
+    }
+
+    void prestito(String titolo) {
+        Libro l = cerca(titolo);
+        if (l == null) {
+            System.out.println("\"" + titolo + "\": non è in catalogo");
+        } else if (l.presta()) {
+            System.out.println("\"" + titolo + "\": prestito registrato");
+        } else {
+            System.out.println("\"" + titolo + "\": è già in prestito");
+        }
+    }
+
+    int disponibili() {
+        int conta = 0;
+        for (int i = 0; i &lt; quanti; i++) {
+            if (!scaffale[i].inPrestito) {
+                conta++;
+            }
+        }
+        return conta;
+    }
+
+    void stampaCatalogo() {
+        System.out.println("--- " + nome + ": " + quanti + " libri, " + disponibili() + " disponibili ---");
+        for (int i = 0; i &lt; quanti; i++) {
+            System.out.println((i + 1) + ". " + scaffale[i].descrizione());
+        }
+    }
+}
+
+// ================== il programma ==================
+public class BibliotecaDiClasse {
+    public static void main(String[] args) {
+        Biblioteca b = new Biblioteca("Biblioteca della 3B", 4);
+
+        b.aggiungi(new Libro("Il barone rampante", "Italo Calvino", 1957));
+        b.aggiungi(new Libro("Dune", "Frank Herbert", 1965));
+        b.aggiungi(new Libro("Il diario della 3B", "Anonimo"));
+        b.aggiungi(new Libro("Il nome della rosa", "Umberto Eco", 1980));
+        b.aggiungi(new Libro("Fahrenheit 451", "Ray Bradbury", 1953));
+        b.stampaCatalogo();
+
+        b.prestito("Dune");
+        b.prestito("Dune");
+        b.prestito("Harry Potter");
+        b.prestito("Il nome della rosa");
+        b.stampaCatalogo();
+
+        Libro dune = b.cerca("Dune");
+        dune.restituisci();
+        System.out.println("Disponibili dopo la restituzione: " + b.disponibili());
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Quanti oggetti <code>Libro</code> vengono creati in tutto? (5: anche Fahrenheit 451 nasce con <code>new</code>, solo che non entra nello scaffale.)</li>
+        <li>Cosa succede se in <code>disponibili()</code> il ciclo arriva a <code>scaffale.length</code> e lo scaffale ha una casella vuota? (<code>scaffale[i].inPrestito</code> su <code>null</code>: <code>NullPointerException</code>.)</li>
+        <li>Perché in <code>descrizione()</code> non serve <code>this.titolo</code>? (Nel metodo non c'è nessun parametro o variabile locale chiamata <code>titolo</code>: <code>titolo</code> indica già l'attributo.)</li>
+        <li>La variabile <code>conta</code> di <code>disponibili()</code> si può usare in <code>stampaCatalogo()</code>? (No: è locale, muore alla fine di <code>disponibili()</code>. Per questo il metodo la <strong>restituisce</strong>.)</li>
+        <li>Se scrivessi <code>b.cerca("Harry Potter").restituisci();</code> cosa succederebbe? (<code>cerca</code> restituisce <code>null</code> e chiamare un metodo su <code>null</code> dà <code>NullPointerException</code>.)</li>
+      </ul>
+    </div></details>
+  </div>
+
+</main>
+</body>
+</html>

@@ -4,6 +4,9 @@
  * Per aggiungere una pagina basta aggiungere { title, path, type } all'array
  * `pages` della materia: menu, elenco argomenti, progressi, ricerca e ripasso
  * si aggiornano da soli.
+ * Le pagine di tipo "esercizi" finiscono nell'area Esercizi (esercizi.html) e hanno
+ * in più: of (il capitolo di teoria a cui si riferiscono, se c'è), n (quanti
+ * esercizi contiene) e desc (una riga di descrizione).
  *
  * Va caricato in modo sincrono nell'<head>: applica subito il colore della
  * materia (niente "lampeggio") e poi carica gli altri script nell'ordine giusto.
@@ -14,7 +17,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "9",
+    version: "10",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -47,6 +50,13 @@
           { title: "Java: eccezioni", path: "materie/informatica/java-eccezioni.html", type: "teoria" },
           { title: "Java: Collections, ArrayList, Vector e LinkedList", path: "materie/informatica/java-collections-liste.html", type: "teoria" },
           { title: "Java: HashMap", path: "materie/informatica/java-hashmap.html", type: "teoria" },
+          { title: "Esercizi: array, wrapper, metodi e overload", path: "materie/informatica/esercizi-java-array-metodi.html", type: "esercizi", of: "materie/informatica/java-array-wrapper-metodi-overload.html", n: 15, desc: "Array e cicli, parseInt, metodi void e con return, metodi sugli array, overload." },
+          { title: "Esercizi: programmazione a oggetti", path: "materie/informatica/esercizi-java-oggetti.html", type: "esercizi", of: "materie/informatica/java-programmazione-a-oggetti.html", n: 16, desc: "Classi e attributi, metodi, costruttore e this, overload dei costruttori, scope, array di oggetti." },
+          { title: "Esercizi: gestione dei file", path: "materie/informatica/esercizi-java-file.html", type: "esercizi", of: "materie/informatica/java-gestione-dei-file.html", n: 17, desc: "La classe File e i percorsi, exists, FileWriter e append, FileReader carattere per carattere, delete, try-catch." },
+          { title: "Esercizi: eccezioni", path: "materie/informatica/esercizi-java-eccezioni.html", type: "esercizi", of: "materie/informatica/java-eccezioni.html", n: 16, desc: "try, catch e finally, più catch e getMessage, checked e unchecked, throw e throws." },
+          { title: "Esercizi: Collections, ArrayList, Vector e LinkedList", path: "materie/informatica/esercizi-java-liste.html", type: "esercizi", of: "materie/informatica/java-collections-liste.html", n: 19, desc: "Generics, metodi di ArrayList, for, foreach e Iterator, Vector, LinkedList come pila e coda, prestazioni." },
+          { title: "Esercizi: HashMap", path: "materie/informatica/esercizi-java-hashmap.html", type: "esercizi", of: "materie/informatica/java-hashmap.html", n: 17, desc: "put, get, containsKey, getOrDefault, remove, scorrere con keySet, values ed entrySet, hash e cassetti." },
+          { title: "Esercizi completi: tutto Java insieme", path: "materie/informatica/esercizi-java-progetti.html", type: "esercizi", n: 7, desc: "Tre progetti grandi come una verifica (biblioteca, negozio, torneo) che usano tutti i capitoli insieme, con le tappe per arrivarci." },
         ],
       },
       {
@@ -147,7 +157,7 @@
     var out = [];
     SITE.subjects.forEach(function (s) {
       s.pages.forEach(function (p, i) {
-        out.push({ subject: s, title: p.title, path: p.path, type: p.type, isIndex: i === 0 });
+        out.push({ subject: s, title: p.title, path: p.path, type: p.type, of: p.of, n: p.n, desc: p.desc, isIndex: i === 0 });
       });
     });
     return out;
@@ -155,6 +165,13 @@
   // Solo gli argomenti (esclusa la panoramica della materia).
   SITE.topics = function (subject) {
     return SITE.allPages().filter(function (p) { return !p.isIndex && (!subject || p.subject.id === subject.id); });
+  };
+  // I capitoli (tutto tranne gli esercizi) e le pagine di esercizi, separati.
+  SITE.chapters = function (subject) {
+    return SITE.topics(subject).filter(function (p) { return p.type !== "esercizi"; });
+  };
+  SITE.exercises = function (subject) {
+    return SITE.topics(subject).filter(function (p) { return p.type === "esercizi"; });
   };
   SITE.currentPage = function () {
     var all = SITE.allPages();
@@ -217,7 +234,7 @@
     },
     count: function (subject) {
       var all = SITE.progress.all();
-      var topics = SITE.topics(subject);
+      var topics = SITE.chapters(subject);
       return { done: topics.filter(function (p) { return all[p.path]; }).length, total: topics.length };
     },
   };

@@ -3,7 +3,7 @@
  * Barra superiore, menu delle materie (laterale su computer, a scomparsa su telefono),
  * barra di navigazione in basso su telefono, percorso, indice della pagina,
  * progressi ("studiato"), copertine delle materie in home, capitoli della materia,
- * pagina Riassunti e piccole animazioni.
+ * pagine Riassunti ed Esercizi e piccole animazioni.
  *
  * Ogni pagina contiene solo il proprio <main id="content">.
  */
@@ -29,6 +29,7 @@ SITE.ready(function () {
     close: '<path d="M18 6 6 18M6 6l12 12"/>',
     copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
     list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>',
   };
   var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
@@ -40,14 +41,25 @@ SITE.ready(function () {
 
   /* ---------- Barra superiore ---------- */
   var onHome = SITE.isHere("index.html"), onSum = SITE.isHere("riassunti.html");
+  var onEx = SITE.isHere("esercizi.html") || !!(page && page.type === "esercizi");
+  // pagina di esercizi collegata a un capitolo di teoria (e viceversa)
+  // "Esercizi: array e metodi" → "Array e metodi" (dentro l'area Esercizi il prefisso è sottinteso)
+  function shortExTitle(title) {
+    var t = title.replace(/^Esercizi:\s*/, "");
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  function exercisesOf(path) {
+    return SITE.allPages().filter(function (p) { return p.type === "esercizi" && p.of === path; })[0] || null;
+  }
   var topbar = document.createElement("header");
   topbar.className = "topbar";
   topbar.innerHTML =
     '<a class="brand" href="' + SITE.url("index.html") + '"><span class="brand-mark" aria-hidden="true"></span>' +
       '<span class="brand-name">' + SITE.escape(SITE.title) + "</span></a>" +
     '<nav class="top-nav" aria-label="Sezioni">' +
-      '<a class="top-link' + (onHome || subject ? " is-active" : "") + '" href="' + SITE.url("index.html") + '">Materie</a>' +
+      '<a class="top-link' + ((onHome || subject) && !onEx ? " is-active" : "") + '" href="' + SITE.url("index.html") + '">Materie</a>' +
       '<a class="top-link' + (onSum ? " is-active" : "") + '" href="' + SITE.url("riassunti.html") + '">Riassunti</a>' +
+      '<a class="top-link' + (onEx ? " is-active" : "") + '" href="' + SITE.url("esercizi.html") + '">Esercizi</a>' +
       (SITE.features.ripasso ? '<a class="top-link' + (SITE.isHere("ripasso.html") ? " is-active" : "") + '" href="' + SITE.url("ripasso.html") + '">Ripasso</a>' : "") +
     "</nav>" +
     '<button class="search-trigger" type="button" data-search-open>' + SITE.icon(I.search) +
@@ -71,12 +83,13 @@ SITE.ready(function () {
         '<span class="tab" aria-hidden="true"></span><span class="side-name">' + SITE.escape(s.name) + "</span>" +
         (c.total ? '<span class="side-count" title="Capitoli studiati">' + c.done + "/" + c.total + "</span>" : "") + "</a>";
       if (open && s.pages.length > 1) {
-        out += '<ul class="side-pages">';
-        s.pages.slice(1).forEach(function (p) {
-          out += '<li><a class="' + (SITE.isHere(p.path) ? "is-active" : "") + (done[p.path] ? " is-done" : "") + '" href="' + SITE.url(p.path) + '">' +
-            '<span class="dot" aria-hidden="true"></span>' + SITE.escape(p.title) + "</a></li>";
-        });
-        out += "</ul>";
+        var item = function (p) {
+          return '<li><a class="' + (SITE.isHere(p.path) ? "is-active" : "") + (done[p.path] ? " is-done" : "") + '" href="' + SITE.url(p.path) + '">' +
+            '<span class="dot" aria-hidden="true"></span>' + SITE.escape(p.type === "esercizi" ? shortExTitle(p.title) : p.title) + "</a></li>";
+        };
+        var ex = SITE.exercises(s);
+        out += '<ul class="side-pages">' + SITE.chapters(s).map(item).join("") +
+          (ex.length ? '<li class="side-group">Esercizi</li>' + ex.map(item).join("") : "") + "</ul>";
       }
       out += "</li>";
     });
@@ -97,8 +110,9 @@ SITE.ready(function () {
   }
   tabbar.innerHTML =
     tab("a", 'href="' + SITE.url("index.html") + '"', onHome, I.home, "Home") +
-    tab("button", 'type="button" data-open-menu', !!subject, I.book, "Materie") +
+    tab("button", 'type="button" data-open-menu', !!subject && !onEx, I.book, "Materie") +
     tab("a", 'href="' + SITE.url("riassunti.html") + '"', onSum, I.notes, "Riassunti") +
+    tab("a", 'href="' + SITE.url("esercizi.html") + '"', onEx, I.pencil, "Esercizi") +
     tab("button", 'type="button" data-search-open', SITE.isHere("cerca.html"), I.search, "Cerca") +
     (SITE.features.ripasso ? tab("a", 'href="' + SITE.url("ripasso.html") + '"', SITE.isHere("ripasso.html"), I.cards, "Ripasso") : "");
 
@@ -143,27 +157,35 @@ SITE.ready(function () {
   if (page && !page.isIndex) {
     SITE.recent.add(page);
     var sum = summaryOf(page.path);
-    var topics = SITE.topics(page.subject);
+    var isEx = page.type === "esercizi";
+    var topics = isEx ? SITE.exercises(page.subject) : SITE.chapters(page.subject);
     var pos = topics.map(function (t) { return t.path; }).indexOf(page.path);
     var next = topics[pos + 1];
+    var theory = isEx && page.of ? SITE.allPages().filter(function (p) { return p.path === page.of; })[0] : null;
+    var practice = isEx ? null : exercisesOf(page.path);
 
     var h1 = main.querySelector("h1");
     var meta = document.createElement("div");
     meta.className = "page-meta";
-    meta.innerHTML = (pos >= 0 ? '<span class="chapter-tag">Capitolo ' + (pos + 1) + "</span>" : "") +
+    meta.innerHTML = (pos >= 0 && !isEx ? '<span class="chapter-tag">Capitolo ' + (pos + 1) + "</span>" : "") +
       (page.type ? '<span class="badge badge-' + page.type + '">' + SITE.escape(SITE.pageTypes[page.type] || page.type) + "</span>" : "") +
       '<button type="button" class="status-pill" data-toggle-done></button>' +
-      (sum ? '<a class="meta-link" href="' + summaryUrl(page.path) + '">' + SITE.icon(I.notes) + "Riassunto</a>" : "");
+      (sum ? '<a class="meta-link" href="' + summaryUrl(page.path) + '">' + SITE.icon(I.notes) + "Riassunto</a>" : "") +
+      (practice ? '<a class="meta-link" href="' + SITE.url(practice.path) + '">' + SITE.icon(I.pencil) + "Esercizi</a>" : "") +
+      (theory ? '<a class="meta-link" href="' + SITE.url(theory.path) + '">' + SITE.icon(I.book) + "Teoria</a>" : "");
     if (h1) h1.parentNode.insertBefore(meta, h1);
 
     var end = document.createElement("section");
     end.className = "page-end";
     end.setAttribute("data-search-ignore", "");
-    end.innerHTML = '<div class="page-end-done"><p class="hand">Finito di studiare?</p><button type="button" class="btn btn-done" data-toggle-done></button></div>' +
+    end.innerHTML = '<div class="page-end-done"><p class="hand">' + (isEx ? "Finito gli esercizi?" : "Finito di studiare?") + '</p><button type="button" class="btn btn-done" data-toggle-done></button></div>' +
       '<div class="page-end-links">' +
         (sum ? '<a class="end-link" href="' + summaryUrl(page.path) + '"><span>Ripassa</span><strong>Riassunto del capitolo</strong>' + SITE.icon(I.arrow) + "</a>" : "") +
-        (next ? '<a class="end-link end-next" href="' + SITE.url(next.path) + '"><span>Capitolo successivo</span><strong>' + SITE.escape(next.title) + "</strong>" + SITE.icon(I.arrow) + "</a>"
-              : '<a class="end-link end-next" href="' + SITE.url(page.subject.pages[0].path) + '"><span>Hai finito i capitoli</span><strong>Torna a ' + SITE.escape(page.subject.name) + "</strong>" + SITE.icon(I.arrow) + "</a>") +
+        (practice ? '<a class="end-link" href="' + SITE.url(practice.path) + '"><span>Allenati</span><strong>' + SITE.escape(practice.title) + "</strong>" + SITE.icon(I.arrow) + "</a>" : "") +
+        (theory ? '<a class="end-link" href="' + SITE.url(theory.path) + '"><span>Rileggi la teoria</span><strong>' + SITE.escape(theory.title) + "</strong>" + SITE.icon(I.arrow) + "</a>" : "") +
+        (next ? '<a class="end-link end-next" href="' + SITE.url(next.path) + '"><span>' + (isEx ? "Esercizi successivi" : "Capitolo successivo") + "</span><strong>" + SITE.escape(next.title) + "</strong>" + SITE.icon(I.arrow) + "</a>"
+          : isEx ? '<a class="end-link end-next" href="' + SITE.url("esercizi.html") + '"><span>Hai finito questi esercizi</span><strong>Torna all\'area Esercizi</strong>' + SITE.icon(I.arrow) + "</a>"
+          : '<a class="end-link end-next" href="' + SITE.url(page.subject.pages[0].path) + '"><span>Hai finito i capitoli</span><strong>Torna a ' + SITE.escape(page.subject.name) + "</strong>" + SITE.icon(I.arrow) + "</a>") +
       "</div>";
     main.appendChild(end);
 
@@ -172,9 +194,10 @@ SITE.ready(function () {
       main.querySelectorAll("[data-toggle-done]").forEach(function (b) {
         b.classList.toggle("is-done", done);
         b.setAttribute("aria-pressed", String(done));
+        var word = isEx ? "Fatto" : "Studiato";
         b.innerHTML = b.classList.contains("status-pill")
-          ? (done ? SITE.icon(I.check) + "Studiato" : "Da studiare")
-          : (done ? SITE.icon(I.check) + "Studiato" : "Segna come studiato");
+          ? (done ? SITE.icon(I.check) + word : (isEx ? "Da fare" : "Da studiare"))
+          : (done ? SITE.icon(I.check) + word : "Segna come " + word.toLowerCase());
       });
     };
     paint();
@@ -195,11 +218,54 @@ SITE.ready(function () {
     });
   }
 
+  /* ---------- Elenco di pagine di esercizi (panoramica materia e area Esercizi) ---------- */
+  function exerciseList(pages) {
+    var done = SITE.progress.all();
+    return '<ol class="chapters ex-list">' + pages.map(function (p, i) {
+      var theory = p.of ? SITE.allPages().filter(function (t) { return t.path === p.of; })[0] : null;
+      var info = [p.n ? plural(p.n, "esercizio", "esercizi") : "", "soluzioni spiegate"].filter(Boolean).join(" · ");
+      return '<li class="chapter' + (done[p.path] ? " is-done" : "") + '" style="--i:' + i + '">' +
+        '<a class="chapter-main" href="' + SITE.url(p.path) + '">' +
+          '<span class="chapter-num" aria-hidden="true">' + SITE.icon(done[p.path] ? I.check : I.pencil) + "</span>" +
+          '<span class="chapter-text"><span class="chapter-title">' + SITE.escape(shortExTitle(p.title)) + "</span>" +
+            (p.desc ? '<span class="chapter-desc">' + SITE.escape(p.desc) + "</span>" : "") +
+            '<span class="chapter-info">' + SITE.escape(info) + (done[p.path] ? ' · <span class="chapter-ok">' + SITE.icon(I.check) + "fatto</span>" : "") + "</span></span>" +
+          '<span class="chapter-go" aria-hidden="true">' + SITE.icon(I.chevron) + "</span>" +
+        "</a>" +
+        (theory ? '<div class="chapter-foot"><span></span><a class="chapter-sum" href="' + SITE.url(theory.path) + '">' + SITE.icon(I.book) + "Teoria</a></div>" : "") +
+        "</li>";
+    }).join("") + "</ol>";
+  }
+
+  var exRoot = main.querySelector("[data-esercizi]");
+  function renderExerciseArea() {
+    if (!exRoot) return;
+    var groups = SITE.subjects.map(function (s) { return { subject: s, pages: SITE.exercises(s) }; })
+      .filter(function (g) { return g.pages.length; });
+    var total = 0;
+    groups.forEach(function (g) { g.pages.forEach(function (p) { total += p.n || 0; }); });
+    var count = exRoot.querySelector("[data-ex-count]");
+    if (count) count.textContent = total ? plural(total, "esercizio", "esercizi") + " con soluzione spiegata" : "";
+    exRoot.querySelector("[data-ex-list]").innerHTML = groups.length ? groups.map(function (g) {
+      return '<section class="sum-subject" style="--c:' + g.subject.color + '">' +
+        '<h2 class="sum-subject-title" data-search-ignore><span class="tab" aria-hidden="true"></span>' + SITE.escape(g.subject.name) + "</h2>" +
+        exerciseList(g.pages) + "</section>";
+    }).join("") : '<div class="empty"><p class="hand">Ancora nessun esercizio.</p><p>Le pagine di tipo <code>esercizi</code> in <code>assets/js/site.js</code> compaiono qui.</p></div>';
+  }
+  renderExerciseArea();
+
   /* ---------- Panoramica materia: progresso + capitoli ---------- */
   var list = main.querySelector("[data-subject-pages]");
+  var exBox = main.querySelector("[data-subject-exercises]");
   function renderTopics() {
+    if (exBox && subject) {
+      var exs = SITE.exercises(subject);
+      exBox.hidden = !exs.length;
+      var exList = exBox.querySelector("[data-list]");
+      if (exList) exList.innerHTML = exerciseList(exs);
+    }
     if (!list || !subject) return;
-    var topics = SITE.topics(subject);
+    var topics = SITE.chapters(subject);
     var done = SITE.progress.all();
     if (!topics.length) {
       list.innerHTML = '<div class="empty"><p class="hand">Quaderno ancora bianco.</p><p>I capitoli di ' +
@@ -280,7 +346,7 @@ SITE.ready(function () {
     var sumList = sumRoot.querySelector("[data-sum-list]");
     var sumFilters = sumRoot.querySelector("[data-sum-filters]");
     var groups = SITE.subjects.map(function (s) {
-      return { subject: s, chapters: SITE.topics(s).filter(function (p) { return summaryOf(p.path); }) };
+      return { subject: s, chapters: SITE.chapters(s).filter(function (p) { return summaryOf(p.path); }) };
     }).filter(function (g) { return g.chapters.length; });
 
     sumFilters.innerHTML = '<button type="button" class="chip" data-m="" aria-pressed="true">Tutte</button>' +
@@ -294,7 +360,7 @@ SITE.ready(function () {
         '<h2 class="sum-subject-title" data-search-ignore><span class="tab" aria-hidden="true"></span>' + SITE.escape(g.subject.name) + "</h2>" +
         g.chapters.map(function (p) {
           var s = summaryOf(p.path);
-          var n = SITE.topics(g.subject).map(function (t) { return t.path; }).indexOf(p.path) + 1;
+          var n = SITE.chapters(g.subject).map(function (t) { return t.path; }).indexOf(p.path) + 1;
           return '<details class="sum-chapter" id="' + summaryId(p.path) + '">' +
             '<summary><span class="sum-num" aria-hidden="true">' + n + "</span>" +
               '<span class="sum-head"><span class="sum-title">' + SITE.escape(p.title) + "</span>" +
@@ -411,7 +477,7 @@ SITE.ready(function () {
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
 
-  document.addEventListener("progress-change", function () { renderTopics(); renderProgress(); });
+  document.addEventListener("progress-change", function () { renderTopics(); renderProgress(); renderExerciseArea(); });
   document.body.classList.add("is-ready");
 
   /* ---------- Blocchi che compaiono scorrendo ---------- */

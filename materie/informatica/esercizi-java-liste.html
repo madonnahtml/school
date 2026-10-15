@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: Collections, ArrayList, Vector e LinkedList · Scuola</title>
+  <meta name="description" content="Informatica, esercizi di Java con soluzioni spiegate passo passo: Collections Framework, generics, interfaccia List, ArrayList e i suoi metodi, la trappola di remove, size e capacità, for, foreach e Iterator, Vector e capacityIncrement, LinkedList, pila e coda con Deque, prestazioni O(1) e O(n), come scegliere la lista, buone abitudini. Con un esercizio completo finale.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: Collections, ArrayList, Vector e LinkedList</h1>
+  <p class="lead">Consegne ed esercizi per allenarti su tutto il capitolo <a href="java-collections-liste.html">Java: Collections, ArrayList, Vector e LinkedList</a>. Ogni soluzione spiega il ragionamento, mostra il codice completo e l'output vero del programma.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a scrivere il programma da solo (su carta o al computer) e solo dopo apri la <strong>soluzione spiegata</strong>. Gli esercizi vanno dal più facile al più difficile; l'ultimo li mette insieme tutti. Ogni programma è stato compilato ed eseguito: l'output che vedi è quello vero. Ricordati gli <code>import</code> da <code>java.util</code>: senza, nessuna lista compila.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Collections Framework e generics</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il <strong>Java Collections Framework</strong> è l'insieme di interfacce e classi di <code>java.util</code> per gestire gruppi di oggetti. Tra le parentesi angolari scrivi il <strong>tipo</strong> degli elementi: <code>List&lt;String&gt;</code>, <code>List&lt;Integer&gt;</code> (solo classi, mai <code>&lt;int&gt;</code>). A destra basta il diamante <code>&lt;&gt;</code>. Teoria: <a href="java-collections-liste.html#il-java-collections-framework">Il Java Collections Framework</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>La lista della spesa <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Crea una lista di <code>String</code> vuota e aggiungi, in quest'ordine, "latte", "pane", "mele" e di nuovo "latte". Stampa la lista intera, quante voci contiene, la prima e l'ultima voce, e se contiene "pane" e "uova". Infine aggiungi "uova" e stampa di nuovo il numero di voci.</p>
+      <p><strong>Vincolo:</strong> per l'ultima voce non scrivere <code>get(3)</code>: deve funzionare con liste di qualsiasi lunghezza.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Lista: [latte, pane, mele, latte]
+Voci: 4
+Prima voce: latte
+Ultima voce: latte
+Serve il pane? true
+Servono le uova? false
+Dopo l'aggiunta: 5 voci</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Non so quante voci avrà la spesa: un array (lunghezza fissa) non va bene, una <strong>lista</strong> sì, perché cresce da sola.</li>
+        <li>Dichiaro <code>List&lt;String&gt; spesa = new ArrayList&lt;&gt;();</code>: a sinistra l'interfaccia <code>List</code>, a destra la classe vera <code>ArrayList</code>; tra <code>&lt; &gt;</code> il tipo degli elementi.</li>
+        <li>Ogni <code>add(e)</code> aggiunge in fondo. "latte" due volte va bene: una <code>List</code> <strong>ammette i duplicati</strong>.</li>
+        <li>Il numero di voci è <code>size()</code> (con le parentesi: è un metodo). La prima voce è <code>get(0)</code>, l'ultima <code>get(size() - 1)</code>, come <code>length - 1</code> negli array.</li>
+        <li>Per sapere se una voce c'è uso <code>contains</code>, che restituisce un <code>boolean</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Spesa {
+    public static void main(String[] args) {
+        List&lt;String&gt; spesa = new ArrayList&lt;&gt;();
+        spesa.add("latte");
+        spesa.add("pane");
+        spesa.add("mele");
+        spesa.add("latte");
+
+        System.out.println("Lista: " + spesa);
+        System.out.println("Voci: " + spesa.size());
+        System.out.println("Prima voce: " + spesa.get(0));
+        System.out.println("Ultima voce: " + spesa.get(spesa.size() - 1));
+        System.out.println("Serve il pane? " + spesa.contains("pane"));
+        System.out.println("Servono le uova? " + spesa.contains("uova"));
+
+        spesa.add("uova");   // me le ero dimenticate: nessun problema
+        System.out.println("Dopo l'aggiunta: " + spesa.size() + " voci");
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li><code>System.out.println(spesa)</code> stampa direttamente tutta la lista tra parentesi quadre: con un array, invece, avresti visto una scritta strana tipo <code>[Ljava.lang.String;@1b6d3586</code>.</li>
+        <li>L'ultima voce prima di aggiungere le uova è "latte" (la seconda volta): l'<strong>ordine di inserimento</strong> viene mantenuto.</li>
+        <li>Array contro lista: <code>array.length</code> (proprietà), <code>stringa.length()</code> (metodo di String), <code>lista.size()</code> (metodo di List). Tre nomi diversi per la stessa idea!</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Trova l'errore: generics e interfacce <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Nessuno di questi tre programmi compila. Per ognuno trova la riga sbagliata, spiega con parole tue cosa dice il compilatore e correggilo.</p>
+      <p><strong>A</strong></p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Generics1 {
+    public static void main(String[] args) {
+        List&lt;int&gt; numeri = new ArrayList&lt;&gt;();
+        numeri.add(5);
+    }
+}</code></pre>
+      <p><strong>B</strong></p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Generics2 {
+    public static void main(String[] args) {
+        List&lt;String&gt; nomi = new ArrayList&lt;&gt;();
+        nomi.add("Anna");
+        nomi.add(42);
+    }
+}</code></pre>
+      <p><strong>C</strong></p>
+<pre data-lang="java"><code>import java.util.List;
+
+public class Generics3 {
+    public static void main(String[] args) {
+        List&lt;String&gt; nomi = new List&lt;&gt;();
+        nomi.add("Anna");
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · tra &lt; &gt; vanno solo classi</h4>
+<pre data-lang="testo"><code>riga 6: error: unexpected type</code></pre>
+      <p>"unexpected type" vuol dire "tipo inaspettato": nelle righe successive il compilatore precisa che voleva un tipo <strong>riferimento</strong> (una classe) e ha trovato il primitivo <code>int</code>. Le collezioni contengono solo oggetti. Correzione: <code>List&lt;Integer&gt; numeri = new ArrayList&lt;&gt;();</code>. La riga <code>numeri.add(5)</code> poi va benissimo: grazie all'<strong>autoboxing</strong> Java trasforma da solo <code>5</code> in un <code>Integer</code>.</p>
+      <h4>B · il tipo lo controlla il compilatore</h4>
+<pre data-lang="testo"><code>riga 8: error: incompatible types: int cannot be converted to String</code></pre>
+      <p>La lista è dichiarata <code>List&lt;String&gt;</code>: accetta solo <code>String</code>. Il compilatore vede che <code>42</code> è un <code>int</code> e che non può diventare una <code>String</code> ("incompatible types: int cannot be converted to String" = tipi incompatibili, un int non si converte in String). È proprio il vantaggio dei generics: l'errore salta fuori <strong>quando compili</strong>, non mentre il programma gira. Correzione: <code>nomi.add("42");</code> se volevi il testo, oppure una lista diversa per i numeri.</p>
+      <h4>C · un'interfaccia non si crea con new</h4>
+<pre data-lang="testo"><code>riga 5: error: List is abstract; cannot be instantiated</code></pre>
+      <p><code>List</code> è un'<strong>interfaccia</strong>: un contratto che dice cosa si può fare, non come ("is abstract; cannot be instantiated" = è astratta, non si può creare). Serve una classe che la implementi. Correzione: <code>List&lt;String&gt; nomi = new ArrayList&lt;&gt;();</code> (e il relativo <code>import java.util.ArrayList;</code>).</p>
+      <div class="callout tip"><span class="callout-title">Riassunto</span>A <strong>sinistra</strong> l'interfaccia (<code>List</code>), a <strong>destra</strong> la classe concreta (<code>ArrayList</code>, <code>LinkedList</code>, <code>Vector</code>), tra <code>&lt; &gt;</code> sempre una <strong>classe</strong> (<code>Integer</code>, <code>Double</code>, <code>String</code>…).</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>ArrayList: i metodi principali</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>add(e)</code> aggiunge in fondo, <code>add(i, e)</code> inserisce in posizione <code>i</code> e fa scalare gli altri, <code>get(i)</code> legge, <code>set(i, e)</code> sostituisce, <code>remove(i)</code> toglie per posizione, <code>remove(oggetto)</code> toglie per valore. Poi <code>size()</code>, <code>contains(e)</code>, <code>indexOf(e)</code>, <code>isEmpty()</code>, <code>clear()</code>. Teoria: <a href="java-collections-liste.html#usare-arraylist-la-sintassi">Usare ArrayList: la sintassi</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>La classifica che cambia <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Senza eseguirlo, scrivi cosa stampa questo frammento. Disegna la lista dopo <strong>ogni</strong> istruzione, come faresti con le caselle di un array.</p>
+<pre data-lang="java"><code>List&lt;String&gt; c = new ArrayList&lt;&gt;();
+c.add("Rossi");
+c.add("Bianchi");
+c.add("Verdi");
+c.add(1, "Neri");
+c.set(0, "Gialli");
+c.remove(2);
+c.add("Rossi");
+System.out.println(c);
+System.out.println(c.indexOf("Verdi") + " " + c.indexOf("Rossi") + " " + c.size());
+System.out.println(c.indexOf("Bianchi") + " " + c.contains("Neri"));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: la tabella della lista</h4>
+      <p>Il trucco è aggiornare la lista riga per riga, ricordando che le posizioni partono da 0 e che <code>add(i, e)</code> e <code>remove(i)</code> <strong>fanno scorrere</strong> gli elementi successivi.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>Lista dopo</th><th>Cosa è successo</th></tr></thead>
+        <tbody>
+          <tr><td><code>add("Rossi")</code></td><td>[Rossi]</td><td>in fondo (posizione 0)</td></tr>
+          <tr><td><code>add("Bianchi")</code></td><td>[Rossi, Bianchi]</td><td>in fondo</td></tr>
+          <tr><td><code>add("Verdi")</code></td><td>[Rossi, Bianchi, Verdi]</td><td>in fondo</td></tr>
+          <tr><td><code>add(1, "Neri")</code></td><td>[Rossi, <strong>Neri</strong>, Bianchi, Verdi]</td><td>Bianchi e Verdi scalano di un posto</td></tr>
+          <tr><td><code>set(0, "Gialli")</code></td><td>[<strong>Gialli</strong>, Neri, Bianchi, Verdi]</td><td>Rossi viene <em>sostituito</em>, la size resta 4</td></tr>
+          <tr><td><code>remove(2)</code></td><td>[Gialli, Neri, Verdi]</td><td>tolto l'elemento in posizione 2 (Bianchi); Verdi torna indietro</td></tr>
+          <tr><td><code>add("Rossi")</code></td><td>[Gialli, Neri, Verdi, <strong>Rossi</strong>]</td><td>Rossi rientra, ma in fondo</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>[Gialli, Neri, Verdi, Rossi]
+2 3 4
+-1 true</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li><code>indexOf("Verdi")</code> è 2 e <code>indexOf("Rossi")</code> è 3: Rossi era stato "cancellato" da <code>set</code>, e quello che c'è ora è il nuovo Rossi aggiunto in fondo.</li>
+        <li><code>indexOf("Bianchi")</code> è <code>-1</code>: è il modo di <code>indexOf</code> per dire "non c'è" (nessuna posizione vera può essere negativa).</li>
+        <li>Errore tipico: pensare che <code>set(0, ...)</code> inserisca come <code>add(0, ...)</code>. <code>set</code> <strong>sostituisce</strong> e la size non cambia; <code>add(i, e)</code> <strong>inserisce</strong> e la size cresce di 1.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>La playlist <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi un programma che gestisce una playlist (una <code>List&lt;String&gt;</code>):</p>
+      <ol type="a">
+        <li>parte vuota; aggiungi "Alba", "Mare", "Notte";</li>
+        <li>inserisci "Pioggia" come <strong>seconda</strong> canzone;</li>
+        <li>sostituisci "Notte" con "Notte (live)" <strong>senza scrivere a mano la sua posizione</strong>;</li>
+        <li>prova a togliere "Vento" (che non c'è) e "Mare", stampando cosa restituisce ogni <code>remove</code>;</li>
+        <li>stampa la playlist numerata a partire da 1;</li>
+        <li>svuotala e controlla che sia vuota.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Tolgo Vento: false
+Tolgo Mare: true
+1. Alba
+2. Pioggia
+3. Notte (live)
+Vuota? true (size 0)</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"Seconda canzone" vuol dire <strong>posizione 1</strong> (si conta da 0): <code>add(1, "Pioggia")</code>. La lista diventa [Alba, Pioggia, Mare, Notte].</li>
+        <li>Per sostituire "Notte" mi serve la sua posizione: me la dà <code>indexOf</code> (qui 3). Poi <code>set(pos, ...)</code> mette il nuovo titolo al suo posto.</li>
+        <li><code>remove("Vento")</code> riceve una <code>String</code>, quindi è il <code>remove</code> <strong>per oggetto</strong>: non trova "Vento" e restituisce <code>false</code>, senza errori. <code>remove("Mare")</code> lo trova, lo toglie e restituisce <code>true</code>.</li>
+        <li>Per numerare serve l'indice: <code>for</code> classico fino a <code>size()</code>, stampando <code>i + 1</code>.</li>
+        <li><code>clear()</code> svuota tutto; <code>isEmpty()</code> è come scrivere <code>size() == 0</code>, ma si legge meglio.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Playlist {
+    public static void main(String[] args) {
+        List&lt;String&gt; playlist = new ArrayList&lt;&gt;();
+        playlist.add("Alba");
+        playlist.add("Mare");
+        playlist.add("Notte");
+
+        // b) "Pioggia" diventa la seconda canzone (posizione 1)
+        playlist.add(1, "Pioggia");
+
+        // c) sostituisco "Notte" senza sapere a memoria dov'è
+        int pos = playlist.indexOf("Notte");
+        playlist.set(pos, "Notte (live)");
+
+        // d) remove per oggetto restituisce true o false
+        System.out.println("Tolgo Vento: " + playlist.remove("Vento"));
+        System.out.println("Tolgo Mare: " + playlist.remove("Mare"));
+
+        // e) stampa numerata
+        for (int i = 0; i &lt; playlist.size(); i++) {
+            System.out.println((i + 1) + ". " + playlist.get(i));
+        }
+
+        // f) svuoto tutto
+        playlist.clear();
+        System.out.println("Vuota? " + playlist.isEmpty() + " (size " + playlist.size() + ")");
+    }
+}</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Scrivere <code>playlist.set(3, "Notte (live)")</code> a mano: funziona oggi, ma se prima cambi l'ordine delle canzoni sostituisci quella sbagliata. Con <code>indexOf</code> il programma si adatta.</li>
+        <li>Se <code>indexOf</code> restituisce <code>-1</code> (canzone che non c'è), <code>set(-1, ...)</code> lancia <code>IndexOutOfBoundsException</code>. In un programma vero si controlla prima: <code>if (pos != -1)</code>.</li>
+        <li><code>(i + 1)</code> va tra parentesi, altrimenti Java attacca il testo: "01. Alba", "11. Pioggia"…</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>remove(int) o remove(Object)? Guarda cosa restituisce <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> 1) Prevedi l'output di questo frammento. Attenzione: ogni <code>println</code> stampa anche <strong>il valore restituito</strong> da <code>remove</code>, che non è sempre dello stesso tipo.</p>
+<pre data-lang="java"><code>List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(4, 0, 2, 1, 3));
+System.out.println(n.remove(1));
+System.out.println(n);
+System.out.println(n.remove(Integer.valueOf(1)));
+System.out.println(n);
+System.out.println(n.remove(Integer.valueOf(9)));
+System.out.println(n.remove(2));
+System.out.println(n);</code></pre>
+      <p>2) Ora la lista è <code>[4, 2]</code> e vuoi togliere il <strong>numero</strong> 4. Cosa succede con questo codice? Come lo correggi?</p>
+<pre data-lang="java"><code>List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(4, 2));
+n.remove(4);   // volevo togliere il numero 4...
+System.out.println(n);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Esistono due metodi <code>remove</code> (è un <strong>overload</strong>, come nel capitolo sui metodi): <code>remove(int indice)</code> e <code>remove(Object oggetto)</code>. Java sceglie guardando il tipo dell'argomento.</li>
+        <li>Un numero scritto così, <code>1</code>, è un <code>int</code> → vince <code>remove(int)</code>: toglie per <strong>posizione</strong> e restituisce <strong>l'elemento tolto</strong>.</li>
+        <li><code>Integer.valueOf(1)</code> è un oggetto <code>Integer</code> → <code>remove(Object)</code>: toglie per <strong>valore</strong> e restituisce <code>true</code> o <code>false</code>.</li>
+      </ol>
+      <h4>1 · Output</h4>
+<pre data-lang="testo"><code>0
+[4, 2, 1, 3]
+true
+[4, 2, 3]
+false
+3
+[4, 2]</code></pre>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Istruzione</th><th>Quale remove</th><th>Restituisce</th><th>Lista dopo</th></tr></thead>
+        <tbody>
+          <tr><td><code>n.remove(1)</code></td><td>per posizione</td><td>0 (l'elemento che stava in posizione 1)</td><td>[4, 2, 1, 3]</td></tr>
+          <tr><td><code>n.remove(Integer.valueOf(1))</code></td><td>per valore</td><td>true (il numero 1 c'era)</td><td>[4, 2, 3]</td></tr>
+          <tr><td><code>n.remove(Integer.valueOf(9))</code></td><td>per valore</td><td>false (il 9 non c'è)</td><td>[4, 2, 3]</td></tr>
+          <tr><td><code>n.remove(2)</code></td><td>per posizione</td><td>3 (l'elemento in posizione 2)</td><td>[4, 2]</td></tr>
+        </tbody>
+      </table></div>
+      <h4>2 · Il programma si ferma</h4>
+<pre data-lang="testo"><code>Exception in thread "main" java.lang.IndexOutOfBoundsException: Index 4 out of bounds for length 2
+	at ...</code></pre>
+      <p><code>n.remove(4)</code> è il remove per <strong>posizione</strong>: cerca l'elemento in posizione 4, ma la lista ha solo 2 elementi (posizioni 0 e 1). Il messaggio lo dice chiaramente: "Index 4 out of bounds for length 2", indice 4 fuori dai limiti per una lunghezza 2. Correzione: <code>n.remove(Integer.valueOf(4));</code>.</p>
+      <div class="callout warn"><span class="callout-title">Quando preoccuparsi</span>La trappola esiste solo con <code>List&lt;Integer&gt;</code>. Con <code>List&lt;String&gt;</code> <code>remove("Mare")</code> non può essere confuso con una posizione. Regola: con una lista di numeri, per togliere un <strong>valore</strong> scrivi sempre <code>Integer.valueOf(...)</code>.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Dentro ArrayList: size e capacità</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Dentro un <code>ArrayList</code> c'è un normale array, un po' più grande del necessario. La <strong>size</strong> è quanti elementi ci sono davvero; la <strong>capacità</strong> è quanti ne entrano prima di dover creare un array più grande e copiare tutto. Inserire in mezzo costa perché bisogna <strong>spostare</strong> gli elementi successivi. Teoria: <a href="java-collections-liste.html#arraylist-l-array-dinamico">ArrayList: l'array dinamico</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Capacità non è size <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Un compagno crea una lista "da 50 posti" e pensa di poter leggere subito il secondo posto. Prevedi l'output e spiega l'errore.</p>
+<pre data-lang="java"><code>List&lt;String&gt; posti = new ArrayList&lt;&gt;(50);
+System.out.println(posti.size());
+System.out.println(posti.isEmpty());
+posti.add("Anna");
+System.out.println(posti.size() + " " + posti.get(0));
+try {
+    System.out.println(posti.get(1));
+} catch (IndexOutOfBoundsException e) {
+    System.out.println("Errore: " + e.getMessage());
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Output</h4>
+<pre data-lang="testo"><code>0
+true
+1 Anna
+Errore: Index 1 out of bounds for length 1</code></pre>
+      <h4>Spiegazione</h4>
+      <ul>
+        <li><code>new ArrayList&lt;&gt;(50)</code> crea una lista <strong>vuota</strong>: il 50 è la <strong>capacità iniziale</strong>, cioè lo spazio preparato in anticipo nell'array interno. La size è 0 e <code>isEmpty()</code> è <code>true</code>.</li>
+        <li>Dopo <code>add("Anna")</code> la size è 1: esiste solo la posizione 0.</li>
+        <li><code>get(1)</code> chiede una posizione che <strong>non esiste</strong> (anche se nell'array interno c'è posto): <code>IndexOutOfBoundsException</code>. Il messaggio "Index 1 out of bounds for length 1" parla della size (1), non della capacità (50).</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Differenza con gli array</span>Con <code>new int[50]</code> hai subito 50 caselle (piene di 0) e puoi leggerle tutte. Con <code>new ArrayList&lt;&gt;(50)</code> non hai nessun elemento: le posizioni nascono solo con <code>add</code>. La capacità serve solo a evitare ingrandimenti inutili se sai già che arriveranno tanti elementi.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Costruisci il tuo ArrayList <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Per capire davvero come funziona <code>ArrayList</code>, costruiscine uno tuo per i numeri interi, usando solo un array. Scrivi una classe <code>ListaInteri</code> con:</p>
+      <ul>
+        <li>gli attributi <code>int[] dati</code> (l'array interno) e <code>int size</code> (quanti elementi ci sono davvero);</li>
+        <li>un costruttore che riceve la capacità iniziale;</li>
+        <li><code>void add(int x)</code>: aggiunge in fondo; se l'array è pieno ne crea uno più grande del 50%, copia tutto e stampa un messaggio;</li>
+        <li><code>int add(int pos, int x)</code> (overload): inserisce in posizione <code>pos</code> spostando avanti gli altri e restituisce <strong>quanti elementi ha spostato</strong>;</li>
+        <li><code>int get(int i)</code>: lancia <code>IndexOutOfBoundsException</code> se <code>i</code> non è tra 0 e <code>size - 1</code>.</li>
+      </ul>
+      <p>Nel <code>main</code> parti con capacità 4, aggiungi 10, 20, …, 100 e poi inserisci 5 in testa.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>add(10)
+add(20)
+add(30)
+add(40)
+add(50)
+  piena! ingrandisco da 4 a 6
+add(60)
+add(70)
+  piena! ingrandisco da 6 a 9
+add(80)
+add(90)
+add(100)
+  piena! ingrandisco da 9 a 13
+size 10, capacità 13
+add(0, 5) ha spostato 10 elementi
+primo 5, ultimo 100
+size 11, capacità 13</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Servono <strong>due numeri diversi</strong>: <code>dati.length</code> è la <strong>capacità</strong>, <code>size</code> è quanti elementi ho messo. Il prossimo elemento va nella casella <code>dati[size]</code>.</li>
+        <li>L'array è pieno quando <code>size == dati.length</code>. Gli array non si allungano, quindi ne creo uno nuovo più grande (<code>length + length / 2</code>, cioè +50%), copio gli elementi con un ciclo e faccio puntare <code>dati</code> al nuovo array. Il vecchio verrà buttato via da Java.</li>
+        <li>Per inserire in posizione <code>pos</code> devo fare posto: prima allungo la lista di uno (riuso <code>add</code>, così l'eventuale ingrandimento è già gestito), poi sposto ogni elemento di una casella in avanti <strong>partendo dal fondo</strong>, fino a <code>pos</code>. Infine scrivo <code>x</code> in <code>dati[pos]</code>.</li>
+        <li>In <code>get</code> controllo l'indice con la <strong>size</strong>, non con la capacità: le caselle oltre <code>size</code> esistono nell'array ma non fanno parte della lista.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>class ListaInteri {
+    int[] dati;
+    int size;
+
+    ListaInteri(int capacitaIniziale) {
+        this.dati = new int[capacitaIniziale];
+        this.size = 0;
+    }
+
+    // aggiunge in fondo: si ingrandisce se è piena
+    void add(int x) {
+        if (size == dati.length) {
+            int nuovaCapacita = dati.length + dati.length / 2;   // circa +50%
+            System.out.println("  piena! ingrandisco da " + dati.length + " a " + nuovaCapacita);
+            int[] nuovo = new int[nuovaCapacita];
+            for (int i = 0; i &lt; size; i++) {
+                nuovo[i] = dati[i];
+            }
+            dati = nuovo;
+        }
+        dati[size] = x;
+        size++;
+    }
+
+    // inserisce in posizione pos: restituisce quanti elementi ha spostato
+    int add(int pos, int x) {
+        add(0);   // fa posto in fondo (e si ingrandisce se serve)
+        int spostati = 0;
+        for (int i = size - 1; i &gt; pos; i--) {
+            dati[i] = dati[i - 1];
+            spostati++;
+        }
+        dati[pos] = x;
+        return spostati;
+    }
+
+    int get(int i) {
+        if (i &lt; 0 || i &gt;= size) {
+            throw new IndexOutOfBoundsException("indice " + i + ", size " + size);
+        }
+        return dati[i];
+    }
+}
+
+public class MiaLista {
+    public static void main(String[] args) {
+        ListaInteri l = new ListaInteri(4);
+        for (int k = 1; k &lt;= 10; k++) {
+            System.out.println("add(" + (k * 10) + ")");
+            l.add(k * 10);
+        }
+        System.out.println("size " + l.size + ", capacità " + l.dati.length);
+
+        int spostati = l.add(0, 5);
+        System.out.println("add(0, 5) ha spostato " + spostati + " elementi");
+        System.out.println("primo " + l.get(0) + ", ultimo " + l.get(l.size - 1));
+        System.out.println("size " + l.size + ", capacità " + l.dati.length);
+    }
+}</code></pre>
+      <h4>Leggere l'output</h4>
+      <ul>
+        <li>Capacità 4: i primi quattro <code>add</code> non spostano niente. Al quinto l'array è pieno: da 4 a 6. Al settimo da 6 a 9, al decimo da 9 a 13. Gli ingrandimenti sono <strong>rari</strong>: per questo <code>add</code> in fondo costa O(1) "in media" (ammortizzato).</li>
+        <li><code>add(0, 5)</code> ha spostato <strong>10</strong> elementi, cioè tutti: inserire in testa costa O(n). Con un milione di elementi sarebbero un milione di spostamenti.</li>
+        <li>Lo spostamento parte dal fondo: se partissi dall'inizio, <code>dati[1] = dati[0]</code> cancellerebbe il valore di <code>dati[1]</code> prima di averlo copiato, e avresti tanti 10 uguali.</li>
+        <li>I due <code>add</code> sono un overload: stesso nome, parametri diversi (uno o due <code>int</code>). Lo fa anche il vero <code>ArrayList</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Scorrere la lista: for, foreach e Iterator</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Tre modi: il <strong>foreach</strong> (il più leggibile, quando servono solo i valori), il <strong>for con indice</strong> (quando serve la posizione) e l'<strong>Iterator</strong> (<code>hasNext()</code>, <code>next()</code>, <code>remove()</code>), l'unico che permette di togliere elementi mentre scorri. Teoria: <a href="java-collections-liste.html#usare-arraylist-la-sintassi">Scorrere la lista</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Ripulire la chat <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> La lista</p>
+<pre data-lang="java"><code>List&lt;String&gt; chat = new ArrayList&lt;&gt;(List.of(
+        "ciao", "", "OFFERTA!!!", "ci vediamo alle 5", "", "OFFERTA!!!", "ok"));</code></pre>
+      <p>contiene i messaggi di una chat, compresi messaggi vuoti e spam. Usa <strong>tutti e tre</strong> i modi di scorrere, ognuno per il compito giusto:</p>
+      <ol>
+        <li>stampa ogni messaggio con la sua posizione, tra parentesi quadre (così si vedono i vuoti);</li>
+        <li>togli i messaggi vuoti e quelli uguali a "OFFERTA!!!", contando quanti ne togli;</li>
+        <li>calcola quanti caratteri ci sono in totale nei messaggi rimasti.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>0: [ciao]
+1: []
+2: [OFFERTA!!!]
+3: [ci vediamo alle 5]
+4: []
+5: [OFFERTA!!!]
+6: [ok]
+Messaggi tolti: 4
+Rimasti: [ciao, ci vediamo alle 5, ok]
+Caratteri in totale: 23</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: quale ciclo per quale compito?</h4>
+      <ol>
+        <li><strong>Stampare con la posizione</strong>: mi serve l'indice, quindi <code>for</code> classico con <code>i &lt; chat.size()</code> e <code>chat.get(i)</code>.</li>
+        <li><strong>Togliere mentre scorro</strong>: è il lavoro dell'<code>Iterator</code>. Lo chiedo alla lista con <code>chat.iterator()</code>; finché <code>hasNext()</code> è vero prendo il prossimo con <code>next()</code> e, se è da scartare, lo tolgo con <code>it.remove()</code> (dell'iteratore, non della lista!).</li>
+        <li><strong>Sommare le lunghezze</strong>: mi servono solo i valori, quindi <code>foreach</code>, il più semplice.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Messaggi {
+    public static void main(String[] args) {
+        List&lt;String&gt; chat = new ArrayList&lt;&gt;(List.of(
+                "ciao", "", "OFFERTA!!!", "ci vediamo alle 5", "", "OFFERTA!!!", "ok"));
+
+        // 1) for con indice: mi serve la posizione
+        for (int i = 0; i &lt; chat.size(); i++) {
+            System.out.println(i + ": [" + chat.get(i) + "]");
+        }
+
+        // 2) Iterator: tolgo mentre scorro
+        int tolti = 0;
+        Iterator&lt;String&gt; it = chat.iterator();
+        while (it.hasNext()) {
+            String m = it.next();
+            if (m.isEmpty() || m.equals("OFFERTA!!!")) {
+                it.remove();
+                tolti++;
+            }
+        }
+        System.out.println("Messaggi tolti: " + tolti);
+        System.out.println("Rimasti: " + chat);
+
+        // 3) foreach: mi servono solo i valori
+        int caratteri = 0;
+        for (String m : chat) {
+            caratteri += m.length();
+        }
+        System.out.println("Caratteri in totale: " + caratteri);
+    }
+}</code></pre>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li><code>next()</code> va chiamato <strong>una sola volta</strong> per giro: salvo il risultato in <code>m</code> e poi lo controllo. Se scrivessi <code>it.next().isEmpty() || it.next().equals(...)</code> la seconda chiamata prenderebbe il messaggio <em>successivo</em>.</li>
+        <li><code>it.remove()</code> toglie l'ultimo elemento restituito da <code>next()</code>; l'iteratore sa di averlo tolto e continua dal punto giusto.</li>
+        <li>Conto dei caratteri: "ciao" (4) + "ci vediamo alle 5" (17) + "ok" (2) = 23. Per l'<code>Iterator</code> serve <code>import java.util.Iterator;</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Trova l'errore: togliere i numeri pari <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Due compagni vogliono togliere tutti i numeri <strong>pari</strong> da una lista. Nessuno dei due programmi funziona, ma sbagliano in modo diverso. Per ognuno: cosa succede, e perché? Poi scrivi la versione corretta.</p>
+      <p><strong>A</strong> · con il foreach</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class TogliForEach {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(3, 8, 5, 12, 7));
+        for (Integer x : n) {
+            if (x % 2 == 0) {
+                n.remove(x);
+            }
+        }
+        System.out.println(n);
+    }
+}</code></pre>
+      <p><strong>B</strong> · con il for e l'indice</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class TogliIndice {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(2, 4, 5, 6, 8));
+        for (int i = 0; i &lt; n.size(); i++) {
+            if (n.get(i) % 2 == 0) {
+                n.remove(i);
+            }
+        }
+        System.out.println(n);
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>A · il programma si ferma</h4>
+<pre data-lang="testo"><code>Exception in thread "main" java.util.ConcurrentModificationException
+	at ...</code></pre>
+      <p>Il <code>foreach</code> usa di nascosto un iteratore. Quando trova 8 chiama <code>n.remove(x)</code> sulla <strong>lista</strong>: la lista cambia "alle spalle" dell'iteratore, che al giro dopo se ne accorge e lancia <code>ConcurrentModificationException</code> ("modifica concorrente": la lista è stata modificata mentre la stavi scorrendo). Nota: qui <code>x</code> è un <code>Integer</code>, quindi <code>remove(x)</code> è il remove per valore, e infatti toglie proprio l'8; il problema non è quale elemento toglie, ma <strong>quando</strong>.</p>
+      <h4>B · niente errori, ma risultato sbagliato</h4>
+<pre data-lang="testo"><code>[4, 5, 8]</code></pre>
+      <p>Questo è più subdolo, perché non si ferma. Seguiamolo:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>i</th><th>n.get(i)</th><th>Cosa fa</th><th>Lista dopo</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>2</td><td>pari: lo toglie, <strong>tutti scalano indietro</strong></td><td>[4, 5, 6, 8]</td></tr>
+          <tr><td>1</td><td>5</td><td>il 4 è finito in posizione 0 e viene <strong>saltato</strong>!</td><td>[4, 5, 6, 8]</td></tr>
+          <tr><td>2</td><td>6</td><td>pari: lo toglie, l'8 scala in posizione 2</td><td>[4, 5, 8]</td></tr>
+          <tr><td>3</td><td>–</td><td><code>3 &lt; size()</code> è falso: il ciclo finisce, l'8 è saltato</td><td>[4, 5, 8]</td></tr>
+        </tbody>
+      </table></div>
+      <p>Ogni volta che togli, l'elemento successivo prende il posto di quello tolto, ma <code>i++</code> va comunque avanti: due pari vicini si "proteggono" a vicenda.</p>
+      <h4>Versione corretta: l'Iterator</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class TogliIterator {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; n = new ArrayList&lt;&gt;(List.of(2, 4, 5, 6, 8));
+        Iterator&lt;Integer&gt; it = n.iterator();
+        while (it.hasNext()) {
+            if (it.next() % 2 == 0) {
+                it.remove();
+            }
+        }
+        System.out.println(n);
+    }
+}</code></pre>
+      <p>Output:</p>
+<pre data-lang="testo"><code>[5]</code></pre>
+      <ul>
+        <li><code>it.remove()</code> toglie l'elemento appena letto e l'iteratore si sistema da solo: nessun salto e nessuna eccezione.</li>
+        <li>(extra) La stessa cosa si può scrivere in una riga con <code>n.removeIf(x -&gt; x % 2 == 0);</code>, che usa una lambda, non ancora spiegata a lezione.</li>
+        <li>Si poteva sistemare anche il programma B scorrendo la lista <strong>al contrario</strong> (da <code>size() - 1</code> a 0): togliendo un elemento scalano solo quelli già controllati. Funziona, ma l'Iterator è la soluzione "ufficiale".</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Vector e la capacità incrementale</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>Vector</code> è come <code>ArrayList</code> (un array che si ingrandisce) ma con tutti i metodi <strong>synchronized</strong>: thread-safe e più lento. È <strong>legacy</strong> (Java 1.0). Di solito raddoppia; con <code>new Vector&lt;&gt;(capacità, incremento)</code> scegli tu di quanto cresce. Teoria: <a href="java-collections-liste.html#vector-l-antenato-thread-safe">Vector: l'antenato thread-safe</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Quanto cresce un Vector? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Crea due <code>Vector&lt;String&gt;</code>, entrambi con capacità iniziale 3: <code>a</code> con <code>capacityIncrement</code> 2, <code>b</code> senza. Aggiungi a entrambi "doc1", …, "doc7" e dopo ogni aggiunta stampa la size e la capacità dei due (la capacità di un <code>Vector</code> si legge con il metodo <code>capacity()</code>, <strong>(extra)</strong>: non è nelle slide). Infine usa <code>a</code> attraverso una variabile <code>List&lt;String&gt;</code> per mostrare che si usa come qualsiasi lista.</p>
+      <p>Prima di eseguire, prova a prevedere le capacità. Output atteso:</p>
+<pre data-lang="testo"><code>size 1 | capacità a: 3 | capacità b: 3
+size 2 | capacità a: 3 | capacità b: 3
+size 3 | capacità a: 3 | capacità b: 3
+size 4 | capacità a: 5 | capacità b: 6
+size 5 | capacità a: 5 | capacità b: 6
+size 6 | capacità a: 7 | capacità b: 6
+size 7 | capacità a: 7 | capacità b: 12
+copertina, 6 elementi, contiene doc4? false</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Finché la size non supera la capacità, la capacità non cambia: i primi 3 elementi entrano in entrambi.</li>
+        <li>Al 4° elemento l'array interno è pieno. <code>a</code> ha l'incremento 2: passa a 3 + 2 = <strong>5</strong>. <code>b</code> non ce l'ha e raddoppia: 3 × 2 = <strong>6</strong>.</li>
+        <li>Al 6° elemento <code>a</code> è di nuovo pieno: 5 + 2 = 7. <code>b</code> ha ancora posto (6).</li>
+        <li>Al 7° elemento <code>b</code> è pieno: 6 × 2 = 12. <code>a</code> ha 7 posti ed è esattamente pieno, ma non deve ancora crescere.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.List;
+import java.util.Vector;
+
+public class CrescitaVector {
+    public static void main(String[] args) {
+        Vector&lt;String&gt; a = new Vector&lt;&gt;(3, 2);   // parte da 3, cresce di 2
+        Vector&lt;String&gt; b = new Vector&lt;&gt;(3);      // parte da 3, raddoppia
+        for (int i = 1; i &lt;= 7; i++) {
+            a.add("doc" + i);
+            b.add("doc" + i);
+            System.out.println("size " + a.size()
+                    + " | capacità a: " + a.capacity()
+                    + " | capacità b: " + b.capacity());
+        }
+
+        // un Vector è una List: stessi metodi
+        List&lt;String&gt; l = a;
+        l.set(0, "copertina");
+        l.remove("doc4");
+        System.out.println(l.get(0) + ", " + l.size() + " elementi, contiene doc4? " + l.contains("doc4"));
+    }
+}</code></pre>
+      <h4>Da notare</h4>
+      <ul>
+        <li><code>a</code> cresce poco alla volta: spreca poca memoria ma si ingrandisce spesso (e ogni ingrandimento copia tutto). <code>b</code> raddoppia: si ingrandisce di rado ma può lasciare molti posti vuoti. È un compromesso.</li>
+        <li><code>List&lt;String&gt; l = a;</code> funziona perché <code>Vector</code> implementa <code>List</code>: <code>set</code>, <code>remove</code>, <code>get</code>, <code>contains</code> sono gli stessi di <code>ArrayList</code>. Attraverso <code>l</code> però <code>capacity()</code> non si vede più: non fa parte del contratto <code>List</code>.</li>
+        <li><code>ArrayList</code> non ha un metodo <code>capacity()</code>: la sua capacità è un dettaglio nascosto. E non ha il <code>capacityIncrement</code>: cresce sempre di circa il 50%.</li>
+        <li>Nel codice nuovo <strong>non</strong> si usa <code>Vector</code>: se serve una lista condivisa tra thread si usa <code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code> o <code>CopyOnWriteArrayList</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>LinkedList: la lista di nodi</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>LinkedList</code> non ha un array: ogni elemento sta in un <strong>nodo</strong> con un riferimento al precedente e uno al successivo. Conosce il primo e l'ultimo nodo, quindi lavorare sulle estremità è velocissimo (<code>addFirst</code>, <code>addLast</code>, <code>removeFirst</code>, <code>removeLast</code>, <code>getFirst</code>, <code>getLast</code>), mentre <code>get(i)</code> deve scorrere i nodi. Teoria: <a href="java-collections-liste.html#linkedlist-la-lista-concatenata">LinkedList: la lista concatenata</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Il treno di nodi <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Prevedi l'output del frammento. Poi disegna il treno come una catena di nodi (<code>null ← [ ] ⇄ [ ] → null</code>) dopo la riga <code>add(2, "Ristorante")</code> e spiega quali collegamenti cambiano in quell'inserimento.</p>
+<pre data-lang="java"><code>LinkedList&lt;String&gt; treno = new LinkedList&lt;&gt;();
+treno.add("Vagone 1");
+treno.add("Vagone 2");
+treno.addFirst("Locomotiva");
+treno.addLast("Coda");
+treno.add(2, "Ristorante");
+System.out.println(treno);
+
+treno.removeLast();
+treno.remove("Vagone 1");
+System.out.println(treno);
+System.out.println(treno.getFirst() + " ... " + treno.getLast());
+System.out.println("Pezzi: " + treno.size() + ", il secondo è " + treno.get(1));</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La variabile è dichiarata <code>LinkedList&lt;String&gt;</code>: così si vedono sia i metodi di <code>List</code> (<code>add</code>, <code>get</code>, <code>remove</code>…) sia quelli delle estremità (<code>addFirst</code>, <code>getLast</code>…).</li>
+        <li>Dopo i due <code>add</code>: [Vagone 1, Vagone 2]. <code>addFirst</code> mette la Locomotiva in testa, <code>addLast</code> la Coda in fondo: [Locomotiva, Vagone 1, Vagone 2, Coda].</li>
+        <li><code>add(2, "Ristorante")</code> inserisce in posizione 2: [Locomotiva, Vagone 1, Ristorante, Vagone 2, Coda].</li>
+        <li><code>removeLast()</code> stacca la Coda; <code>remove("Vagone 1")</code> toglie per valore: [Locomotiva, Ristorante, Vagone 2].</li>
+      </ol>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>[Locomotiva, Vagone 1, Ristorante, Vagone 2, Coda]
+[Locomotiva, Ristorante, Vagone 2]
+Locomotiva ... Vagone 2
+Pezzi: 3, il secondo è Ristorante</code></pre>
+      <h4>Il disegno</h4>
+<pre data-lang="testo"><code>null ← [Locomotiva] ⇄ [Vagone 1] ⇄ [Ristorante] ⇄ [Vagone 2] ⇄ [Coda] → null
+          ↑                                                      ↑
+        first                                                  last</code></pre>
+      <p>Per inserire il Ristorante Java <strong>scorre</strong> i nodi dalla testa fino alla posizione 2 (Locomotiva → Vagone 1), poi cambia solo quattro frecce: il <code>next</code> di Vagone 1 e il <code>prev</code> di Vagone 2 ora puntano al Ristorante, e il Ristorante punta a loro due. <strong>Nessun vagone si sposta</strong>: in un <code>ArrayList</code> invece Vagone 2 e Coda sarebbero scalati di una casella.</p>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li><code>addFirst</code>, <code>removeLast</code>, <code>getFirst</code>, <code>getLast</code> sono O(1): la lista conosce già il primo e l'ultimo nodo.</li>
+        <li><code>get(1)</code> funziona, ma su una <code>LinkedList</code> deve seguire le frecce: con liste lunghe è O(n).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>LinkedList come pila e come coda</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Con <code>Deque&lt;T&gt; d = new LinkedList&lt;&gt;();</code> hai una sequenza a due estremità. <strong>Pila</strong> (LIFO, l'ultimo entrato esce per primo): <code>push</code>, <code>pop</code>, <code>peek</code>. <strong>Coda</strong> (FIFO, il primo entrato esce per primo): <code>offer</code>, <code>poll</code>, <code>peek</code>. Su una deque vuota <code>poll</code>/<code>peek</code> restituiscono <code>null</code>, <code>remove</code>/<code>get</code> lanciano <code>NoSuchElementException</code>. Teoria: <a href="java-collections-liste.html#linkedlist-come-pila-e-come-coda">LinkedList come pila e come coda</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>Stesse operazioni, risultati diversi <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Una pila e una coda ricevono gli stessi elementi nello stesso ordine. Completa una tabella con il contenuto delle due strutture dopo ogni riga e scrivi cosa stampa il programma.</p>
+<pre data-lang="java"><code>Deque&lt;String&gt; pila = new LinkedList&lt;&gt;();
+Deque&lt;String&gt; coda = new LinkedList&lt;&gt;();
+
+pila.push("A");   coda.offer("A");
+pila.push("B");   coda.offer("B");
+String p1 = pila.pop();
+String c1 = coda.poll();
+pila.push("C");   coda.offer("C");
+pila.push("D");   coda.offer("D");
+String p2 = pila.peek();
+String c2 = coda.peek();
+String p3 = pila.pop();
+String c3 = coda.poll();
+
+System.out.println("pila: " + p1 + " " + p2 + " " + p3 + " -&gt; " + pila);
+System.out.println("coda: " + c1 + " " + c2 + " " + c3 + " -&gt; " + coda);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento: la tabella</h4>
+      <p>Per la <strong>pila</strong> scrivo la cima a sinistra (<code>push</code> e <code>pop</code> lavorano lì). Per la <strong>coda</strong> scrivo la testa a sinistra: <code>offer</code> aggiunge a destra (in fondo alla fila), <code>poll</code> toglie da sinistra.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Operazioni</th><th>Pila (cima a sinistra)</th><th>Coda (testa a sinistra)</th></tr></thead>
+        <tbody>
+          <tr><td>push A / offer A</td><td>[A]</td><td>[A]</td></tr>
+          <tr><td>push B / offer B</td><td>[B, A]</td><td>[A, B]</td></tr>
+          <tr><td>pop / poll</td><td>[A] → p1 = <strong>B</strong></td><td>[B] → c1 = <strong>A</strong></td></tr>
+          <tr><td>push C / offer C</td><td>[C, A]</td><td>[B, C]</td></tr>
+          <tr><td>push D / offer D</td><td>[D, C, A]</td><td>[B, C, D]</td></tr>
+          <tr><td>peek / peek</td><td>[D, C, A] → p2 = <strong>D</strong></td><td>[B, C, D] → c2 = <strong>B</strong></td></tr>
+          <tr><td>pop / poll</td><td>[C, A] → p3 = <strong>D</strong></td><td>[C, D] → c3 = <strong>B</strong></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>pila: B D D -&gt; [C, A]
+coda: A B B -&gt; [C, D]</code></pre>
+      <h4>Perché</h4>
+      <ul>
+        <li>La pila restituisce sempre l'<strong>ultimo</strong> entrato (LIFO): per questo B esce prima di A, e D prima di C.</li>
+        <li>La coda restituisce sempre il <strong>primo</strong> della fila (FIFO): A esce per prima, poi B.</li>
+        <li><code>peek</code> guarda senza togliere: per questo il <code>pop</code>/<code>poll</code> successivo restituisce lo stesso elemento (D e B compaiono due volte).</li>
+        <li>Stampando una <code>Deque</code> si vede l'ordine dalla testa: nella pila la testa è la cima, quindi <code>[C, A]</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>Il tasto Indietro del browser <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi una classe <code>Browser</code> con l'attributo <code>String paginaCorrente</code>, una pila <code>Deque&lt;String&gt; cronologia</code> e un costruttore che riceve la pagina iniziale. Metodi:</p>
+      <ul>
+        <li><code>visita(String pagina)</code>: la pagina corrente va nella cronologia e si passa alla nuova;</li>
+        <li><code>indietro()</code>: si torna all'ultima pagina lasciata; se la cronologia è vuota stampa "Non puoi tornare più indietro".</li>
+      </ul>
+      <p>Nel <code>main</code> parti da "scuola.it", visita "materie", "informatica", "java", torna indietro 2 volte, visita "storia" e torna indietro 3 volte.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Visito materie   (indietro possibili: 1)
+Visito informatica   (indietro possibili: 2)
+Visito java   (indietro possibili: 3)
+Torno a informatica
+Torno a materie
+Visito storia   (indietro possibili: 2)
+Torno a materie
+Torno a scuola.it
+Non puoi tornare più indietro</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"Indietro" deve riportare all'<strong>ultima</strong> pagina lasciata: l'ultimo che entra è il primo che esce, quindi una <strong>pila</strong> (LIFO).</li>
+        <li><code>visita</code>: prima di cambiare pagina faccio <code>push</code> di quella corrente, poi aggiorno <code>paginaCorrente</code>. L'ordine conta: se aggiornassi prima, metterei nella pila la pagina nuova.</li>
+        <li><code>indietro</code>: <code>pop</code> toglie la cima e me la restituisce: diventa la pagina corrente. Prima controllo <code>isEmpty()</code>, perché <code>pop</code> su una pila vuota lancia <code>NoSuchElementException</code>.</li>
+        <li>La pila è un attributo creato con <code>new LinkedList&lt;&gt;()</code> e dichiarato <code>Deque</code>, così si vedono <code>push</code> e <code>pop</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Deque;
+import java.util.LinkedList;
+
+class Browser {
+    String paginaCorrente;
+    Deque&lt;String&gt; cronologia = new LinkedList&lt;&gt;();
+
+    Browser(String home) {
+        this.paginaCorrente = home;
+    }
+
+    void visita(String pagina) {
+        cronologia.push(paginaCorrente);   // la pagina che lascio va in cima
+        paginaCorrente = pagina;
+        System.out.println("Visito " + pagina + "   (indietro possibili: " + cronologia.size() + ")");
+    }
+
+    void indietro() {
+        if (cronologia.isEmpty()) {
+            System.out.println("Non puoi tornare più indietro");
+        } else {
+            paginaCorrente = cronologia.pop();
+            System.out.println("Torno a " + paginaCorrente);
+        }
+    }
+}
+
+public class TastoIndietro {
+    public static void main(String[] args) {
+        Browser b = new Browser("scuola.it");
+        b.visita("materie");
+        b.visita("informatica");
+        b.visita("java");
+        b.indietro();
+        b.indietro();
+        b.visita("storia");
+        b.indietro();
+        b.indietro();
+        b.indietro();
+    }
+}</code></pre>
+      <h4>La pila passo passo</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Azione</th><th>Pagina corrente</th><th>Cronologia (cima a sinistra)</th></tr></thead>
+        <tbody>
+          <tr><td>inizio</td><td>scuola.it</td><td>[ ]</td></tr>
+          <tr><td>visita materie</td><td>materie</td><td>[scuola.it]</td></tr>
+          <tr><td>visita informatica</td><td>informatica</td><td>[materie, scuola.it]</td></tr>
+          <tr><td>visita java</td><td>java</td><td>[informatica, materie, scuola.it]</td></tr>
+          <tr><td>indietro</td><td>informatica</td><td>[materie, scuola.it]</td></tr>
+          <tr><td>indietro</td><td>materie</td><td>[scuola.it]</td></tr>
+          <tr><td>visita storia</td><td>storia</td><td>[materie, scuola.it]</td></tr>
+          <tr><td>indietro</td><td>materie</td><td>[scuola.it]</td></tr>
+          <tr><td>indietro</td><td>scuola.it</td><td>[ ]</td></tr>
+          <tr><td>indietro</td><td>scuola.it</td><td>[ ] → messaggio</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Da notare</h4>
+      <ul>
+        <li>Visitando "storia" la pagina "materie" rientra nella pila: la cronologia ricorda <strong>il percorso</strong>, non solo le pagine visitate.</li>
+        <li>La classe pubblica si chiama <code>TastoIndietro</code> perché il file deve avere il nome della classe con il <code>main</code>; <code>Browser</code> sta nello stesso file senza <code>public</code>.</li>
+        <li>Lo stesso schema è quello del tasto "Annulla" di un editor: ogni azione fa <code>push</code>, Annulla fa <code>pop</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>Deque vuota: null o eccezione? <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> 1) Prevedi cosa stampa questo frammento, che lavora su una <code>Deque</code> <strong>vuota</strong>.</p>
+<pre data-lang="java"><code>Deque&lt;String&gt; d = new LinkedList&lt;&gt;();
+System.out.println("pollFirst: " + d.pollFirst());
+System.out.println("peekLast: " + d.peekLast());
+try {
+    d.removeFirst();
+    System.out.println("removeFirst riuscito");
+} catch (NoSuchElementException e) {
+    System.out.println("removeFirst: NoSuchElementException");
+}
+try {
+    d.getLast();
+    System.out.println("getLast riuscito");
+} catch (NoSuchElementException e) {
+    System.out.println("getLast: NoSuchElementException");
+}
+d.offerLast("x");
+System.out.println(d.pollLast() + " " + d.pollLast());</code></pre>
+      <p>2) Il programma dello sportello usa la versione "gentile" <code>poll</code>, eppure si ferma con un errore. Quale, e perché? Come lo sistemi?</p>
+<pre data-lang="java"><code>Deque&lt;Integer&gt; numeri = new LinkedList&lt;&gt;();
+numeri.offer(15);
+int primo = numeri.poll();
+System.out.println("Serviamo il numero " + primo);
+int secondo = numeri.poll();
+System.out.println("Serviamo il numero " + secondo);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Output</h4>
+<pre data-lang="testo"><code>pollFirst: null
+peekLast: null
+removeFirst: NoSuchElementException
+getLast: NoSuchElementException
+x null</code></pre>
+      <h4>Ragionamento</h4>
+      <ul>
+        <li>Le due famiglie fanno la stessa cosa ma reagiscono diversamente alla deque vuota: <code>poll</code>/<code>peek</code> sono "gentili" e restituiscono <code>null</code>; <code>remove</code>/<code>get</code> "si arrabbiano" e lanciano <code>NoSuchElementException</code>. Per questo le prime due righe stampano <code>null</code> e i due <code>try</code> finiscono nel <code>catch</code> (le righe "riuscito" non vengono mai stampate).</li>
+        <li><code>NoSuchElementException</code> sta in <code>java.util</code>: per catturarla per nome serve l'<code>import</code>.</li>
+        <li>Ultima riga: c'è un solo elemento. Il primo <code>pollLast()</code> restituisce "x", il secondo trova la deque di nuovo vuota e restituisce <code>null</code>.</li>
+      </ul>
+      <h4>2 · Lo sportello</h4>
+<pre data-lang="testo"><code>Serviamo il numero 15
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "java.util.Deque.poll()" is null
+	at ...</code></pre>
+      <p>Il primo <code>poll</code> restituisce 15. Il secondo trova la coda vuota e restituisce <code>null</code>, senza eccezioni. Il problema è <strong>dove</strong> lo mettiamo: <code>int secondo</code> è un primitivo, e Java prova a fare l'<strong>unboxing</strong> di <code>null</code> (cioè a chiamare <code>intValue()</code> su un oggetto che non esiste). Risultato: <code>NullPointerException</code>. Il messaggio lo dice proprio: "because the return value of ... poll() is null".</p>
+      <p>Correzione: salvare il risultato in un <code>Integer</code> e controllarlo, oppure controllare prima la coda:</p>
+<pre data-lang="java"><code>Integer secondo = numeri.poll();
+if (secondo == null) {
+    System.out.println("Nessuno in fila");
+} else {
+    System.out.println("Serviamo il numero " + secondo);
+}</code></pre>
+      <div class="callout tip"><span class="callout-title">Quale famiglia usare</span>Se una deque vuota è una situazione <strong>normale</strong> (la fila può essere vuota), usa <code>poll</code>/<code>peek</code> e controlla il <code>null</code>. Se una deque vuota è un <strong>errore</strong> del programma, usa <code>remove</code>/<code>get</code>: l'eccezione ti avvisa subito.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Prestazioni e scelta della lista</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><strong>O(1)</strong>: tempo costante, non dipende da quanti elementi ci sono. <strong>O(n)</strong>: tempo che cresce con il numero di elementi. <code>ArrayList</code>: <code>get(i)</code> O(1), inserire/togliere in testa o in mezzo O(n). <code>LinkedList</code>: estremità O(1), <code>get(i)</code> O(n). Regola d'oro: <strong>ArrayList</strong> quasi sempre; <strong>LinkedList</strong> (come Deque) per pile, code e lavoro sulle estremità; <strong>Vector</strong> da evitare. Teoria: <a href="java-collections-liste.html#prestazioni-o-1-e-o-n">Prestazioni: O(1) e O(n)</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>Quale lista sceglieresti e perché? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Per ogni situazione scegli tra <code>ArrayList</code>, <code>LinkedList</code> usata come <code>Deque</code> (pila, coda o entrambe le estremità) e una lista sincronizzata. Motiva con il costo O(1)/O(n) dell'operazione più frequente.</p>
+      <ol type="a">
+        <li>Una rubrica di 2000 contatti: l'app mostra spesso "il contatto numero 857".</li>
+        <li>La sala d'attesa del medico: chi arriva prende il numero e si entra in ordine di arrivo.</li>
+        <li>Una partita a scacchi con il tasto "annulla mossa", che si può premere più volte.</li>
+        <li>Un sensore manda 10 000 misure; alla fine il programma calcola media e massimo.</li>
+        <li>Un mazzo di carte: si pesca dalla cima, ma alcune carte vanno rimesse in fondo al mazzo.</li>
+        <li>Un programma del 2001, a un solo thread, che usa <code>Vector</code> per l'elenco dei clienti. Il collega chiede se conviene cambiarlo.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <p>Per ogni caso mi faccio le due domande della regola d'oro: "<strong>leggo per posizione?</strong>" → <code>ArrayList</code>. "<strong>Lavoro sulle estremità</strong>, come in una fila o in una pila?" → <code>LinkedList</code> come <code>Deque</code>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Caso</th><th>Scelta</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>a) rubrica</td><td><code>ArrayList</code></td><td>l'operazione tipica è <code>get(856)</code>: O(1) su ArrayList, O(n) su LinkedList, che dovrebbe scorrere centinaia di nodi.</td></tr>
+          <tr><td>b) sala d'attesa</td><td><code>LinkedList</code> come <strong>coda</strong></td><td>FIFO: <code>offer</code> per chi arriva, <code>poll</code> per chi entra. Entrambe O(1). Con un ArrayList togliere il primo (<code>remove(0)</code>) farebbe scalare tutti: O(n).</td></tr>
+          <tr><td>c) annulla mossa</td><td><code>LinkedList</code> come <strong>pila</strong></td><td>LIFO: ogni mossa <code>push</code>, annulla <code>pop</code>. Si annulla sempre l'ultima mossa fatta.</td></tr>
+          <tr><td>d) sensore</td><td><code>ArrayList</code>, magari <code>new ArrayList&lt;&gt;(10000)</code></td><td>si aggiunge in fondo (O(1) ammortizzato) e poi si scorre con il foreach, velocissimo su memoria contigua. Sapendo già quante misure arrivano, la capacità iniziale evita gli ingrandimenti.</td></tr>
+          <tr><td>e) mazzo di carte</td><td><code>LinkedList</code> come <code>Deque</code></td><td>servono <strong>entrambe</strong> le estremità: <code>pollFirst</code> per pescare, <code>offerLast</code> per rimettere in fondo. Tutte O(1).</td></tr>
+          <tr><td>f) Vector vecchio</td><td><code>ArrayList</code></td><td>con un solo thread la sincronizzazione di <code>Vector</code> non serve a niente e costa tempo a ogni chiamata. Se il codice usa <code>List</code> come tipo, basta cambiare <code>new Vector&lt;&gt;()</code> in <code>new ArrayList&lt;&gt;()</code>.</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Scegliere <code>LinkedList</code> "perché inserire costa O(1)" e poi usarla con <code>get(i)</code> e <code>add(i, e)</code> in mezzo: per arrivare alla posizione <code>i</code> deve comunque scorrere i nodi, O(n).</li>
+        <li>Rispondere solo con il nome della classe: in verifica conta il <strong>perché</strong>, cioè quale operazione si fa più spesso e quanto costa.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>Trova la lentezza: get(i) su una LinkedList <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Un programma somma 20 000 numeri contenuti in una <code>LinkedList</code> in due modi. Il risultato è identico, ma la prima versione è <strong>migliaia di volte più lenta</strong>. Spiega perché, calcolando quanti "passi tra i nodi" fa ciascuna versione, e scrivi un metodo che stimi i passi di <code>get(i)</code>.</p>
+<pre data-lang="java"><code>import java.util.LinkedList;
+import java.util.List;
+
+public class SommaLenta {
+
+    // versione lenta su LinkedList: get(i) riparte ogni volta da un'estremità
+    static long sommaConIndice(List&lt;Integer&gt; l) {
+        long s = 0;
+        for (int i = 0; i &lt; l.size(); i++) {
+            s += l.get(i);
+        }
+        return s;
+    }
+
+    // versione giusta: il foreach passa da un nodo al successivo
+    static long sommaForEach(List&lt;Integer&gt; l) {
+        long s = 0;
+        for (int x : l) {
+            s += x;
+        }
+        return s;
+    }
+
+    // quanti nodi attraversa in totale get(i) per i = 0 .. n-1
+    static long passiGet(int n) {
+        long passi = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if (i &lt; n / 2) {
+                passi += i;            // parte dalla testa
+            } else {
+                passi += n - 1 - i;    // parte dalla coda
+            }
+        }
+        return passi;
+    }
+
+    public static void main(String[] args) {
+        int n = 20000;
+        List&lt;Integer&gt; lista = new LinkedList&lt;&gt;();
+        for (int i = 0; i &lt; n; i++) {
+            lista.add(i);
+        }
+        System.out.println("Somma con get(i): " + sommaConIndice(lista));
+        System.out.println("Somma con foreach: " + sommaForEach(lista));
+        System.out.println("Passi tra i nodi con get(i): " + passiGet(n));
+        System.out.println("Passi tra i nodi con foreach: " + n);
+    }
+}</code></pre>
+      <p>Output:</p>
+<pre data-lang="testo"><code>Somma con get(i): 199990000
+Somma con foreach: 199990000
+Passi tra i nodi con get(i): 99990000
+Passi tra i nodi con foreach: 20000</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Su una <code>LinkedList</code> non si può "saltare" alla posizione <code>i</code>: <code>get(i)</code> parte dal primo nodo (o dall'ultimo, se <code>i</code> è nella seconda metà) e segue le frecce una per una.</li>
+        <li>Nel <code>for</code> con l'indice, <code>get(i)</code> <strong>riparte da capo a ogni giro</strong>: per <code>i = 5000</code> fa 5000 passi, per <code>i = 5001</code> ne fa 5001… Non ricorda dove era arrivato.</li>
+        <li>Sommo i passi: per la prima metà <code>i</code> passi, per la seconda <code>n - 1 - i</code> (si parte dalla coda). È quello che calcola <code>passiGet</code>: quasi <strong>100 milioni</strong> di passi, circa n²/4. Il costo totale è O(n²): O(n) per ogni <code>get</code>, ripetuto n volte.</li>
+        <li>Il <code>foreach</code> usa un iteratore che <strong>resta sul nodo corrente</strong> e passa al successivo con un solo passo: in tutto n = 20 000 passi, O(n).</li>
+      </ol>
+      <h4>Il confronto</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Versione</th><th>Costo di un accesso</th><th>Costo totale</th><th>Passi con n = 20 000</th></tr></thead>
+        <tbody>
+          <tr><td><code>for</code> + <code>get(i)</code> su LinkedList</td><td>O(n)</td><td>O(n²)</td><td>99 990 000</td></tr>
+          <tr><td><code>foreach</code> su LinkedList</td><td>O(1)</td><td>O(n)</td><td>20 000</td></tr>
+          <tr><td><code>for</code> + <code>get(i)</code> su ArrayList</td><td>O(1)</td><td>O(n)</td><td>nessuno: calcola subito l'indirizzo</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Da ricordare</h4>
+      <ul>
+        <li>Per <strong>scorrere</strong> una lista usa il <code>foreach</code>: è veloce con qualsiasi implementazione.</li>
+        <li>Il metodo <code>sommaConIndice</code> non è sbagliato in sé: con un <code>ArrayList</code> andrebbe benissimo. Il problema nasce dall'accoppiata "accesso per indice + LinkedList". Per questo la domanda "leggo per posizione?" porta ad <code>ArrayList</code>.</li>
+        <li>I tempi esatti dipendono dal computer (per questo non li stampiamo), ma la differenza tra 20 000 e quasi 100 milioni di passi si sente sempre.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Buone abitudini: interfacce e generics</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>1) <strong>Programma per interfaccia</strong>: dichiara variabili e parametri come <code>List&lt;T&gt;</code>, non come <code>ArrayList&lt;T&gt;</code>, così puoi cambiare implementazione e i metodi accettano qualsiasi lista. 2) <strong>Usa sempre i generics</strong>: una collezione raw (senza <code>&lt; &gt;</code>) sposta gli errori dalla compilazione all'esecuzione. Teoria: <a href="java-collections-liste.html#buone-abitudini">Buone abitudini</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">17</span>Un metodo per tutte le liste <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> 1) Scrivi il metodo <code>static List&lt;String&gt; lunghe(List&lt;String&gt; parole, int min)</code> che restituisce una <strong>nuova</strong> lista con le sole parole lunghe almeno <code>min</code> lettere. Provalo con un <code>ArrayList</code>, una <code>LinkedList</code> e un <code>Vector</code>, con <code>min = 5</code>.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>ArrayList  [mela, banana, kiwi, ciliegia] -&gt; [banana, ciliegia]
+LinkedList [cane, gatto, criceto] -&gt; [gatto, criceto]
+Vector     [sole, luna, pianeta] -&gt; [pianeta]</code></pre>
+      <p>2) Un compagno ha scritto questo metodo. Perché non compila? Come lo correggi cambiando <strong>una sola parola</strong>?</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class NonPerInterfaccia {
+    static int contaVuote(ArrayList&lt;String&gt; l) {
+        int c = 0;
+        for (String s : l) {
+            if (s.isEmpty()) c++;
+        }
+        return c;
+    }
+
+    public static void main(String[] args) {
+        LinkedList&lt;String&gt; righe = new LinkedList&lt;&gt;(List.of("a", "", "b"));
+        System.out.println(contaVuote(righe));
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>1 · Ragionamento</h4>
+      <ol>
+        <li>Il parametro è <code>List&lt;String&gt;</code>: il metodo chiede solo "dammi una lista di stringhe", non quale. Così accetta <code>ArrayList</code>, <code>LinkedList</code> e <code>Vector</code>, che implementano tutte <code>List</code>.</li>
+        <li>Dentro, scorro con il <code>foreach</code> (veloce con tutte e tre) e aggiungo a una lista nuova le parole con <code>length() &gt;= min</code>.</li>
+        <li>Anche il tipo restituito è <code>List&lt;String&gt;</code>: chi chiama il metodo non ha bisogno di sapere che dentro ho usato un <code>ArrayList</code>.</li>
+        <li><code>new LinkedList&lt;&gt;(List.of(...))</code> e <code>new Vector&lt;&gt;(List.of(...))</code> funzionano come <code>new ArrayList&lt;&gt;(List.of(...))</code>: creano una lista modificabile partendo da quei valori.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+public class PerInterfaccia {
+
+    static List&lt;String&gt; lunghe(List&lt;String&gt; parole, int min) {
+        List&lt;String&gt; risultato = new ArrayList&lt;&gt;();
+        for (String p : parole) {
+            if (p.length() &gt;= min) {
+                risultato.add(p);
+            }
+        }
+        return risultato;
+    }
+
+    static void stampa(String etichetta, List&lt;String&gt; l) {
+        System.out.println(etichetta + " " + l + " -&gt; " + lunghe(l, 5));
+    }
+
+    public static void main(String[] args) {
+        List&lt;String&gt; a = new ArrayList&lt;&gt;(List.of("mela", "banana", "kiwi", "ciliegia"));
+        List&lt;String&gt; b = new LinkedList&lt;&gt;(List.of("cane", "gatto", "criceto"));
+        List&lt;String&gt; c = new Vector&lt;&gt;(List.of("sole", "luna", "pianeta"));
+        stampa("ArrayList ", a);
+        stampa("LinkedList", b);
+        stampa("Vector    ", c);
+    }
+}</code></pre>
+      <h4>2 · Perché non compila</h4>
+<pre data-lang="testo"><code>riga 16: error: incompatible types: LinkedList&lt;String&gt; cannot be converted to ArrayList&lt;String&gt;</code></pre>
+      <p>Il parametro è <code>ArrayList&lt;String&gt;</code>: il metodo accetta <strong>solo</strong> ArrayList. Una <code>LinkedList</code> è una <code>List</code>, ma non è un <code>ArrayList</code>, quindi il compilatore rifiuta la chiamata ("incompatible types": tipi non compatibili). Correzione: <code>static int contaVuote(List&lt;String&gt; l)</code>. Il corpo del metodo non cambia, perché usa solo cose che ogni <code>List</code> sa fare.</p>
+      <div class="callout tip"><span class="callout-title">Regola</span>Il tipo concreto (<code>ArrayList</code>, <code>LinkedList</code>…) compare <strong>solo dopo il <code>new</code></strong>. Ovunque altrove (variabili, parametri, tipo di ritorno) scrivi <code>List&lt;T&gt;</code>. Se ti servono i metodi delle estremità, usa <code>Deque&lt;T&gt;</code>.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">18</span>Trova l'errore: la lista senza tipo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Questo programma compila, parte, stampa due righe e poi si ferma. Spiega cosa succede e perché il compilatore non ti ha avvisato. Poi riscrivilo con i generics: cosa cambia?</p>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Grezza {
+    public static void main(String[] args) {
+        List spesa = new ArrayList();
+        spesa.add("pane");
+        spesa.add("latte");
+        spesa.add(3);
+        for (int i = 0; i &lt; spesa.size(); i++) {
+            String voce = (String) spesa.get(i);
+            System.out.println(voce + " (" + voce.length() + " lettere)");
+        }
+    }
+}</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Cosa succede</h4>
+<pre data-lang="testo"><code>pane (4 lettere)
+latte (5 lettere)
+Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.String (java.lang.Integer and java.lang.String are in module java.base of loader 'bootstrap')
+	at ...</code></pre>
+      <ul>
+        <li><code>List spesa</code> senza <code>&lt; &gt;</code> è una collezione <strong>raw</strong> (grezza): accetta qualsiasi oggetto. Il <code>3</code> diventa un <code>Integer</code> e finisce nella lista senza proteste.</li>
+        <li>Per leggere serve il cast <code>(String)</code>. Funziona con "pane" e "latte", ma al terzo giro l'oggetto è un <code>Integer</code>: un <code>Integer</code> non si può trasformare in <code>String</code>, e Java lancia <code>ClassCastException</code> ("class java.lang.Integer cannot be cast to class java.lang.String").</li>
+        <li>Il compilatore non ti avvisa perché, senza il tipo, non sa cosa dovrebbe esserci nella lista. L'errore salta fuori solo <strong>durante l'esecuzione</strong>, magari davanti al cliente.</li>
+      </ul>
+      <h4>Con i generics</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class GrezzaCorretta {
+    public static void main(String[] args) {
+        List&lt;String&gt; spesa = new ArrayList&lt;&gt;();
+        spesa.add("pane");
+        spesa.add("latte");
+        spesa.add(3);
+        for (String voce : spesa) {
+            System.out.println(voce + " (" + voce.length() + " lettere)");
+        }
+    }
+}</code></pre>
+<pre data-lang="testo"><code>riga 9: error: incompatible types: int cannot be converted to String</code></pre>
+      <p>Ora l'errore è nella riga <code>spesa.add(3)</code> ed è il <strong>compilatore</strong> a trovarlo, prima ancora di eseguire: il programma non parte finché non lo correggi (togliendo la riga o scrivendo <code>"3 uova"</code>). In più sparisce il cast e si può usare il <code>foreach</code> con <code>String voce</code>.</p>
+      <div class="callout warn"><span class="callout-title">Da ricordare</span>Un errore di compilazione è un <strong>amico</strong>: lo vedi subito e sai la riga. Un errore a runtime può restare nascosto per mesi. I generics trasformano il secondo nel primo.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: la biblioteca della scuola</h2>
+  <p>Questo esercizio mette insieme <strong>tutto il capitolo</strong>: generics e programmazione per interfaccia, <code>ArrayList</code> con <code>add</code>, <code>add(i, e)</code>, <code>addAll</code>, <code>get</code>, <code>set</code>, <code>remove</code>, <code>size</code>, <code>contains</code>, <code>indexOf</code>, la trappola di <code>remove</code> con gli <code>Integer</code>, il for con indice, il foreach e l'<code>Iterator</code>, un <code>Vector</code> con <code>capacityIncrement</code>, e una <code>LinkedList</code> usata come coda e come pila. È lungo come una verifica: fallo a pezzi e prova ogni pezzo prima di andare avanti.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">19</span>La biblioteca della scuola <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi un programma per la biblioteca della scuola.</p>
+      <ol>
+        <li>Crea la classe <code>Libro</code> con <code>titolo</code>, <code>autore</code>, <code>boolean smarrito</code> (all'inizio <code>false</code>), un costruttore e un metodo <code>descrizione()</code> che restituisce "titolo (autore)".</li>
+        <li>Crea il <strong>catalogo</strong> come <code>List&lt;Libro&gt;</code>: aggiungi <em>Il barone rampante</em> (Calvino), <em>La coscienza di Zeno</em> (Svevo), <em>Uno, nessuno e centomila</em> (Pirandello) e poi inserisci <em>I Malavoglia</em> (Verga) <strong>in testa</strong>.</li>
+        <li>Il vecchio programma della biblioteca consegna le donazioni in un <code>Vector&lt;Libro&gt;</code> con capacità 2 e incremento 2: <em>Il fu Mattia Pascal</em> (Pirandello), <em>Senilità</em> (Svevo), <em>Le città invisibili</em> (Calvino). Stampa quanti sono e la capacità del Vector, poi aggiungili tutti al catalogo in un colpo solo.</li>
+        <li>Scrivi i metodi <code>stampaCatalogo(List&lt;Libro&gt;)</code> (elenco numerato da 1) e <code>cerca(List&lt;Libro&gt;, String titolo)</code> (posizione o -1).</li>
+        <li>L'autore del <em>Barone rampante</em> va corretto in "Italo Calvino": sostituisci il libro nella sua posizione.</li>
+        <li>All'inventario risultano smarriti <em>La coscienza di Zeno</em> e <em>Senilità</em>: segnali come smarriti e toglili con un metodo <code>togliSmarriti</code> che usa un <code>Iterator</code> e restituisce quanti ne ha tolti.</li>
+        <li><em>I Malavoglia</em> va in restauro: toglilo dal catalogo e stampa quale libro è stato tolto (usa ciò che restituisce <code>remove</code>).</li>
+        <li>Gli scaffali aperti sono <code>List.of(3, 1, 4, 2)</code> (numeri degli scaffali): chiudi lo scaffale <strong>numero</strong> 1.</li>
+        <li>Le prenotazioni sono una <strong>coda</strong>: arrivano Anna, Bruno e Carla; presta il libro al primo e mostra chi è il prossimo senza toglierlo.</li>
+        <li>I libri restituiti finiscono su un carrello, uno sopra l'altro (<strong>pila</strong>): mettici tutti i libri del catalogo nell'ordine del catalogo e poi rimettili a posto, prendendoli sempre dall'alto.</li>
+        <li>Infine crea una lista con i soli titoli e dì se c'è ancora <em>Senilità</em> e in che posizione è <em>Le città invisibili</em>.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Donati: 3 (capacità del Vector: 4)
+Catalogo, 7 libri:
+  1. I Malavoglia (Verga)
+  2. Il barone rampante (Calvino)
+  3. La coscienza di Zeno (Svevo)
+  4. Uno, nessuno e centomila (Pirandello)
+  5. Il fu Mattia Pascal (Pirandello)
+  6. Senilità (Svevo)
+  7. Le città invisibili (Calvino)
+Corretto in posizione 1: Il barone rampante (Italo Calvino)
+Smarriti tolti: 2
+In restauro: I Malavoglia (Verga)
+Catalogo, 4 libri:
+  1. Il barone rampante (Italo Calvino)
+  2. Uno, nessuno e centomila (Pirandello)
+  3. Il fu Mattia Pascal (Pirandello)
+  4. Le città invisibili (Calvino)
+Scaffali aperti: [3, 4, 2]
+Prestito a: Anna
+Prossimo: Bruno (in attesa: 2)
+Rimetto a posto, dall'alto del carrello:
+  Le città invisibili
+  Il fu Mattia Pascal
+  Uno, nessuno e centomila
+  Il barone rampante
+C'è Senilità? false
+Posizione di Le città invisibili: 3</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <p>Prima di tutto scelgo la <strong>struttura giusta per ogni dato</strong>, guardando l'operazione che userò di più. È la parte più importante, ed è quella che si chiede nelle verifiche.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Dato</th><th>Struttura</th><th>Operazioni principali</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>catalogo</td><td><code>List&lt;Libro&gt;</code> = <code>ArrayList</code></td><td><code>add</code>, <code>add(0, e)</code>, <code>get</code>, <code>set</code>, <code>remove</code></td><td>si legge per posizione (stampa numerata, <code>cerca</code>): <code>get(i)</code> O(1)</td></tr>
+          <tr><td>donazioni</td><td><code>Vector&lt;Libro&gt;</code></td><td><code>add</code>, <code>capacity()</code> (extra)</td><td>imposto dal vecchio programma (legacy); lo travaso subito nel catalogo con <code>addAll</code></td></tr>
+          <tr><td>scaffali</td><td><code>List&lt;Integer&gt;</code></td><td><code>remove(Integer.valueOf(...))</code></td><td>lista di numeri: attenzione alla trappola</td></tr>
+          <tr><td>prenotazioni</td><td><code>Deque&lt;String&gt;</code> = <code>LinkedList</code></td><td><code>offer</code>, <code>poll</code>, <code>peek</code></td><td>coda FIFO: chi prenota prima, riceve prima</td></tr>
+          <tr><td>carrello</td><td><code>Deque&lt;Libro&gt;</code> = <code>LinkedList</code></td><td><code>push</code>, <code>pop</code>, <code>isEmpty</code></td><td>pila LIFO: si prende il libro in cima</td></tr>
+          <tr><td>titoli</td><td><code>List&lt;String&gt;</code> = <code>ArrayList</code></td><td><code>contains</code>, <code>indexOf</code></td><td><code>contains</code> e <code>indexOf</code> confrontano con <code>equals</code>: con le <code>String</code> funzionano subito</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · La classe Libro</h4>
+      <p>Tre attributi, un costruttore che usa <code>this.</code> per distinguere l'attributo dal parametro con lo stesso nome, e <code>descrizione()</code> che restituisce una <code>String</code>. <code>smarrito</code> parte sempre da <code>false</code>, quindi non serve passarlo al costruttore.</p>
+      <h4>Passo 3 · Catalogo e donazioni</h4>
+      <p>Dopo i tre <code>add</code>, <code>add(0, ...)</code> mette <em>I Malavoglia</em> in testa e fa scalare gli altri. Il <code>Vector</code> parte con capacità 2: al terzo libro è pieno e cresce di 2, quindi la capacità diventa <strong>4</strong> (con la size a 3). <code>addAll(donati)</code> aggiunge in fondo al catalogo tutti gli elementi del Vector, nell'ordine: si può fare perché anche il Vector è una collezione. Il catalogo arriva a 7 libri.</p>
+      <h4>Passo 4 · Stampare e cercare (per interfaccia)</h4>
+      <p>Entrambi i metodi ricevono una <code>List&lt;Libro&gt;</code>, non un <code>ArrayList</code>: funzionerebbero anche con il Vector delle donazioni. <code>stampaCatalogo</code> usa il for con indice perché deve numerare. <code>cerca</code> confronta i titoli con <code>equals</code> e restituisce la <strong>posizione</strong> appena lo trova; se il ciclo finisce senza trovarlo restituisce -1, come <code>indexOf</code>.</p>
+      <p>Perché non usare direttamente <code>catalogo.indexOf(...)</code>? Perché <code>indexOf</code> cerca un oggetto <code>Libro</code> uguale, mentre io ho solo il <strong>titolo</strong>. Per questo il punto 11 costruisce una lista di <code>String</code>, dove <code>contains</code> e <code>indexOf</code> funzionano direttamente.</p>
+      <h4>Passo 5 · set, Iterator e remove</h4>
+      <ul>
+        <li><strong>set</strong>: <code>cerca</code> trova <em>Il barone rampante</em> in posizione 1 (è scalato dopo l'inserimento in testa) e <code>set(1, ...)</code> lo sostituisce con il libro corretto. La size resta 7.</li>
+        <li><strong>Iterator</strong>: segno i due libri come smarriti e poi <code>togliSmarriti</code> li toglie mentre scorre, come nell'esercizio della chat. Con un foreach e <code>libri.remove(...)</code> avrei una <code>ConcurrentModificationException</code>. Restano 5 libri.</li>
+        <li><strong>remove per posizione</strong>: <code>catalogo.remove(cerca(...))</code> riceve un <code>int</code>, quindi toglie per posizione e <strong>restituisce il libro tolto</strong>, che salvo in <code>restauro</code>. Restano 4 libri.</li>
+      </ul>
+      <h4>Passo 6 · Gli scaffali</h4>
+      <p><code>scaffali.remove(1)</code> toglierebbe l'elemento in <strong>posizione</strong> 1, che è proprio lo scaffale 1, per pura coincidenza! Con <code>Integer.valueOf(1)</code> tolgo il <strong>numero</strong> 1 ovunque si trovi: il codice è giusto per il motivo giusto, e resta giusto anche se cambia l'ordine degli scaffali. Risultato: <code>[3, 4, 2]</code>.</p>
+      <h4>Passo 7 · Coda e pila</h4>
+      <ul>
+        <li><strong>Coda</strong>: tre <code>offer</code> in fondo; <code>poll</code> fa uscire Anna (la prima arrivata); <code>peek</code> mostra Bruno senza toglierlo, quindi in attesa restano 2 persone.</li>
+        <li><strong>Pila</strong>: il foreach mette sul carrello i libri nell'ordine del catalogo (Il barone rampante, Uno nessuno e centomila, Il fu Mattia Pascal, Le città invisibili). L'ultimo appoggiato è in cima, quindi il <code>while (!carrello.isEmpty())</code> con <code>pop</code> li riprende <strong>al contrario</strong>. Il ciclo si ferma quando la pila è vuota, così <code>pop</code> non lancia mai eccezioni.</li>
+      </ul>
+      <h4>Passo 8 · Le ricerche finali</h4>
+      <p>Costruisco <code>titoli</code> con un foreach sul catalogo. <em>Senilità</em> è stato tolto all'inventario, quindi <code>contains</code> dà <code>false</code>; <em>Le città invisibili</em> è l'ultimo dei 4 libri, posizione <strong>3</strong>.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+class Libro {
+    String titolo;
+    String autore;
+    boolean smarrito;
+
+    Libro(String titolo, String autore) {
+        this.titolo = titolo;
+        this.autore = autore;
+        this.smarrito = false;
+    }
+
+    String descrizione() {
+        return titolo + " (" + autore + ")";
+    }
+}
+
+public class Biblioteca {
+
+    // ---------- programmare per interfaccia: va bene qualsiasi List ----------
+    static void stampaCatalogo(List&lt;Libro&gt; libri) {
+        for (int i = 0; i &lt; libri.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + libri.get(i).descrizione());
+        }
+    }
+
+    static int cerca(List&lt;Libro&gt; libri, String titolo) {
+        for (int i = 0; i &lt; libri.size(); i++) {
+            if (libri.get(i).titolo.equals(titolo)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // ---------- Iterator: togliere mentre si scorre ----------
+    static int togliSmarriti(List&lt;Libro&gt; libri) {
+        int tolti = 0;
+        Iterator&lt;Libro&gt; it = libri.iterator();
+        while (it.hasNext()) {
+            Libro l = it.next();
+            if (l.smarrito) {
+                it.remove();
+                tolti++;
+            }
+        }
+        return tolti;
+    }
+
+    public static void main(String[] args) {
+        // 1. il catalogo: ArrayList, perché si legge per posizione
+        List&lt;Libro&gt; catalogo = new ArrayList&lt;&gt;();
+        catalogo.add(new Libro("Il barone rampante", "Calvino"));
+        catalogo.add(new Libro("La coscienza di Zeno", "Svevo"));
+        catalogo.add(new Libro("Uno, nessuno e centomila", "Pirandello"));
+        catalogo.add(0, new Libro("I Malavoglia", "Verga"));   // novità in testa
+
+        // 2. le donazioni arrivano dal vecchio programma, che usa un Vector
+        Vector&lt;Libro&gt; donati = new Vector&lt;&gt;(2, 2);
+        donati.add(new Libro("Il fu Mattia Pascal", "Pirandello"));
+        donati.add(new Libro("Senilità", "Svevo"));
+        donati.add(new Libro("Le città invisibili", "Calvino"));
+        System.out.println("Donati: " + donati.size() + " (capacità del Vector: " + donati.capacity() + ")");
+        catalogo.addAll(donati);
+
+        System.out.println("Catalogo, " + catalogo.size() + " libri:");
+        stampaCatalogo(catalogo);
+
+        // 3. correggere un dato con set
+        int pos = cerca(catalogo, "Il barone rampante");
+        catalogo.set(pos, new Libro("Il barone rampante", "Italo Calvino"));
+        System.out.println("Corretto in posizione " + pos + ": " + catalogo.get(pos).descrizione());
+
+        // 4. inventario: i libri smarriti si tolgono con l'Iterator
+        catalogo.get(cerca(catalogo, "La coscienza di Zeno")).smarrito = true;
+        catalogo.get(cerca(catalogo, "Senilità")).smarrito = true;
+        System.out.println("Smarriti tolti: " + togliSmarriti(catalogo));
+
+        // 5. un libro ritirato per restauro: remove per posizione restituisce il libro
+        Libro restauro = catalogo.remove(cerca(catalogo, "I Malavoglia"));
+        System.out.println("In restauro: " + restauro.descrizione());
+        System.out.println("Catalogo, " + catalogo.size() + " libri:");
+        stampaCatalogo(catalogo);
+
+        // 6. gli scaffali: attenzione alla trappola di remove
+        List&lt;Integer&gt; scaffali = new ArrayList&lt;&gt;(List.of(3, 1, 4, 2));
+        scaffali.remove(Integer.valueOf(1));   // chiude lo scaffale NUMERO 1
+        System.out.println("Scaffali aperti: " + scaffali);
+
+        // 7. prenotazioni: coda FIFO
+        Deque&lt;String&gt; prenotazioni = new LinkedList&lt;&gt;();
+        prenotazioni.offer("Anna");
+        prenotazioni.offer("Bruno");
+        prenotazioni.offer("Carla");
+        System.out.println("Prestito a: " + prenotazioni.poll());
+        System.out.println("Prossimo: " + prenotazioni.peek() + " (in attesa: " + prenotazioni.size() + ")");
+
+        // 8. carrello dei libri restituiti: pila LIFO
+        Deque&lt;Libro&gt; carrello = new LinkedList&lt;&gt;();
+        for (Libro l : catalogo) {
+            carrello.push(l);
+        }
+        System.out.println("Rimetto a posto, dall'alto del carrello:");
+        while (!carrello.isEmpty()) {
+            System.out.println("  " + carrello.pop().titolo);
+        }
+
+        // 9. ricerche veloci su una lista di titoli
+        List&lt;String&gt; titoli = new ArrayList&lt;&gt;();
+        for (Libro l : catalogo) {
+            titoli.add(l.titolo);
+        }
+        System.out.println("C'è Senilità? " + titoli.contains("Senilità"));
+        System.out.println("Posizione di Le città invisibili: " + titoli.indexOf("Le città invisibili"));
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Se dichiari <code>ArrayList&lt;Libro&gt; catalogo</code> invece di <code>List&lt;Libro&gt;</code>, il programma funziona ancora? (Sì; ma se un giorno vuoi una <code>LinkedList</code> devi cambiare più righe, e un metodo con parametro <code>ArrayList</code> non accetterebbe il Vector.)</li>
+        <li>Cosa stamperebbe il programma se gli scaffali fossero <code>List.of(1, 3, 4, 2)</code> e usassi <code>scaffali.remove(1)</code>? (<code>[1, 4, 2]</code>: toglie il 3, che sta in posizione 1. Con <code>Integer.valueOf(1)</code> invece <code>[3, 4, 2]</code>.)</li>
+        <li>Perché il carrello non è un <code>ArrayList</code>? (Si potrebbe usare, ma <code>push</code> e <code>pop</code> lavorano sulla testa: con un array ogni operazione in testa farebbe scalare tutti, O(n). Con <code>LinkedList</code> è O(1) e il codice dice chiaramente "questa è una pila".)</li>
+        <li>Cosa succede se <code>cerca</code> restituisce -1 e lo passi a <code>catalogo.remove(...)</code>? (<code>IndexOutOfBoundsException</code>: in un programma vero si controlla prima il risultato di <code>cerca</code>.)</li>
+        <li>Se la coda delle prenotazioni fosse vuota, cosa restituirebbe <code>poll()</code>? (<code>null</code>; <code>removeFirst</code> invece lancerebbe <code>NoSuchElementException</code>.)</li>
+      </ul>
+    </div></details>
+  </div>
+
+</main>
+</body>
+</html>

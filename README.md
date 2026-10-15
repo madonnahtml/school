@@ -8,6 +8,7 @@ Solo HTML, CSS e JavaScript: niente da compilare o installare. Funziona da compu
 - **Ricerca** in tutte le pagine (`Ctrl K`, `/` o il tasto *Cerca* in basso sul telefono), senza distinzione di maiuscole e accenti; `"tra virgolette"` per una frase esatta. Ogni risultato porta alla sezione giusta e le parole vengono evidenziate.
 - **Materie come quaderni**: in home ogni materia è una copertina colorata; aprendola si sceglie il capitolo, con l'elenco dei paragrafi.
 - **Riassunti** (`riassunti.html`): le idee da ricordare di ogni capitolo, paragrafo per paragrafo, divise per materia. Ogni scheda porta al paragrafo nel capitolo.
+- **Esercizi** (`esercizi.html`): l'area con consegne ed esercizi per ogni argomento, con le soluzioni spiegate passo passo e un esercizio completo alla fine di ogni pagina. Raccoglie da sola tutte le pagine di tipo `esercizi`; ogni capitolo di teoria ha il link ai suoi esercizi e viceversa.
 - **Progressi**: ogni capitolo si può segnare come *studiato*; menu, copertine e panoramiche mostrano quanti ne hai fatti. In fondo a ogni capitolo c'è il link al successivo.
 - **Ripasso** (`ripasso.html`, ora **disattivato**): raccoglie da solo flashcard e quiz delle pagine, con metodo a scatole (Leitner) e quiz a punteggio. Per ora le pagine non hanno flashcard né quiz; si riattiva in `assets/js/site.js` con `features: { ripasso: true }`.
 - **Codice colorato** (c, cpp, java, python, js, sql, bash, html) con pulsante Copia.
@@ -20,7 +21,7 @@ Progressi e ripasso sono salvati nel browser del dispositivo che usi.
 ## Struttura
 
 ```
-index.html · cerca.html · riassunti.html · ripasso.html · componenti.html
+index.html · cerca.html · riassunti.html · esercizi.html · ripasso.html · componenti.html
 materie/<materia>/index.html     panoramica della materia
 materie/<materia>/<pagina>.html  argomenti
 assets/js/site.js                ELENCO DI MATERIE E PAGINE (si parte da qui)
@@ -31,7 +32,7 @@ assets/js/search.js              ricerca
 assets/js/ripasso.js             pagina Ripasso
 assets/css/style.css             grafica
 sw.js · manifest.webmanifest     offline e installazione come app
-tools/pagine.py                  rigenera home, cerca, riassunti, ripasso e panoramiche
+tools/pagine.py                  rigenera home, cerca, riassunti, esercizi, ripasso e panoramiche
 ```
 
 ## Aggiungere una pagina
@@ -42,12 +43,13 @@ tools/pagine.py                  rigenera home, cerca, riassunti, ripasso e pano
    { title: "Subnetting", path: "materie/sistemi-e-reti/subnetting.html", type: "esercizi" },
    ```
    Tipi: `teoria`, `esercizi`, `laboratorio`, `riassunto`, `verifica`, `vocabolario`.
+   Le pagine `esercizi` vanno nell'area Esercizi; si possono aggiungere `of` (il capitolo di teoria collegato), `n` (quanti esercizi) e `desc` (una riga di descrizione).
 
 3. (Facoltativo) aggiungi il suo riassunto in `assets/js/riassunti.js`: una voce per ogni `<h2>` della pagina, con lo stesso titolo.
 
 `componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni*, *Java: Collections, ArrayList, Vector e LinkedList*, *Java: HashMap*; TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio XML*, *Lo schema DTD*, *Il linguaggio JSON*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
+Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni*, *Java: Collections, ArrayList, Vector e LinkedList*, *Java: HashMap*; Esercizi di Informatica → una pagina per ognuno dei sei capitoli di Java più *Esercizi completi: tutto Java insieme* (107 esercizi, ogni programma compilato ed eseguito con Java 21); TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio XML*, *Lo schema DTD*, *Il linguaggio JSON*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 
