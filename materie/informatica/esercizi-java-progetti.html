@@ -1,0 +1,1776 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi completi: tutto Java insieme · Scuola</title>
+  <meta name="description" content="Informatica, tre progetti Java completi con soluzione spiegata passo passo: una biblioteca, un negozio e un torneo. Ognuno usa insieme array, wrapper, metodi e overload, classi e costruttori, file, eccezioni, ArrayList e LinkedList, HashMap.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi completi: tutto Java insieme</h1>
+  <p class="lead">Tre progetti lunghi come una verifica di fine anno: una <strong>biblioteca</strong>, un <strong>negozio</strong> e un <strong>torneo</strong>. Ognuno usa insieme <strong>tutti</strong> gli argomenti dei capitoli di Java: array e metodi, oggetti, file, eccezioni, liste e HashMap. Ogni soluzione spiega il ragionamento passo per passo e mostra il codice completo, l'output vero e i file che il programma ha davvero scritto.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Ci sono tre <strong>progetti</strong>, dal più semplice al più difficile. Prima di ogni progetto trovi una o due <strong>tappe</strong>: esercizi brevi che costruiscono un pezzo del progetto, da fare per primi. Poi c'è l'<strong>esercizio completo</strong>: leggi la consegna, progetta su carta le classi e i metodi, scrivi il programma un pezzo alla volta e solo alla fine apri la soluzione. Ogni programma è stato compilato ed eseguito: output e file che vedi sono quelli veri.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="callout def"><span class="callout-title">Cosa serve, e dove ripassarlo</span>Ogni progetto usa <strong>tutti</strong> questi argomenti. Se uno non ti è chiaro, ripassalo prima dal suo capitolo:
+    <div class="table-wrap"><table>
+      <thead><tr><th>Argomento</th><th>Cosa userai</th><th>Capitolo</th></tr></thead>
+      <tbody>
+        <tr><td>Array</td><td><code>length</code>, <code>for</code> classico, <code>foreach</code>, l'array di <code>split</code></td><td><a href="java-array-wrapper-metodi-overload.html#length-for-e-foreach">Array, wrapper, metodi</a></td></tr>
+        <tr><td>Wrapper</td><td><code>Integer.parseInt</code>, <code>Double.parseDouble</code>, <code>Integer</code> nelle collezioni</td><td><a href="java-array-wrapper-metodi-overload.html#wrapper-classes">Wrapper classes</a></td></tr>
+        <tr><td>Metodi static</td><td><code>void</code> e con <code>return</code>, overload</td><td><a href="java-array-wrapper-metodi-overload.html#i-metodi">I metodi</a>, <a href="java-array-wrapper-metodi-overload.html#overload-dei-metodi">Overload</a></td></tr>
+        <tr><td>Classi e oggetti</td><td>attributi, costruttori, <code>this</code>, overload dei costruttori, metodi, liste di oggetti</td><td><a href="java-programmazione-a-oggetti.html#il-costruttore-e-la-parola-chiave-this">Programmazione a oggetti</a></td></tr>
+        <tr><td>File</td><td><code>File</code>, <code>exists</code>, <code>delete</code>, <code>FileWriter</code> (normale e in append), <code>FileReader</code> carattere per carattere</td><td><a href="java-gestione-dei-file.html#leggere-un-file-con-filereader">Gestione dei file</a></td></tr>
+        <tr><td>Eccezioni</td><td><code>try</code>/<code>catch</code>/<code>finally</code>, più <code>catch</code>, <code>throw</code> e <code>throws</code>, checked e unchecked</td><td><a href="java-eccezioni.html#checked-e-unchecked-exceptions">Eccezioni</a></td></tr>
+        <tr><td>Liste</td><td><code>ArrayList</code>, <code>LinkedList</code> come coda e come pila</td><td><a href="java-collections-liste.html#linkedlist-come-pila-e-come-coda">Collections e liste</a></td></tr>
+        <tr><td>HashMap</td><td><code>put</code>, <code>get</code>, <code>containsKey</code>, <code>getOrDefault</code>, <code>remove</code>, <code>keySet</code>, <code>values</code>, <code>entrySet</code></td><td><a href="java-hashmap.html#scorrere-una-hashmap">HashMap</a></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="callout tip"><span class="callout-title">Più classi in un solo file</span>Ogni progetto ha più classi (per esempio <code>Libro</code> e <code>Biblioteca</code>). In classe ognuna andrebbe nel suo file (<code>Libro.java</code>, <code>Biblioteca.java</code>). Qui, per avere un unico programma da copiare e provare, stanno nello stesso file: <strong>solo una</strong> è <code>public</code> (quella con il <code>main</code>, che dà il nome al file), le altre sono scritte senza <code>public</code>. Gli attributi sono senza modificatori, come nel capitolo sugli oggetti. I file di testo da leggere (<code>catalogo.txt</code> e gli altri) vanno messi nella <strong>cartella del progetto</strong>, quella da cui parte il programma: vedi <a href="java-gestione-dei-file.html#percorso-relativo-e-percorso-assoluto">percorso relativo</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il mattone comune: leggere un file riga per riga</h2>
+  <p>Tutti e tre i progetti leggono dei file di testo in cui <strong>ogni riga è un dato</strong> (un libro, un prodotto, una partita). <code>FileReader</code> però legge <strong>un carattere alla volta</strong>, non una riga. Prima dei progetti, quindi, costruiamo un metodo che rimette insieme le righe: lo copieremo uguale in tutti e tre. Teoria: <a href="java-gestione-dei-file.html#leggere-un-file-con-filereader">Leggere un file con FileReader</a>.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Tappa · Il metodo leggiRighe <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Scrivi un metodo</p>
+<pre data-lang="java"><code>static ArrayList&lt;String&gt; leggiRighe(String nomeFile) throws IOException</code></pre>
+      <p>che legge il file <strong>carattere per carattere</strong> con <code>FileReader</code> e restituisce una lista con una stringa per ogni riga. Requisiti:</p>
+      <ol>
+        <li>il carattere <code>'\n'</code> (a capo) chiude la riga corrente e ne comincia una nuova;</li>
+        <li>il carattere <code>'\r'</code> va ignorato: i file salvati su Windows finiscono ogni riga con <code>\r\n</code>, e senza questo controllo le righe avrebbero un carattere invisibile in fondo;</li>
+        <li>anche l'ultima riga va salvata se il file non finisce con un "a capo";</li>
+        <li>il file va chiuso <strong>sempre</strong>, anche se la lettura fallisce: usa <code>finally</code>.</li>
+      </ol>
+      <p>Il <code>main</code> prova il metodo su due file: <code>spesa.txt</code> (salvato da Windows, tre righe, l'ultima senza "a capo") e <code>compiti.txt</code>, che <strong>non esiste</strong>. Per ogni riga stampa il numero, il testo e quanti caratteri contiene; se il file non c'è stampa un messaggio con due <code>catch</code> distinti per <code>FileNotFoundException</code> e <code>IOException</code>.</p>
+      <p>Contenuto di <code>spesa.txt</code>:</p>
+<pre data-lang="testo"><code>latte
+pane
+uova</code></pre>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>== spesa.txt
+1) latte [5 caratteri]
+2) pane [4 caratteri]
+3) uova [4 caratteri]
+Righe lette: 3
+== compiti.txt
+Il file non c'è: compiti.txt (No such file or directory)</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Un accumulatore di testo.</strong> Tengo una stringa <code>riga</code> che parte vuota. Per ogni carattere letto: se è <code>'\n'</code> la riga è finita, la aggiungo alla lista e riparto da <code>""</code>; altrimenti attacco il carattere in fondo con <code>riga = riga + (char) c</code>. È lo stesso schema dell'accumulatore della somma, ma con il testo.</li>
+        <li><strong>Il ciclo di lettura</strong> è quello del capitolo: leggo una volta prima del <code>while</code>, controllo <code>!= -1</code> (fine del file), e leggo di nuovo come <strong>ultima</strong> istruzione del giro.</li>
+        <li><strong>L'ultima riga.</strong> Se il file non finisce con <code>'\n'</code>, quando arriva il <code>-1</code> nella variabile <code>riga</code> c'è ancora <code>uova</code>, mai salvata: dopo il ciclo, se non è vuota, la aggiungo.</li>
+        <li><strong>try-finally.</strong> Il metodo non sa cosa fare se la lettura fallisce (stampare? riprovare?), quindi <strong>non</strong> cattura l'eccezione: la dichiara con <code>throws IOException</code> e la lascia a chi lo chiama. Però il file deve essere chiuso comunque: per questo <code>close()</code> è nel <code>finally</code>, in un <code>try</code> senza <code>catch</code>. Teoria: <a href="java-eccezioni.html#finally-per-chiudere-un-file">finally per chiudere un file</a>.</li>
+        <li><strong>Nel main</strong> <code>IOException</code> è <strong>checked</strong>: il compilatore obbliga a gestirla. I due <code>catch</code> vanno dal più specifico (<code>FileNotFoundException</code>) al più generale (<code>IOException</code>).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class LeggiRighe {
+
+    static ArrayList&lt;String&gt; leggiRighe(String nomeFile) throws IOException {
+        ArrayList&lt;String&gt; righe = new ArrayList&lt;&gt;();
+        FileReader lettore = new FileReader(nomeFile);   // FileNotFoundException se non c'è
+        try {
+            String riga = "";
+            int c = lettore.read();
+            while (c != -1) {
+                if (c == '\n') {            // fine riga: la salvo e ne comincio un'altra
+                    righe.add(riga);
+                    riga = "";
+                } else if (c != '\r') {     // '\r' lo mette Windows prima di '\n': lo ignoro
+                    riga = riga + (char) c;
+                }
+                c = lettore.read();
+            }
+            if (riga.length() &gt; 0) {        // ultima riga senza "a capo"
+                righe.add(riga);
+            }
+        } finally {
+            lettore.close();                // eseguito sempre, anche se read() fallisce
+        }
+        return righe;
+    }
+
+    public static void main(String[] args) {
+        String[] nomi = {"spesa.txt", "compiti.txt"};
+        for (String nome : nomi) {
+            System.out.println("== " + nome);
+            try {
+                ArrayList&lt;String&gt; righe = leggiRighe(nome);
+                for (int i = 0; i &lt; righe.size(); i++) {
+                    String r = righe.get(i);
+                    System.out.println((i + 1) + ") " + r + " [" + r.length() + " caratteri]");
+                }
+                System.out.println("Righe lette: " + righe.size());
+            } catch (FileNotFoundException e) {
+                System.out.println("Il file non c'è: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Errore di lettura: " + e.getMessage());
+            }
+        }
+    }
+}</code></pre>
+      <h4>Cosa dice l'output</h4>
+      <ul>
+        <li>Ogni riga ha il numero di caratteri giusto (<code>latte</code> 5, <code>pane</code> 4): il <code>'\r'</code> è stato davvero scartato. Senza il controllo, le prime due righe avrebbero 6 e 5 caratteri e <code>"latte".equals(riga)</code> sarebbe <code>false</code>.</li>
+        <li><code>uova</code> c'è, anche se dopo non c'era un "a capo".</li>
+        <li>Per <code>compiti.txt</code> è <code>new FileReader(...)</code> a lanciare <code>FileNotFoundException</code>: il <code>try</code> del metodo non è ancora cominciato, quindi non c'è niente da chiudere. Il messaggio tra parentesi dipende dal sistema operativo: su Windows è in italiano.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Progetto 1 · La biblioteca di classe</h2>
+  <p>La biblioteca della scuola tiene il catalogo in un file di testo. Il programma lo carica, gestisce i prestiti della giornata (con una <strong>coda di prenotazioni</strong> per i libri già tutti in prestito), scrive un registro e salva il catalogo aggiornato. È il progetto più semplice dei tre: le operazioni sono scritte in un array nel <code>main</code>.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Tappa · Da una riga di testo a un oggetto <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Una riga di catalogo può avere due campi (<code>codice;titolo</code>, e allora il libro ha 1 copia) oppure tre (<code>codice;titolo;copie</code>).</p>
+      <ol>
+        <li>Scrivi la classe <code>Libro</code> con gli attributi <code>codice</code>, <code>titolo</code>, <code>copie</code> e <strong>due costruttori</strong> (con 2 e con 3 parametri), che usano <code>this</code>; aggiungi un metodo <code>descrizione()</code>.</li>
+        <li>Scrivi un metodo <code>static Libro creaLibro(String riga)</code> che divide la riga con <code>split(";")</code> e chiama il costruttore giusto. Se i campi non sono 2 o 3, <strong>lancia</strong> una <code>IllegalArgumentException</code> con un messaggio che spiega il problema.</li>
+        <li>Nel <code>main</code>, a partire dall'array</li>
+      </ol>
+<pre data-lang="java"><code>String[] righe = {"L01;Cuore;2", "L02;Dune", "L03;Il Gattopardo;tre", "L04", "L05;Lessico famigliare;1"};</code></pre>
+      <p>crea i libri validi in un <code>ArrayList&lt;Libro&gt;</code>; per le righe sbagliate stampa un messaggio diverso se il numero di copie non è un numero o se i campi sono sbagliati. Alla fine stampa i libri caricati.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>"L03;Il Gattopardo;tre" scartata: le copie non sono un numero
+"L04" scartata: servono 2 o 3 campi, ne ho trovati 1
+Libri caricati: 3
+  L01 Cuore, copie: 2
+  L02 Dune, copie: 1
+  L05 Lessico famigliare, copie: 1</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>split.</strong> <code>riga.split(";")</code> restituisce un <strong>array</strong> di stringhe, uno per campo (l'hai già incontrato negli esercizi sulla <a href="java-hashmap.html">HashMap</a>). Con <code>parti.length</code> so quanti campi ci sono.</li>
+        <li><strong>Overload dei costruttori.</strong> 2 campi → <code>new Libro(codice, titolo)</code>; 3 campi → <code>new Libro(codice, titolo, copie)</code>. Java sceglie il costruttore dal numero di argomenti. Teoria: <a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">Overload dei costruttori</a>.</li>
+        <li><strong>Due errori diversi.</strong> <code>"tre"</code> non è un numero: ci pensa <code>Integer.parseInt</code> a lanciare <code>NumberFormatException</code>. Il numero di campi sbagliato invece per Java non è un errore: siamo <strong>noi</strong> a lanciarlo con <code>throw new IllegalArgumentException(...)</code>.</li>
+        <li><strong>L'ordine dei catch.</strong> <code>NumberFormatException</code> è una "figlia" di <code>IllegalArgumentException</code> (un numero scritto male è un caso particolare di argomento non valido). Quindi il suo <code>catch</code> va <strong>prima</strong>: altrimenti quello generale prenderebbe tutto.</li>
+        <li><strong>Il try dentro il for.</strong> Il <code>try</code> sta <strong>dentro</strong> il ciclo: se una riga è sbagliata si salta solo quella e il ciclo continua con la successiva. Se il <code>try</code> fosse fuori dal <code>for</code>, il primo errore fermerebbe tutto il caricamento.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+
+class Libro {
+    String codice;
+    String titolo;
+    int copie;
+
+    Libro(String codice, String titolo) {
+        this.codice = codice;
+        this.titolo = titolo;
+        this.copie = 1;
+    }
+
+    Libro(String codice, String titolo, int copie) {
+        this.codice = codice;
+        this.titolo = titolo;
+        this.copie = copie;
+    }
+
+    String descrizione() {
+        return codice + " " + titolo + ", copie: " + copie;
+    }
+}
+
+public class ProvaLibri {
+
+    static Libro creaLibro(String riga) {
+        String[] parti = riga.split(";");
+        if (parti.length == 2) {
+            return new Libro(parti[0], parti[1]);
+        }
+        if (parti.length == 3) {
+            return new Libro(parti[0], parti[1], Integer.parseInt(parti[2]));
+        }
+        throw new IllegalArgumentException("servono 2 o 3 campi, ne ho trovati " + parti.length);
+    }
+
+    public static void main(String[] args) {
+        String[] righe = {"L01;Cuore;2", "L02;Dune", "L03;Il Gattopardo;tre", "L04", "L05;Lessico famigliare;1"};
+        ArrayList&lt;Libro&gt; libri = new ArrayList&lt;&gt;();
+
+        for (String riga : righe) {
+            try {
+                libri.add(creaLibro(riga));
+            } catch (NumberFormatException e) {
+                System.out.println("\"" + riga + "\" scartata: le copie non sono un numero");
+            } catch (IllegalArgumentException e) {
+                System.out.println("\"" + riga + "\" scartata: " + e.getMessage());
+            }
+        }
+
+        System.out.println("Libri caricati: " + libri.size());
+        for (Libro l : libri) {
+            System.out.println("  " + l.descrizione());
+        }
+    }
+}</code></pre>
+      <h4>E se inverto i due catch?</h4>
+      <p>Se metto prima <code>catch (IllegalArgumentException e)</code> e poi <code>catch (NumberFormatException e)</code>, il programma non compila:</p>
+<pre data-lang="testo"><code>riga 8: error: exception NumberFormatException has already been caught</code></pre>
+      <p>"has already been caught" = è già stata catturata: il primo <code>catch</code> prende anche le <code>NumberFormatException</code>, quindi il secondo non verrebbe mai eseguito. Regola: dal più specifico al più generale. Teoria: <a href="java-eccezioni.html#gestire-piu-eccezioni">Gestire più eccezioni</a>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>La biblioteca di classe <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il catalogo della biblioteca è nel file <code>catalogo.txt</code>. Ogni riga è <code>codice;titolo;autore;copie</code>; se il numero di copie manca, il libro ne ha una. Alcune righe sono state scritte male.</p>
+<pre data-lang="testo"><code>L01;Il piccolo principe;Antoine de Saint-Exupery;2
+L02;Harry Potter e la pietra filosofale;J.K. Rowling;3
+L03;Il barone rampante;Italo Calvino
+L04;Cuore;Edmondo De Amicis;1
+L05;Dune;Frank Herbert;due
+L06;Il nome della rosa
+L07;La coscienza di Zeno;Italo Svevo;1</code></pre>
+      <p>Scrivi un programma che:</p>
+      <ol>
+        <li>definisca la classe <code>Libro</code> con gli attributi <code>codice</code>, <code>titolo</code>, <code>autore</code>, <code>copieTotali</code>, <code>copie</code> (quelle sullo scaffale adesso) e <code>prenotazioni</code>, una <code>LinkedList&lt;String&gt;</code> usata come <strong>coda</strong> degli studenti in attesa. Due costruttori: con 3 parametri (1 copia) e con 4. Metodi: <code>disponibile()</code>, <code>presta()</code> (lancia <code>IllegalStateException</code> se non ci sono copie), <code>restituisci()</code> (lancia <code>IllegalStateException</code> se tutte le copie sono già in biblioteca), <code>descrizione()</code> e <code>rigaFile()</code>;</li>
+        <li>all'avvio, se esiste un vecchio <code>registro.txt</code>, lo <strong>elimini</strong>;</li>
+        <li>legga <code>catalogo.txt</code> con il metodo <code>leggiRighe</code> della tappa e, con un metodo <code>creaLibro</code>, crei i libri. Le righe sbagliate vanno <strong>saltate</strong> con un messaggio diverso per "copie non numeriche" e "numero di campi sbagliato";</li>
+        <li>tenga i libri sia in una <code>HashMap&lt;String, Libro&gt;</code> (codice → libro, per trovarli subito) sia in un <code>ArrayList&lt;Libro&gt;</code> (per ricordare l'ordine del file);</li>
+        <li>esegua le operazioni della giornata, scritte in questo array:
+<pre data-lang="java"><code>String[] operazioni = {
+    "PRESTA;L01;Anna", "PRESTA;L01;Bruno", "PRESTA;L01;Carla", "PRESTA;L03;Anna",
+    "PRESTA;L09;Dario", "RESTITUISCI;L01;Anna", "RESTITUISCI;L02;Bruno",
+    "RITIRA;L04;-", "PRESTA;L04;Elena", "PRESTA;L07;Carla"
+};</code></pre>
+          <ul>
+            <li><strong>PRESTA</strong>: se il codice non esiste lo dice; se c'è una copia la presta, altrimenti mette lo studente in coda;</li>
+            <li><strong>RESTITUISCI</strong>: rimette la copia sullo scaffale e, se qualcuno è in coda, la presta subito al <strong>primo</strong> della coda;</li>
+            <li><strong>RITIRA</strong>: toglie il libro (rovinato) dal catalogo;</li>
+          </ul></li>
+        <li>conti quanti prestiti ha ricevuto ogni studente in una <code>HashMap&lt;String, Integer&gt;</code>;</li>
+        <li>scriva ogni prestito, restituzione e ritiro in <code>registro.txt</code>, <strong>in fondo</strong> al file (modalità append), con un metodo <code>registra</code> in <strong>overload</strong>: una versione riceve il testo già pronto, l'altra azione, libro e studente;</li>
+        <li>alla fine stampi la situazione dei libri, i prestiti totali e per studente, i codici rimasti, e salvi il catalogo aggiornato in <code>catalogo_nuovo.txt</code>.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Vecchio registro eliminato.
+Riga 5 saltata, copie non numeriche: For input string: "due"
+Riga 6 saltata: servono 3 o 4 campi, ne ho trovati 2
+Libri caricati: 5
+
+PRESTA;L01;Anna -&gt; prestato
+PRESTA;L01;Bruno -&gt; prestato
+PRESTA;L01;Carla -&gt; nessuna copia, Carla in coda (posizione 1)
+PRESTA;L03;Anna -&gt; prestato
+PRESTA;L09;Dario -&gt; codice inesistente
+RESTITUISCI;L01;Anna -&gt; restituito
+   e subito prestato a Carla, che era in coda
+RESTITUISCI;L02;Bruno -&gt; errore: tutte le copie di Harry Potter e la pietra filosofale sono già in biblioteca
+RITIRA;L04;- -&gt; tolto dal catalogo
+PRESTA;L04;Elena -&gt; codice inesistente
+PRESTA;L07;Carla -&gt; prestato
+
+Situazione dei libri:
+  L01 Il piccolo principe (Antoine de Saint-Exupery): 0/2 copie, in coda 0
+  L02 Harry Potter e la pietra filosofale (J.K. Rowling): 3/3 copie, in coda 0
+  L03 Il barone rampante (Italo Calvino): 0/1 copie, in coda 0
+  L07 La coscienza di Zeno (Italo Svevo): 0/1 copie, in coda 0
+Prestiti totali: 5
+  Bruno: 1
+  Carla: 2
+  Anna: 2
+Codici in catalogo: L07 L01 L03 L02
+Catalogo salvato in catalogo_nuovo.txt
+Biblioteca chiusa.</code></pre>
+      <p>Contenuto di <code>registro.txt</code> alla fine:</p>
+<pre data-lang="testo"><code>PRESTITO L01 a Anna
+PRESTITO L01 a Bruno
+PRESTITO L03 a Anna
+RESTITUZIONE L01 a Anna
+PRESTITO L01 a Carla
+RITIRATO L04
+PRESTITO L07 a Carla</code></pre>
+      <p>Contenuto di <code>catalogo_nuovo.txt</code>:</p>
+<pre data-lang="testo"><code>L01;Il piccolo principe;Antoine de Saint-Exupery;2
+L02;Harry Potter e la pietra filosofale;J.K. Rowling;3
+L03;Il barone rampante;Italo Calvino;1
+L07;La coscienza di Zeno;Italo Svevo;1</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <p>Prima del codice, la tabella dei compiti: ogni compito ha un metodo (o una struttura dati) e ognuno viene da un capitolo preciso.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Classe / metodo</th><th>Compito</th><th>Argomento del capitolo</th></tr></thead>
+        <tbody>
+          <tr><td><code>Libro</code></td><td>un libro con le sue copie e la sua coda</td><td><a href="java-programmazione-a-oggetti.html#il-costruttore-e-la-parola-chiave-this">classe, costruttori, <code>this</code></a>, <a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">overload dei costruttori</a></td></tr>
+          <tr><td><code>presta</code>, <code>restituisci</code></td><td>cambiano le copie, rifiutano le operazioni impossibili</td><td>metodi dell'oggetto, <a href="java-eccezioni.html#throw-e-throws"><code>throw</code></a> (unchecked)</td></tr>
+          <tr><td><code>prenotazioni</code></td><td>chi aspetta il libro, in ordine di arrivo</td><td><a href="java-collections-liste.html#la-coda-queue-il-primo-che-entra-e-il-primo-che-esce"><code>LinkedList</code> come coda</a>: <code>offer</code>, <code>poll</code></td></tr>
+          <tr><td><code>leggiRighe</code></td><td>file → lista di righe</td><td><a href="java-gestione-dei-file.html#leggere-un-file-con-filereader"><code>FileReader</code></a>, <code>finally</code>, <a href="java-eccezioni.html#throws"><code>throws</code></a> (checked)</td></tr>
+          <tr><td><code>creaLibro</code></td><td>riga → oggetto <code>Libro</code></td><td>array di <code>split</code>, <a href="java-array-wrapper-metodi-overload.html#wrapper-classes"><code>parseInt</code></a>, metodo con <code>return</code></td></tr>
+          <tr><td><code>registra</code> ×2</td><td>aggiunge una riga al registro</td><td><a href="java-array-wrapper-metodi-overload.html#overload-dei-metodi">overload</a>, <a href="java-gestione-dei-file.html#scrivere-in-un-file-con-filewriter"><code>FileWriter</code> in append</a></td></tr>
+          <tr><td><code>salvaCatalogo</code></td><td>riscrive il catalogo da capo</td><td><code>FileWriter</code> normale, metodo <code>void</code></td></tr>
+          <tr><td><code>catalogo</code>, <code>prestiti</code></td><td>trovare un libro dal codice, contare i prestiti</td><td><a href="java-hashmap.html#leggere-con-get-e-controllare">HashMap</a>: <code>containsKey</code>, <code>get</code>, <code>getOrDefault</code>, <code>remove</code></td></tr>
+          <tr><td><code>elenco</code></td><td>i libri nell'ordine del file</td><td><a href="java-collections-liste.html#usare-arraylist-la-sintassi"><code>ArrayList</code></a> di oggetti</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · La classe Libro</h4>
+      <p>Gli attributi sono i <strong>sostantivi</strong> della consegna (codice, titolo, autore, copie, prenotazioni), i metodi sono i <strong>verbi</strong> (prestare, restituire, descrivere). I due costruttori differiscono per il numero di parametri: in tutti e due <code>this.codice = codice</code> distingue l'attributo dal parametro con lo stesso nome. L'attributo <code>prenotazioni</code> viene creato direttamente nella dichiarazione (<code>= new LinkedList&lt;&gt;()</code>): così ogni libro nasce con la <strong>sua</strong> coda, vuota, qualunque costruttore si usi.</p>
+<pre data-lang="java"><code>void presta() {
+    if (copie == 0) {
+        throw new IllegalStateException("nessuna copia di " + titolo + " sullo scaffale");
+    }
+    copie--;
+}
+
+void restituisci() {
+    if (copie == copieTotali) {
+        throw new IllegalStateException("tutte le copie di " + titolo + " sono già in biblioteca");
+    }
+    copie++;
+}</code></pre>
+      <p>Perché due attributi per le copie? <code>copie</code> cambia con i prestiti, <code>copieTotali</code> no: serve a capire quando una restituzione è impossibile (non si possono avere 4 copie di un libro che ne ha 3). In quel caso, e quando si presta un libro senza copie, il metodo <strong>lancia</strong> un'eccezione: l'oggetto si rifiuta di finire in uno stato assurdo. <code>IllegalStateException</code> è <strong>unchecked</strong>, quindi non serve <code>throws</code> nell'intestazione.</p>
+      <h4>Passo 3 · Il registro: elimina, poi aggiungi in fondo</h4>
+      <p>All'avvio <code>registro.txt</code> esiste (è quello della settimana scorsa): con <code>exists()</code> lo scopro e con <code>delete()</code> lo cancello. Poi ogni chiamata di <code>registra</code> apre il file con <code>new FileWriter("registro.txt", true)</code>: il <code>true</code> è la <strong>modalità append</strong>. Senza, ogni apertura svuoterebbe il file e alla fine il registro conterrebbe solo l'ultima riga.</p>
+<pre data-lang="java"><code>static void registra(String testo) {
+    try {
+        FileWriter w = new FileWriter("registro.txt", true);   // true = scrivi in fondo
+        w.write(testo + "\n");
+        w.close();
+    } catch (IOException e) {
+        System.out.println("Impossibile scrivere nel registro: " + e.getMessage());
+    }
+}
+
+static void registra(String azione, Libro l, String studente) {
+    registra(azione + " " + l.codice + " a " + studente);
+}</code></pre>
+      <p>È un <strong>overload</strong>: stesso nome, parametri diversi (uno contro tre). La versione con tre parametri non riscrive il codice del file: prepara il testo e chiama l'altra. <code>registra</code> gestisce da sé la sua <code>IOException</code> con un <code>catch</code>: se il registro non si può scrivere, il programma avvisa ma continua a prestare libri.</p>
+      <h4>Passo 4 · Caricare il catalogo</h4>
+      <p><code>creaLibro</code> è quello della tappa, con un campo in più (3 o 4 campi). Nel <code>main</code> il <code>try</code> esterno gestisce la <code>IOException</code> di <code>leggiRighe</code> (checked: senza, non compila), quello interno le righe sbagliate (unchecked: non obbligatorie, ma senza il programma si fermerebbe alla riga 5).</p>
+<pre data-lang="java"><code>try {
+    ArrayList&lt;String&gt; righe = leggiRighe("catalogo.txt");
+    for (int i = 0; i &lt; righe.size(); i++) {
+        try {
+            Libro l = creaLibro(righe.get(i));
+            catalogo.put(l.codice, l);
+            elenco.add(l);
+        } catch (NumberFormatException e) {
+            System.out.println("Riga " + (i + 1) + " saltata, copie non numeriche: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Riga " + (i + 1) + " saltata: " + e.getMessage());
+        }
+    }
+} catch (IOException e) {
+    System.out.println("Errore nella lettura del catalogo: " + e.getMessage());
+    return;
+}
+System.out.println("Libri caricati: " + catalogo.size());</code></pre>
+      <p>Uso il <code>for</code> classico perché mi serve il <strong>numero</strong> della riga per il messaggio (<code>i + 1</code>, dato che gli indici partono da 0). Ogni libro valido va in <strong>due</strong> strutture: la mappa per trovarlo dal codice in un attimo, la lista per l'ordine. Non sono due copie del libro: contengono due riferimenti allo <strong>stesso</strong> oggetto, quindi se un prestito cambia le copie, la modifica si vede da tutte e due.</p>
+      <h4>Passo 5 · Le operazioni</h4>
+      <p>Per ogni stringa dell'array (<code>foreach</code>) uso <code>split</code> per avere tipo, codice e studente. Prima di tutto controllo <code>containsKey</code>: senza, <code>get</code> restituirebbe <code>null</code> e la prima chiamata di un metodo su quel "libro" darebbe <code>NullPointerException</code>. <code>continue</code> salta al giro successivo del ciclo.</p>
+<pre data-lang="java"><code>} else if (tipo.equals("RESTITUISCI")) {
+    l.restituisci();
+    registra("RESTITUZIONE", l, studente);
+    System.out.println(op + " -&gt; restituito");
+    if (l.prenotazioni.size() &gt; 0) {           // c'è qualcuno in attesa?
+        String prossimo = l.prenotazioni.poll(); // il primo della coda
+        l.presta();
+        prestiti.put(prossimo, prestiti.getOrDefault(prossimo, 0) + 1);
+        registra("PRESTITO", l, prossimo);
+        System.out.println("   e subito prestato a " + prossimo + ", che era in coda");
+    }</code></pre>
+      <ul>
+        <li><strong>La coda.</strong> Quando Carla chiede L01 non ci sono copie: <code>offer</code> la mette in fondo alla coda. Quando Anna restituisce, <code>poll</code> toglie e restituisce il <strong>primo</strong> in coda (FIFO, chi arriva prima è servito prima), e il libro le viene prestato subito.</li>
+        <li><strong>Contare con getOrDefault.</strong> <code>prestiti.put(studente, prestiti.getOrDefault(studente, 0) + 1)</code>: la prima volta lo studente non c'è e si parte da 0. Con <code>get</code> avrei <code>null + 1</code> e quindi <code>NullPointerException</code>.</li>
+        <li><strong>Le stringhe si confrontano con equals</strong>, non con <code>==</code>.</li>
+        <li><strong>RITIRA</strong> toglie il libro da tutte e due le strutture: <code>catalogo.remove(codice)</code> per chiave, <code>elenco.remove(l)</code> per oggetto. Infatti <code>PRESTA;L04;Elena</code> subito dopo trova "codice inesistente".</li>
+        <li><strong>RESTITUISCI;L02;Bruno</strong>: L02 ha tutte e 3 le copie in biblioteca, quindi <code>restituisci()</code> lancia l'eccezione, il <code>catch (IllegalStateException e)</code> stampa il messaggio con <code>e.getMessage()</code> e il ciclo continua.</li>
+      </ul>
+      <h4>Passo 6 · Il riepilogo e i tre modi di scorrere una HashMap</h4>
+<pre data-lang="java"><code>int totale = 0;
+for (int n : prestiti.values()) {
+    totale += n;
+}
+System.out.println("Prestiti totali: " + totale);
+for (Map.Entry&lt;String, Integer&gt; e : prestiti.entrySet()) {
+    System.out.println("  " + e.getKey() + ": " + e.getValue());
+}
+System.out.print("Codici in catalogo:");
+for (String codice : catalogo.keySet()) {
+    System.out.print(" " + codice);
+}
+System.out.println();</code></pre>
+      <p><code>values()</code> quando servono solo i numeri (la somma), <code>entrySet()</code> quando servono chiave e valore insieme, <code>keySet()</code> quando servono solo le chiavi. Guarda l'output: gli studenti escono come <code>Bruno, Carla, Anna</code> e i codici come <code>L07 L01 L03 L02</code>, <strong>non</strong> nell'ordine in cui sono stati inseriti. È normale: una HashMap <a href="java-hashmap.html#come-funziona-dentro">non garantisce nessun ordine</a>, e su un'altra versione di Java potrebbe uscire diverso. Per questo la situazione dei libri si stampa scorrendo l'<code>ArrayList</code>, che l'ordine lo ricorda.</p>
+      <h4>Passo 7 · Il salvataggio e il finally</h4>
+      <p><code>salvaCatalogo</code> apre il file <strong>senza</strong> <code>true</code>: deve riscriverlo da capo, non aggiungere in fondo. Dichiara <code>throws IOException</code> e il <code>main</code> la gestisce. Il <code>finally</code> stampa "Biblioteca chiusa." sia che il salvataggio riesca, sia che fallisca. Nota che in <code>catalogo_nuovo.txt</code> la riga di L03 ora ha 4 campi: <code>rigaFile()</code> scrive sempre il numero di copie, anche quando nel file originale mancava.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+// In classe Libro starebbe nel suo file Libro.java: qui è nello stesso file
+// (senza public) per avere un unico programma da copiare.
+class Libro {
+    String codice;
+    String titolo;
+    String autore;
+    int copieTotali;
+    int copie;                                            // copie sullo scaffale adesso
+    LinkedList&lt;String&gt; prenotazioni = new LinkedList&lt;&gt;(); // coda: chi aspetta il libro
+
+    // costruttore 1: il file non dice quante copie -&gt; ce n'è una
+    Libro(String codice, String titolo, String autore) {
+        this.codice = codice;
+        this.titolo = titolo;
+        this.autore = autore;
+        this.copieTotali = 1;
+        this.copie = 1;
+    }
+
+    // costruttore 2: il numero di copie è scritto nel file
+    Libro(String codice, String titolo, String autore, int copie) {
+        this.codice = codice;
+        this.titolo = titolo;
+        this.autore = autore;
+        this.copieTotali = copie;
+        this.copie = copie;
+    }
+
+    boolean disponibile() {
+        return copie &gt; 0;
+    }
+
+    void presta() {
+        if (copie == 0) {
+            throw new IllegalStateException("nessuna copia di " + titolo + " sullo scaffale");
+        }
+        copie--;
+    }
+
+    void restituisci() {
+        if (copie == copieTotali) {
+            throw new IllegalStateException("tutte le copie di " + titolo + " sono già in biblioteca");
+        }
+        copie++;
+    }
+
+    String descrizione() {
+        return codice + " " + titolo + " (" + autore + "): " + copie + "/" + copieTotali
+                + " copie, in coda " + prenotazioni.size();
+    }
+
+    String rigaFile() {
+        return codice + ";" + titolo + ";" + autore + ";" + copieTotali;
+    }
+}
+
+public class Biblioteca {
+
+    // ---------- lettura: FileReader carattere per carattere ----------
+    static ArrayList&lt;String&gt; leggiRighe(String nomeFile) throws IOException {
+        ArrayList&lt;String&gt; righe = new ArrayList&lt;&gt;();
+        FileReader lettore = new FileReader(nomeFile);
+        try {
+            String riga = "";
+            int c = lettore.read();
+            while (c != -1) {
+                if (c == '\n') {            // fine riga: la salvo e ne comincio un'altra
+                    righe.add(riga);
+                    riga = "";
+                } else if (c != '\r') {     // '\r' lo mette Windows prima di '\n': lo ignoro
+                    riga = riga + (char) c;
+                }
+                c = lettore.read();
+            }
+            if (riga.length() &gt; 0) {        // ultima riga senza "a capo"
+                righe.add(riga);
+            }
+        } finally {
+            lettore.close();                // eseguito sempre, anche se read() fallisce
+        }
+        return righe;
+    }
+
+    // ---------- da una riga di testo a un oggetto ----------
+    static Libro creaLibro(String riga) {
+        String[] parti = riga.split(";");
+        if (parti.length == 3) {
+            return new Libro(parti[0], parti[1], parti[2]);
+        }
+        if (parti.length == 4) {
+            return new Libro(parti[0], parti[1], parti[2], Integer.parseInt(parti[3]));
+        }
+        throw new IllegalArgumentException("servono 3 o 4 campi, ne ho trovati " + parti.length);
+    }
+
+    // ---------- registro: FileWriter in modalità append, con overload ----------
+    static void registra(String testo) {
+        try {
+            FileWriter w = new FileWriter("registro.txt", true);   // true = scrivi in fondo
+            w.write(testo + "\n");
+            w.close();
+        } catch (IOException e) {
+            System.out.println("Impossibile scrivere nel registro: " + e.getMessage());
+        }
+    }
+
+    static void registra(String azione, Libro l, String studente) {
+        registra(azione + " " + l.codice + " a " + studente);
+    }
+
+    // ---------- salvataggio: FileWriter normale (sovrascrive) ----------
+    static void salvaCatalogo(ArrayList&lt;Libro&gt; elenco, String nomeFile) throws IOException {
+        FileWriter w = new FileWriter(nomeFile);
+        for (Libro l : elenco) {
+            w.write(l.rigaFile() + "\n");
+        }
+        w.close();
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, Libro&gt; catalogo = new HashMap&lt;&gt;();   // codice -&gt; libro
+        ArrayList&lt;Libro&gt; elenco = new ArrayList&lt;&gt;();          // gli stessi libri, in ordine
+        HashMap&lt;String, Integer&gt; prestiti = new HashMap&lt;&gt;();  // studente -&gt; quanti prestiti
+
+        // 1) un nuovo registro per ogni giornata
+        File registro = new File("registro.txt");
+        if (registro.exists()) {
+            registro.delete();
+            System.out.println("Vecchio registro eliminato.");
+        }
+
+        // 2) caricamento del catalogo
+        File fileCatalogo = new File("catalogo.txt");
+        if (!fileCatalogo.exists()) {
+            System.out.println("Manca il file catalogo.txt");
+            return;
+        }
+        try {
+            ArrayList&lt;String&gt; righe = leggiRighe("catalogo.txt");
+            for (int i = 0; i &lt; righe.size(); i++) {
+                try {
+                    Libro l = creaLibro(righe.get(i));
+                    catalogo.put(l.codice, l);
+                    elenco.add(l);
+                } catch (NumberFormatException e) {
+                    System.out.println("Riga " + (i + 1) + " saltata, copie non numeriche: " + e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Riga " + (i + 1) + " saltata: " + e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Errore nella lettura del catalogo: " + e.getMessage());
+            return;
+        }
+        System.out.println("Libri caricati: " + catalogo.size());
+
+        // 3) le operazioni della giornata
+        String[] operazioni = {
+            "PRESTA;L01;Anna", "PRESTA;L01;Bruno", "PRESTA;L01;Carla", "PRESTA;L03;Anna",
+            "PRESTA;L09;Dario", "RESTITUISCI;L01;Anna", "RESTITUISCI;L02;Bruno",
+            "RITIRA;L04;-", "PRESTA;L04;Elena", "PRESTA;L07;Carla"
+        };
+        System.out.println();
+        for (String op : operazioni) {
+            String[] p = op.split(";");
+            String tipo = p[0];
+            String codice = p[1];
+            String studente = p[2];
+
+            if (!catalogo.containsKey(codice)) {
+                System.out.println(op + " -&gt; codice inesistente");
+                continue;
+            }
+            Libro l = catalogo.get(codice);
+            try {
+                if (tipo.equals("PRESTA")) {
+                    if (l.disponibile()) {
+                        l.presta();
+                        prestiti.put(studente, prestiti.getOrDefault(studente, 0) + 1);
+                        registra("PRESTITO", l, studente);
+                        System.out.println(op + " -&gt; prestato");
+                    } else {
+                        l.prenotazioni.offer(studente);        // in fondo alla coda
+                        System.out.println(op + " -&gt; nessuna copia, " + studente
+                                + " in coda (posizione " + l.prenotazioni.size() + ")");
+                    }
+                } else if (tipo.equals("RESTITUISCI")) {
+                    l.restituisci();
+                    registra("RESTITUZIONE", l, studente);
+                    System.out.println(op + " -&gt; restituito");
+                    if (l.prenotazioni.size() &gt; 0) {           // c'è qualcuno in attesa?
+                        String prossimo = l.prenotazioni.poll(); // il primo della coda
+                        l.presta();
+                        prestiti.put(prossimo, prestiti.getOrDefault(prossimo, 0) + 1);
+                        registra("PRESTITO", l, prossimo);
+                        System.out.println("   e subito prestato a " + prossimo + ", che era in coda");
+                    }
+                } else if (tipo.equals("RITIRA")) {
+                    catalogo.remove(codice);
+                    elenco.remove(l);
+                    registra("RITIRATO " + codice);
+                    System.out.println(op + " -&gt; tolto dal catalogo");
+                }
+            } catch (IllegalStateException e) {
+                System.out.println(op + " -&gt; errore: " + e.getMessage());
+            }
+        }
+
+        // 4) riepilogo
+        System.out.println();
+        System.out.println("Situazione dei libri:");
+        for (Libro l : elenco) {
+            System.out.println("  " + l.descrizione());
+        }
+        int totale = 0;
+        for (int n : prestiti.values()) {
+            totale += n;
+        }
+        System.out.println("Prestiti totali: " + totale);
+        for (Map.Entry&lt;String, Integer&gt; e : prestiti.entrySet()) {
+            System.out.println("  " + e.getKey() + ": " + e.getValue());
+        }
+        System.out.print("Codici in catalogo:");
+        for (String codice : catalogo.keySet()) {
+            System.out.print(" " + codice);
+        }
+        System.out.println();
+
+        // 5) salvataggio
+        try {
+            salvaCatalogo(elenco, "catalogo_nuovo.txt");
+            System.out.println("Catalogo salvato in catalogo_nuovo.txt");
+        } catch (IOException e) {
+            System.out.println("Salvataggio non riuscito: " + e.getMessage());
+        } finally {
+            System.out.println("Biblioteca chiusa.");
+        }
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Perché nel registro manca la riga di <code>RESTITUISCI;L02;Bruno</code>? (<code>restituisci()</code> ha lanciato l'eccezione: le righe successive del <code>try</code>, compresa <code>registra(...)</code>, sono state saltate.)</li>
+        <li>Cosa succede se in <code>registra</code> togli il <code>true</code>? (Ogni chiamata svuota il file: alla fine <code>registro.txt</code> contiene solo <code>PRESTITO L07 a Carla</code>.)</li>
+        <li>Se Dario e poi Elena si mettono in coda per L01, e poi Bruno restituisce, chi riceve il libro? (Dario: la coda è FIFO e <code>poll</code> prende il primo arrivato.)</li>
+        <li>Perché <code>leggiRighe</code> ha <code>throws</code> e <code>creaLibro</code> no, anche se tutti e due possono lanciare eccezioni? (<code>IOException</code> è checked e va dichiarata; <code>NumberFormatException</code> e <code>IllegalArgumentException</code> sono unchecked.)</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Per andare oltre</span>Leggi le operazioni da un file <code>operazioni.txt</code> invece che dall'array (hai già <code>leggiRighe</code>!) e aggiungi l'operazione <code>CODA;L01;-</code>, che stampa chi è in attesa per quel libro senza toglierlo dalla coda (suggerimento: <code>peek()</code> guarda solo il primo; per vederli tutti, un <code>foreach</code> sulla <code>LinkedList</code>).</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Progetto 2 · Il negozio di cancelleria</h2>
+  <p>Un piccolo negozio legge il magazzino da file e riceve gli ordini dei clienti in un secondo file. Gli ordini vengono evasi <strong>in ordine di arrivo</strong> (una coda), e c'è un comando <strong>ANNULLA</strong> che cancella l'ultimo ordine evaso (una pila). Ogni scontrino finisce in un file. Rispetto alla biblioteca è più difficile: due file da leggere, due <code>LinkedList</code> con ruoli diversi e più tipi di errore da gestire.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Tappa · Il carrello con il tasto Annulla <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il listino è una <code>HashMap&lt;String, Integer&gt;</code> con i prezzi <strong>in centesimi</strong>: <code>P01</code> → 150, <code>P02</code> → 80, <code>P03</code> → 2990. Il cliente esegue queste azioni:</p>
+<pre data-lang="java"><code>String[] azioni = {"P01", "P03", "ANNULLA", "P02", "P02", "ANNULLA", "ANNULLA", "ANNULLA", "ANNULLA"};</code></pre>
+      <ol>
+        <li>un codice aggiunge il prodotto al carrello; <code>ANNULLA</code> toglie l'<strong>ultimo</strong> prodotto aggiunto. Il carrello è una <code>LinkedList&lt;String&gt;</code> usata come <strong>pila</strong> (<code>push</code>, <code>pop</code>);</li>
+        <li>se il carrello è vuoto, <code>pop()</code> lancia <code>NoSuchElementException</code>: catturala e stampa "niente da annullare";</li>
+        <li>dopo ogni azione stampa il carrello e il totale in euro, scritto con un metodo <code>static String euro(int centesimi)</code> che restituisce per esempio <code>"31.40"</code> per 3140 e <code>"0.80"</code> per 80.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>aggiungo P01 -&gt; [P01] totale 1.50 euro
+aggiungo P03 -&gt; [P03, P01] totale 31.40 euro
+annullo P03 -&gt; [P01] totale 1.50 euro
+aggiungo P02 -&gt; [P02, P01] totale 2.30 euro
+aggiungo P02 -&gt; [P02, P02, P01] totale 3.10 euro
+annullo P02 -&gt; [P02, P01] totale 2.30 euro
+annullo P02 -&gt; [P01] totale 1.50 euro
+annullo P01 -&gt; [] totale 0.00 euro
+niente da annullare -&gt; [] totale 0.00 euro</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Perché i centesimi.</strong> I <code>double</code> non sanno rappresentare esattamente tutti i decimali: <code>0.1 + 0.2</code> dà <code>0.30000000000000004</code>. Con gli <code>int</code> in centesimi i conti sono sempre esatti; la virgola si mette solo quando si stampa.</li>
+        <li><strong>Il metodo euro.</strong> <code>centesimi / 100</code> (divisione intera) dà gli euro, <code>centesimi % 100</code> (il resto) i centesimi. Se i centesimi sono meno di 10 serve uno zero davanti: 5 centesimi si scrivono <code>05</code>, non <code>5</code>. Il punto lo scrivo io, quindi il risultato non cambia da un computer all'altro (con <code>printf</code> su un computer in italiano uscirebbe la virgola).</li>
+        <li><strong>La pila.</strong> <code>push</code> mette in cima, <code>pop</code> toglie dalla cima: l'ultimo entrato è il primo a uscire (LIFO). Stampando la <code>LinkedList</code> la cima è il <strong>primo</strong> elemento a sinistra: guarda <code>[P03, P01]</code>. Teoria: <a href="java-collections-liste.html#la-pila-stack-l-ultimo-che-entra-e-il-primo-che-esce">La pila</a>.</li>
+        <li><strong>Il totale</strong> si ricalcola ogni volta scorrendo il carrello con un <code>foreach</code> e chiedendo il prezzo al listino con <code>get</code>.</li>
+        <li><strong>L'ultimo ANNULLA</strong> trova il carrello vuoto: <code>pop()</code> lancia <code>NoSuchElementException</code> (unchecked, va importata da <code>java.util</code>). Lo stesso controllo si poteva fare con un <code>if (carrello.size() &gt; 0)</code>: qui usiamo il <code>catch</code> per vedere l'eccezione.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+
+public class Carrello {
+
+    static String euro(int centesimi) {
+        String cent = "" + centesimi % 100;
+        if (centesimi % 100 &lt; 10) {
+            cent = "0" + cent;                 // 5 centesimi -&gt; "05"
+        }
+        return centesimi / 100 + "." + cent;
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; listino = new HashMap&lt;&gt;();
+        listino.put("P01", 150);
+        listino.put("P02", 80);
+        listino.put("P03", 2990);
+
+        LinkedList&lt;String&gt; carrello = new LinkedList&lt;&gt;();   // usata come pila
+        String[] azioni = {"P01", "P03", "ANNULLA", "P02", "P02", "ANNULLA", "ANNULLA", "ANNULLA", "ANNULLA"};
+
+        for (String azione : azioni) {
+            try {
+                if (azione.equals("ANNULLA")) {
+                    String tolto = carrello.pop();          // toglie la cima
+                    System.out.print("annullo " + tolto + " -&gt; ");
+                } else {
+                    carrello.push(azione);                  // mette in cima
+                    System.out.print("aggiungo " + azione + " -&gt; ");
+                }
+            } catch (NoSuchElementException e) {
+                System.out.print("niente da annullare -&gt; ");
+            }
+            int totale = 0;
+            for (String codice : carrello) {
+                totale += listino.get(codice);
+            }
+            System.out.println(carrello + " totale " + euro(totale) + " euro");
+        }
+    }
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Il negozio di cancelleria <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Il magazzino è nel file <code>magazzino.txt</code>: la prima riga è un'intestazione, poi ogni riga è <code>codice;nome;prezzo;quantita</code>. Un prodotto appena messo in vendita può non avere la quantità (vuol dire 0 pezzi).</p>
+<pre data-lang="testo"><code>codice;nome;prezzo;quantita
+P01;Quaderno a righe;1.50;40
+P02;Penna blu;0.80;100
+P03;Zaino;29.90;3
+P04;Calcolatrice;12.50;5
+P05;Evidenziatore;1.20
+P06;Astuccio;8.00;tanti</code></pre>
+      <p>Gli ordini arrivano nel file <code>ordini.txt</code>: ogni riga è <code>cliente;codice;quantita</code>, oppure la parola <code>ANNULLA</code>.</p>
+<pre data-lang="testo"><code>ANNULLA
+Rossi;P01;3
+Bianchi;P03;2
+Verdi;P03;2
+Rossi;P02;dieci
+Neri;P09;1
+ANNULLA
+Verdi;P03;2
+Bianchi;P05;1
+Rossi;P04;-1
+Gialli;P04;5
+Rossi;P02;10</code></pre>
+      <p>Scrivi un programma che:</p>
+      <ol>
+        <li>definisca le classi <code>Prodotto</code> (codice, nome, prezzo <strong>in centesimi</strong>, quantità; due costruttori; metodi <code>preleva(int q)</code>, <code>rimetti(int q)</code>, <code>rigaFile()</code>) e <code>Ordine</code> (cliente, prodotto, quantità; metodi <code>totale()</code> e <code>rigaScontrino()</code>);</li>
+        <li><code>preleva</code> lanci <code>IllegalArgumentException</code> se la quantità è zero o negativa e <code>IllegalStateException</code> se in magazzino non ce n'è abbastanza;</li>
+        <li>cancelli il vecchio <code>scontrini.txt</code> se esiste, poi carichi il magazzino (saltando l'intestazione e scartando le righe con numeri sbagliati) in una <code>HashMap</code> codice → prodotto e in un <code>ArrayList</code>;</li>
+        <li>metta tutte le righe di <code>ordini.txt</code> in una <strong>coda</strong> (<code>LinkedList</code>, <code>offer</code>/<code>poll</code>) e le evada una alla volta. Un ordine valido toglie la merce, va in cima a una <strong>pila</strong> di ordini evasi (<code>push</code>) e produce uno scontrino numerato. <code>ANNULLA</code> toglie dalla pila l'ultimo ordine evaso (<code>pop</code>) e rimette la merce in magazzino;</li>
+        <li>per ogni ordine sbagliato stampi il motivo: niente da annullare, quantità non numerica, prodotto sconosciuto, quantità non valida, merce insufficiente;</li>
+        <li>tenga in una <code>HashMap&lt;String, Integer&gt;</code> quanto ha speso ogni cliente; se un annullamento porta la spesa di un cliente a zero, il cliente va <strong>tolto</strong> dalla mappa;</li>
+        <li>scriva gli scontrini (e gli annullamenti) in fondo a <code>scontrini.txt</code> con un metodo <code>scrivi</code> in <strong>overload</strong>: <code>scrivi(nomeFile, testo, inFondo)</code> e <code>scrivi(nomeFile, testo)</code>, che aggiunge sempre in fondo;</li>
+        <li>alla fine tolga dal listino i prodotti esauriti, salvi il magazzino in <code>magazzino_nuovo.txt</code> e stampi l'incasso, la spesa di ogni cliente e i codici rimasti.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>magazzino, riga 7 scartata: For input string: "tanti"
+Prodotti a listino: 5
+ANNULLA -&gt; niente da annullare
+Rossi;P01;3 -&gt; ok, 4.50 euro
+Bianchi;P03;2 -&gt; ok, 59.80 euro
+Verdi;P03;2 -&gt; di Zaino ne restano solo 1
+Rossi;P02;dieci -&gt; quantità non numerica
+Neri;P09;1 -&gt; prodotto P09 sconosciuto
+ANNULLA -&gt; annullato l'ordine di Bianchi
+Verdi;P03;2 -&gt; ok, 59.80 euro
+Bianchi;P05;1 -&gt; di Evidenziatore ne restano solo 0
+Rossi;P04;-1 -&gt; quantità non valida: -1
+Gialli;P04;5 -&gt; ok, 62.50 euro
+Rossi;P02;10 -&gt; ok, 8.00 euro
+
+Esaurito, tolto dal listino: Calcolatrice
+Esaurito, tolto dal listino: Evidenziatore
+Ordini rimasti in coda: 0
+Incasso: 134.80 euro
+  Verdi ha speso 59.80 euro
+  Gialli ha speso 62.50 euro
+  Rossi ha speso 12.50 euro
+Codici ancora a listino: P01 P03 P02</code></pre>
+      <p>Contenuto di <code>scontrini.txt</code>:</p>
+<pre data-lang="testo"><code>Scontrino 1 - Rossi: Quaderno a righe x3 = 4.50 euro
+Scontrino 2 - Bianchi: Zaino x2 = 59.80 euro
+ANNULLATO l'ordine di Bianchi: Zaino x2 = 59.80 euro
+Scontrino 3 - Verdi: Zaino x2 = 59.80 euro
+Scontrino 4 - Gialli: Calcolatrice x5 = 62.50 euro
+Scontrino 5 - Rossi: Penna blu x10 = 8.00 euro</code></pre>
+      <p>Contenuto di <code>magazzino_nuovo.txt</code>:</p>
+<pre data-lang="testo"><code>codice;nome;prezzo;quantita
+P01;Quaderno a righe;1.50;37
+P02;Penna blu;0.80;90
+P03;Zaino;29.90;1</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Classe / metodo</th><th>Compito</th><th>Argomento del capitolo</th></tr></thead>
+        <tbody>
+          <tr><td><code>Prodotto</code></td><td>un articolo del magazzino; <code>preleva</code> rifiuta le quantità impossibili</td><td><a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">costruttori in overload</a>, <code>this</code>, <a href="java-eccezioni.html#throw-e-throws"><code>throw</code></a></td></tr>
+          <tr><td><code>Ordine</code></td><td>chi compra cosa e quanto; calcola il totale</td><td>un oggetto che contiene un <strong>altro oggetto</strong> (<code>Prodotto</code>)</td></tr>
+          <tr><td><code>euro</code>, <code>centesimi</code></td><td>da centesimi a testo e da testo a centesimi</td><td><a href="java-array-wrapper-metodi-overload.html#wrapper-classes"><code>Double.parseDouble</code></a>, metodi con <code>return</code></td></tr>
+          <tr><td><code>scrivi</code> ×2</td><td>una riga su file, in fondo o da capo</td><td><a href="java-array-wrapper-metodi-overload.html#overload-dei-metodi">overload</a>, <a href="java-gestione-dei-file.html#scrivere-in-un-file-con-filewriter"><code>FileWriter</code></a>, <code>finally</code>, <code>throws</code></td></tr>
+          <tr><td><code>leggiRighe</code></td><td>file → lista di righe (uguale alla tappa)</td><td><a href="java-gestione-dei-file.html#leggere-un-file-con-filereader"><code>FileReader</code></a> carattere per carattere</td></tr>
+          <tr><td><code>creaProdotto</code>, <code>creaOrdine</code></td><td>riga → oggetto, oppure eccezione</td><td>array di <code>split</code>, <code>parseInt</code>, <code>throw</code></td></tr>
+          <tr><td><code>coda</code></td><td>ordini da evadere, il primo arrivato per primo</td><td><a href="java-collections-liste.html#la-coda-queue-il-primo-che-entra-e-il-primo-che-esce"><code>LinkedList</code> come coda</a></td></tr>
+          <tr><td><code>storico</code></td><td>ordini evasi, l'ultimo in cima (per ANNULLA)</td><td><a href="java-collections-liste.html#la-pila-stack-l-ultimo-che-entra-e-il-primo-che-esce"><code>LinkedList</code> come pila</a></td></tr>
+          <tr><td><code>magazzino</code>, <code>spesa</code></td><td>prodotto dal codice, spesa per cliente</td><td><a href="java-hashmap.html#rimuovere-svuotare-e-contare">HashMap</a>, tutti i metodi</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · Prezzi in centesimi</h4>
+      <p>Come nella tappa, i soldi sono <code>int</code> in centesimi. Nel file però il prezzo è scritto <code>1.50</code>: il metodo <code>centesimi</code> lo converte con <code>Double.parseDouble</code> (la "sorella" di <code>parseInt</code> per i decimali, che vuole il <strong>punto</strong>) e lo moltiplica per 100. <code>Math.round</code> arrotonda all'intero più vicino: serve perché con i <code>double</code> i conti non sono sempre esatti: per esempio <code>0.29 * 100</code> fa <code>28.999999999999996</code>, e il cast <code>(int)</code> da solo taglierebbe a 28 invece di 29.</p>
+<pre data-lang="java"><code>static int centesimi(String testo) {
+    double euro = Double.parseDouble(testo);  // "1.50" -&gt; 1.5
+    return (int) Math.round(euro * 100);      // 1.5 -&gt; 150
+}</code></pre>
+      <p><code>Prodotto.rigaFile()</code> e <code>Ordine.rigaScontrino()</code> usano <code>Negozio.euro(...)</code>: un metodo <code>static</code> di un'altra classe si chiama con il <strong>nome della classe</strong> davanti, proprio come <code>Integer.parseInt</code>.</p>
+      <h4>Passo 3 · Le eccezioni di Prodotto</h4>
+<pre data-lang="java"><code>void preleva(int q) {
+    if (q &lt;= 0) {
+        throw new IllegalArgumentException("quantità non valida: " + q);
+    }
+    if (q &gt; quantita) {
+        throw new IllegalStateException("di " + nome + " ne restano solo " + quantita);
+    }
+    quantita -= q;
+}</code></pre>
+      <p>Due errori diversi, due eccezioni diverse: una quantità come <code>-1</code> è un <strong>argomento</strong> sbagliato (<code>IllegalArgumentException</code>); chiedere 2 zaini quando ne resta 1 è una richiesta giusta che lo <strong>stato</strong> attuale del magazzino non permette (<code>IllegalStateException</code>). Il controllo sta nella classe: così nessun pezzo di programma può mai portare una quantità sotto zero.</p>
+      <h4>Passo 4 · Scrivere su file: overload e finally</h4>
+<pre data-lang="java"><code>static void scrivi(String nomeFile, String testo, boolean inFondo) throws IOException {
+    FileWriter w = new FileWriter(nomeFile, inFondo);
+    try {
+        w.write(testo + "\n");
+    } finally {
+        w.close();
+    }
+}
+
+static void scrivi(String nomeFile, String testo) throws IOException {
+    scrivi(nomeFile, testo, true);         // di solito si aggiunge in fondo
+}</code></pre>
+      <p>Il secondo parametro di <code>new FileWriter(nomeFile, inFondo)</code> decide tutto: <code>true</code> aggiunge in fondo, <code>false</code> svuota il file e ricomincia. La versione a due parametri usa <code>true</code>, il caso più frequente. Il <code>try</code>-<code>finally</code> garantisce il <code>close()</code> anche se <code>write</code> fallisce; l'eccezione non viene catturata qui ma passa al <code>main</code> grazie a <code>throws IOException</code>.</p>
+      <h4>Passo 5 · Caricare il magazzino</h4>
+      <p>La riga 0 della lista è l'intestazione <code>codice;nome;prezzo;quantita</code>: per saltarla il <code>for</code> classico parte da <code>i = 1</code>. Se la leggessi, <code>Double.parseDouble("prezzo")</code> lancerebbe <code>NumberFormatException</code>. P05 ha 3 campi e usa il costruttore che mette la quantità a 0; P06 (<code>tanti</code>) viene scartato.</p>
+      <h4>Passo 6 · La coda degli ordini e la pila dello storico</h4>
+<pre data-lang="java"><code>while (coda.size() &gt; 0) {
+    String riga = coda.poll();
+    try {
+        if (riga.equals("ANNULLA")) {
+            Ordine o = storico.pop();                // l'ultimo evaso
+            o.prodotto.rimetti(o.quantita);
+            int resto = spesa.get(o.cliente) - o.totale();
+            if (resto == 0) {
+                spesa.remove(o.cliente);
+            } else {
+                spesa.put(o.cliente, resto);
+            }
+            scrivi("scontrini.txt", "ANNULLATO l'ordine di " + o.cliente + ": " + o.rigaScontrino());
+            System.out.println("ANNULLA -&gt; annullato l'ordine di " + o.cliente);
+        } else {</code></pre>
+      <ul>
+        <li><strong>Coda (FIFO).</strong> Tutte le righe entrano con <code>offer</code> e il <code>while</code> le estrae con <code>poll</code>: si evadono nell'ordine del file.</li>
+        <li><strong>Pila (LIFO).</strong> Ogni ordine riuscito fa <code>storico.push(o)</code>; <code>ANNULLA</code> fa <code>storico.pop()</code> e quindi prende sempre l'<strong>ultimo</strong>. La pila contiene oggetti <code>Ordine</code> interi: dentro c'è già tutto per tornare indietro (quale prodotto, quanti pezzi, quale cliente).</li>
+        <li><strong>Il primo ANNULLA</strong> arriva con la pila vuota: <code>pop()</code> lancia <code>NoSuchElementException</code>, come nella tappa.</li>
+        <li><strong>remove sulla mappa.</strong> Il secondo <code>ANNULLA</code> cancella l'unico ordine di Bianchi: la sua spesa scenderebbe a 0, quindi <code>spesa.remove(o.cliente)</code>. Per questo nel riepilogo Bianchi non c'è.</li>
+      </ul>
+      <p>Il ramo dell'ordine normale e i <code>catch</code>:</p>
+<pre data-lang="java"><code>    } else {
+        Ordine o = creaOrdine(riga, magazzino);
+        o.prodotto.preleva(o.quantita);
+        storico.push(o);
+        spesa.put(o.cliente, spesa.getOrDefault(o.cliente, 0) + o.totale());
+        numeroScontrino++;
+        scrivi("scontrini.txt", "Scontrino " + numeroScontrino + " - " + o.cliente
+                + ": " + o.rigaScontrino());
+        System.out.println(riga + " -&gt; ok, " + euro(o.totale()) + " euro");
+    }
+} catch (NoSuchElementException e) {
+    System.out.println(riga + " -&gt; niente da annullare");
+} catch (NumberFormatException e) {
+    System.out.println(riga + " -&gt; quantità non numerica");
+} catch (IllegalArgumentException e) {
+    System.out.println(riga + " -&gt; " + e.getMessage());
+} catch (IllegalStateException e) {
+    System.out.println(riga + " -&gt; " + e.getMessage());
+}</code></pre>
+      <p>Ogni riga sbagliata finisce nel suo <code>catch</code>, e il <code>while</code> va avanti con l'ordine successivo:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Riga</th><th>Chi lancia</th><th>Eccezione</th></tr></thead>
+        <tbody>
+          <tr><td><code>ANNULLA</code> (la prima)</td><td><code>storico.pop()</code></td><td><code>NoSuchElementException</code></td></tr>
+          <tr><td><code>Verdi;P03;2</code> (la prima)</td><td><code>preleva</code>: resta 1 zaino</td><td><code>IllegalStateException</code></td></tr>
+          <tr><td><code>Rossi;P02;dieci</code></td><td><code>Integer.parseInt</code></td><td><code>NumberFormatException</code></td></tr>
+          <tr><td><code>Neri;P09;1</code></td><td><code>creaOrdine</code>: codice sconosciuto</td><td><code>IllegalArgumentException</code></td></tr>
+          <tr><td><code>Bianchi;P05;1</code></td><td><code>preleva</code>: 0 evidenziatori</td><td><code>IllegalStateException</code></td></tr>
+          <tr><td><code>Rossi;P04;-1</code></td><td><code>preleva</code>: quantità negativa</td><td><code>IllegalArgumentException</code></td></tr>
+        </tbody>
+      </table></div>
+      <p>Anche qui <code>NumberFormatException</code> deve stare prima di <code>IllegalArgumentException</code>. Gli altri <code>catch</code> non sono "parenti" tra loro, quindi il loro ordine è libero. Nota che dopo l'annullamento Verdi riprova a comprare 2 zaini e stavolta ci riesce: lo zaino di Bianchi è tornato in magazzino.</p>
+      <h4>Passo 7 · Togliere i prodotti esauriti mentre scorro</h4>
+<pre data-lang="java"><code>Iterator&lt;Prodotto&gt; it = elenco.iterator();
+while (it.hasNext()) {
+    Prodotto p = it.next();
+    if (p.quantita == 0) {
+        it.remove();
+        magazzino.remove(p.codice);
+        System.out.println("Esaurito, tolto dal listino: " + p.nome);
+    }
+}</code></pre>
+      <p>Togliere elementi da una lista <strong>dentro un foreach</strong> che la sta scorrendo provoca <code>ConcurrentModificationException</code>. L'<code>Iterator</code> invece lo permette con <code>it.remove()</code>, che toglie l'elemento appena letto con <code>next()</code>. Teoria: <a href="java-collections-liste.html#scorrere-la-lista">Scorrere la lista</a>. Dalla mappa invece tolgo con <code>remove(chiave)</code>: lì non sto scorrendo la mappa, quindi non c'è problema. Escono la calcolatrice (Gialli ha comprato le ultime 5) e l'evidenziatore (non ne è mai arrivato uno).</p>
+      <h4>Passo 8 · Salvataggio e riepilogo</h4>
+      <p><code>magazzino_nuovo.txt</code> si scrive con la prima riga in modalità <code>false</code> (svuota il file) e tutte le altre in fondo. Il <code>finally</code> del grande <code>try</code> stampa quanti ordini sono rimasti in coda: <code>0</code> se è andato tutto bene, di più se un errore sui file avesse interrotto il lavoro. L'incasso si calcola con <code>values()</code>, la spesa per cliente con <code>entrySet()</code>, i codici con <code>keySet()</code>: anche qui l'ordine di clienti e codici è quello della HashMap, non quello di inserimento.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+class Prodotto {
+    String codice;
+    String nome;
+    int prezzo;       // in centesimi: 1.50 euro -&gt; 150
+    int quantita;
+
+    // prodotto appena messo a listino, ancora senza pezzi
+    Prodotto(String codice, String nome, int prezzo) {
+        this.codice = codice;
+        this.nome = nome;
+        this.prezzo = prezzo;
+        this.quantita = 0;
+    }
+
+    Prodotto(String codice, String nome, int prezzo, int quantita) {
+        this.codice = codice;
+        this.nome = nome;
+        this.prezzo = prezzo;
+        this.quantita = quantita;
+    }
+
+    void preleva(int q) {
+        if (q &lt;= 0) {
+            throw new IllegalArgumentException("quantità non valida: " + q);
+        }
+        if (q &gt; quantita) {
+            throw new IllegalStateException("di " + nome + " ne restano solo " + quantita);
+        }
+        quantita -= q;
+    }
+
+    void rimetti(int q) {
+        quantita += q;
+    }
+
+    String rigaFile() {
+        return codice + ";" + nome + ";" + Negozio.euro(prezzo) + ";" + quantita;
+    }
+}
+
+class Ordine {
+    String cliente;
+    Prodotto prodotto;
+    int quantita;
+
+    Ordine(String cliente, Prodotto prodotto, int quantita) {
+        this.cliente = cliente;
+        this.prodotto = prodotto;
+        this.quantita = quantita;
+    }
+
+    int totale() {
+        return prodotto.prezzo * quantita;
+    }
+
+    String rigaScontrino() {
+        return prodotto.nome + " x" + quantita + " = " + Negozio.euro(totale()) + " euro";
+    }
+}
+
+public class Negozio {
+
+    // ---------- overload: un importo in euro da centesimi o da testo ----------
+    static String euro(int centesimi) {
+        String cent = "" + centesimi % 100;
+        if (centesimi % 100 &lt; 10) {
+            cent = "0" + cent;                 // 5 centesimi -&gt; "05"
+        }
+        return centesimi / 100 + "." + cent;
+    }
+
+    static int centesimi(String testo) {
+        double euro = Double.parseDouble(testo);  // "1.50" -&gt; 1.5
+        return (int) Math.round(euro * 100);      // 1.5 -&gt; 150
+    }
+
+    // ---------- overload: scrivere su file, in fondo o da capo ----------
+    static void scrivi(String nomeFile, String testo, boolean inFondo) throws IOException {
+        FileWriter w = new FileWriter(nomeFile, inFondo);
+        try {
+            w.write(testo + "\n");
+        } finally {
+            w.close();
+        }
+    }
+
+    static void scrivi(String nomeFile, String testo) throws IOException {
+        scrivi(nomeFile, testo, true);         // di solito si aggiunge in fondo
+    }
+
+    // ---------- lettura carattere per carattere (come nel progetto 1) ----------
+    static ArrayList&lt;String&gt; leggiRighe(String nomeFile) throws IOException {
+        ArrayList&lt;String&gt; righe = new ArrayList&lt;&gt;();
+        FileReader lettore = new FileReader(nomeFile);
+        try {
+            String riga = "";
+            int c = lettore.read();
+            while (c != -1) {
+                if (c == '\n') {
+                    righe.add(riga);
+                    riga = "";
+                } else if (c != '\r') {
+                    riga = riga + (char) c;
+                }
+                c = lettore.read();
+            }
+            if (riga.length() &gt; 0) {
+                righe.add(riga);
+            }
+        } finally {
+            lettore.close();
+        }
+        return righe;
+    }
+
+    static Prodotto creaProdotto(String riga) {
+        String[] p = riga.split(";");
+        if (p.length == 3) {
+            return new Prodotto(p[0], p[1], centesimi(p[2]));
+        }
+        if (p.length == 4) {
+            return new Prodotto(p[0], p[1], centesimi(p[2]), Integer.parseInt(p[3]));
+        }
+        throw new IllegalArgumentException("numero di campi sbagliato");
+    }
+
+    static Ordine creaOrdine(String riga, HashMap&lt;String, Prodotto&gt; magazzino) {
+        String[] p = riga.split(";");
+        if (p.length != 3) {
+            throw new IllegalArgumentException("ordine scritto male");
+        }
+        if (!magazzino.containsKey(p[1])) {
+            throw new IllegalArgumentException("prodotto " + p[1] + " sconosciuto");
+        }
+        return new Ordine(p[0], magazzino.get(p[1]), Integer.parseInt(p[2]));
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, Prodotto&gt; magazzino = new HashMap&lt;&gt;();   // codice -&gt; prodotto
+        ArrayList&lt;Prodotto&gt; elenco = new ArrayList&lt;&gt;();           // stesso contenuto, in ordine
+        HashMap&lt;String, Integer&gt; spesa = new HashMap&lt;&gt;();         // cliente -&gt; centesimi spesi
+        LinkedList&lt;String&gt; coda = new LinkedList&lt;&gt;();             // ordini da evadere (FIFO)
+        LinkedList&lt;Ordine&gt; storico = new LinkedList&lt;&gt;();          // ordini evasi (pila, LIFO)
+        int numeroScontrino = 0;
+
+        File scontrini = new File("scontrini.txt");
+        if (scontrini.exists()) {
+            scontrini.delete();
+        }
+
+        try {
+            // 1) magazzino: la riga 0 è l'intestazione, si parte da 1
+            ArrayList&lt;String&gt; righe = leggiRighe("magazzino.txt");
+            for (int i = 1; i &lt; righe.size(); i++) {
+                try {
+                    Prodotto p = creaProdotto(righe.get(i));
+                    magazzino.put(p.codice, p);
+                    elenco.add(p);
+                } catch (NumberFormatException e) {
+                    System.out.println("magazzino, riga " + (i + 1) + " scartata: " + e.getMessage());
+                }
+            }
+            System.out.println("Prodotti a listino: " + magazzino.size());
+
+            // 2) gli ordini entrano in coda nell'ordine del file
+            for (String r : leggiRighe("ordini.txt")) {
+                coda.offer(r);
+            }
+
+            // 3) si evadono uno alla volta: il primo arrivato è il primo servito
+            while (coda.size() &gt; 0) {
+                String riga = coda.poll();
+                try {
+                    if (riga.equals("ANNULLA")) {
+                        Ordine o = storico.pop();                // l'ultimo evaso
+                        o.prodotto.rimetti(o.quantita);
+                        int resto = spesa.get(o.cliente) - o.totale();
+                        if (resto == 0) {
+                            spesa.remove(o.cliente);
+                        } else {
+                            spesa.put(o.cliente, resto);
+                        }
+                        scrivi("scontrini.txt", "ANNULLATO l'ordine di " + o.cliente + ": " + o.rigaScontrino());
+                        System.out.println("ANNULLA -&gt; annullato l'ordine di " + o.cliente);
+                    } else {
+                        Ordine o = creaOrdine(riga, magazzino);
+                        o.prodotto.preleva(o.quantita);
+                        storico.push(o);
+                        spesa.put(o.cliente, spesa.getOrDefault(o.cliente, 0) + o.totale());
+                        numeroScontrino++;
+                        scrivi("scontrini.txt", "Scontrino " + numeroScontrino + " - " + o.cliente
+                                + ": " + o.rigaScontrino());
+                        System.out.println(riga + " -&gt; ok, " + euro(o.totale()) + " euro");
+                    }
+                } catch (NoSuchElementException e) {
+                    System.out.println(riga + " -&gt; niente da annullare");
+                } catch (NumberFormatException e) {
+                    System.out.println(riga + " -&gt; quantità non numerica");
+                } catch (IllegalArgumentException e) {
+                    System.out.println(riga + " -&gt; " + e.getMessage());
+                } catch (IllegalStateException e) {
+                    System.out.println(riga + " -&gt; " + e.getMessage());
+                }
+            }
+
+            // 4) prodotti esauriti: via dal listino (Iterator per togliere mentre scorro)
+            System.out.println();
+            Iterator&lt;Prodotto&gt; it = elenco.iterator();
+            while (it.hasNext()) {
+                Prodotto p = it.next();
+                if (p.quantita == 0) {
+                    it.remove();
+                    magazzino.remove(p.codice);
+                    System.out.println("Esaurito, tolto dal listino: " + p.nome);
+                }
+            }
+
+            // 5) magazzino aggiornato: FileWriter senza append, si riscrive da capo
+            scrivi("magazzino_nuovo.txt", "codice;nome;prezzo;quantita", false);
+            for (Prodotto p : elenco) {
+                scrivi("magazzino_nuovo.txt", p.rigaFile());
+            }
+        } catch (IOException e) {
+            System.out.println("Problema con i file: " + e.getMessage());
+        } finally {
+            System.out.println("Ordini rimasti in coda: " + coda.size());
+        }
+
+        // 6) riepilogo
+        int incasso = 0;
+        for (int c : spesa.values()) {
+            incasso += c;
+        }
+        System.out.println("Incasso: " + euro(incasso) + " euro");
+        for (Map.Entry&lt;String, Integer&gt; e : spesa.entrySet()) {
+            System.out.println("  " + e.getKey() + " ha speso " + euro(e.getValue()) + " euro");
+        }
+        System.out.print("Codici ancora a listino:");
+        for (String codice : magazzino.keySet()) {
+            System.out.print(" " + codice);
+        }
+        System.out.println();
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Cosa cambierebbe se lo storico fosse una coda (<code>offer</code>/<code>poll</code>) invece di una pila? (ANNULLA cancellerebbe l'ordine <strong>più vecchio</strong>, quello di Rossi, invece dell'ultimo.)</li>
+        <li>Perché lo scontrino di Verdi è il numero 3 e non il 4? (<code>numeroScontrino</code> aumenta solo per gli ordini riusciti; l'annullamento scrive una riga ma non usa un numero.)</li>
+        <li>Rossi spende 4.50 + 8.00 euro. Perché la sua spesa non è stata toccata dal <code>-1</code>? (<code>preleva</code> lancia l'eccezione prima di qualunque modifica, e le righe dopo nel <code>try</code> vengono saltate.)</li>
+        <li>Cosa succederebbe con la riga <code>Rossi;P02</code>? (<code>creaOrdine</code> trova 2 campi e lancia <code>IllegalArgumentException("ordine scritto male")</code>.)</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Per andare oltre</span>Permetti ordini con più prodotti, come <code>Rossi;P01:3,P02:10</code>: <code>Ordine</code> conterrà un <code>ArrayList</code> di righe, e se anche un solo prodotto non è disponibile l'ordine intero va rifiutato (prima controlla tutti i prodotti, poi preleva).</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Progetto 3 · Il torneo di calcetto</h2>
+  <p>Il torneo di calcetto della scuola raccoglie i risultati in un file scritto a mano, quindi pieno di errori. Il programma deve scartare le righe sbagliate (spiegando perché, in un file apposta), calcolare la <strong>classifica</strong> e salvarla. È il progetto più difficile: le classi lavorano insieme (una partita aggiorna due squadre) e la classifica va ordinata senza strumenti già pronti.</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Tappa · Ordinare per estrazione del massimo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> In una <code>HashMap&lt;String, Integer&gt;</code> ci sono i punti di quattro giocatori: Rossi 12, Bianchi 18, Verdi 7, Neri 15. Stampa la mappa, poi stampa la classifica dal primo all'ultimo. Metodo da usare: copia i nomi in un <code>ArrayList</code>, poi <strong>ripeti finché la lista non è vuota</strong>: trova il giocatore con più punti tra quelli rimasti, toglilo dalla lista e aggiungilo in fondo alla classifica.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>La HashMap: {Bianchi=18, Verdi=7, Neri=15, Rossi=12}
+1. Bianchi 18 punti
+2. Neri 15 punti
+3. Rossi 12 punti
+4. Verdi 7 punti</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>La HashMap non ha ordine.</strong> La prima riga dell'output lo mostra: le coppie non escono né per punti né nell'ordine di inserimento. Per una classifica serve una <strong>lista</strong>, che l'ordine lo tiene.</li>
+        <li><strong>new ArrayList&lt;&gt;(punti.keySet())</strong> crea una lista con tutte le chiavi della mappa: i nomi da sistemare.</li>
+        <li><strong>Cercare il massimo per indice</strong>, come la "media più alta" degli esercizi sugli array: <code>migliore</code> parte da 0 e diventa <code>i</code> ogni volta che trovo qualcuno con più punti. Mi serve l'<strong>indice</strong>, non il nome, perché poi <code>rimasti.remove(migliore)</code> toglie per posizione e <strong>restituisce</strong> l'elemento tolto: lo passo direttamente a <code>classifica.add</code>.</li>
+        <li><strong>Il confronto.</strong> <code>punti.get(...)</code> restituisce un <code>Integer</code>. Con <code>&gt;</code> Java fa l'unboxing e confronta i numeri: va bene. Con <code>==</code> invece confronterebbe gli oggetti, la <a href="java-array-wrapper-metodi-overload.html#wrapper-classes">trappola dei wrapper</a>.</li>
+        <li>Ogni giro del <code>while</code> toglie un nome da <code>rimasti</code>, quindi il ciclo finisce sempre. Con 4 giocatori fa 4 giri.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.HashMap;
+
+public class ClassificaPunti {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; punti = new HashMap&lt;&gt;();
+        punti.put("Rossi", 12);
+        punti.put("Bianchi", 18);
+        punti.put("Verdi", 7);
+        punti.put("Neri", 15);
+        System.out.println("La HashMap: " + punti);
+
+        ArrayList&lt;String&gt; rimasti = new ArrayList&lt;&gt;(punti.keySet());
+        ArrayList&lt;String&gt; classifica = new ArrayList&lt;&gt;();
+        while (rimasti.size() &gt; 0) {
+            int migliore = 0;
+            for (int i = 1; i &lt; rimasti.size(); i++) {
+                if (punti.get(rimasti.get(i)) &gt; punti.get(rimasti.get(migliore))) {
+                    migliore = i;
+                }
+            }
+            classifica.add(rimasti.remove(migliore));   // remove(i) restituisce l'elemento tolto
+        }
+
+        for (int i = 0; i &lt; classifica.size(); i++) {
+            String nome = classifica.get(i);
+            System.out.println((i + 1) + ". " + nome + " " + punti.get(nome) + " punti");
+        }
+    }
+}</code></pre>
+      <p>Questo metodo si chiama <strong>ordinamento per selezione</strong>: è lento con migliaia di elementi, ma per una classifica di qualche squadra va benissimo ed è facile da controllare a mano. Se due giocatori avessero gli stessi punti, resterebbe davanti quello trovato prima nella lista, cioè quello che la HashMap ha messo prima: un ordine casuale. Nel progetto lo eviteremo con dei criteri di spareggio.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Il torneo di calcetto <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+
+      <p><strong>Consegna.</strong> Le squadre iscritte sono nel file <code>squadre.txt</code>, una per riga. Una squadra può partire con dei punti già assegnati (le Aquile hanno una penalizzazione di 2 punti per un ritardo all'iscrizione):</p>
+<pre data-lang="testo"><code>Leoni
+Tigri
+Aquile;-2
+Lupi
+Falchi</code></pre>
+      <p>I risultati sono in <code>risultati.txt</code>, nella forma <code>casa;ospite;golCasa;golOspite</code>:</p>
+<pre data-lang="testo"><code>Leoni;Tigri;2;1
+Aquile;Lupi;0;0
+Tigri;Aquile;3;x
+Lupi;Leoni;1;1
+Leoni;Aquile;2;0
+Falchi;Orsi;1;0
+Tigri;Lupi;1;3
+Aquile;Aquile;1;1
+Lupi;Tigri;2
+Aquile;Tigri;2;1
+Leoni;Lupi;0;1
+Tigri;Leoni;-1;2
+Aquile;Leoni;1;1
+Tigri;Aquile;2;1</code></pre>
+      <p>Scrivi un programma che:</p>
+      <ol>
+        <li>definisca la classe <code>Squadra</code> (nome, punti, vinte, pareggiate, perse, gol fatti e subiti; due costruttori, con e senza punti iniziali; metodi <code>registra(fatti, subiti)</code>, <code>giocate()</code>, <code>differenza()</code>, <code>davantiA(altra)</code>, <code>rigaClassifica(posizione)</code>) e la classe <code>Partita</code> (le due squadre come <strong>oggetti</strong> e i gol; metodi <code>applica()</code>, che aggiorna tutte e due le squadre, e <code>risultato()</code>);</li>
+        <li>la vittoria vale 3 punti, il pareggio 1, la sconfitta 0;</li>
+        <li>elimini il vecchio <code>scarti.txt</code> se esiste, e scriva in fondo a <code>scarti.txt</code> ogni riga di risultati scartata con il motivo: gol non numerici, numero di campi sbagliato, squadra non iscritta, squadra contro se stessa, gol negativi. Gli ultimi quattro controlli li fa un metodo <code>creaPartita</code> che <strong>lancia</strong> <code>IllegalArgumentException</code>;</li>
+        <li>tenga le squadre in una <code>HashMap&lt;String, Squadra&gt;</code>; le squadre senza nessuna partita valida vanno <strong>tolte</strong> dalla mappa;</li>
+        <li>stampi le partite valide, i gol totali, il risultato più frequente (contato con una <code>HashMap&lt;String, Integer&gt;</code>) e le ultime 3 partite valide, dalla più recente, usando una <code>LinkedList</code> come <strong>pila</strong>;</li>
+        <li>ordini la classifica per punti; a parità di punti conta la differenza reti, poi i gol fatti;</li>
+        <li>stampi la classifica completa e le prime due (che vanno in finale) con un metodo <code>stampaClassifica</code> in <strong>overload</strong>, e salvi la classifica in <code>classifica.txt</code>.</li>
+      </ol>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>Eliminato il vecchio scarti.txt
+Partite valide: 9 su 14
+Falchi non ha giocato partite valide: esclusa
+Gol segnati in tutto: 20
+Risultato più frequente: 2-1 (3 volte)
+Ultime 3 partite, dalla più recente:
+  Tigri 2 - 1 Aquile
+  Aquile 1 - 1 Leoni
+  Leoni 0 - 1 Lupi
+Classifica:
+  1. Lupi 8 punti (G4 V2 N2 P0, gol 5-2, +3)
+  2. Leoni 8 punti (G5 V2 N2 P1, gol 6-4, +2)
+  3. Aquile 3 punti (G5 V1 N2 P2, gol 4-6, -2)
+  4. Tigri 3 punti (G4 V1 N0 P3, gol 5-8, -3)
+In finale:
+  1. Lupi 8 punti (G4 V2 N2 P0, gol 5-2, +3)
+  2. Leoni 8 punti (G5 V2 N2 P1, gol 6-4, +2)
+Classifica salvata in classifica.txt</code></pre>
+      <p>Contenuto di <code>scarti.txt</code>:</p>
+<pre data-lang="testo"><code>Tigri;Aquile;3;x  &lt;-- gol non numerici
+Falchi;Orsi;1;0  &lt;-- Orsi non è iscritta al torneo
+Aquile;Aquile;1;1  &lt;-- una squadra non gioca contro se stessa
+Lupi;Tigri;2  &lt;-- servono 4 campi, ne ho 3
+Tigri;Leoni;-1;2  &lt;-- gol negativi</code></pre>
+      <p>Contenuto di <code>classifica.txt</code>:</p>
+<pre data-lang="testo"><code>CLASSIFICA DEL TORNEO
+1. Lupi 8 punti (G4 V2 N2 P0, gol 5-2, +3)
+2. Leoni 8 punti (G5 V2 N2 P1, gol 6-4, +2)
+3. Aquile 3 punti (G5 V1 N2 P2, gol 4-6, -2)
+4. Tigri 3 punti (G4 V1 N0 P3, gol 5-8, -3)</code></pre>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 1 · Progettare prima di scrivere</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Classe / metodo</th><th>Compito</th><th>Argomento del capitolo</th></tr></thead>
+        <tbody>
+          <tr><td><code>Squadra</code></td><td>i numeri di una squadra; sa confrontarsi con un'altra</td><td><a href="java-programmazione-a-oggetti.html#overload-dei-costruttori">costruttori in overload</a>, metodi con <code>return</code></td></tr>
+          <tr><td><code>Partita</code></td><td>un risultato; aggiorna le due squadre</td><td>oggetti che contengono <a href="java-programmazione-a-oggetti.html#variabili-che-puntano-agli-oggetti">riferimenti</a> ad altri oggetti</td></tr>
+          <tr><td><code>leggiRighe</code></td><td>file → lista di righe</td><td><a href="java-gestione-dei-file.html#leggere-un-file-con-filereader"><code>FileReader</code></a>, <code>finally</code>, <code>throws</code></td></tr>
+          <tr><td><code>creaSquadra</code>, <code>creaPartita</code></td><td>riga → oggetto, oppure eccezione con il motivo</td><td>array <code>int[]</code>, <code>parseInt</code>, <a href="java-eccezioni.html#throw"><code>throw</code></a></td></tr>
+          <tr><td><code>scarta</code></td><td>una riga in fondo a <code>scarti.txt</code></td><td><a href="java-gestione-dei-file.html#scrivere-in-un-file-con-filewriter"><code>FileWriter</code> in append</a>, <code>try</code>/<code>catch</code></td></tr>
+          <tr><td><code>ordina</code></td><td>classifica per estrazione del massimo</td><td><a href="java-collections-liste.html#usare-arraylist-la-sintassi"><code>ArrayList</code></a>: <code>get</code>, <code>remove(i)</code>, <code>add</code></td></tr>
+          <tr><td><code>stampaClassifica</code> ×2</td><td>tutte le squadre o solo le prime <em>n</em></td><td><a href="java-array-wrapper-metodi-overload.html#overload-dei-metodi">overload</a>, metodi <code>void</code></td></tr>
+          <tr><td><code>salvaClassifica</code></td><td>classifica su file, da capo</td><td><code>FileWriter</code>, <code>finally</code>, <code>throws</code></td></tr>
+          <tr><td><code>squadre</code>, <code>frequenze</code></td><td>squadra dal nome, quante volte esce ogni risultato</td><td><a href="java-hashmap.html#scorrere-una-hashmap">HashMap</a>, tutti i metodi</td></tr>
+          <tr><td><code>pila</code></td><td>le partite, l'ultima in cima</td><td><a href="java-collections-liste.html#la-pila-stack-l-ultimo-che-entra-e-il-primo-che-esce"><code>LinkedList</code> come pila</a></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Passo 2 · Squadra e Partita: gli oggetti lavorano insieme</h4>
+      <p><code>Partita</code> non contiene i <strong>nomi</strong> delle squadre ma gli <strong>oggetti</strong> <code>Squadra</code> (i riferimenti presi dalla mappa). Così <code>applica()</code> può aggiornarli direttamente:</p>
+<pre data-lang="java"><code>void applica() {                       // aggiorna le due squadre
+    casa.registra(golCasa, golOspite);
+    ospite.registra(golOspite, golCasa);
+}</code></pre>
+      <p>La stessa partita si vede da due lati: per la squadra di casa i gol fatti sono <code>golCasa</code>, per l'ospite sono <code>golOspite</code>. Il metodo <code>registra</code> di <code>Squadra</code> fa il resto: aggiorna i gol, poi con un <code>if</code> decide vittoria (+3), pareggio (+1) o sconfitta. Visto che <code>Partita</code> e la mappa puntano agli <strong>stessi</strong> oggetti, dopo <code>applica()</code> la mappa è già aggiornata. Il costruttore <code>Squadra(nome, punti)</code> serve per le Aquile, che partono da -2.</p>
+      <h4>Passo 3 · creaPartita: tutti i controlli in un posto</h4>
+<pre data-lang="java"><code>static Partita creaPartita(String riga, HashMap&lt;String, Squadra&gt; squadre) {
+    String[] p = riga.split(";");
+    if (p.length != 4) {
+        throw new IllegalArgumentException("servono 4 campi, ne ho " + p.length);
+    }
+    for (int i = 0; i &lt; 2; i++) {
+        if (!squadre.containsKey(p[i])) {
+            throw new IllegalArgumentException(p[i] + " non è iscritta al torneo");
+        }
+    }
+    if (p[0].equals(p[1])) {
+        throw new IllegalArgumentException("una squadra non gioca contro se stessa");
+    }
+    int[] gol = new int[2];
+    for (int i = 0; i &lt; gol.length; i++) {
+        gol[i] = Integer.parseInt(p[i + 2]);      // può lanciare NumberFormatException
+        if (gol[i] &lt; 0) {
+            throw new IllegalArgumentException("gol negativi");
+        }
+    }
+    return new Partita(squadre.get(p[0]), squadre.get(p[1]), gol[0], gol[1]);
+}</code></pre>
+      <ul>
+        <li>I controlli vanno in un ordine preciso: prima il numero di campi (altrimenti <code>p[3]</code> darebbe <code>ArrayIndexOutOfBoundsException</code>), poi le squadre, poi i gol.</li>
+        <li>I due gol finiscono in un array <code>int[] gol</code>: un solo ciclo li converte e li controlla tutti e due, con <code>gol.length</code> come limite e <code>p[i + 2]</code> per prendere i campi 2 e 3.</li>
+        <li><code>p[0].equals(p[1])</code>: due stringhe si confrontano con <code>equals</code>.</li>
+        <li><code>throw</code> interrompe il metodo subito: niente <code>return</code>, niente partita creata. Il messaggio dell'eccezione è il motivo che finirà in <code>scarti.txt</code>.</li>
+      </ul>
+      <h4>Passo 4 · Il ciclo sui risultati</h4>
+<pre data-lang="java"><code>for (String riga : righe) {
+    try {
+        Partita p = creaPartita(riga, squadre);
+        p.applica();
+        pila.push(p);
+        valide++;
+        String chiave = p.golCasa + "-" + p.golOspite;
+        frequenze.put(chiave, frequenze.getOrDefault(chiave, 0) + 1);
+    } catch (NumberFormatException e) {
+        scarta(riga, "gol non numerici");
+    } catch (IllegalArgumentException e) {
+        scarta(riga, e.getMessage());
+    }
+}</code></pre>
+      <p>Solo se <code>creaPartita</code> non lancia niente si arriva ad <code>applica()</code>: una riga sbagliata non tocca mai la classifica. Per le righe scartate: <code>NumberFormatException</code> (lanciata da <code>parseInt</code>) ha il suo messaggio fisso, le altre usano <code>e.getMessage()</code>, cioè il testo scritto nel <code>throw</code>. <code>scarta</code> apre <code>scarti.txt</code> con <code>true</code> a ogni chiamata, così le righe si accumulano; il vecchio file era stato eliminato all'avvio con <code>exists()</code> e <code>delete()</code> (guarda la prima riga dell'output). Infine la chiave <code>"2-1"</code> conta i risultati con <code>getOrDefault</code>.</p>
+      <h4>Passo 5 · Togliere dalla mappa le squadre che non hanno giocato</h4>
+<pre data-lang="java"><code>ArrayList&lt;String&gt; daTogliere = new ArrayList&lt;&gt;();
+for (String nome : squadre.keySet()) {
+    if (squadre.get(nome).giocate() == 0) {
+        daTogliere.add(nome);
+    }
+}
+for (String nome : daTogliere) {
+    squadre.remove(nome);
+    System.out.println(nome + " non ha giocato partite valide: esclusa");
+}</code></pre>
+      <p>L'unica partita dei Falchi era contro gli Orsi, che non sono iscritti: riga scartata, Falchi a zero partite. Perché due cicli? Se chiamassi <code>squadre.remove(nome)</code> <strong>mentre</strong> scorro <code>squadre.keySet()</code>, Java lancerebbe <code>ConcurrentModificationException</code>, lo stesso problema delle liste. Allora prima raccolgo i nomi in una lista, poi li tolgo con un secondo ciclo, che scorre la lista e non la mappa.</p>
+      <h4>Passo 6 · Statistiche: values, entrySet e la pila</h4>
+      <ul>
+        <li><strong>Gol totali</strong>: un <code>foreach</code> su <code>squadre.values()</code> somma i gol fatti di ogni squadra (20, la somma dei gol delle 9 partite valide).</li>
+        <li><strong>Risultato più frequente</strong>: cerco il massimo scorrendo <code>frequenze.entrySet()</code>, perché mi servono insieme la chiave (<code>"2-1"</code>) e il valore (3). Vince <code>2-1</code> con 3 volte; il secondo, <code>1-1</code>, è a 2: non c'è parità, quindi il risultato non dipende dall'ordine della HashMap.</li>
+        <li><strong>Ultime 3 partite</strong>: durante la lettura ogni partita valida è finita in cima alla pila con <code>push</code>, quindi tre <code>pop</code> le restituiscono dalla più recente (l'ultima riga valida del file, <code>Tigri 2 - 1 Aquile</code>) andando indietro. Con meno di 3 partite valide, il terzo <code>pop</code> lancerebbe <code>NoSuchElementException</code>.</li>
+      </ul>
+      <h4>Passo 7 · La classifica</h4>
+      <p>L'ordinamento è quello della tappa, ma il confronto non è più un semplice <code>&gt;</code>: lo fa il metodo <code>davantiA</code> della squadra.</p>
+<pre data-lang="java"><code>boolean davantiA(Squadra altra) {
+    if (punti != altra.punti) {
+        return punti &gt; altra.punti;
+    }
+    if (differenza() != altra.differenza()) {
+        return differenza() &gt; altra.differenza();
+    }
+    return golFatti &gt; altra.golFatti;
+}</code></pre>
+      <p>Prima i punti; solo se sono uguali la differenza reti; solo se anche quella è uguale i gol fatti. Ogni <code>return</code> esce subito dal metodo. Nel nostro torneo servono gli spareggi: Lupi e Leoni hanno 8 punti, ma i Lupi sono primi con +3 contro +2; Aquile e Tigri hanno 3 punti (le Aquile ne hanno fatti 5, meno 2 di penalizzazione) e le Aquile sono davanti con -2 contro -3. Nessuna coppia di squadre è pari in tutto, quindi la classifica non dipende dall'ordine della HashMap da cui parte la lista (<code>new ArrayList&lt;&gt;(squadre.values())</code>).</p>
+      <h4>Passo 8 · Overload e salvataggio</h4>
+<pre data-lang="java"><code>static void stampaClassifica(ArrayList&lt;Squadra&gt; classifica, int quante) {
+    for (int i = 0; i &lt; quante &amp;&amp; i &lt; classifica.size(); i++) {
+        System.out.println("  " + classifica.get(i).rigaClassifica(i + 1));
+    }
+}
+
+static void stampaClassifica(ArrayList&lt;Squadra&gt; classifica) {
+    stampaClassifica(classifica, classifica.size());
+}</code></pre>
+      <p>La versione con un parametro stampa tutte le squadre chiamando l'altra con <code>classifica.size()</code>. La condizione <code>i &lt; quante &amp;&amp; i &lt; classifica.size()</code> evita un <code>IndexOutOfBoundsException</code> se chiedo più squadre di quante ce ne siano. <code>salvaClassifica</code> apre il file senza append (la classifica si riscrive da capo), chiude nel <code>finally</code> e dichiara <code>throws IOException</code>; il <code>main</code> la cattura e stampa un messaggio.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+class Squadra {
+    String nome;
+    int punti;
+    int vinte, pareggiate, perse;
+    int golFatti, golSubiti;
+
+    Squadra(String nome) {
+        this.nome = nome;
+        this.punti = 0;
+    }
+
+    // per una squadra che parte penalizzata (o con un bonus)
+    Squadra(String nome, int punti) {
+        this.nome = nome;
+        this.punti = punti;
+    }
+
+    void registra(int fatti, int subiti) {
+        golFatti += fatti;
+        golSubiti += subiti;
+        if (fatti &gt; subiti) {
+            vinte++;
+            punti += 3;
+        } else if (fatti == subiti) {
+            pareggiate++;
+            punti += 1;
+        } else {
+            perse++;
+        }
+    }
+
+    int giocate() {
+        return vinte + pareggiate + perse;
+    }
+
+    int differenza() {
+        return golFatti - golSubiti;
+    }
+
+    // true se questa squadra va messa davanti ad "altra" in classifica
+    boolean davantiA(Squadra altra) {
+        if (punti != altra.punti) {
+            return punti &gt; altra.punti;
+        }
+        if (differenza() != altra.differenza()) {
+            return differenza() &gt; altra.differenza();
+        }
+        return golFatti &gt; altra.golFatti;
+    }
+
+    String rigaClassifica(int posizione) {
+        String diff = "" + differenza();
+        if (differenza() &gt; 0) {
+            diff = "+" + diff;
+        }
+        return posizione + ". " + nome + " " + punti + " punti (G" + giocate() + " V" + vinte
+                + " N" + pareggiate + " P" + perse + ", gol " + golFatti + "-" + golSubiti + ", " + diff + ")";
+    }
+}
+
+class Partita {
+    Squadra casa;
+    Squadra ospite;
+    int golCasa;
+    int golOspite;
+
+    Partita(Squadra casa, Squadra ospite, int golCasa, int golOspite) {
+        this.casa = casa;
+        this.ospite = ospite;
+        this.golCasa = golCasa;
+        this.golOspite = golOspite;
+    }
+
+    void applica() {                       // aggiorna le due squadre
+        casa.registra(golCasa, golOspite);
+        ospite.registra(golOspite, golCasa);
+    }
+
+    String risultato() {
+        return casa.nome + " " + golCasa + " - " + golOspite + " " + ospite.nome;
+    }
+}
+
+public class Torneo {
+
+    static ArrayList&lt;String&gt; leggiRighe(String nomeFile) throws IOException {
+        ArrayList&lt;String&gt; righe = new ArrayList&lt;&gt;();
+        FileReader lettore = new FileReader(nomeFile);
+        try {
+            String riga = "";
+            int c = lettore.read();
+            while (c != -1) {
+                if (c == '\n') {
+                    righe.add(riga);
+                    riga = "";
+                } else if (c != '\r') {
+                    riga = riga + (char) c;
+                }
+                c = lettore.read();
+            }
+            if (riga.length() &gt; 0) {
+                righe.add(riga);
+            }
+        } finally {
+            lettore.close();
+        }
+        return righe;
+    }
+
+    static Squadra creaSquadra(String riga) {
+        String[] p = riga.split(";");
+        if (p.length == 1) {
+            return new Squadra(p[0]);
+        }
+        return new Squadra(p[0], Integer.parseInt(p[1]));
+    }
+
+    // trasforma una riga in una Partita, oppure lancia un'eccezione che spiega perché non si può
+    static Partita creaPartita(String riga, HashMap&lt;String, Squadra&gt; squadre) {
+        String[] p = riga.split(";");
+        if (p.length != 4) {
+            throw new IllegalArgumentException("servono 4 campi, ne ho " + p.length);
+        }
+        for (int i = 0; i &lt; 2; i++) {
+            if (!squadre.containsKey(p[i])) {
+                throw new IllegalArgumentException(p[i] + " non è iscritta al torneo");
+            }
+        }
+        if (p[0].equals(p[1])) {
+            throw new IllegalArgumentException("una squadra non gioca contro se stessa");
+        }
+        int[] gol = new int[2];
+        for (int i = 0; i &lt; gol.length; i++) {
+            gol[i] = Integer.parseInt(p[i + 2]);      // può lanciare NumberFormatException
+            if (gol[i] &lt; 0) {
+                throw new IllegalArgumentException("gol negativi");
+            }
+        }
+        return new Partita(squadre.get(p[0]), squadre.get(p[1]), gol[0], gol[1]);
+    }
+
+    static void scarta(String riga, String motivo) {
+        try {
+            FileWriter w = new FileWriter("scarti.txt", true);   // in fondo, senza cancellare
+            w.write(riga + "  &lt;-- " + motivo + "\n");
+            w.close();
+        } catch (IOException e) {
+            System.out.println("Non riesco a scrivere scarti.txt");
+        }
+    }
+
+    // estrae ogni volta la squadra migliore tra quelle rimaste
+    static ArrayList&lt;Squadra&gt; ordina(ArrayList&lt;Squadra&gt; daOrdinare) {
+        ArrayList&lt;Squadra&gt; classifica = new ArrayList&lt;&gt;();
+        while (daOrdinare.size() &gt; 0) {
+            int migliore = 0;
+            for (int i = 1; i &lt; daOrdinare.size(); i++) {
+                if (daOrdinare.get(i).davantiA(daOrdinare.get(migliore))) {
+                    migliore = i;
+                }
+            }
+            classifica.add(daOrdinare.remove(migliore));
+        }
+        return classifica;
+    }
+
+    // ---------- overload: tutta la classifica o solo le prime n ----------
+    static void stampaClassifica(ArrayList&lt;Squadra&gt; classifica, int quante) {
+        for (int i = 0; i &lt; quante &amp;&amp; i &lt; classifica.size(); i++) {
+            System.out.println("  " + classifica.get(i).rigaClassifica(i + 1));
+        }
+    }
+
+    static void stampaClassifica(ArrayList&lt;Squadra&gt; classifica) {
+        stampaClassifica(classifica, classifica.size());
+    }
+
+    static void salvaClassifica(ArrayList&lt;Squadra&gt; classifica, String nomeFile) throws IOException {
+        FileWriter w = new FileWriter(nomeFile);                // da capo: sovrascrive
+        try {
+            w.write("CLASSIFICA DEL TORNEO\n");
+            for (int i = 0; i &lt; classifica.size(); i++) {
+                w.write(classifica.get(i).rigaClassifica(i + 1) + "\n");
+            }
+        } finally {
+            w.close();
+        }
+    }
+
+    public static void main(String[] args) {
+        HashMap&lt;String, Squadra&gt; squadre = new HashMap&lt;&gt;();
+        HashMap&lt;String, Integer&gt; frequenze = new HashMap&lt;&gt;();  // "1-1" -&gt; quante volte
+        LinkedList&lt;Partita&gt; pila = new LinkedList&lt;&gt;();          // l'ultima giocata sta in cima
+        int valide = 0;
+
+        File scarti = new File("scarti.txt");
+        if (scarti.exists() &amp;&amp; scarti.delete()) {
+            System.out.println("Eliminato il vecchio scarti.txt");
+        }
+
+        try {
+            for (String riga : leggiRighe("squadre.txt")) {
+                Squadra s = creaSquadra(riga);
+                squadre.put(s.nome, s);
+            }
+
+            ArrayList&lt;String&gt; righe = leggiRighe("risultati.txt");
+            for (String riga : righe) {
+                try {
+                    Partita p = creaPartita(riga, squadre);
+                    p.applica();
+                    pila.push(p);
+                    valide++;
+                    String chiave = p.golCasa + "-" + p.golOspite;
+                    frequenze.put(chiave, frequenze.getOrDefault(chiave, 0) + 1);
+                } catch (NumberFormatException e) {
+                    scarta(riga, "gol non numerici");
+                } catch (IllegalArgumentException e) {
+                    scarta(riga, e.getMessage());
+                }
+            }
+            System.out.println("Partite valide: " + valide + " su " + righe.size());
+        } catch (IOException e) {
+            System.out.println("Impossibile leggere i dati: " + e.getMessage());
+            return;
+        }
+
+        // chi non ha mai giocato esce dal torneo: prima le raccolgo, poi le tolgo
+        ArrayList&lt;String&gt; daTogliere = new ArrayList&lt;&gt;();
+        for (String nome : squadre.keySet()) {
+            if (squadre.get(nome).giocate() == 0) {
+                daTogliere.add(nome);
+            }
+        }
+        for (String nome : daTogliere) {
+            squadre.remove(nome);
+            System.out.println(nome + " non ha giocato partite valide: esclusa");
+        }
+
+        int totaleGol = 0;
+        for (Squadra s : squadre.values()) {
+            totaleGol += s.golFatti;
+        }
+        System.out.println("Gol segnati in tutto: " + totaleGol);
+
+        String piuFrequente = "";
+        int volte = 0;
+        for (Map.Entry&lt;String, Integer&gt; e : frequenze.entrySet()) {
+            if (e.getValue() &gt; volte) {
+                piuFrequente = e.getKey();
+                volte = e.getValue();
+            }
+        }
+        System.out.println("Risultato più frequente: " + piuFrequente + " (" + volte + " volte)");
+
+        System.out.println("Ultime 3 partite, dalla più recente:");
+        for (int i = 0; i &lt; 3; i++) {
+            System.out.println("  " + pila.pop().risultato());
+        }
+
+        ArrayList&lt;Squadra&gt; classifica = ordina(new ArrayList&lt;&gt;(squadre.values()));
+        System.out.println("Classifica:");
+        stampaClassifica(classifica);
+        System.out.println("In finale:");
+        stampaClassifica(classifica, 2);
+
+        try {
+            salvaClassifica(classifica, "classifica.txt");
+            System.out.println("Classifica salvata in classifica.txt");
+        } catch (IOException e) {
+            System.out.println("Salvataggio non riuscito: " + e.getMessage());
+        }
+    }
+}</code></pre>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Quante righe di <code>risultati.txt</code> sono state scartate, e quale eccezione ha prodotto ognuna? (5: <code>3;x</code> → <code>NumberFormatException</code>; le altre quattro → <code>IllegalArgumentException</code> lanciata da <code>creaPartita</code>.)</li>
+        <li>Se nella riga <code>Lupi;Tigri;2</code> il controllo dei campi venisse <strong>dopo</strong> il ciclo dei gol, cosa succederebbe? (<code>p[3]</code> non esiste: <code>ArrayIndexOutOfBoundsException</code>, che nessun <code>catch</code> prende, e il programma si fermerebbe.)</li>
+        <li>Perché le Aquile hanno 3 punti con 1 vittoria e 2 pareggi? (3 + 2 = 5, meno i 2 punti di partenza: il costruttore le ha fatte nascere con <code>punti = -2</code>.)</li>
+        <li>Cosa stamperebbe <code>pila.peek().risultato()</code> dopo i tre <code>pop</code>? (La quartultima partita valida: <code>Aquile 2 - 1 Tigri</code>.)</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Per andare oltre</span>Aggiungi i marcatori: un file <code>marcatori.txt</code> con righe <code>giocatore;squadra;gol</code>, una <code>HashMap&lt;String, Integer&gt;</code> giocatore → gol (con <code>getOrDefault</code>, perché lo stesso giocatore compare in più righe) e la classifica dei cannonieri con lo stesso ordinamento per estrazione del massimo, salvata in <code>cannonieri.txt</code>.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Prima della verifica</h2>
+  <div class="callout def"><span class="callout-title">Lo schema che torna sempre</span>Guarda i tre progetti: hanno tutti la stessa forma. Riconoscerla è metà del lavoro in una verifica.
+    <ol>
+      <li><strong>Classi</strong>: i sostantivi della consegna diventano classi e attributi, i verbi metodi; i metodi che non possono fare il loro lavoro lanciano un'eccezione.</li>
+      <li><strong>Lettura</strong>: <code>File</code> + <code>exists</code>, poi <code>leggiRighe</code> con <code>FileReader</code> e <code>finally</code>.</li>
+      <li><strong>Da riga a oggetto</strong>: <code>split</code>, <code>length</code>, <code>parseInt</code>, costruttore giusto; un <code>try</code> <strong>dentro</strong> il ciclo per saltare le righe sbagliate.</li>
+      <li><strong>Strutture</strong>: HashMap per trovare per nome o codice, ArrayList per l'ordine, LinkedList per coda o pila.</li>
+      <li><strong>Scrittura</strong>: <code>FileWriter</code> con <code>true</code> per un registro che cresce, senza per un file da riscrivere.</li>
+      <li><strong>Eccezioni</strong>: checked (<code>IOException</code>) dichiarate con <code>throws</code> e gestite nel <code>main</code>; unchecked lanciate con <code>throw</code> dai controlli; <code>catch</code> dal più specifico al più generale.</li>
+    </ol>
+  </div>
+
+</main>
+</body>
+</html>
