@@ -463,6 +463,7 @@ html[data-subject][data-toc="off"] #content { max-width: 48rem; }
 .badge-riassunto, .badge-medio { --b: #b8660f; }
 .badge-verifica, .badge-difficile { --b: #c43a3a; }
 .badge-vocabolario { --b: #0f8b8d; }
+.badge-classroom { --b: #1a73a8; }
 .badge[class*="badge-"] { color: color-mix(in srgb, var(--b, var(--ink-soft)) var(--c-mix), var(--ink)); background: color-mix(in srgb, var(--b, var(--ink-soft)) 11%, transparent); }
 
 /* ---------- 7. Contenuto ---------- */
@@ -894,6 +895,7 @@ details[open] > :not(summary) { animation: drop 0.25s var(--ease); }
     transition: color 0.2s;
   }
   .tabbar .icon { width: 23px; height: 23px; transition: transform 0.15s; }
+  .tabbar span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tabbar a:active .icon, .tabbar button:active .icon { transform: scale(0.88); }
   .tabbar .is-active { color: var(--pen); }
   .tabbar .is-active .icon { animation: bump 0.4s var(--ease); }

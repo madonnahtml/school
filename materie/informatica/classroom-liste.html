@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: ArrayList, Vector e LinkedList · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione pratica di Java assegnata su Classroom con soluzioni spiegate: ArrayList, Vector e LinkedList, add, get, set, remove, size, contains, indexOf, addFirst, addLast, getFirst, getLast, removeFirst, removeLast, classe Studente con costruttore, getter, setter e toString, registro studenti con menu interattivo (Scanner, while, switch), test sulle prestazioni con System.nanoTime, tabella dei risultati, domanda finale e relazione.txt per la consegna.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: ArrayList, Vector e LinkedList</h1>
+  <p class="lead">L'esercitazione pratica di Java assegnata su Classroom (<em>Esercitazione pratica di Java – ArrayList, Vector e LinkedList</em>, classe quinta, 2-3 ore, individuale o a coppie), con la consegna riportata fedelmente e, per ogni punto, la risposta spiegata. La teoria che serve è nel capitolo <a href="java-collections-liste.html">Java: Collections, ArrayList, Vector e LinkedList</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong> (è il testo del professore), prova a scrivere il programma da solo e solo dopo apri la <strong>risposta spiegata</strong>. Ogni programma è stato compilato ed eseguito davvero con Java 21: gli output e gli esempi di esecuzione sono quelli usciti dal terminale. Nei programmi con <code>Scanner</code>, quello che scrive l'utente è il testo subito dopo i due punti del messaggio.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Obiettivi</h2>
+  <p>Al termine dell'esercitazione lo studente dovrà essere in grado di:</p>
+  <ul>
+    <li>utilizzare le collezioni <code>ArrayList</code>, <code>Vector</code> e <code>LinkedList</code>;</li>
+    <li>dichiarare e inizializzare una collezione;</li>
+    <li>inserire, modificare e rimuovere elementi;</li>
+    <li>scorrere una collezione utilizzando diversi tipi di ciclo;</li>
+    <li>utilizzare i principali metodi delle classi;</li>
+    <li>confrontare il comportamento di <code>ArrayList</code>, <code>Vector</code> e <code>LinkedList</code>;</li>
+    <li>scegliere la struttura dati più adatta in base al problema;</li>
+    <li>utilizzare una collezione con oggetti di una classe definita dal programmatore.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Richiamo teorico</h2>
+  <p>Le tre strutture appartengono al Java Collections Framework e permettono di gestire insiemi ordinati di elementi.</p>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>
+    <strong>ArrayList</strong> (<code>ArrayList&lt;String&gt; nomi = new ArrayList&lt;&gt;();</code>): è una lista basata su un <strong>array dinamico</strong>. Metodi principali: <code>add()</code>, <code>get()</code>, <code>set()</code>, <code>remove()</code>, <code>size()</code>, <code>contains()</code>, <code>indexOf()</code>, <code>clear()</code>, <code>isEmpty()</code>.<br>
+    <strong>Vector</strong> (<code>Vector&lt;String&gt; nomi = new Vector&lt;&gt;();</code>): funziona come <code>ArrayList</code>, ma è una classe più datata con metodi <strong>sincronizzati</strong>. Esempio: <code>nomi.add("Luca"); nomi.add("Anna"); System.out.println(nomi.get(0));</code> stampa <code>Luca</code>.<br>
+    <strong>LinkedList</strong> (<code>LinkedList&lt;String&gt; nomi = new LinkedList&lt;&gt;();</code>): è una lista basata su una <strong>struttura concatenata</strong>. Oltre ai metodi comuni delle liste ha operazioni comode all'inizio e alla fine: <code>addFirst()</code>, <code>addLast()</code>, <code>removeFirst()</code>, <code>removeLast()</code>, <code>getFirst()</code>, <code>getLast()</code>.<br>
+    Teoria: <a href="java-collections-liste.html#arraylist-l-array-dinamico">ArrayList</a>, <a href="java-collections-liste.html#vector-l-antenato-thread-safe">Vector</a>, <a href="java-collections-liste.html#linkedlist-la-lista-concatenata">LinkedList</a>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 1 – Gestione di una lista di studenti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Gli indici partono da <strong>0</strong>: lo studente "in posizione 3" per una persona è <code>get(2)</code> per Java. <code>contains</code> risponde <code>true</code>/<code>false</code>, <code>indexOf</code> dà l'indice oppure <code>-1</code>. Teoria: <a href="java-collections-liste.html#usare-arraylist-la-sintassi">Usare ArrayList: la sintassi</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>GestioneStudenti <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizzare un programma Java chiamato <code>GestioneStudenti</code>. Il programma deve utilizzare un <code>ArrayList&lt;String&gt;</code> per memorizzare i nomi degli studenti di una classe.</p>
+      <p>Il programma deve:</p>
+      <ol>
+        <li>creare un <code>ArrayList&lt;String&gt;</code>;</li>
+        <li>inserire almeno 8 nomi;</li>
+        <li>visualizzare tutti gli studenti;</li>
+        <li>visualizzare il numero totale degli studenti;</li>
+        <li>verificare se un determinato studente è presente;</li>
+        <li>visualizzare la posizione di uno studente;</li>
+        <li>modificare il nome di uno studente;</li>
+        <li>eliminare uno studente;</li>
+        <li>visualizzare nuovamente la lista.</li>
+      </ol>
+      <p>Esempio di output:</p>
+<pre data-lang="testo"><code>Studenti della classe:
+1. Marco
+2. Luca
+3. Anna
+4. Giulia
+5. Paolo
+6. Sara
+7. Matteo
+8. Elena
+
+Numero studenti: 8
+
+Inserisci il nome da cercare: Giulia
+Studente presente nella lista.
+
+Inserisci il nuovo nome per lo studente in posizione 3: Giorgio
+
+Lista aggiornata:
+Marco
+Luca
+Giorgio
+...</code></pre>
+      <p><strong>Vincolo.</strong> Utilizzare almeno una volta ciascuno dei seguenti metodi: <code>add()</code>, <code>get()</code>, <code>set()</code>, <code>remove()</code>, <code>size()</code>, <code>contains()</code>, <code>indexOf()</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Creo <code>ArrayList&lt;String&gt; studenti</code> e ci metto gli 8 nomi dell'esempio con <code>add</code>.</li>
+        <li>Per stamparli <strong>numerati</strong> mi serve l'indice, quindi uso il <code>for</code> classico con <code>get(i)</code> e scrivo <code>i + 1</code> (le persone contano da 1, Java da 0). Il totale è <code>size()</code>.</li>
+        <li>Il nome da cercare lo leggo con <code>Scanner</code>: <code>contains</code> mi dice se c'è, <code>indexOf</code> in che posizione (anche qui +1 per l'utente).</li>
+        <li>"Posizione 3" per l'utente è l'indice <strong>2</strong>: <code>set(2, nuovoNome)</code>. <code>set</code> restituisce il valore vecchio, così posso dire chi è stato sostituito.</li>
+        <li>Per eliminare uso <code>remove(nome)</code>, la versione che riceve l'<strong>oggetto</strong>: restituisce <code>true</code> se l'ha trovato e tolto, <code>false</code> se non c'era. Così gestisco anche il caso del nome sbagliato.</li>
+        <li>L'ultima stampa la faccio con il for-each, così il programma usa due tipi di ciclo diversi (era uno degli obiettivi).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Scanner;
+
+public class GestioneStudenti {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // 1. creo l'ArrayList di nomi
+        ArrayList&lt;String&gt; studenti = new ArrayList&lt;&gt;();
+
+        // 2. inserisco 8 nomi con add()
+        studenti.add("Marco");
+        studenti.add("Luca");
+        studenti.add("Anna");
+        studenti.add("Giulia");
+        studenti.add("Paolo");
+        studenti.add("Sara");
+        studenti.add("Matteo");
+        studenti.add("Elena");
+
+        // 3. visualizzo tutti gli studenti con get(i), numerati da 1
+        System.out.println("Studenti della classe:");
+        for (int i = 0; i &lt; studenti.size(); i++) {
+            System.out.println((i + 1) + ". " + studenti.get(i));
+        }
+
+        // 4. numero totale con size()
+        System.out.println();
+        System.out.println("Numero studenti: " + studenti.size());
+
+        // 5. verifico se uno studente è presente con contains()
+        System.out.println();
+        System.out.print("Inserisci il nome da cercare: ");
+        String cercato = input.nextLine();
+        if (studenti.contains(cercato)) {
+            System.out.println("Studente presente nella lista.");
+            // 6. posizione con indexOf() (+1 per contare da 1 come nell'elenco)
+            System.out.println("Posizione di " + cercato + ": " + (studenti.indexOf(cercato) + 1));
+        } else {
+            System.out.println("Studente non presente nella lista.");
+        }
+
+        // 7. modifico il nome in posizione 3 (indice 2) con set()
+        System.out.println();
+        System.out.print("Inserisci il nuovo nome per lo studente in posizione 3: ");
+        String nuovoNome = input.nextLine();
+        String vecchio = studenti.set(2, nuovoNome);   // set restituisce il valore sostituito
+        System.out.println(vecchio + " sostituito da " + nuovoNome + ".");
+
+        // 8. elimino uno studente con remove()
+        System.out.println();
+        System.out.print("Inserisci il nome da eliminare: ");
+        String daEliminare = input.nextLine();
+        if (studenti.remove(daEliminare)) {
+            System.out.println(daEliminare + " eliminato.");
+        } else {
+            System.out.println(daEliminare + " non è nella lista: nessuna eliminazione.");
+        }
+
+        // 9. visualizzo di nuovo la lista
+        System.out.println();
+        System.out.println("Lista aggiornata:");
+        for (String nome : studenti) {
+            System.out.println(nome);
+        }
+        System.out.println("Numero studenti: " + studenti.size());
+
+        input.close();
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+      <p>L'utente cerca Giulia, rinomina lo studente in posizione 3 in Giorgio ed elimina Paolo:</p>
+<pre data-lang="testo"><code>Studenti della classe:
+1. Marco
+2. Luca
+3. Anna
+4. Giulia
+5. Paolo
+6. Sara
+7. Matteo
+8. Elena
+
+Numero studenti: 8
+
+Inserisci il nome da cercare: Giulia
+Studente presente nella lista.
+Posizione di Giulia: 4
+
+Inserisci il nuovo nome per lo studente in posizione 3: Giorgio
+Anna sostituito da Giorgio.
+
+Inserisci il nome da eliminare: Paolo
+Paolo eliminato.
+
+Lista aggiornata:
+Marco
+Luca
+Giorgio
+Giulia
+Sara
+Matteo
+Elena
+Numero studenti: 7</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Dopo <code>set(2, "Giorgio")</code> la lista ha sempre 8 elementi: <code>set</code> <strong>sostituisce</strong>, non aggiunge. Dopo <code>remove("Paolo")</code> invece gli elementi sono 7 e quelli dopo Paolo (Sara, Matteo, Elena) scalano indietro di un posto.</li>
+        <li>Se il nome da eliminare non esiste (ho provato con "Zeno") il programma stampa <code>Zeno non è nella lista: nessuna eliminazione.</code> e la lista resta di 8.</li>
+        <li>I metodi richiesti dal vincolo ci sono tutti: <code>add</code>, <code>get</code>, <code>set</code>, <code>remove</code>, <code>size</code>, <code>contains</code>, <code>indexOf</code>.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Scrivere <code>set(3, ...)</code> per "la posizione 3": cambieresti Giulia, non Anna.</li>
+        <li>Con <code>ArrayList&lt;Integer&gt;</code> attenzione a <code>remove(3)</code>: toglie l'elemento <strong>in posizione</strong> 3, non il numero 3. Con le <code>String</code> il problema non c'è.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 2 – Confronto tra ArrayList e Vector</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>ArrayList</code> e <code>Vector</code> hanno la stessa struttura interna (array dinamico) e gli stessi metodi; <code>Vector</code> è sincronizzato ed è più vecchio. Teoria: <a href="java-collections-liste.html#vector-l-antenato-thread-safe">Vector: l'antenato thread-safe</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>ConfrontoListe <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare un programma chiamato <code>ConfrontoListe</code>. Il programma deve creare:</p>
+<pre data-lang="java"><code>ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+Vector&lt;Integer&gt; vector = new Vector&lt;&gt;();</code></pre>
+      <p>Inserire in entrambe le strutture i numeri da <code>1</code> a <code>20</code>. Successivamente:</p>
+      <ol>
+        <li>visualizzare gli elementi dell'<code>ArrayList</code>;</li>
+        <li>visualizzare gli elementi del <code>Vector</code>;</li>
+        <li>eliminare i numeri pari dall'<code>ArrayList</code>;</li>
+        <li>eliminare i numeri dispari dal <code>Vector</code>;</li>
+        <li>visualizzare le due strutture dopo le modifiche;</li>
+        <li>confrontarne la dimensione finale.</li>
+      </ol>
+      <p><strong>Domanda.</strong> Spiegare, in un breve commento nel codice: quali sono le principali differenze tra <code>ArrayList</code> e <code>Vector</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Un solo ciclo da 1 a 20 riempie tutte e due le strutture.</li>
+        <li>Per la stampa basta <code>println(lista)</code>: le liste hanno già un <code>toString</code> che le scrive tra parentesi quadre.</li>
+        <li>Il punto delicato è <strong>togliere elementi mentre scorro</strong>. Se vado avanti con <code>i++</code> e tolgo l'elemento in posizione <code>i</code>, quello dopo scala al suo posto e il ciclo lo salta. Soluzione semplice: scorro <strong>dal fondo verso l'inizio</strong>, così gli spostamenti avvengono solo nella parte già controllata.</li>
+        <li>Uso <code>remove(i)</code> con un <code>int</code>: toglie per <strong>posizione</strong>, che è proprio quello che voglio.</li>
+        <li>Il codice per il <code>Vector</code> è identico a quello per l'<code>ArrayList</code>, cambia solo la condizione (dispari invece di pari): già questo dice che le due classi si usano allo stesso modo.</li>
+      </ol>
+      <h4>Codice (con la risposta alla domanda nel commento)</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Vector;
+
+/*
+ * DOMANDA: quali sono le principali differenze tra ArrayList e Vector?
+ *
+ * - Somiglianze: entrambe sono liste basate su un ARRAY DINAMICO, implementano
+ *   l'interfaccia List e hanno gli stessi metodi (add, get, set, remove, size...).
+ *   get(i) è velocissimo in tutte e due; inserire/togliere in mezzo o all'inizio
+ *   è lento in tutte e due, perché bisogna spostare gli elementi successivi.
+ * - Sincronizzazione: i metodi di Vector sono "synchronized", cioè sicuri se più
+ *   thread usano la stessa lista nello stesso momento. ArrayList non lo è.
+ *   Il prezzo: Vector paga un piccolo costo in più a ogni operazione, anche
+ *   quando c'è un solo thread (come nei nostri programmi).
+ * - Crescita: quando l'array interno è pieno, Vector raddoppia la capacità,
+ *   ArrayList la aumenta del 50%.
+ * - Età: Vector esiste da Java 1.0 ed è una classe "storica"; ArrayList è nata
+ *   con il Collections Framework (Java 1.2) ed è la scelta consigliata oggi.
+ *   Se serve sicurezza tra thread si preferiscono altre soluzioni
+ *   (es. Collections.synchronizedList o CopyOnWriteArrayList).
+ */
+public class ConfrontoListe {
+    public static void main(String[] args) {
+        ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+        Vector&lt;Integer&gt; vector = new Vector&lt;&gt;();
+
+        // inserisco i numeri da 1 a 20 in entrambe
+        for (int n = 1; n &lt;= 20; n++) {
+            arrayList.add(n);
+            vector.add(n);
+        }
+
+        // 1-2. visualizzo le due strutture
+        System.out.println("ArrayList: " + arrayList);
+        System.out.println("Vector:    " + vector);
+
+        // 3. elimino i pari dall'ArrayList.
+        // Scorro al CONTRARIO: se tolgo un elemento, quelli dopo scalano di un posto,
+        // ma io sto andando verso sinistra e quindi non ne salto nessuno.
+        for (int i = arrayList.size() - 1; i &gt;= 0; i--) {
+            if (arrayList.get(i) % 2 == 0) {
+                arrayList.remove(i);          // remove(int indice)
+            }
+        }
+
+        // 4. elimino i dispari dal Vector (stessa tecnica, stessi metodi)
+        for (int i = vector.size() - 1; i &gt;= 0; i--) {
+            if (vector.get(i) % 2 != 0) {
+                vector.remove(i);
+            }
+        }
+
+        // 5. visualizzo dopo le modifiche
+        System.out.println();
+        System.out.println("Dopo le modifiche:");
+        System.out.println("ArrayList (solo dispari): " + arrayList);
+        System.out.println("Vector (solo pari):       " + vector);
+
+        // 6. confronto le dimensioni finali
+        System.out.println();
+        System.out.println("Dimensione ArrayList: " + arrayList.size());
+        System.out.println("Dimensione Vector:    " + vector.size());
+        if (arrayList.size() == vector.size()) {
+            System.out.println("Le due strutture hanno la stessa dimensione.");
+        } else if (arrayList.size() &gt; vector.size()) {
+            System.out.println("L'ArrayList contiene più elementi.");
+        } else {
+            System.out.println("Il Vector contiene più elementi.");
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>ArrayList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+Vector:    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+Dopo le modifiche:
+ArrayList (solo dispari): [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+Vector (solo pari):       [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+Dimensione ArrayList: 10
+Dimensione Vector:    10
+Le due strutture hanno la stessa dimensione.</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Da 1 a 20 ci sono 10 pari e 10 dispari: l'<code>ArrayList</code> tiene i 10 dispari, il <code>Vector</code> i 10 pari, quindi le dimensioni finali sono uguali.</li>
+        <li>Prova a mano del ciclo all'indietro: parto da <code>i = 19</code> (il 20, pari: lo tolgo), poi <code>i = 18</code> (il 19, resta), <code>i = 17</code> (il 18, lo tolgo)... Togliendo il 20 si sposta solo ciò che sta <strong>dopo</strong> di lui, cioè niente che devo ancora controllare.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Ciclo in avanti con <code>remove(i)</code>: con [1, 2, 3, 4] tolgo il 2, il 3 scala in posizione 1, <code>i</code> diventa 2 e guardo il 4. Qui per caso funziona perché pari e dispari si alternano, ma con [2, 4, 5] il 4 resterebbe dentro.</li>
+        <li>Togliere elementi dentro un <strong>for-each</strong>: Java lancia <code>ConcurrentModificationException</code>. Se vuoi scorrere in avanti si usa un <code>Iterator</code> con <code>it.remove()</code> (o <code>removeIf</code>, che vedremo più avanti).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 3 – Utilizzo di LinkedList</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una coda (FIFO) entra dal fondo ed esce dalla testa. <code>LinkedList</code> ha metodi apposta per le due estremità, tutti veloci (O(1)): <code>addFirst/addLast</code>, <code>getFirst/getLast</code>, <code>removeFirst/removeLast</code>. Teoria: <a href="java-collections-liste.html#linkedlist-come-pila-e-come-coda">LinkedList come pila e come coda</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>GestioneCoda <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare un programma chiamato <code>GestioneCoda</code>. Utilizzare:</p>
+<pre data-lang="java"><code>LinkedList&lt;String&gt; coda = new LinkedList&lt;&gt;();</code></pre>
+      <p>La lista rappresenta una coda di persone in attesa. Inserire inizialmente: Mario, Luigi, Anna, Franco, Sara.</p>
+      <p>Successivamente il programma deve permettere di:</p>
+      <ol>
+        <li>aggiungere una persona alla fine della coda;</li>
+        <li>aggiungere una persona all'inizio della coda;</li>
+        <li>visualizzare la prima persona;</li>
+        <li>visualizzare l'ultima persona;</li>
+        <li>rimuovere la prima persona;</li>
+        <li>rimuovere l'ultima persona;</li>
+        <li>visualizzare la coda aggiornata.</li>
+      </ol>
+      <p>Utilizzare obbligatoriamente: <code>addFirst()</code>, <code>addLast()</code>, <code>getFirst()</code>, <code>getLast()</code>, <code>removeFirst()</code>, <code>removeLast()</code>.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>Coda iniziale:
+Mario
+Luigi
+Anna
+Franco
+Sara
+
+Nuova persona in fondo: Paolo
+
+Nuova persona in testa: Elena
+
+Prima persona: Elena
+Ultima persona: Paolo
+
+Rimuovo: Elena
+Rimuovo: Paolo
+
+Coda aggiornata:
+Mario
+Luigi
+Anna
+Franco
+Sara</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Le 5 persone iniziali entrano con <code>add</code>, che in una <code>LinkedList</code> equivale ad <code>addLast</code>.</li>
+        <li>Nell'esempio "Paolo" ed "Elena" sono scritti dall'utente dopo i due punti, quindi li leggo con <code>Scanner</code>: il primo va in fondo con <code>addLast</code>, il secondo in testa con <code>addFirst</code>.</li>
+        <li><code>getFirst</code> e <code>getLast</code> <strong>guardano</strong> senza togliere; <code>removeFirst</code> e <code>removeLast</code> <strong>tolgono e restituiscono</strong> l'elemento, quindi posso stamparlo direttamente: <code>"Rimuovo: " + coda.removeFirst()</code>.</li>
+        <li>La stampa della coda serve due volte: la metto in un metodo <code>stampa</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.LinkedList;
+import java.util.Scanner;
+
+public class GestioneCoda {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        LinkedList&lt;String&gt; coda = new LinkedList&lt;&gt;();
+
+        // persone inizialmente in coda
+        coda.add("Mario");
+        coda.add("Luigi");
+        coda.add("Anna");
+        coda.add("Franco");
+        coda.add("Sara");
+
+        System.out.println("Coda iniziale:");
+        stampa(coda);
+
+        // 1. aggiungo una persona alla fine della coda
+        System.out.println();
+        System.out.print("Nuova persona in fondo: ");
+        coda.addLast(input.nextLine());
+
+        // 2. aggiungo una persona all'inizio della coda
+        System.out.println();
+        System.out.print("Nuova persona in testa: ");
+        coda.addFirst(input.nextLine());
+
+        // 3-4. prima e ultima persona
+        System.out.println();
+        System.out.println("Prima persona: " + coda.getFirst());
+        System.out.println("Ultima persona: " + coda.getLast());
+
+        // 5-6. rimuovo la prima e l'ultima (removeFirst/removeLast restituiscono chi è uscito)
+        System.out.println();
+        System.out.println("Rimuovo: " + coda.removeFirst());
+        System.out.println("Rimuovo: " + coda.removeLast());
+
+        // 7. coda aggiornata
+        System.out.println();
+        System.out.println("Coda aggiornata:");
+        stampa(coda);
+
+        input.close();
+    }
+
+    // stampa un nome per riga
+    static void stampa(LinkedList&lt;String&gt; coda) {
+        for (String persona : coda) {
+            System.out.println(persona);
+        }
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+<pre data-lang="testo"><code>Coda iniziale:
+Mario
+Luigi
+Anna
+Franco
+Sara
+
+Nuova persona in fondo: Paolo
+
+Nuova persona in testa: Elena
+
+Prima persona: Elena
+Ultima persona: Paolo
+
+Rimuovo: Elena
+Rimuovo: Paolo
+
+Coda aggiornata:
+Mario
+Luigi
+Anna
+Franco
+Sara</code></pre>
+      <h4>Perché funziona</h4>
+      <p>L'output è identico all'esempio del professore. Elena entra in testa e Paolo in fondo, quindi sono proprio loro la prima e l'ultima persona; togliendoli, la coda torna quella iniziale. In una <code>LinkedList</code> tutte queste operazioni sulle estremità sono immediate: si cambiano solo un paio di collegamenti tra nodi, senza spostare nessun altro elemento.</p>
+      <h4>Errori da evitare</h4>
+      <p><code>getFirst()</code> e <code>removeFirst()</code> su una coda <strong>vuota</strong> lanciano <code>NoSuchElementException</code>. In un programma vero si controlla prima con <code>isEmpty()</code> (oppure si usano <code>peekFirst()</code>/<code>pollFirst()</code>, che in quel caso restituiscono <code>null</code>).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 4 – Registro degli studenti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una lista può contenere oggetti di una classe scritta da noi: <code>ArrayList&lt;Studente&gt;</code>. <code>get(i)</code> restituisce l'<strong>oggetto</strong>, su cui chiamo i getter e i setter: <code>registro.get(i).setMedia(8)</code>. Teoria: <a href="java-collections-liste.html#usare-arraylist-la-sintassi">Usare ArrayList: la sintassi</a>; per costruttori, getter e setter vedi <a href="java-programmazione-a-oggetti.html">Programmazione a oggetti</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>RegistroStudenti con la classe Studente <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizzare un programma più completo chiamato <code>RegistroStudenti</code>. Definire una classe:</p>
+<pre data-lang="java"><code>class Studente {
+    private String nome;
+    private String cognome;
+    private double media;
+}</code></pre>
+      <p>Creare opportuni: costruttore; getter; setter; metodo <code>toString()</code>. Esempio:</p>
+<pre data-lang="java"><code>Studente s = new Studente("Mario", "Rossi", 7.5);</code></pre>
+      <p><strong>Gestione del registro.</strong> Nel <code>main</code> creare:</p>
+<pre data-lang="java"><code>ArrayList&lt;Studente&gt; registro = new ArrayList&lt;&gt;();</code></pre>
+      <p>Inserire almeno 6 studenti. Il programma deve permettere di:</p>
+      <ol type="A">
+        <li><strong>Visualizzare gli studenti.</strong> Visualizzare tutti gli studenti presenti nel registro.</li>
+        <li><strong>Cercare uno studente.</strong> Chiedere il cognome e verificare se esiste nel registro.</li>
+        <li><strong>Calcolare la media della classe.</strong> Calcolare e visualizzare la media delle medie degli studenti.</li>
+        <li><strong>Individuare il migliore.</strong> Individuare lo studente con la media più alta.</li>
+        <li><strong>Eliminare uno studente.</strong> Chiedere il cognome e rimuovere lo studente corrispondente.</li>
+        <li><strong>Modificare la media.</strong> Chiedere il cognome e una nuova media e modificare il valore.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>La classe.</strong> Attributi <code>private</code> (incapsulamento), un costruttore che li riceve tutti e tre, un getter e un setter per ognuno. <code>toString()</code> decide come appare lo studente quando lo stampo: <code>Mario Rossi - media 7.5</code>. Con <code>@Override</code> dico al compilatore che sto ridefinendo il <code>toString</code> ereditato da <code>Object</code>.</li>
+        <li><strong>Dove metto la classe.</strong> Nella cartella di consegna c'è solo <code>RegistroStudenti.java</code>, quindi scrivo <code>Studente</code> nello stesso file, <strong>senza</strong> <code>public</code> (in un file può esserci una sola classe pubblica, quella con il nome del file).</li>
+        <li><strong>A.</strong> <code>for</code> con indice per numerare; <code>println(registro.get(i))</code> chiama da solo <code>toString()</code>.</li>
+        <li><strong>B, E, F</strong> cercano tutti per cognome: scrivo una volta sola il metodo <code>cerca</code>, che restituisce la posizione oppure <code>-1</code>. Confronto con <code>equalsIgnoreCase</code> così "verdi" e "Verdi" vanno bene uguale (mai <code>==</code> con le stringhe).</li>
+        <li><strong>C.</strong> Accumulo le medie in <code>somma</code> e divido per <code>size()</code>.</li>
+        <li><strong>D.</strong> Classico algoritmo del massimo: parto dal primo studente e lo sostituisco ogni volta che ne trovo uno con la media più alta.</li>
+        <li><strong>E.</strong> <code>remove(pos)</code> toglie lo studente e lo restituisce, così posso dire chi ho eliminato.</li>
+        <li><strong>F.</strong> Non serve togliere e rimettere lo studente: <code>registro.get(pos)</code> mi dà l'oggetto che è nella lista e <code>setMedia</code> lo modifica lì dentro.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Scanner;
+
+// Classe definita dal programmatore: uno studente con nome, cognome e media
+class Studente {
+    private String nome;
+    private String cognome;
+    private double media;
+
+    // costruttore
+    public Studente(String nome, String cognome, double media) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.media = media;
+    }
+
+    // getter
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public double getMedia() {
+        return media;
+    }
+
+    // setter
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public void setMedia(double media) {
+        this.media = media;
+    }
+
+    // toString: come deve apparire lo studente quando lo stampo
+    @Override
+    public String toString() {
+        return nome + " " + cognome + " - media " + media;
+    }
+}
+
+public class RegistroStudenti {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        ArrayList&lt;Studente&gt; registro = new ArrayList&lt;&gt;();
+
+        // inserisco 6 studenti
+        registro.add(new Studente("Mario", "Rossi", 7.5));
+        registro.add(new Studente("Giulia", "Bianchi", 8.25));
+        registro.add(new Studente("Luca", "Verdi", 6.0));
+        registro.add(new Studente("Anna", "Neri", 9.0));
+        registro.add(new Studente("Paolo", "Russo", 5.5));
+        registro.add(new Studente("Sara", "Colombo", 7.0));
+
+        // A. visualizzare gli studenti
+        System.out.println("=== A. Studenti nel registro ===");
+        for (int i = 0; i &lt; registro.size(); i++) {
+            System.out.println((i + 1) + ". " + registro.get(i));   // println chiama toString()
+        }
+
+        // B. cercare uno studente per cognome
+        System.out.println();
+        System.out.println("=== B. Ricerca ===");
+        System.out.print("Cognome da cercare: ");
+        String cognome = input.nextLine();
+        int pos = cerca(registro, cognome);
+        if (pos != -1) {
+            System.out.println("Trovato: " + registro.get(pos));
+        } else {
+            System.out.println("Nessuno studente con cognome " + cognome + ".");
+        }
+
+        // C. media della classe = media delle medie
+        System.out.println();
+        System.out.println("=== C. Media della classe ===");
+        double somma = 0;
+        for (Studente s : registro) {
+            somma += s.getMedia();
+        }
+        double mediaClasse = somma / registro.size();
+        System.out.printf("Media della classe: %.2f%n", mediaClasse);
+
+        // D. studente con la media più alta
+        System.out.println();
+        System.out.println("=== D. Il migliore ===");
+        Studente migliore = registro.get(0);           // parto dal primo...
+        for (Studente s : registro) {
+            if (s.getMedia() &gt; migliore.getMedia()) {  // ...e lo sostituisco se trovo di meglio
+                migliore = s;
+            }
+        }
+        System.out.println("Studente con la media più alta: " + migliore);
+
+        // E. eliminare uno studente per cognome
+        System.out.println();
+        System.out.println("=== E. Eliminazione ===");
+        System.out.print("Cognome dello studente da eliminare: ");
+        cognome = input.nextLine();
+        pos = cerca(registro, cognome);
+        if (pos != -1) {
+            Studente tolto = registro.remove(pos);
+            System.out.println("Eliminato: " + tolto);
+        } else {
+            System.out.println("Nessuno studente con cognome " + cognome + ".");
+        }
+
+        // F. modificare la media
+        System.out.println();
+        System.out.println("=== F. Modifica della media ===");
+        System.out.print("Cognome dello studente: ");
+        cognome = input.nextLine();
+        pos = cerca(registro, cognome);
+        if (pos != -1) {
+            System.out.print("Nuova media: ");
+            double nuova = Double.parseDouble(input.nextLine());
+            registro.get(pos).setMedia(nuova);         // modifico l'oggetto con il setter
+            System.out.println("Media aggiornata: " + registro.get(pos));
+        } else {
+            System.out.println("Nessuno studente con cognome " + cognome + ".");
+        }
+
+        // registro finale
+        System.out.println();
+        System.out.println("=== Registro finale ===");
+        for (Studente s : registro) {
+            System.out.println(s);
+        }
+
+        input.close();
+    }
+
+    // restituisce la posizione dello studente con quel cognome, oppure -1
+    static int cerca(ArrayList&lt;Studente&gt; registro, String cognome) {
+        for (int i = 0; i &lt; registro.size(); i++) {
+            if (registro.get(i).getCognome().equalsIgnoreCase(cognome)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+      <p>L'utente cerca Verdi, elimina Russo e porta la media di Neri a 9.5:</p>
+<pre data-lang="testo"><code>=== A. Studenti nel registro ===
+1. Mario Rossi - media 7.5
+2. Giulia Bianchi - media 8.25
+3. Luca Verdi - media 6.0
+4. Anna Neri - media 9.0
+5. Paolo Russo - media 5.5
+6. Sara Colombo - media 7.0
+
+=== B. Ricerca ===
+Cognome da cercare: Verdi
+Trovato: Luca Verdi - media 6.0
+
+=== C. Media della classe ===
+Media della classe: 7.21
+
+=== D. Il migliore ===
+Studente con la media più alta: Anna Neri - media 9.0
+
+=== E. Eliminazione ===
+Cognome dello studente da eliminare: Russo
+Eliminato: Paolo Russo - media 5.5
+
+=== F. Modifica della media ===
+Cognome dello studente: Neri
+Nuova media: 9.5
+Media aggiornata: Anna Neri - media 9.5
+
+=== Registro finale ===
+Mario Rossi - media 7.5
+Giulia Bianchi - media 8.25
+Luca Verdi - media 6.0
+Anna Neri - media 9.5
+Sara Colombo - media 7.0</code></pre>
+      <p>Se il cognome non esiste (provato con "Gialli" in B, E e F) ogni volta il programma risponde <code>Nessuno studente con cognome Gialli.</code> e il registro resta intatto.</p>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Media della classe: (7.5 + 8.25 + 6.0 + 9.0 + 5.5 + 7.0) / 6 = 43.25 / 6 = 7.208..., che <code>printf("%.2f")</code> arrotonda a 7.21. Su un computer impostato in italiano <code>printf</code> scrive <code>7,21</code> con la virgola: è normale.</li>
+        <li>La media va letta con <code>Double.parseDouble(input.nextLine())</code> e non con <code>nextDouble()</code>: così leggo sempre righe intere e non resta l'"a capo" nel buffer a rovinare la lettura successiva.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Rendere pubblici gli attributi per "fare prima": la consegna li vuole <code>private</code>, e si accede con getter e setter.</li>
+        <li>Dimenticare <code>toString()</code>: la stampa diventerebbe qualcosa come <code>Studente@1b6d3586</code>.</li>
+        <li>Dentro il for-each di ricerca chiamare <code>registro.remove(s)</code>: si ottiene <code>ConcurrentModificationException</code>. Prima trovo la posizione, poi rimuovo fuori dal ciclo.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 5 – Tre strutture, un solo problema</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>ArrayList</code>, <code>Vector</code> e <code>LinkedList</code> implementano tutte l'interfaccia <code>List</code>: un metodo che riceve una <code>List&lt;Studente&gt;</code> funziona con tutte e tre. Teoria: <a href="java-collections-liste.html#l-interfaccia-list">L'interfaccia List</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Le stesse operazioni su ArrayList, Vector e LinkedList <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Riprendere il problema del registro studenti e creare tre liste:</p>
+<pre data-lang="java"><code>ArrayList&lt;Studente&gt; listaArray = new ArrayList&lt;&gt;();
+
+Vector&lt;Studente&gt; listaVector = new Vector&lt;&gt;();
+
+LinkedList&lt;Studente&gt; listaLinked = new LinkedList&lt;&gt;();</code></pre>
+      <p>Inserire gli stessi studenti nelle tre strutture. Per ciascuna lista realizzare le seguenti operazioni:</p>
+      <ul>
+        <li>inserimento;</li>
+        <li>ricerca;</li>
+        <li>visualizzazione;</li>
+        <li>modifica;</li>
+        <li>eliminazione.</li>
+      </ul>
+      <p>Successivamente rispondere alle domande (blocco successivo).</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Potrei copiare tre volte lo stesso codice cambiando solo il nome della lista. Ma le tre classi hanno <strong>gli stessi metodi</strong> perché implementano tutte <code>List</code>: allora scrivo i metodi <code>riempi</code> e <code>operazioni</code> con un parametro <code>List&lt;Studente&gt;</code> e li chiamo tre volte. È il modo più diretto per <strong>vedere</strong> che le operazioni sono le stesse.</li>
+        <li><code>riempi</code> fa l'inserimento (gli stessi 4 studenti). <code>operazioni</code> fa visualizzazione, ricerca di "Verdi", modifica della sua media con <code>setMedia</code> ed eliminazione del primo studente con <code>remove(0)</code>.</li>
+        <li>Alla fine provo i metodi che ha <strong>solo</strong> <code>LinkedList</code>: su <code>listaLinked</code>, dichiarata come <code>LinkedList</code>, posso chiamare <code>addFirst</code>, <code>getLast</code> e compagnia.</li>
+        <li>La classe <code>Studente</code> è quella dell'esercizio 4: <code>TreStrutture.java</code> va nella stessa cartella di <code>RegistroStudenti.java</code> e si compila con <code>javac *.java</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+// Usa la classe Studente dell'esercizio 4 (stessa cartella, compilare con: javac *.java)
+public class TreStrutture {
+    public static void main(String[] args) {
+        ArrayList&lt;Studente&gt; listaArray = new ArrayList&lt;&gt;();
+        Vector&lt;Studente&gt; listaVector = new Vector&lt;&gt;();
+        LinkedList&lt;Studente&gt; listaLinked = new LinkedList&lt;&gt;();
+
+        // inserimento: gli stessi studenti nelle tre strutture
+        riempi(listaArray);
+        riempi(listaVector);
+        riempi(listaLinked);
+
+        // ricerca, visualizzazione, modifica, eliminazione: STESSO codice per tutte e tre
+        operazioni("ArrayList", listaArray);
+        operazioni("Vector", listaVector);
+        operazioni("LinkedList", listaLinked);
+
+        // solo LinkedList ha i metodi per lavorare sulle estremità
+        System.out.println("=== Metodi specifici di LinkedList ===");
+        listaLinked.addFirst(new Studente("Elena", "Gallo", 8.0));
+        listaLinked.addLast(new Studente("Matteo", "Costa", 6.5));
+        System.out.println("Primo:  " + listaLinked.getFirst());
+        System.out.println("Ultimo: " + listaLinked.getLast());
+        System.out.println("Tolgo il primo:  " + listaLinked.removeFirst());
+        System.out.println("Tolgo l'ultimo: " + listaLinked.removeLast());
+        System.out.println("Elementi rimasti: " + listaLinked.size());
+    }
+
+    // inserimento
+    static void riempi(List&lt;Studente&gt; lista) {
+        lista.add(new Studente("Mario", "Rossi", 7.5));
+        lista.add(new Studente("Giulia", "Bianchi", 8.25));
+        lista.add(new Studente("Luca", "Verdi", 6.0));
+        lista.add(new Studente("Anna", "Neri", 9.0));
+    }
+
+    // List è l'interfaccia comune: il metodo accetta ArrayList, Vector e LinkedList
+    static void operazioni(String nome, List&lt;Studente&gt; lista) {
+        System.out.println("=== " + nome + " ===");
+
+        // visualizzazione
+        for (Studente s : lista) {
+            System.out.println("  " + s);
+        }
+
+        // ricerca per cognome
+        int pos = -1;
+        for (int i = 0; i &lt; lista.size(); i++) {
+            if (lista.get(i).getCognome().equals("Verdi")) {
+                pos = i;
+            }
+        }
+        System.out.println("Ricerca Verdi: trovato in posizione " + pos);
+
+        // modifica
+        lista.get(pos).setMedia(6.5);
+        System.out.println("Modifica:      " + lista.get(pos));
+
+        // eliminazione
+        Studente tolto = lista.remove(0);
+        System.out.println("Eliminazione:  " + tolto.getNome() + " " + tolto.getCognome()
+                + " -&gt; restano " + lista.size() + " studenti");
+        System.out.println();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>=== ArrayList ===
+  Mario Rossi - media 7.5
+  Giulia Bianchi - media 8.25
+  Luca Verdi - media 6.0
+  Anna Neri - media 9.0
+Ricerca Verdi: trovato in posizione 2
+Modifica:      Luca Verdi - media 6.5
+Eliminazione:  Mario Rossi -&gt; restano 3 studenti
+
+=== Vector ===
+  Mario Rossi - media 7.5
+  Giulia Bianchi - media 8.25
+  Luca Verdi - media 6.0
+  Anna Neri - media 9.0
+Ricerca Verdi: trovato in posizione 2
+Modifica:      Luca Verdi - media 6.5
+Eliminazione:  Mario Rossi -&gt; restano 3 studenti
+
+=== LinkedList ===
+  Mario Rossi - media 7.5
+  Giulia Bianchi - media 8.25
+  Luca Verdi - media 6.0
+  Anna Neri - media 9.0
+Ricerca Verdi: trovato in posizione 2
+Modifica:      Luca Verdi - media 6.5
+Eliminazione:  Mario Rossi -&gt; restano 3 studenti
+
+=== Metodi specifici di LinkedList ===
+Primo:  Elena Gallo - media 8.0
+Ultimo: Matteo Costa - media 6.5
+Tolgo il primo:  Elena Gallo - media 8.0
+Tolgo l'ultimo: Matteo Costa - media 6.5
+Elementi rimasti: 3</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>I tre blocchi di output sono <strong>identici</strong>: dal punto di vista del risultato le tre strutture si comportano allo stesso modo. Quello che cambia è <strong>come</strong> lavorano dentro (e quindi la velocità), che misureremo nell'esercizio 7.</li>
+        <li>Se nel metodo <code>operazioni</code> provassi a scrivere <code>lista.addFirst(...)</code> il compilatore darebbe errore: il parametro è una <code>List</code>, e <code>List</code> non ha quel metodo.</li>
+        <li>Nota tecnica: <code>javac -Xlint</code> avvisa che <code>Studente</code> è una classe "ausiliaria" usata da un altro file. Compila e funziona lo stesso; in un progetto vero metteremmo <code>Studente</code> in un suo file <code>Studente.java</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Domande sull'esercizio 5 <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Rispondere alle domande:</p>
+      <ol>
+        <li>Quali operazioni sono simili nelle tre strutture?</li>
+        <li>Quali metodi specifici offre <code>LinkedList</code>?</li>
+        <li>Qual è la differenza principale nella struttura interna di <code>ArrayList</code> e <code>LinkedList</code>?</li>
+        <li>Perché <code>Vector</code> può essere considerato una classe "storica" rispetto ad altre soluzioni del Collections Framework?</li>
+        <li>Se devi effettuare moltissimi accessi tramite indice, quale struttura risulta particolarmente adatta?</li>
+        <li>Se devi effettuare frequentemente inserimenti e rimozioni alle estremità della lista, quale struttura offre metodi specifici per queste operazioni?</li>
+        <li>Perché, in un programma moderno, non è sufficiente scegliere una struttura dati basandosi esclusivamente sul fatto che "funziona"?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposte spiegate</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Praticamente tutte quelle di base</strong>: <code>add</code>, <code>get</code>, <code>set</code>, <code>remove</code>, <code>size</code>, <code>isEmpty</code>, <code>contains</code>, <code>indexOf</code>, <code>clear</code>, e lo scorrimento con <code>for</code> o for-each. Il motivo è che tutte e tre implementano l'interfaccia <code>List</code>, che obbliga ad avere questi metodi. Lo dimostra l'esercizio 5: lo stesso metodo <code>operazioni(List&lt;Studente&gt;)</code> ha funzionato su tutte e tre dando lo stesso output.</li>
+        <li><code>addFirst()</code>, <code>addLast()</code>, <code>getFirst()</code>, <code>getLast()</code>, <code>removeFirst()</code>, <code>removeLast()</code>, cioè le operazioni sulle due <strong>estremità</strong>. In più, poiché <code>LinkedList</code> implementa anche <code>Deque</code>, ha i metodi da pila e da coda: <code>push</code>/<code>pop</code>, <code>offer</code>/<code>poll</code>/<code>peek</code>. (Nota: da Java 21 anche <code>ArrayList</code> ha <code>getFirst</code>/<code>addFirst</code> ecc. grazie all'interfaccia <code>SequencedCollection</code>, ma su un <code>ArrayList</code> <code>addFirst</code> resta lento perché deve spostare tutto.)</li>
+        <li><code>ArrayList</code> tiene gli elementi in un <strong>array</strong>, cioè in celle una dopo l'altra in memoria: per andare all'elemento <code>i</code> fa un calcolo e ci salta subito (accesso O(1)), ma per inserire o togliere in mezzo deve spostare tutti quelli dopo (O(n)). <code>LinkedList</code> è una catena di <strong>nodi</strong> sparsi in memoria, e ogni nodo conosce il precedente e il successivo: inserire o togliere, una volta arrivati al punto giusto, vuol dire solo cambiare due collegamenti (O(1)), ma per arrivare all'elemento <code>i</code> bisogna percorrere la catena nodo per nodo (O(n)).</li>
+        <li>Perché esiste da <strong>Java 1.0</strong>, prima che nascesse il Collections Framework (Java 1.2); è stata poi "adattata" per implementare <code>List</code>, ma si porta dietro metodi vecchi (<code>addElement</code>, <code>elementAt</code>...) e la scelta di sincronizzare <strong>ogni</strong> metodo. Quella sincronizzazione costa tempo anche quando il programma ha un solo thread, e non basta comunque a rendere sicure le operazioni composte (es. "controlla e poi aggiungi"). Oggi si usa <code>ArrayList</code>, e se servono i thread si usano <code>Collections.synchronizedList</code> o le classi di <code>java.util.concurrent</code> come <code>CopyOnWriteArrayList</code>. Vector resta solo per compatibilità con codice vecchio.</li>
+        <li><strong><code>ArrayList</code></strong>: <code>get(i)</code> è a tempo costante. Nel nostro test B, 1.000.000 di accessi con <code>ArrayList</code> hanno richiesto circa 9 ms, mentre solo 50.000 accessi con <code>LinkedList</code> circa 4 secondi. <code>Vector</code> è altrettanto adatta come struttura, ma un po' più lenta per la sincronizzazione.</li>
+        <li><strong><code>LinkedList</code></strong>, con <code>addFirst</code>/<code>addLast</code>/<code>removeFirst</code>/<code>removeLast</code>, tutti O(1). Nel test C e D inserire e togliere in posizione 0 è stato da circa 50 a oltre 100 volte più veloce che con <code>ArrayList</code>. (In un progetto vero per code e pile si usa spesso anche <code>ArrayDeque</code>.)</li>
+        <li>Perché "funziona" vuol dire solo che il risultato è giusto <strong>con i dati di prova</strong>. Con pochi elementi tutte e tre le strutture sembrano istantanee, ma con molti dati la scelta sbagliata fa la differenza tra millisecondi e secondi (o minuti): basta guardare <code>get(i)</code> su <code>LinkedList</code> nel test B. Un programma moderno deve anche essere <strong>efficiente</strong> (tempo e memoria), <strong>scalabile</strong> (reggere quando i dati crescono), corretto con più thread se serve, e <strong>leggibile</strong>: scegliere la struttura giusta comunica anche a chi legge il codice come verrà usata (lista che si legge per indice, coda, ecc.).</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 6 – Menu interattivo</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Lo schema di ogni programma a menu: <code>while (scelta != 0)</code> → stampa il menu → leggi la scelta → <code>switch</code> con un <code>case</code> per voce (e il <code>break</code>!) → <code>default</code> per le scelte non previste. Teoria: <a href="java-collections-liste.html#buone-abitudini">Buone abitudini</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>RegistroStudenti con menu <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Trasformare il programma <code>RegistroStudenti</code> in un'applicazione con menu. Il menu deve essere simile al seguente:</p>
+<pre data-lang="testo"><code>========== REGISTRO STUDENTI ==========
+
+1. Inserisci studente
+2. Visualizza studenti
+3. Cerca studente
+4. Modifica media
+5. Elimina studente
+6. Calcola media classe
+7. Mostra studente migliore
+0. Esci
+
+Scelta:</code></pre>
+      <p>Il programma deve continuare a funzionare finché l'utente non sceglie <code>0. Esci</code>. Utilizzare: <code>Scanner</code>, <code>ArrayList</code>, <code>while</code>, <code>switch</code>.</p>
+      <p><strong>Requisiti.</strong> Il programma deve gestire anche situazioni anomale, ad esempio:</p>
+      <ul>
+        <li>lista vuota;</li>
+        <li>studente non trovato;</li>
+        <li>media non valida;</li>
+        <li>scelta di menu non prevista.</li>
+      </ul>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Struttura.</strong> Nel <code>main</code> resta solo il ciclo <code>while (scelta != 0)</code> con il menu e lo <code>switch</code>; ogni voce è un metodo <code>static</code> che riceve il registro. Così il <code>main</code> si legge come un indice e ogni metodo fa una cosa sola.</li>
+        <li><strong>Lo Scanner</strong> è uno solo, dichiarato <code>static</code> nella classe, perché lo usano tutti i metodi. Leggo <strong>sempre righe intere</strong> con <code>nextLine()</code> e le converto io: così non ci sono problemi di "a capo" rimasti nel buffer.</li>
+        <li><strong>Scelta non prevista.</strong> Un numero fuori menu (es. 9) finisce nel <code>default</code>. Per un testo come "abc", <code>Integer.parseInt</code> lancerebbe <code>NumberFormatException</code> e il programma si chiuderebbe: lo catturo con <code>try/catch</code> dentro <code>leggiIntero</code>, avviso l'utente e restituisco <code>-1</code>, che finisce anch'esso nel <code>default</code>.</li>
+        <li><strong>Media non valida.</strong> <code>leggiMedia</code> ripete la domanda <strong>finché</strong> la media non è un numero tra 0 e 10. Accetta anche la virgola (<code>8,25</code>), che è come la scriverebbe un italiano: la trasformo in punto con <code>replace(',', '.')</code>.</li>
+        <li><strong>Lista vuota.</strong> Il metodo <code>vuoto</code> controlla <code>isEmpty()</code> e avvisa; tutte le voci tranne "Inserisci" lo chiamano per prime. È importante soprattutto per la media della classe (si dividerebbe per zero, ottenendo <code>NaN</code>) e per il migliore (<code>get(0)</code> su una lista vuota lancia <code>IndexOutOfBoundsException</code>).</li>
+        <li><strong>Studente non trovato.</strong> <code>cerca</code> restituisce <code>-1</code> e ogni voce lo controlla prima di usare la posizione.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.Scanner;
+
+class Studente {
+    private String nome;
+    private String cognome;
+    private double media;
+
+    public Studente(String nome, String cognome, double media) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.media = media;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public double getMedia() {
+        return media;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public void setMedia(double media) {
+        this.media = media;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " " + cognome + " - media " + media;
+    }
+}
+
+public class RegistroStudenti {
+    // un solo Scanner per tutto il programma
+    static Scanner input = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        ArrayList&lt;Studente&gt; registro = new ArrayList&lt;&gt;();
+        int scelta = -1;
+
+        while (scelta != 0) {
+            System.out.println();
+            System.out.println("========== REGISTRO STUDENTI ==========");
+            System.out.println("1. Inserisci studente");
+            System.out.println("2. Visualizza studenti");
+            System.out.println("3. Cerca studente");
+            System.out.println("4. Modifica media");
+            System.out.println("5. Elimina studente");
+            System.out.println("6. Calcola media classe");
+            System.out.println("7. Mostra studente migliore");
+            System.out.println("0. Esci");
+            scelta = leggiIntero("Scelta: ");
+
+            switch (scelta) {
+                case 1:
+                    inserisci(registro);
+                    break;
+                case 2:
+                    visualizza(registro);
+                    break;
+                case 3:
+                    cercaStudente(registro);
+                    break;
+                case 4:
+                    modificaMedia(registro);
+                    break;
+                case 5:
+                    elimina(registro);
+                    break;
+                case 6:
+                    mediaClasse(registro);
+                    break;
+                case 7:
+                    migliore(registro);
+                    break;
+                case 0:
+                    System.out.println("Arrivederci!");
+                    break;
+                default:
+                    System.out.println("Scelta non prevista: inserisci un numero da 0 a 7.");
+            }
+        }
+        input.close();
+    }
+
+    // ---------- lettura sicura dell'input ----------
+
+    // legge un intero; se l'utente scrive lettere restituisce -1 (che finisce nel default)
+    static int leggiIntero(String messaggio) {
+        System.out.print(messaggio);
+        String riga = input.nextLine().trim();
+        try {
+            return Integer.parseInt(riga);
+        } catch (NumberFormatException e) {
+            System.out.println("\"" + riga + "\" non è un numero.");
+            return -1;
+        }
+    }
+
+    // chiede una media finché non è un numero tra 0 e 10 (accetta anche la virgola: 7,5)
+    static double leggiMedia(String messaggio) {
+        while (true) {
+            System.out.print(messaggio);
+            String riga = input.nextLine().trim().replace(',', '.');
+            try {
+                double media = Double.parseDouble(riga);
+                if (media &gt;= 0 &amp;&amp; media &lt;= 10) {
+                    return media;
+                }
+                System.out.println("Media non valida: deve essere tra 0 e 10.");
+            } catch (NumberFormatException e) {
+                System.out.println("Media non valida: scrivi un numero, ad esempio 7.5");
+            }
+        }
+    }
+
+    // posizione dello studente con quel cognome, oppure -1
+    static int cerca(ArrayList&lt;Studente&gt; registro, String cognome) {
+        for (int i = 0; i &lt; registro.size(); i++) {
+            if (registro.get(i).getCognome().equalsIgnoreCase(cognome)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // controlla la lista vuota e avvisa l'utente
+    static boolean vuoto(ArrayList&lt;Studente&gt; registro) {
+        if (registro.isEmpty()) {
+            System.out.println("Il registro è vuoto: inserisci prima almeno uno studente.");
+            return true;
+        }
+        return false;
+    }
+
+    // ---------- le voci del menu ----------
+
+    static void inserisci(ArrayList&lt;Studente&gt; registro) {
+        System.out.print("Nome: ");
+        String nome = input.nextLine().trim();
+        System.out.print("Cognome: ");
+        String cognome = input.nextLine().trim();
+        double media = leggiMedia("Media: ");
+        registro.add(new Studente(nome, cognome, media));
+        System.out.println("Studente inserito. Studenti nel registro: " + registro.size());
+    }
+
+    static void visualizza(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;
+        for (int i = 0; i &lt; registro.size(); i++) {
+            System.out.println((i + 1) + ". " + registro.get(i));
+        }
+    }
+
+    static void cercaStudente(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;
+        System.out.print("Cognome da cercare: ");
+        String cognome = input.nextLine().trim();
+        int pos = cerca(registro, cognome);
+        if (pos == -1) {
+            System.out.println("Studente non trovato.");
+        } else {
+            System.out.println("Trovato in posizione " + (pos + 1) + ": " + registro.get(pos));
+        }
+    }
+
+    static void modificaMedia(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;
+        System.out.print("Cognome dello studente: ");
+        String cognome = input.nextLine().trim();
+        int pos = cerca(registro, cognome);
+        if (pos == -1) {
+            System.out.println("Studente non trovato.");
+            return;
+        }
+        double nuova = leggiMedia("Nuova media: ");
+        registro.get(pos).setMedia(nuova);
+        System.out.println("Media aggiornata: " + registro.get(pos));
+    }
+
+    static void elimina(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;
+        System.out.print("Cognome dello studente da eliminare: ");
+        String cognome = input.nextLine().trim();
+        int pos = cerca(registro, cognome);
+        if (pos == -1) {
+            System.out.println("Studente non trovato.");
+        } else {
+            System.out.println("Eliminato: " + registro.remove(pos));
+        }
+    }
+
+    static void mediaClasse(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;   // evita la divisione per zero
+        double somma = 0;
+        for (Studente s : registro) {
+            somma += s.getMedia();
+        }
+        System.out.printf("Media della classe: %.2f (%d studenti)%n", somma / registro.size(), registro.size());
+    }
+
+    static void migliore(ArrayList&lt;Studente&gt; registro) {
+        if (vuoto(registro)) return;
+        Studente best = registro.get(0);
+        for (Studente s : registro) {
+            if (s.getMedia() &gt; best.getMedia()) {
+                best = s;
+            }
+        }
+        System.out.println("Studente migliore: " + best);
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+      <p>Una sessione che tocca tutte le voci e tutti i casi anomali. Il registro parte vuoto. Per non ripetere 18 volte le stesse righe, dopo la prima volta il menu è sostituito da <code>[... menu ...]</code>: il programma in realtà lo ristampa ogni volta.</p>
+<pre data-lang="testo"><code>========== REGISTRO STUDENTI ==========
+1. Inserisci studente
+2. Visualizza studenti
+3. Cerca studente
+4. Modifica media
+5. Elimina studente
+6. Calcola media classe
+7. Mostra studente migliore
+0. Esci
+Scelta: 2
+Il registro è vuoto: inserisci prima almeno uno studente.
+
+[... menu ...]
+Scelta: 6
+Il registro è vuoto: inserisci prima almeno uno studente.
+
+[... menu ...]
+Scelta: 1
+Nome: Mario
+Cognome: Rossi
+Media: 7.5
+Studente inserito. Studenti nel registro: 1
+
+[... menu ...]
+Scelta: 1
+Nome: Giulia
+Cognome: Bianchi
+Media: 11
+Media non valida: deve essere tra 0 e 10.
+Media: otto
+Media non valida: scrivi un numero, ad esempio 7.5
+Media: 8,25
+Studente inserito. Studenti nel registro: 2
+
+[... menu ...]
+Scelta: 1
+Nome: Luca
+Cognome: Verdi
+Media: 6
+Studente inserito. Studenti nel registro: 3
+
+[... menu ...]
+Scelta: 2
+1. Mario Rossi - media 7.5
+2. Giulia Bianchi - media 8.25
+3. Luca Verdi - media 6.0
+
+[... menu ...]
+Scelta: 3
+Cognome da cercare: Verdi
+Trovato in posizione 3: Luca Verdi - media 6.0
+
+[... menu ...]
+Scelta: 3
+Cognome da cercare: Gialli
+Studente non trovato.
+
+[... menu ...]
+Scelta: 4
+Cognome dello studente: Rossi
+Nuova media: 8
+Media aggiornata: Mario Rossi - media 8.0
+
+[... menu ...]
+Scelta: 4
+Cognome dello studente: Gialli
+Studente non trovato.
+
+[... menu ...]
+Scelta: 7
+Studente migliore: Giulia Bianchi - media 8.25
+
+[... menu ...]
+Scelta: 5
+Cognome dello studente da eliminare: Gialli
+Studente non trovato.
+
+[... menu ...]
+Scelta: 5
+Cognome dello studente da eliminare: Verdi
+Eliminato: Luca Verdi - media 6.0
+
+[... menu ...]
+Scelta: 2
+1. Mario Rossi - media 8.0
+2. Giulia Bianchi - media 8.25
+
+[... menu ...]
+Scelta: 6
+Media della classe: 8.13 (2 studenti)
+
+[... menu ...]
+Scelta: 9
+Scelta non prevista: inserisci un numero da 0 a 7.
+
+[... menu ...]
+Scelta: abc
+"abc" non è un numero.
+Scelta non prevista: inserisci un numero da 0 a 7.
+
+[... menu ...]
+Scelta: 0
+Arrivederci!</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Tutti i requisiti sono coperti: lista vuota (scelte 2 e 6 all'inizio), media non valida (11 e "otto"), studente non trovato (Gialli in cerca, modifica ed elimina), scelta non prevista (9) e input non numerico ("abc").</li>
+        <li>Media della classe finale: (8.0 + 8.25) / 2 = 8.125, che con due decimali diventa 8.13.</li>
+        <li>Il ciclo termina solo con 0: dopo lo <code>switch</code> la condizione <code>scelta != 0</code> diventa falsa e il programma esce dal <code>while</code>.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Dimenticare il <code>break</code> in un <code>case</code>: l'esecuzione "cade" nel <code>case</code> successivo (fall-through) ed esegue anche quella voce.</li>
+        <li>Mescolare <code>nextInt()</code> e <code>nextLine()</code>: dopo <code>nextInt()</code> l'"a capo" resta nel buffer e il <code>nextLine()</code> seguente legge una stringa vuota (il nome dello studente sparisce).</li>
+        <li>Creare un nuovo <code>Scanner</code> dentro ogni metodo: basta uno solo per tutto il programma.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 7 – Sperimentazione sulle prestazioni</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Array dinamico: <code>get(i)</code> O(1), inserire/togliere in testa O(n) (sposta tutto). Lista concatenata: <code>get(i)</code> O(n) (percorre i nodi), inserire/togliere in testa O(1). Teoria: <a href="java-collections-liste.html#prestazioni-o-1-e-o-n">Prestazioni: O(1) e O(n)</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>TestPrestazioni <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizzare un programma chiamato <code>TestPrestazioni</code>. Creare:</p>
+<pre data-lang="java"><code>ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+Vector&lt;Integer&gt; vector = new Vector&lt;&gt;();
+LinkedList&lt;Integer&gt; linkedList = new LinkedList&lt;&gt;();</code></pre>
+      <p>Inserire in ciascuna struttura <code>1.000.000</code> numeri interi. Misurare il tempo necessario utilizzando:</p>
+<pre data-lang="java"><code>long inizio = System.nanoTime();
+
+// operazione da misurare
+
+long fine = System.nanoTime();
+
+System.out.println("Tempo: " + (fine - inizio) + " ns");</code></pre>
+      <p>Effettuare almeno tre test:</p>
+      <ul>
+        <li><strong>Test A – Inserimento in coda.</strong> Misurare il tempo necessario per inserire gli elementi.</li>
+        <li><strong>Test B – Accesso tramite indice.</strong> Eseguire numerosi accessi del tipo <code>lista.get(indice);</code> e misurare il tempo.</li>
+        <li><strong>Test C – Inserimento all'inizio.</strong> Provare a inserire ripetutamente elementi nella posizione <code>0</code>: <code>lista.add(0, valore);</code>. Confrontare i risultati.</li>
+      </ul>
+      <div class="callout warn"><span class="callout-title">Attenzione</span>I tempi possono variare sensibilmente da un'esecuzione all'altra a causa della JVM, del garbage collector e del computer utilizzato. Per questo motivo non bisogna considerare una singola misurazione come una prova assoluta.</div>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Un metodo per test.</strong> Ogni test è un metodo che riceve una <code>List&lt;Integer&gt;</code>: così lo stesso identico codice misura tutte e tre le strutture, e il confronto è onesto. Ogni metodo fa <code>nanoTime()</code> prima e dopo il ciclo e restituisce la differenza.</li>
+        <li><strong>Test A</strong>: <code>add(i)</code> per un milione di volte.</li>
+        <li><strong>Test B</strong>: <code>get(i)</code> sulle liste da un milione create nel test A. Sommo i valori letti: se il risultato non venisse usato, la JVM potrebbe accorgersene e "saltare" il ciclo, falsando il tempo.</li>
+        <li><strong>Test C</strong>: <code>add(0, i)</code> su liste nuove e vuote.</li>
+        <li><strong>Test D (in più)</strong>: <code>remove(0)</code> finché la lista è vuota. Non è tra i tre test richiesti, ma serve per la riga "Rimozione in posizione 0" della tabella dei risultati.</li>
+        <li>Stampo i tempi sia in ns (come chiede la consegna) sia in ms, che sono più facili da leggere: 1 ms = 1.000.000 ns.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Quantità ridotte, dichiarate</span>Due operazioni sono troppo lente per farle un milione di volte, ed è proprio questo il risultato dell'esperimento:
+        <ul>
+          <li><code>get(i)</code> su <code>LinkedList</code>: un milione di accessi a una lista di un milione richiederebbe molti minuti (in una prima prova già 100.000 accessi hanno impiegato circa 20 secondi). Per <code>LinkedList</code> facciamo <strong>50.000 accessi</strong>, e per un confronto alla pari ripetiamo anche <code>ArrayList</code> con 50.000.</li>
+          <li><code>add(0, ...)</code> e <code>remove(0)</code> su <code>ArrayList</code> e <code>Vector</code>: per ogni elemento si sposta tutto l'array. I test C e D usano <strong>100.000 elementi</strong> per tutte e tre le strutture.</li>
+        </ul>
+      </div>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+public class TestPrestazioni {
+
+    static final int N = 1_000_000;        // elementi inseriti (test A) e accessi su ArrayList/Vector (test B)
+    static final int N_ACCESSI_LINKED = 50_000;    // accessi ridotti per LinkedList (test B)
+    static final int N_ESTREMI = 100_000;  // inserimenti/rimozioni in posizione 0 (test C e D)
+
+    public static void main(String[] args) {
+        ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+        Vector&lt;Integer&gt; vector = new Vector&lt;&gt;();
+        LinkedList&lt;Integer&gt; linkedList = new LinkedList&lt;&gt;();
+
+        System.out.println("TEST A - Inserimento in coda di " + N + " interi");
+        stampa("ArrayList ", testInserimentoCoda(arrayList));
+        stampa("Vector    ", testInserimentoCoda(vector));
+        stampa("LinkedList", testInserimentoCoda(linkedList));
+
+        System.out.println();
+        System.out.println("TEST B - Accesso tramite indice con get(i)");
+        System.out.println("(ArrayList e Vector: " + N + " accessi; LinkedList: " + N_ACCESSI_LINKED + " accessi)");
+        stampa("ArrayList ", testAccesso(arrayList, N));
+        stampa("Vector    ", testAccesso(vector, N));
+        stampa("LinkedList", testAccesso(linkedList, N_ACCESSI_LINKED));
+        // stesso numero di accessi anche per ArrayList, per un confronto alla pari
+        stampa("ArrayList  (" + N_ACCESSI_LINKED + " accessi)", testAccesso(arrayList, N_ACCESSI_LINKED));
+
+        // per i test C e D riparto da liste vuote
+        arrayList = new ArrayList&lt;&gt;();
+        vector = new Vector&lt;&gt;();
+        linkedList = new LinkedList&lt;&gt;();
+
+        System.out.println();
+        System.out.println("TEST C - Inserimento in posizione 0 di " + N_ESTREMI + " interi");
+        stampa("ArrayList ", testInserimentoInizio(arrayList));
+        stampa("Vector    ", testInserimentoInizio(vector));
+        stampa("LinkedList", testInserimentoInizio(linkedList));
+
+        System.out.println();
+        System.out.println("TEST D - Rimozione in posizione 0 di " + N_ESTREMI + " interi");
+        stampa("ArrayList ", testRimozioneInizio(arrayList));
+        stampa("Vector    ", testRimozioneInizio(vector));
+        stampa("LinkedList", testRimozioneInizio(linkedList));
+    }
+
+    // TEST A: add(valore) in fondo alla lista
+    static long testInserimentoCoda(List&lt;Integer&gt; lista) {
+        long inizio = System.nanoTime();
+        for (int i = 0; i &lt; N; i++) {
+            lista.add(i);
+        }
+        long fine = System.nanoTime();
+        return fine - inizio;
+    }
+
+    // TEST B: get(i) per i da 0 a quanti-1; sommo i valori così la JVM non "salta" il ciclo
+    static long testAccesso(List&lt;Integer&gt; lista, int quanti) {
+        long somma = 0;
+        long inizio = System.nanoTime();
+        for (int i = 0; i &lt; quanti; i++) {
+            somma += lista.get(i);
+        }
+        long fine = System.nanoTime();
+        if (somma &lt; 0) System.out.println(somma);   // non succede mai: serve solo a "usare" somma
+        return fine - inizio;
+    }
+
+    // TEST C: add(0, valore), sempre in testa
+    static long testInserimentoInizio(List&lt;Integer&gt; lista) {
+        long inizio = System.nanoTime();
+        for (int i = 0; i &lt; N_ESTREMI; i++) {
+            lista.add(0, i);
+        }
+        long fine = System.nanoTime();
+        return fine - inizio;
+    }
+
+    // TEST D: remove(0) finché la lista non è vuota
+    static long testRimozioneInizio(List&lt;Integer&gt; lista) {
+        long inizio = System.nanoTime();
+        while (!lista.isEmpty()) {
+            lista.remove(0);
+        }
+        long fine = System.nanoTime();
+        return fine - inizio;
+    }
+
+    static void stampa(String nome, long ns) {
+        System.out.printf("%s  Tempo: %,d ns  (%.1f ms)%n", nome, ns, ns / 1_000_000.0);
+    }
+}</code></pre>
+      <h4>Output</h4>
+      <p>Questi sono i tempi <strong>veri</strong> misurati sul computer dove abbiamo provato (Linux, 4 core, OpenJDK 21). Sul tuo computer saranno diversi, anche di molto: conta il <strong>rapporto</strong> tra le strutture, non il numero esatto. Su un PC impostato in italiano le migliaia sono separate dal punto invece che dalla virgola.</p>
+<pre data-lang="testo"><code>TEST A - Inserimento in coda di 1000000 interi
+ArrayList   Tempo: 47,931,536 ns  (47.9 ms)
+Vector      Tempo: 78,116,092 ns  (78.1 ms)
+LinkedList  Tempo: 208,862,389 ns  (208.9 ms)
+
+TEST B - Accesso tramite indice con get(i)
+(ArrayList e Vector: 1000000 accessi; LinkedList: 50000 accessi)
+ArrayList   Tempo: 8,603,253 ns  (8.6 ms)
+Vector      Tempo: 25,737,061 ns  (25.7 ms)
+LinkedList  Tempo: 4,046,300,686 ns  (4046.3 ms)
+ArrayList  (50000 accessi)  Tempo: 388,297 ns  (0.4 ms)
+
+TEST C - Inserimento in posizione 0 di 100000 interi
+ArrayList   Tempo: 406,277,407 ns  (406.3 ms)
+Vector      Tempo: 421,447,910 ns  (421.4 ms)
+LinkedList  Tempo: 7,642,943 ns  (7.6 ms)
+
+TEST D - Rimozione in posizione 0 di 100000 interi
+ArrayList   Tempo: 415,709,109 ns  (415.7 ms)
+Vector      Tempo: 416,981,182 ns  (417.0 ms)
+LinkedList  Tempo: 3,140,835 ns  (3.1 ms)</code></pre>
+      <p>Abbiamo eseguito il programma <strong>tre volte</strong>, come suggerisce l'avviso della consegna. Gli intervalli ottenuti (in ms):</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Test</th><th>ArrayList</th><th>Vector</th><th>LinkedList</th></tr></thead>
+        <tbody>
+          <tr><td>A · inserimento in coda (1.000.000)</td><td>39 – 48</td><td>57 – 78</td><td>206 – 225</td></tr>
+          <tr><td>B · get(i) (1.000.000; LinkedList 50.000)</td><td>6,9 – 8,6</td><td>21,7 – 25,7</td><td>4.046 – 4.821</td></tr>
+          <tr><td>C · add(0, x) (100.000)</td><td>406 – 410</td><td>409 – 421</td><td>5,7 – 7,6</td></tr>
+          <tr><td>D · remove(0) (100.000)</td><td>406 – 416</td><td>400 – 455</td><td>2,9 – 3,4</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Cosa dicono i numeri</h4>
+      <ul>
+        <li><strong>Test A</strong>: tutte e tre aggiungono in fondo in O(1), ma <code>LinkedList</code> è la più lenta (circa 4 volte <code>ArrayList</code>): per ogni elemento deve creare un oggetto nodo in più. <code>ArrayList</code> scrive in una cella dell'array e solo ogni tanto lo ingrandisce.</li>
+        <li><strong>Test B</strong>: è il risultato più spettacolare. <code>LinkedList</code> per <code>get(i)</code> parte dall'estremità più vicina e percorre i nodi uno a uno: con i 50.000 accessi i passi totali sono circa 1,25 miliardi. In una prima prova con 100.000 accessi (il doppio) il tempo era salito a circa 20 secondi, quasi 5 volte tanto: è il comportamento "quadratico" di un ciclo O(n) ripetuto n volte. <code>ArrayList</code> fa gli stessi 50.000 accessi in meno di mezzo millisecondo.</li>
+        <li><strong>Test C e D</strong>: si ribalta tutto. <code>ArrayList</code> e <code>Vector</code> a ogni <code>add(0)</code>/<code>remove(0)</code> spostano tutti gli elementi di un posto; <code>LinkedList</code> cambia solo un paio di collegamenti, ed è da circa 50 a oltre 100 volte più veloce.</li>
+        <li><strong>Vector</strong> è sempre un po' più lenta di <code>ArrayList</code> nei test A e B, dove ogni chiamata paga la sincronizzazione; nei test C e D la differenza sparisce perché il tempo è tutto speso a spostare elementi.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Fidarsi di una sola misura: la prima esecuzione di un ciclo è spesso più lenta perché la JVM sta ancora compilando il codice (JIT) e il garbage collector può intervenire in qualunque momento.</li>
+        <li>Misurare insieme cose diverse (per esempio mettere la <code>println</code> dentro il tratto misurato): la stampa è lentissima e coprirebbe tutto il resto.</li>
+        <li>Lanciare un milione di <code>get(i)</code> su <code>LinkedList</code> "per vedere": il programma sembra bloccato per minuti.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Tabella dei risultati</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Compilare la tabella e commentarla <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Compilare una tabella simile:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Operazione</th><th>ArrayList</th><th>Vector</th><th>LinkedList</th></tr></thead>
+        <tbody>
+          <tr><td>Inserimento in coda</td><td></td><td></td><td></td></tr>
+          <tr><td>Accesso tramite indice</td><td></td><td></td><td></td></tr>
+          <tr><td>Inserimento in posizione 0</td><td></td><td></td><td></td></tr>
+          <tr><td>Rimozione in posizione 0</td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table></div>
+      <p>Indicare i tempi ottenuti e formulare una breve osservazione.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>La tabella compilata</h4>
+      <p>Tempi in millisecondi della prima esecuzione di <code>TestPrestazioni</code> (quella mostrata sopra). Sono valori del nostro computer: ripetendo il test sul tuo otterrai numeri diversi.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Operazione</th><th>ArrayList</th><th>Vector</th><th>LinkedList</th></tr></thead>
+        <tbody>
+          <tr><td>Inserimento in coda (1.000.000 elementi)</td><td>47,9 ms</td><td>78,1 ms</td><td>208,9 ms</td></tr>
+          <tr><td>Accesso tramite indice (1.000.000 accessi; LinkedList 50.000)</td><td>8,6 ms<br>(0,4 ms per 50.000)</td><td>25,7 ms</td><td>4.046,3 ms<br>(solo 50.000 accessi)</td></tr>
+          <tr><td>Inserimento in posizione 0 (100.000 elementi)</td><td>406,3 ms</td><td>421,4 ms</td><td>7,6 ms</td></tr>
+          <tr><td>Rimozione in posizione 0 (100.000 elementi)</td><td>415,7 ms</td><td>417,0 ms</td><td>3,1 ms</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Osservazione</h4>
+      <p><code>ArrayList</code> e <code>Vector</code> sono velocissime ad aggiungere in fondo e soprattutto ad accedere per indice, perché gli elementi stanno in un array e <code>get(i)</code> salta direttamente alla cella giusta (O(1)); sono invece lente a inserire e rimuovere in posizione 0, perché ogni volta devono spostare tutti gli altri elementi (O(n)). <code>LinkedList</code> ha il comportamento opposto: inserire e togliere in testa costa pochissimo (cambia solo dei collegamenti, O(1)), mentre l'accesso per indice è disastroso: a parità di accessi (50.000) è circa <strong>10.000 volte</strong> più lenta di <code>ArrayList</code>, perché deve percorrere i nodi uno per uno (O(n)). Anche l'inserimento in coda, pur essendo O(1) per tutte, è più lento con <code>LinkedList</code>, che deve creare un nodo per ogni elemento. <code>Vector</code> si comporta come <code>ArrayList</code> ma è un po' più lenta nelle operazioni semplici a causa della sincronizzazione. Ripetendo il test tre volte i numeri sono cambiati (anche del 30-40%), ma l'ordine tra le strutture è rimasto sempre lo stesso: è questo il risultato affidabile dell'esperimento.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Domanda finale</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>La regola d'oro del capitolo: per default <code>ArrayList</code>; <code>LinkedList</code> solo se lavori tanto alle estremità e poco per indice; <code>Vector</code> solo per codice vecchio. Teoria: <a href="java-collections-liste.html#come-scegliere-la-regola-d-oro">Come scegliere: la regola d'oro</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Quale lista scegliere per tanti elementi? <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivere un breve testo rispondendo alla seguente domanda:</p>
+      <p><em>Devi progettare un'applicazione che deve gestire una grande quantità di elementi. Quali caratteristiche prenderesti in considerazione prima di scegliere tra <code>ArrayList</code>, <code>Vector</code> e <code>LinkedList</code>?</em></p>
+      <p>La risposta deve fare riferimento almeno a:</p>
+      <ul>
+        <li>modalità di accesso agli elementi;</li>
+        <li>inserimenti;</li>
+        <li>eliminazioni;</li>
+        <li>gestione della memoria;</li>
+        <li>struttura interna;</li>
+        <li>eventuale sincronizzazione;</li>
+        <li>caratteristiche del problema da risolvere.</li>
+      </ul>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Il testo</h4>
+      <p>Prima di scegliere la struttura partirei dalle <strong>caratteristiche del problema</strong>: quanti elementi ci saranno, quali operazioni faranno più spesso gli utenti e se il programma userà più thread. Con pochi dati qualunque lista "funziona"; con una grande quantità di elementi la scelta sbagliata trasforma un'operazione da pochi millisecondi in secondi o minuti, come ha mostrato il test sulle prestazioni.</p>
+      <p>La prima cosa da guardare è la <strong>struttura interna</strong>, perché da lì dipende tutto il resto. <code>ArrayList</code> e <code>Vector</code> sono basate su un <strong>array dinamico</strong>: gli elementi stanno in celle consecutive e, quando l'array è pieno, ne viene creato uno più grande in cui si copiano tutti gli elementi. <code>LinkedList</code> è invece una <strong>lista doppiamente concatenata</strong>: ogni elemento sta in un nodo che conosce il nodo precedente e quello successivo.</p>
+      <p>Per la <strong>modalità di accesso</strong>: se il programma legge spesso elementi per posizione (<code>get(i)</code>), per esempio per mostrare la pagina di risultati numero 500 o fare una ricerca binaria, servono <code>ArrayList</code> o <code>Vector</code>, dove l'accesso è immediato (O(1)). Con <code>LinkedList</code> ogni accesso per indice percorre i nodi (O(n)): nel nostro test 50.000 accessi hanno richiesto circa 4 secondi contro meno di un millisecondo. Se invece gli elementi si scorrono solo dall'inizio alla fine con il for-each, la differenza è molto più piccola.</p>
+      <p>Per gli <strong>inserimenti</strong>: aggiungere in fondo è veloce con tutte e tre (O(1)), anche se <code>ArrayList</code> resta la più rapida. Inserire all'inizio o in mezzo costa O(n) con gli array, perché bisogna spostare gli elementi successivi, mentre con <code>LinkedList</code> costa O(1) una volta arrivati al punto giusto: nel test, 100.000 inserimenti in posizione 0 hanno richiesto circa 400 ms con <code>ArrayList</code> e 8 ms con <code>LinkedList</code>. Per le <strong>eliminazioni</strong> vale lo stesso discorso: togliere l'ultimo elemento è veloce ovunque, togliere il primo o uno in mezzo è lento con gli array e veloce con la lista concatenata (circa 400 ms contro 3 ms nel test). Se l'applicazione funziona come una coda o una pila, con tanto lavoro alle estremità, <code>LinkedList</code> (con <code>addFirst</code>, <code>removeFirst</code>, ecc.) è la scelta naturale.</p>
+      <p>Poi la <strong>gestione della memoria</strong>. Un array occupa per ogni elemento solo il riferimento all'oggetto, più un po' di spazio libero di riserva: <code>ArrayList</code> cresce del 50% alla volta, <code>Vector</code> raddoppia e quindi può sprecare di più. Inoltre le celle consecutive sfruttano bene la cache del processore. <code>LinkedList</code> per ogni elemento crea un nodo con tre riferimenti (elemento, precedente, successivo) più l'intestazione dell'oggetto: con milioni di elementi occupa molta più memoria, i nodi sono sparsi nella RAM e il garbage collector ha più lavoro.</p>
+      <p>Infine la <strong>sincronizzazione</strong>. <code>Vector</code> ha tutti i metodi sincronizzati: è sicura se più thread usano la stessa lista, ma paga un costo a ogni operazione anche quando il thread è uno solo (nel test era circa 3 volte più lenta di <code>ArrayList</code> negli accessi). Se l'applicazione ha un solo thread userei <code>ArrayList</code>; se ne ha più di uno, invece di <code>Vector</code>, che è una classe storica, userei <code>Collections.synchronizedList</code> o una collezione di <code>java.util.concurrent</code>.</p>
+      <p>In conclusione: per una grande quantità di elementi sceglierei <code>ArrayList</code> nella maggior parte dei casi, perché è veloce negli accessi, negli inserimenti in fondo e nell'uso della memoria; <code>LinkedList</code> solo se il problema richiede soprattutto inserimenti e rimozioni all'inizio o in mezzo e pochi accessi per indice; <code>Vector</code> solo per mantenere codice vecchio. E in caso di dubbio, misurerei con un test come quello dell'esercizio 7 sui dati reali.</p>
+      <h4>Perché questa risposta è completa</h4>
+      <p>Tocca tutti i punti richiesti, ciascuno nel suo paragrafo: caratteristiche del problema (primo e ultimo), struttura interna (secondo), modalità di accesso (terzo), inserimenti ed eliminazioni (quarto), gestione della memoria (quinto), sincronizzazione (sesto). E non si limita alla teoria: ogni affermazione sulle prestazioni è confermata dai numeri misurati nell'esercizio 7.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Consegna</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>La cartella da consegnare e la relazione <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Consegnare una cartella contenente:</p>
+<pre data-lang="testo"><code>Cognome_Nome/
+│
+├── GestioneStudenti.java
+├── ConfrontoListe.java
+├── GestioneCoda.java
+├── RegistroStudenti.java
+├── TestPrestazioni.java
+└── relazione.txt</code></pre>
+      <p>Nel file <code>relazione.txt</code> inserire:</p>
+      <ol>
+        <li>differenze tra <code>ArrayList</code>, <code>Vector</code> e <code>LinkedList</code>;</li>
+        <li>risultati dei test sulle prestazioni;</li>
+        <li>osservazioni sui risultati;</li>
+        <li>risposta alla domanda finale.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Cosa mettere nella cartella</h4>
+      <ol>
+        <li>Rinomina la cartella con il tuo cognome e nome (es. <code>Rossi_Mario/</code>; se lavorate a coppie, mettete entrambi i nomi anche dentro la relazione).</li>
+        <li><code>RegistroStudenti.java</code> è <strong>uno solo</strong>: consegna la versione finale con il menu (esercizio 6), che contiene anche la classe <code>Studente</code> e fa tutto quello che chiedeva l'esercizio 4.</li>
+        <li>L'esercizio 5 (<code>TreStrutture.java</code>) non è nell'elenco: le sue risposte vanno nella relazione. Se vuoi consegnare anche il codice, aggiungilo nella stessa cartella (si compila insieme a <code>RegistroStudenti.java</code>, che contiene <code>Studente</code>).</li>
+        <li>Prima di consegnare, verifica che tutto compili: dalla cartella, <code>javac *.java</code> non deve dare errori.</li>
+        <li>Nella relazione metti i tempi <strong>del tuo computer</strong>: quelli qui sotto sono i nostri e servono solo da modello.</li>
+      </ol>
+<pre data-lang="bash"><code>cd Rossi_Mario
+javac *.java
+java TestPrestazioni</code></pre>
+      <h4>Proposta di relazione.txt</h4>
+<pre data-lang="testo"><code>RELAZIONE - Esercitazione pratica di Java: ArrayList, Vector e LinkedList
+Studente: Cognome Nome            Classe: 5ª Informatica
+==========================================================================
+
+1. DIFFERENZE TRA ARRAYLIST, VECTOR E LINKEDLIST
+--------------------------------------------------------------------------
+Tutte e tre fanno parte del Java Collections Framework, implementano
+l'interfaccia List e mantengono gli elementi nell'ordine di inserimento.
+Hanno quindi gli stessi metodi di base: add, get, set, remove, size,
+isEmpty, contains, indexOf, clear (esercizio 5: lo stesso metodo che
+riceve una List ha funzionato su tutte e tre con lo stesso risultato).
+
+ArrayList
+- Struttura interna: array dinamico (celle consecutive in memoria).
+  Quando è pieno crea un array più grande del 50% e ricopia gli elementi.
+- get(i) e set(i) immediati: O(1).
+- add in fondo veloce (O(1) in media).
+- Inserimento/rimozione all'inizio o in mezzo lenti: O(n), perché
+  bisogna spostare tutti gli elementi successivi.
+- Non sincronizzata. È la lista "di default" nei programmi moderni.
+
+Vector
+- Stessa struttura di ArrayList (array dinamico) e stessi costi O().
+- Tutti i metodi sono sincronizzati (synchronized): sicura se più thread
+  usano la stessa lista, ma più lenta anche con un solo thread.
+- Quando è piena raddoppia la capacità (o cresce di capacityIncrement).
+- Classe "storica": esiste da Java 1.0, prima del Collections Framework
+  (Java 1.2). Oggi si usa ArrayList, e per i thread
+  Collections.synchronizedList o le classi di java.util.concurrent.
+
+LinkedList
+- Struttura interna: lista doppiamente concatenata; ogni elemento è in un
+  nodo che conosce il precedente e il successivo.
+- get(i) lento: O(n), deve percorrere i nodi dall'estremità più vicina.
+- Inserimento/rimozione alle estremità O(1), con i metodi specifici
+  addFirst, addLast, getFirst, getLast, removeFirst, removeLast.
+  Implementa anche Deque: si può usare come coda o come pila.
+- Occupa più memoria: ogni nodo ha tre riferimenti (elemento, prev, next).
+- Non sincronizzata.
+
+2. RISULTATI DEI TEST SULLE PRESTAZIONI (TestPrestazioni)
+--------------------------------------------------------------------------
+Computer: Linux, 4 core, OpenJDK 21. Tempi in millisecondi (1 ms =
+1.000.000 ns), prima di tre esecuzioni.
+
+Quantità usate:
+- Test A: 1.000.000 di inserimenti in coda.
+- Test B: 1.000.000 di get(i) per ArrayList e Vector; per LinkedList solo
+  50.000 (con 1.000.000 il test sarebbe durato molti minuti); per un
+  confronto alla pari anche 50.000 get(i) su ArrayList.
+- Test C e D: 100.000 inserimenti/rimozioni in posizione 0.
+
+Operazione                     ArrayList     Vector      LinkedList
+-----------------------------  ------------  ----------  ---------------
+Inserimento in coda                47,9 ms     78,1 ms        208,9 ms
+Accesso tramite indice              8,6 ms     25,7 ms      4.046,3 ms
+  (a parità: 50.000 accessi)        0,4 ms        -         4.046,3 ms
+Inserimento in posizione 0        406,3 ms    421,4 ms          7,6 ms
+Rimozione in posizione 0          415,7 ms    417,0 ms          3,1 ms
+
+Su tre esecuzioni i tempi sono cambiati anche del 30-40% (es. Vector
+nel test A tra 57 e 78 ms), ma l'ordine tra le strutture è rimasto
+sempre lo stesso.
+
+3. OSSERVAZIONI SUI RISULTATI
+--------------------------------------------------------------------------
+- Accesso per indice: ArrayList e Vector sono velocissime perché
+  saltano direttamente alla cella. LinkedList, a parità di accessi, è
+  circa 10.000 volte più lenta, perché percorre i nodi uno per uno.
+  Raddoppiando gli accessi (100.000) il tempo è passato da circa 4 a circa
+  20 secondi: un'operazione O(n) ripetuta n volte cresce come n^2.
+- Inserimento/rimozione in posizione 0: risultato opposto. ArrayList e
+  Vector spostano ogni volta tutti gli elementi; LinkedList cambia solo
+  due collegamenti ed è da circa 50 a oltre
+  100 volte più veloce.
+- Inserimento in coda: O(1) per tutte, ma LinkedList è la più lenta
+  perché per ogni elemento crea un nuovo oggetto nodo.
+- Vector è sempre un po' più lenta di ArrayList nelle operazioni semplici
+  (sincronizzazione); nei test C e D la differenza sparisce perché il
+  tempo è tutto speso a spostare elementi.
+- I tempi dipendono da JVM, garbage collector e computer: una singola
+  misura non è una prova assoluta, contano i rapporti tra le strutture.
+
+4. RISPOSTA ALLA DOMANDA FINALE
+--------------------------------------------------------------------------
+Domanda: devi progettare un'applicazione che gestisce una grande quantità
+di elementi. Quali caratteristiche prenderesti in considerazione prima di
+scegliere tra ArrayList, Vector e LinkedList?
+
+Partirei dalle caratteristiche del problema: quanti elementi ci saranno,
+quali operazioni si faranno più spesso e se il programma userà più
+thread. Con pochi dati tutto "funziona", con molti dati la scelta
+sbagliata trasforma millisecondi in secondi.
+
+Struttura interna: ArrayList e Vector usano un array dinamico (celle
+consecutive), LinkedList una catena di nodi collegati. Da qui dipende
+tutto il resto.
+
+Accesso agli elementi: se si legge spesso per posizione con get(i)
+servono ArrayList o Vector (O(1)); con LinkedList ogni accesso è O(n)
+(nel mio test 50.000 accessi: circa 4 secondi contro 0,4 ms).
+
+Inserimenti: in fondo sono veloci con tutte; all'inizio o in mezzo sono
+O(n) con gli array (spostamento degli elementi) e O(1) con LinkedList
+(100.000 inserimenti in testa: circa 400 ms contro 8 ms).
+
+Eliminazioni: stesso discorso; togliere in fondo è veloce ovunque,
+togliere all'inizio o in mezzo è veloce solo con LinkedList (circa
+400 ms contro 3 ms). Per code e pile LinkedList offre addFirst,
+removeFirst, removeLast, ecc.
+
+Gestione della memoria: l'array occupa un riferimento per elemento più
+un po' di spazio di riserva (ArrayList +50%, Vector raddoppia e può
+sprecare di più) e sfrutta bene la cache. LinkedList crea un nodo con tre
+riferimenti per ogni elemento: con milioni di elementi usa molta più
+memoria e dà più lavoro al garbage collector.
+
+Sincronizzazione: Vector è sincronizzata e quindi più lenta anche con un
+solo thread. Con un solo thread uso ArrayList; con più thread preferisco
+Collections.synchronizedList o java.util.concurrent invece di Vector,
+che è una classe storica.
+
+Conclusione: per una grande quantità di elementi sceglierei ArrayList
+nella maggior parte dei casi; LinkedList solo se il problema richiede
+soprattutto inserimenti e rimozioni all'inizio o in mezzo e pochi accessi
+per indice; Vector solo per mantenere codice vecchio. Nel dubbio,
+misurerei le prestazioni con i dati reali, come nell'esercizio 7.</code></pre>
+      <h4>Perché questa relazione va bene</h4>
+      <p>Segue esattamente i quattro punti chiesti, nello stesso ordine e con titoli chiari. I risultati sono in una tabella allineata (in un <code>.txt</code> non ci sono tabelle vere: si allinea con gli spazi) e dicono <strong>quante</strong> operazioni sono state misurate e su che computer, così chi legge può confrontarli. Le osservazioni spiegano il <strong>perché</strong> dei numeri usando la struttura interna, e la risposta finale richiama i numeri misurati invece di restare solo teorica.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Fonti</h2>
+  <p>Consegne tratte dal PDF dell'esercitazione assegnata su Google Classroom: <em>Esercitazione pratica di Java – ArrayList, Vector e LinkedList</em> (classe quinta, Istituto Tecnico Informatico), riportate fedelmente, comprese le sezioni Obiettivi, Richiamo teorico, Tabella dei risultati, Domanda finale e Consegna. Sono aggiunti da noi: tutte le soluzioni e le spiegazioni, il programma <code>TreStrutture</code> per l'esercizio 5 (il PDF non dà un nome alla classe), il test D sulla rimozione in posizione 0 (serve per l'ultima riga della tabella), la gestione dell'input non numerico nel menu, i tempi misurati e la proposta di <code>relazione.txt</code>. Nei test sulle prestazioni alcune quantità sono state ridotte rispetto al milione del PDF, come dichiarato nell'esercizio 7. Teoria di riferimento: <a href="java-collections-liste.html">Java: Collections, ArrayList, Vector e LinkedList</a>.</p>
+
+</main>
+</body>
+</html>

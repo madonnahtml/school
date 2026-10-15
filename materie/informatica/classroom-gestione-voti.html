@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: array, wrapper, metodi e overload · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione Classroom GestioneVoti con soluzioni spiegate: array di voti, indici, length, ciclo for e foreach, modificare un array, somma, media con cast (double), massimo e minimo, metodi void e con return, Wrapper Classes Integer, autoboxing e unboxing, Integer.parseInt e Double.parseDouble, method overloading per numero e per tipo, errore di overload sul tipo di ritorno, Integer[] e domande di teoria.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: array, wrapper, metodi e overload</h1>
+  <p class="lead">L'esercitazione <strong>"Array, Wrapper Classes, metodi e method overloading"</strong> assegnata su Google Classroom (5ª Informatica, livello base/intermedio, 2–3 ore, individuale): un programma <code>GestioneVoti</code> che cresce un passo alla volta, dalle prime righe con un array fino a un programma diviso in metodi con l'overload. Per ogni parte trovi la consegna fedele, la risposta alle domande e la spiegazione. La teoria è nel capitolo <a href="java-array-wrapper-metodi-overload.html">Java: array, wrapper, metodi e overload</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong> di ogni parte, prova a scrivere il codice (in NetBeans, IntelliJ IDEA o Eclipse) e a rispondere alle domande, e solo dopo apri la <strong>risposta spiegata</strong>. Le parti vanno in ordine: ognuna riusa quella prima. L'esercizio finale le mette tutte insieme. Ogni programma è stato compilato ed eseguito con Java 21: l'output e gli errori del compilatore che vedi sono quelli veri.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Obiettivi</h2>
+  <p>Al termine dell'esercitazione lo studente dovrà essere in grado di:</p>
+  <ul>
+    <li>creare e inizializzare array;</li>
+    <li>accedere agli elementi tramite indice;</li>
+    <li>utilizzare <code>length</code>;</li>
+    <li>utilizzare <code>for</code> e <code>foreach</code>;</li>
+    <li>modificare gli elementi di un array;</li>
+    <li>calcolare somma, media, massimo e minimo;</li>
+    <li>utilizzare le Wrapper Classes;</li>
+    <li>effettuare conversioni con <code>parseInt()</code> e <code>parseDouble()</code>;</li>
+    <li>comprendere autoboxing e unboxing;</li>
+    <li>creare metodi <code>void</code>;</li>
+    <li>creare metodi con valore di ritorno;</li>
+    <li>passare parametri ai metodi;</li>
+    <li>passare array ai metodi;</li>
+    <li>organizzare un programma in più metodi;</li>
+    <li>utilizzare il <strong>method overloading</strong>.</li>
+  </ul>
+
+  <h2>Scenario</h2>
+  <p>Realizzare un programma Java chiamato <code>GestioneVoti</code>. Il programma deve permettere di gestire i voti di una classe. Avremo inizialmente un array contenente alcuni voti:</p>
+<pre data-lang="java"><code>int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};</code></pre>
+  <p>Il programma dovrà progressivamente diventare più strutturato attraverso l'utilizzo di <strong>array, metodi e Wrapper Classes</strong>.</p>
+  <div class="callout tip"><span class="callout-title">Tienili a mente</span>Questi otto voti tornano in tutta l'esercitazione. Conviene sapere già i risultati, così controlli subito se il programma sbaglia: <strong>8</strong> voti, somma <strong>60</strong>, media <strong>7.5</strong>, massimo <strong>10</strong>, minimo <strong>5</strong>. Indici da <strong>0</strong> a <strong>7</strong>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 1 – Creazione dell'array</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un array è una fila di variabili dello stesso tipo, numerate da <strong>0</strong>. Si legge una casella con <code>voti[indice]</code>. Teoria: <a href="java-array-wrapper-metodi-overload.html#creare-un-array-e-usare-gli-indici">Creare un array e usare gli indici</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Esercizio 1 · Primo, quarto e ultimo voto <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare il progetto Java e una classe:</p>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+    }
+}</code></pre>
+      <p><strong>Esercizio 1.</strong> Visualizzare:</p>
+      <ol>
+        <li>il primo voto;</li>
+        <li>il quarto voto;</li>
+        <li>l'ultimo voto.</li>
+      </ol>
+      <p>Utilizzare gli indici dell'array.</p>
+      <p><strong>Domande</strong></p>
+      <p><strong>A.</strong> Qual è l'indice del primo elemento?<br>
+      <strong>B.</strong> Qual è l'indice dell'ultimo elemento?<br>
+      <strong>C.</strong> Perché non possiamo utilizzare <code>voti[8]</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Gli indici partono da <strong>0</strong>: il primo voto è <code>voti[0]</code>.</li>
+        <li>Il quarto voto non è <code>voti[4]</code> ma <code>voti[3]</code>: la posizione "umana" meno uno.</li>
+        <li>Gli elementi sono 8, quindi l'ultimo indice è 8 − 1 = 7. Invece di scrivere 7 "a mano" scrivo <code>voti.length - 1</code>: così funziona anche se domani i voti diventano 20.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // gli indici partono da 0
+        System.out.println("Primo voto: " + voti[0]);
+        System.out.println("Quarto voto: " + voti[3]);
+        // l'ultimo indice e' length - 1 (qui 7)
+        System.out.println("Ultimo voto: " + voti[voti.length - 1]);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Primo voto: 7
+Quarto voto: 9
+Ultimo voto: 7</code></pre>
+      <h4>Risposte alle domande</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Indice</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead>
+        <tbody><tr><td>Voto</td><td>7</td><td>8</td><td>6</td><td>9</td><td>5</td><td>8</td><td>10</td><td>7</td></tr></tbody>
+      </table></div>
+      <ul>
+        <li><strong>A.</strong> L'indice del primo elemento è <strong>0</strong>. In Java (come in C) l'indice dice "quanti passi faccio dall'inizio": per il primo non ne faccio nessuno.</li>
+        <li><strong>B.</strong> L'indice dell'ultimo elemento è <strong>7</strong>, cioè <code>voti.length - 1</code>. In generale, con <em>n</em> elementi gli indici vanno da 0 a <em>n</em> − 1.</li>
+        <li><strong>C.</strong> Perché la casella 8 <strong>non esiste</strong>: le caselle sono 8 ma numerate da 0 a 7. Il programma compila (il compilatore non controlla gli indici), ma quando lo esegui si ferma con un errore. Ecco cosa succede davvero con <code>System.out.println(voti[8]);</code>:</li>
+      </ul>
+<pre data-lang="testo"><code>Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 8 out of bounds for length 8
+	at ProvaIndice.main(ProvaIndice.java:6)</code></pre>
+      <p>Il messaggio si legge così: "indice 8 fuori dai limiti per lunghezza 8". È l'errore più classico con gli array: l'indice ha "sforato" di uno.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 2 – Proprietà length</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>voti.length</code> dice quante caselle ha l'array. È una proprietà, quindi <strong>senza parentesi</strong>. Teoria: <a href="java-array-wrapper-metodi-overload.html#length-for-e-foreach">length, for e foreach</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Esercizio 2 · Quanti voti ci sono <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizzare <code>voti.length</code> per visualizzare il numero di voti presenti. Esempio:</p>
+<pre data-lang="java"><code>System.out.println("Numero voti: " + voti.length);</code></pre>
+      <p>Ricorda: <code>length</code> è una <strong>proprietà</strong> dell'array e non un metodo, quindi non bisogna scrivere <code>length()</code>.</p>
+      <p><strong>Esercizio 2.</strong> Visualizzare:</p>
+<pre data-lang="testo"><code>Numero di voti: 8</code></pre>
+      <p>senza scrivere direttamente il numero <code>8</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il numero 8 non lo scrivo io: lo chiedo all'array con <code>voti.length</code>.</li>
+        <li>Lo concateno alla scritta con <code>+</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // length e' una proprieta': si scrive senza parentesi
+        System.out.println("Numero di voti: " + voti.length);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Numero di voti: 8</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Se aggiungo un voto nelle graffe, l'output diventa 9 da solo, senza toccare la <code>println</code>. È proprio il motivo per cui la consegna vieta di scrivere 8: un numero "scritto a mano" va cambiato ovunque ogni volta che cambiano i dati.</p>
+      <h4>Errori da evitare</h4>
+      <p>Non confondere: per gli array è <code>voti.length</code> (proprietà), per le stringhe è <code>nome.length()</code> (metodo, con le parentesi). Scrivere <code>voti.length()</code> non compila.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 3 – Ciclo for</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il <code>for</code> classico usa un contatore <code>i</code> che va da 0 a <code>length - 1</code>: dentro il ciclo ho sia l'indice <code>i</code> sia il valore <code>voti[i]</code>. Teoria: <a href="java-array-wrapper-metodi-overload.html#length-for-e-foreach">length, for e foreach</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Tutti i voti numerati con il for <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizzare un ciclo <code>for</code> per visualizzare tutti i voti. Il ciclo <code>for</code> è particolarmente utile quando è necessario conoscere l'indice dell'elemento. Modificare il programma affinché visualizzi:</p>
+<pre data-lang="testo"><code>Voto 1: 7
+Voto 2: 8
+Voto 3: 6
+...</code></pre>
+      <p><strong>Attenzione:</strong> l'indice dell'array parte da <code>0</code>, ma per l'utente il primo voto deve essere indicato come <code>1</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il ciclo parte da <code>i = 0</code> e continua finché <code>i &lt; voti.length</code> (quindi l'ultimo giro è con <code>i = 7</code>).</li>
+        <li>Il valore lo leggo con <code>voti[i]</code>.</li>
+        <li>Il numero da mostrare all'utente è <code>i + 1</code>, <strong>tra parentesi</strong>: senza parentesi Java incollerebbe le stringhe e scriverebbe "Voto 01", "Voto 11"...</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // i va da 0 a voti.length - 1
+        for (int i = 0; i &lt; voti.length; i++) {
+            // all'utente mostro i + 1, cosi' il primo voto e' "Voto 1"
+            System.out.println("Voto " + (i + 1) + ": " + voti[i]);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Voto 1: 7
+Voto 2: 8
+Voto 3: 6
+Voto 4: 9
+Voto 5: 5
+Voto 6: 8
+Voto 7: 10
+Voto 8: 7</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li><code>i &lt;= voti.length</code>: un giro di troppo, all'ultimo giro <code>voti[8]</code> e quindi <code>ArrayIndexOutOfBoundsException</code>.</li>
+        <li><code>"Voto " + i + 1</code>: si legge da sinistra a destra, "Voto " + 0 diventa la stringa "Voto 0", poi + 1 incolla "1" e viene "Voto 01". Servono le parentesi.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 4 – Ciclo foreach</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Gli stessi voti con il foreach <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Riscrivere la visualizzazione dei voti utilizzando il ciclo foreach. Il <code>foreach</code> permette di attraversare tutti gli elementi senza gestire direttamente l'indice. Poi rispondere:</p>
+      <p><strong>Domanda.</strong> Qual è la differenza principale tra <code>for</code> e <code>foreach</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La forma è <code>for (tipo variabile : array)</code>, che si legge "per ogni <code>voto</code> contenuto in <code>voti</code>".</li>
+        <li>A ogni giro la variabile <code>voto</code> contiene già il valore: niente <code>i</code>, niente <code>voti[i]</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // si legge: "per ogni voto contenuto in voti"
+        for (int voto : voti) {
+            System.out.println(voto);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>7
+8
+6
+9
+5
+8
+10
+7</code></pre>
+      <h4>Risposta alla domanda</h4>
+      <p>La differenza principale è <strong>l'indice</strong>: il <code>for</code> classico ce l'ha (<code>i</code>), il <code>foreach</code> no, ti dà direttamente il valore di ogni elemento.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th><code>for</code> classico</th><th><code>foreach</code></th></tr></thead>
+        <tbody>
+          <tr><td>Indice</td><td>sì, <code>i</code></td><td>no</td></tr>
+          <tr><td>Ordine e passo</td><td>li scegli tu (anche al contrario, o uno sì e uno no)</td><td>sempre tutti, dal primo all'ultimo</td></tr>
+          <tr><td>Modificare l'array</td><td>sì, con <code>voti[i] = ...</code></td><td>no (vedi Parte 5)</td></tr>
+          <tr><td>Quando usarlo</td><td>serve la posizione ("Voto 1: 7") o devi cambiare i valori</td><td>devi solo leggere tutti i valori (stampa, somma, massimo)</td></tr>
+        </tbody>
+      </table></div>
+      <p>Per questo nella Parte 3 serviva il <code>for</code> (dovevo scrivere "Voto 1", "Voto 2"), mentre qui basta il <code>foreach</code>, più corto e senza il rischio di sbagliare i limiti.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 5 – Modificare un array</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Il 5 diventa 6 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Modificare il voto <code>5</code> trasformandolo in <code>6</code>. Utilizzare l'indice corretto. Esempio:</p>
+<pre data-lang="java"><code>voti[4] = 6;</code></pre>
+      <p>Successivamente visualizzare nuovamente l'array.</p>
+      <p><strong>Domanda.</strong> Perché con un <code>for</code> possiamo facilmente modificare gli elementi dell'array mentre con un <code>foreach</code> è meno appropriato utilizzare la variabile del ciclo per modificare direttamente l'array?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il 5 è il quinto voto della lista, quindi sta all'indice <strong>4</strong>.</li>
+        <li>Un'assegnazione a <code>voti[4]</code> sostituisce il valore nella casella.</li>
+        <li>Per ristampare uso il <code>for</code> della Parte 3, così vedo anche la posizione.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // il 5 e' il quinto voto, quindi sta all'indice 4
+        voti[4] = 6;
+
+        for (int i = 0; i &lt; voti.length; i++) {
+            System.out.println("Voto " + (i + 1) + ": " + voti[i]);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Voto 1: 7
+Voto 2: 8
+Voto 3: 6
+Voto 4: 9
+Voto 5: 6
+Voto 6: 8
+Voto 7: 10
+Voto 8: 7</code></pre>
+      <h4>Risposta alla domanda</h4>
+      <p>Nel <code>foreach</code> la variabile del ciclo (<code>voto</code>) è una <strong>copia</strong> del valore della casella, non la casella. Se le assegno un valore nuovo cambio solo la copia, e l'array resta com'era. Con il <code>for</code> invece ho l'indice <code>i</code> e scrivo direttamente <code>voti[i] = ...</code>, cioè dentro la casella vera. L'ho provato:</p>
+<pre data-lang="java"><code>// tentativo SBAGLIATO: modifico la variabile del ciclo
+for (int voto : voti) {
+    if (voto == 5) {
+        voto = 6;   // cambia solo la copia, non l'array
+    }
+}
+System.out.println("Con foreach, voti[4] = " + voti[4]);
+
+// modo corretto: con il for ho l'indice
+for (int i = 0; i &lt; voti.length; i++) {
+    if (voti[i] == 5) {
+        voti[i] = 6;
+    }
+}
+System.out.println("Con for, voti[4] = " + voti[4]);</code></pre>
+<pre data-lang="testo"><code>Con foreach, voti[4] = 5
+Con for, voti[4] = 6</code></pre>
+      <p>Il programma compila e non dà errori: semplicemente il <code>foreach</code> non ha cambiato niente. È un errore "silenzioso", per questo è meglio non usare il <code>foreach</code> per modificare.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 6 – Calcolo della somma</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Accumulatore: una variabile che parte da 0 e a ogni giro aggiunge il valore corrente. Teoria: <a href="java-array-wrapper-metodi-overload.html#esempio-guidato-somma-media-e-massimo">Esempio guidato: somma, media e massimo</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>La somma dei voti <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare un programma che calcoli la somma di tutti i voti. Utilizzare una variabile:</p>
+<pre data-lang="java"><code>int somma = 0;</code></pre>
+      <p>e un ciclo. La logica fondamentale è:</p>
+<pre data-lang="java"><code>somma += voto;</code></pre>
+      <p>Le slide utilizzano proprio questo approccio nel calcolo della somma tramite <code>foreach</code>.</p>
+      <p><strong>Obiettivo.</strong> Visualizzare:</p>
+<pre data-lang="testo"><code>Somma = ...</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>somma</code> parte da 0 (l'elemento "neutro" della somma).</li>
+        <li>Con il <code>foreach</code> prendo un voto alla volta e lo aggiungo: <code>somma += voto</code> vuol dire <code>somma = somma + voto</code>.</li>
+        <li>La stampa va <strong>dopo</strong> il ciclo, quando i voti sono stati sommati tutti.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        int somma = 0;   // l'accumulatore parte da zero
+        for (int voto : voti) {
+            somma += voto;   // somma = somma + voto
+        }
+        System.out.println("Somma = " + somma);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Somma = 60</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Ecco come cresce <code>somma</code> giro dopo giro: 0 → 7 → 15 → 21 → 30 → 35 → 43 → 53 → <strong>60</strong>. Controllo a mano: 7+8+6+9+5+8+10+7 = 60.</p>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Dichiarare <code>int somma = 0;</code> <strong>dentro</strong> il ciclo: verrebbe azzerata a ogni giro (e fuori dal ciclo non esisterebbe nemmeno).</li>
+        <li>Mettere la <code>println</code> dentro il ciclo: stamperebbe 8 somme parziali invece del risultato.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 7 – Calcolo della media</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>La media e il cast (double) <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Calcolare la media dei voti. Utilizzare:</p>
+<pre data-lang="java"><code>double media = (double) somma / voti.length;</code></pre>
+      <p><strong>Domanda fondamentale.</strong> Perché è necessario utilizzare <code>(double)</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Calcolo la somma come nella Parte 6.</li>
+        <li>Divido per <code>voti.length</code>, cioè per il numero di voti.</li>
+        <li>Per vedere a cosa serve il cast, calcolo la media anche <strong>senza</strong> e confronto.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        int somma = 0;
+        for (int voto : voti) {
+            somma += voto;
+        }
+
+        // senza cast: divisione tra due int, la parte decimale si perde
+        double mediaSbagliata = somma / voti.length;
+        // con il cast: somma diventa double PRIMA della divisione
+        double media = (double) somma / voti.length;
+
+        System.out.println("Senza (double): " + mediaSbagliata);
+        System.out.println("Media = " + media);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Senza (double): 7.0
+Media = 7.5</code></pre>
+      <h4>Risposta alla domanda fondamentale</h4>
+      <p>Perché <code>somma</code> e <code>voti.length</code> sono <strong>due <code>int</code></strong>, e in Java la divisione tra due interi è una <strong>divisione intera</strong>: 60 / 8 fa 7 e il resto (0,5) viene buttato via. Solo dopo il 7 viene messo nella variabile <code>double</code>, diventando 7.0: ormai il mezzo voto è perso. Lo vedi nella prima riga dell'output.</p>
+      <p>Il cast <code>(double)</code> trasforma <code>somma</code> in 60.0 <strong>prima</strong> della divisione. Ora è "double diviso int", Java fa la divisione con la virgola e il risultato è 7.5.</p>
+      <h4>Errori da evitare</h4>
+      <p><code>(double) (somma / voti.length)</code> dà ancora 7.0: le parentesi fanno eseguire prima la divisione intera, e il cast arriva troppo tardi. Il cast va sul <strong>numeratore</strong>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 8 – Massimo e minimo</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Voto massimo e voto minimo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare due variabili:</p>
+<pre data-lang="java"><code>int massimo = voti[0];
+int minimo = voti[0];</code></pre>
+      <p>Utilizzare un ciclo per individuare:</p>
+      <ul>
+        <li>voto massimo;</li>
+        <li>voto minimo.</li>
+      </ul>
+      <p><strong>Output previsto</strong></p>
+<pre data-lang="testo"><code>Voto massimo: 10
+Voto minimo: 5</code></pre>
+      <p><strong>Importante:</strong> non utilizzare <code>Math.max()</code> o <code>Math.min()</code>. L'obiettivo è esercitarsi con array e cicli.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il "campione provvisorio" all'inizio è il primo voto: sia per il massimo sia per il minimo.</li>
+        <li>Scorro tutti i voti. Se ne trovo uno <strong>più grande</strong> del massimo attuale, diventa il nuovo massimo.</li>
+        <li>Nello stesso giro, se ne trovo uno <strong>più piccolo</strong> del minimo attuale, diventa il nuovo minimo. Due <code>if</code> separati, non <code>else if</code>: un voto va confrontato con entrambi.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // si parte dal primo voto, non da 0
+        int massimo = voti[0];
+        int minimo = voti[0];
+
+        for (int voto : voti) {
+            if (voto &gt; massimo) {
+                massimo = voto;
+            }
+            if (voto &lt; minimo) {
+                minimo = voto;
+            }
+        }
+        System.out.println("Voto massimo: " + massimo);
+        System.out.println("Voto minimo: " + minimo);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Voto massimo: 10
+Voto minimo: 5</code></pre>
+      <h4>Perché partire da voti[0]</h4>
+      <p>Se scrivessi <code>int minimo = 0;</code>, nessun voto sarebbe mai minore di 0 e il programma direbbe "Voto minimo: 0", un voto che non esiste. Partendo da un elemento <strong>vero</strong> dell'array il risultato è sempre uno dei voti. Il massimo con 0 qui funzionerebbe per caso (i voti sono positivi), ma con <code>voti[0]</code> funziona sempre.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 9 – Trasformare il programma in metodi</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un metodo è un blocco di codice con un nome che svolge <strong>un</strong> compito. <code>void</code> = non restituisce niente; un tipo (<code>int</code>, <code>double</code>) = restituisce un valore con <code>return</code>. Teoria: <a href="java-array-wrapper-metodi-overload.html#i-metodi">I metodi</a> e <a href="java-array-wrapper-metodi-overload.html#metodi-e-array-un-programma-strutturato">Metodi e array: un programma strutturato</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Cinque metodi per cinque compiti <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> A questo punto il programma deve essere riorganizzato. Le slide sottolineano che un metodo deve svolgere un compito specifico e che suddividere il programma in metodi rende il codice più leggibile e manutenibile. Creare i seguenti metodi:</p>
+<pre data-lang="java"><code>static void stampaVoti(int[] voti)
+static int calcolaSomma(int[] voti)
+static double calcolaMedia(int[] voti)
+static int trovaMassimo(int[] voti)
+static int trovaMinimo(int[] voti)</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Ogni pezzo delle Parti 4–8 diventa un metodo: il ciclo di stampa va in <code>stampaVoti</code>, l'accumulatore in <code>calcolaSomma</code>, e così via.</li>
+        <li>Ogni metodo riceve l'array come <strong>parametro</strong> (<code>int[] voti</code>): così lavora sui dati che gli passa il <code>main</code>, non su una variabile "sua".</li>
+        <li>Il tipo prima del nome dice cosa restituisce: <code>stampaVoti</code> stampa e basta (<code>void</code>), gli altri calcolano un numero e lo restituiscono con <code>return</code>.</li>
+        <li>I metodi sono <code>static</code> perché li chiamo dal <code>main</code>, che è <code>static</code>, senza creare oggetti.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // il main ora "dirige": ogni compito lo fa un metodo
+        stampaVoti(voti);
+        System.out.println("Somma: " + calcolaSomma(voti));
+        System.out.println("Media: " + calcolaMedia(voti));
+        System.out.println("Voto massimo: " + trovaMassimo(voti));
+        System.out.println("Voto minimo: " + trovaMinimo(voti));
+    }
+
+    // stampa i voti, uno per riga (non restituisce nulla)
+    static void stampaVoti(int[] voti) {
+        for (int voto : voti) {
+            System.out.println(voto);
+        }
+    }
+
+    // restituisce la somma di tutti i voti
+    static int calcolaSomma(int[] voti) {
+        int somma = 0;
+        for (int voto : voti) {
+            somma += voto;
+        }
+        return somma;
+    }
+
+    // restituisce la media (riusa calcolaSomma)
+    static double calcolaMedia(int[] voti) {
+        return (double) calcolaSomma(voti) / voti.length;
+    }
+
+    // restituisce il voto piu' alto
+    static int trovaMassimo(int[] voti) {
+        int massimo = voti[0];
+        for (int voto : voti) {
+            if (voto &gt; massimo) {
+                massimo = voto;
+            }
+        }
+        return massimo;
+    }
+
+    // restituisce il voto piu' basso
+    static int trovaMinimo(int[] voti) {
+        int minimo = voti[0];
+        for (int voto : voti) {
+            if (voto &lt; minimo) {
+                minimo = voto;
+            }
+        }
+        return minimo;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>7
+8
+6
+9
+5
+8
+10
+7
+Somma: 60
+Media: 7.5
+Voto massimo: 10
+Voto minimo: 5</code></pre>
+      <h4>Perché conviene</h4>
+      <ul>
+        <li><strong>Leggibilità</strong>: il <code>main</code> ora si legge come un indice ("stampa, somma, media, massimo, minimo"); i dettagli sono nei metodi.</li>
+        <li><strong>Manutenzione</strong>: se il calcolo del massimo è sbagliato, so esattamente dove guardare.</li>
+        <li><strong>Riuso</strong>: <code>calcolaMedia</code> non riscrive la somma, chiama <code>calcolaSomma</code>. E posso chiamare gli stessi metodi su un altro array (per esempio i voti di un'altra classe).</li>
+      </ul>
+      <p>Le Parti 10, 11 e 12 guardano da vicino tre di questi metodi uno per uno.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 10 – Metodo void</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>stampaVoti: perché void <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizzare:</p>
+<pre data-lang="java"><code>static void stampaVoti(int[] voti) {
+
+    for (int voto : voti) {
+        System.out.println(voto);
+    }
+
+}</code></pre>
+      <p>Nel <code>main</code>:</p>
+<pre data-lang="java"><code>stampaVoti(voti);</code></pre>
+      <p><strong>Domanda.</strong> Perché il metodo è dichiarato <code>void</code> e non <code>int</code>?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        stampaVoti(voti);   // chiamata "da sola": non c'e' niente da salvare
+    }
+
+    static void stampaVoti(int[] voti) {
+
+        for (int voto : voti) {
+            System.out.println(voto);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>7
+8
+6
+9
+5
+8
+10
+7</code></pre>
+      <h4>Risposta alla domanda</h4>
+      <p>Perché il compito del metodo è <strong>fare</strong> qualcosa (stampare a video), non <strong>calcolare</strong> un risultato da restituire. Non c'è nessun numero che il <code>main</code> debba ricevere indietro, quindi il tipo di ritorno è <code>void</code> ("vuoto"). Infatti nel <code>main</code> la chiamata è da sola, <code>stampaVoti(voti);</code>, e non <code>int x = stampaVoti(voti);</code>.</p>
+      <p>Se lo dichiarassi <code>int</code> il compilatore pretenderebbe un <code>return</code> con un numero intero, e io non ho niente di sensato da restituire. Infatti, cambiando solo <code>void</code> in <code>int</code>, <code>javac</code> risponde:</p>
+<pre data-lang="testo"><code>ProvaInt.java:13: error: missing return statement
+    }
+    ^
+1 error</code></pre>
+      <p>"missing return statement" = manca l'istruzione <code>return</code>: un metodo <code>int</code> <strong>deve</strong> restituire un <code>int</code> in ogni caso.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 11 – Metodo con return</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>calcolaSomma restituisce un valore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare:</p>
+<pre data-lang="java"><code>static int calcolaSomma(int[] voti) {
+
+    int somma = 0;
+
+    for (int voto : voti) {
+        somma += voto;
+    }
+
+    return somma;
+}</code></pre>
+      <p>Nel <code>main</code>:</p>
+<pre data-lang="java"><code>int somma = calcolaSomma(voti);</code></pre>
+      <p>e successivamente:</p>
+<pre data-lang="java"><code>System.out.println("Somma: " + somma);</code></pre>
+      <p>Un metodo con <code>return</code> restituisce un valore al punto in cui viene chiamato.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        // il valore restituito "torna qui" e lo salvo in una variabile
+        int somma = calcolaSomma(voti);
+
+        System.out.println("Somma: " + somma);
+    }
+
+    static int calcolaSomma(int[] voti) {
+
+        int somma = 0;
+
+        for (int voto : voti) {
+            somma += voto;
+        }
+
+        return somma;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Somma: 60</code></pre>
+      <h4>Perché funziona</h4>
+      <ol>
+        <li>Il <code>main</code> arriva a <code>calcolaSomma(voti)</code> e "salta" dentro il metodo, passandogli l'array.</li>
+        <li>Il metodo fa il ciclo e arriva a <code>return somma;</code>: il valore 60 viene <strong>spedito indietro</strong> e il metodo finisce.</li>
+        <li>Nel <code>main</code>, al posto della chiamata è come se ci fosse scritto 60: <code>int somma = 60;</code>.</li>
+      </ol>
+      <p>Da notare: ci sono <strong>due</strong> variabili <code>somma</code>, una nel <code>main</code> e una nel metodo. Sono diverse: ognuna vive solo dentro il suo metodo. Il collegamento tra le due lo fa solo il <code>return</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 12 – Metodo per la media</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>calcolaMedia riusa calcolaSomma <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Creare:</p>
+<pre data-lang="java"><code>static double calcolaMedia(int[] voti) {
+
+    return (double) calcolaSomma(voti) / voti.length;
+
+}</code></pre>
+      <p>Nel <code>main</code>:</p>
+<pre data-lang="java"><code>double media = calcolaMedia(voti);
+
+System.out.println("Media: " + media);</code></pre>
+      <p>Questo esercizio riprende direttamente il modello delle slide relativo ai metodi che ricevono un array e restituiscono un risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        double media = calcolaMedia(voti);
+
+        System.out.println("Media: " + media);
+    }
+
+    static int calcolaSomma(int[] voti) {
+        int somma = 0;
+        for (int voto : voti) {
+            somma += voto;
+        }
+        return somma;
+    }
+
+    static double calcolaMedia(int[] voti) {
+
+        // un metodo puo' chiamarne un altro: riuso calcolaSomma
+        return (double) calcolaSomma(voti) / voti.length;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Media: 7.5</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>calcolaMedia</code> ha bisogno della somma ma <strong>non la ricalcola</strong>: chiama <code>calcolaSomma</code>, che deve quindi esistere nella stessa classe.</li>
+        <li>L'ordine è: prima <code>calcolaSomma(voti)</code> dà 60, poi il cast lo rende 60.0, poi la divisione per 8 dà 7.5. Il cast è sul risultato di <code>calcolaSomma</code>, cioè sul numeratore, come nella Parte 7.</li>
+        <li>Il tipo di ritorno è <code>double</code> perché la media può avere la virgola; se fosse <code>int</code>, 7.5 non ci starebbe.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 13 – Wrapper classes</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Ogni tipo primitivo ha una classe "involucro" (wrapper) che contiene lo stesso valore dentro un oggetto: <code>int</code> → <code>Integer</code>, <code>double</code> → <code>Double</code>... Teoria: <a href="java-array-wrapper-metodi-overload.html#wrapper-classes">Wrapper classes</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>Integer voto = 8 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Ora modificare il programma utilizzando <code>Integer</code> al posto di <code>int</code>. Creare:</p>
+<pre data-lang="java"><code>Integer voto = 8;</code></pre>
+      <p>e visualizzarlo. Le principali corrispondenze presentate nelle slide sono:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Tipo primitivo</th><th>Wrapper</th></tr></thead>
+        <tbody>
+          <tr><td><code>int</code></td><td><code>Integer</code></td></tr>
+          <tr><td><code>double</code></td><td><code>Double</code></td></tr>
+          <tr><td><code>float</code></td><td><code>Float</code></td></tr>
+          <tr><td><code>boolean</code></td><td><code>Boolean</code></td></tr>
+          <tr><td><code>char</code></td><td><code>Character</code></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>Integer</code> si scrive con la maiuscola perché è una <strong>classe</strong>: <code>voto</code> non è più un semplice numero, è un oggetto che contiene il numero 8.</li>
+        <li>Si stampa come un <code>int</code>.</li>
+        <li>Per far vedere che è davvero un oggetto, uso anche un suo metodo (<code>doubleValue()</code>), due costanti della classe e il valore <code>null</code>, che un <code>int</code> non può avere.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        Integer voto = 8;   // un oggetto Integer che contiene 8
+
+        System.out.println("Voto: " + voto);
+
+        // essendo un oggetto, ha dei metodi
+        System.out.println("Come double: " + voto.doubleValue());
+        System.out.println("Massimo int: " + Integer.MAX_VALUE);
+        System.out.println("Minimo int: " + Integer.MIN_VALUE);
+
+        // e puo' valere null (un int no)
+        Integer votoMancante = null;
+        System.out.println("Voto mancante: " + votoMancante);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Voto: 8
+Come double: 8.0
+Massimo int: 2147483647
+Minimo int: -2147483648
+Voto mancante: null</code></pre>
+      <h4>Perché esistono le Wrapper Classes</h4>
+      <ul>
+        <li>Alcune parti di Java accettano <strong>solo oggetti</strong>: per esempio le collezioni (<code>ArrayList&lt;Integer&gt;</code>, <code>HashMap&lt;String, Integer&gt;</code>). Tra le <code>&lt; &gt;</code> non si può scrivere <code>int</code>.</li>
+        <li>Danno <strong>metodi utili</strong> già pronti, come <code>Integer.parseInt</code> (Parte 16).</li>
+        <li>Possono valere <code>null</code>, utile per dire "valore mancante" (per esempio un voto non ancora inserito).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 14 – Autoboxing</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>Da int a Integer da solo <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> <strong>Autoboxing</strong>, cioè la conversione automatica:</p>
+<pre data-lang="testo"><code>int → Integer</code></pre>
+      <p>come mostrato nelle slide.</p>
+      <p class="muted">(La consegna è solo il titolo dell'argomento: la risposta mostra un esempio che lo mette in pratica.)</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Parto da un <code>int</code> e lo assegno a una variabile <code>Integer</code>, senza scrivere nessuna conversione.</li>
+        <li>Per vedere cosa fa Java "di nascosto", faccio la stessa cosa anche a mano con <code>Integer.valueOf</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int voto = 9;                // tipo primitivo
+
+        Integer votoOggetto = voto;  // AUTOBOXING: int -&gt; Integer, fatto da Java
+
+        // e' come se Java avesse scritto per noi:
+        Integer votoOggetto2 = Integer.valueOf(voto);
+
+        System.out.println("int: " + voto);
+        System.out.println("Integer (autoboxing): " + votoOggetto);
+        System.out.println("Integer (a mano): " + votoOggetto2);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>int: 9
+Integer (autoboxing): 9
+Integer (a mano): 9</code></pre>
+      <h4>Perché funziona</h4>
+      <p><strong>Boxing</strong> = "mettere nella scatola": il numero 9 viene chiuso dentro un oggetto <code>Integer</code>. <strong>Auto</strong> perché lo fa il compilatore al posto nostro: dove serve un <code>Integer</code> e trova un <code>int</code>, aggiunge lui <code>Integer.valueOf(...)</code>. Succede anche nella Parte 13 (<code>Integer voto = 8;</code>: 8 è un <code>int</code>), e ogni volta che fai <code>lista.add(7)</code> su un <code>ArrayList&lt;Integer&gt;</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 15 – Unboxing</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>Da Integer a int da solo <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong></p>
+<pre data-lang="testo"><code>Integer → int</code></pre>
+      <p>Questa operazione prende il nome di: <strong>unboxing</strong>.</p>
+      <p class="muted">(Anche qui la consegna presenta solo l'argomento: la risposta lo mostra in un programma.)</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>È il contrario della Parte 14: assegno un <code>Integer</code> a un <code>int</code> e Java tira fuori il numero dalla "scatola".</li>
+        <li>L'unboxing avviene anche quando uso un <code>Integer</code> in un calcolo (<code>+</code>, <code>&gt;</code>...), perché gli operatori aritmetici lavorano sui primitivi.</li>
+        <li>Provo anche il caso pericoloso: un <code>Integer</code> che vale <code>null</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        Integer votoOggetto = 7;          // autoboxing
+
+        int voto = votoOggetto;           // UNBOXING: Integer -&gt; int, fatto da Java
+
+        // e' come se Java avesse scritto per noi:
+        int voto2 = votoOggetto.intValue();
+
+        // unboxing anche dentro un calcolo: + lavora sui primitivi
+        int bonus = votoOggetto + 1;
+
+        System.out.println("int (unboxing): " + voto);
+        System.out.println("int (a mano): " + voto2);
+        System.out.println("Con bonus: " + bonus);
+
+        // ATTENZIONE: un Integer null non si puo' "spacchettare"
+        Integer assente = null;
+        try {
+            int x = assente;              // unboxing di null
+            System.out.println(x);
+        } catch (NullPointerException e) {
+            System.out.println("Unboxing di null: NullPointerException");
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>int (unboxing): 7
+int (a mano): 7
+Con bonus: 8
+Unboxing di null: NullPointerException</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>L'unboxing di un <code>Integer</code> che vale <code>null</code> compila, ma durante l'esecuzione lancia <code>NullPointerException</code>: dentro la scatola non c'è nessun numero da tirare fuori. Un <code>int</code> non può mai essere "vuoto", quindi Java non sa cosa metterci. (Il <code>try</code>/<code>catch</code> qui serve solo a mostrare l'errore senza far fermare il programma.)</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 16 – Conversione di stringhe</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>parseInt, parseDouble e la media di tre stringhe <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizzare:</p>
+<pre data-lang="java"><code>Integer.parseInt("25");</code></pre>
+      <p>per trasformare la stringa <code>"25"</code> in un numero intero. Poi utilizzare:</p>
+<pre data-lang="java"><code>Double.parseDouble("12.5");</code></pre>
+      <p>per trasformare <code>"12.5"</code> in un <code>double</code>. Le slide presentano inoltre <code>Integer.toString()</code> per effettuare la conversione inversa da intero a stringa.</p>
+      <p><strong>Esercizio.</strong> Scrivere un programma che trasformi:</p>
+<pre data-lang="java"><code>String voto1 = "7";
+String voto2 = "8";
+String voto3 = "9";</code></pre>
+      <p>in numeri interi e calcoli la loro media.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Prima provo le tre conversioni della consegna, facendo un calcolo con ciascuna per vedere se il risultato è davvero un numero (o una stringa).</li>
+        <li>Faccio vedere cosa succede se "sommo" le stringhe senza convertirle.</li>
+        <li>Converto i tre voti con <code>Integer.parseInt</code>, li sommo e divido per 3 con il cast <code>(double)</code>, come nella Parte 7.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        // conversioni di prova
+        int n = Integer.parseInt("25");
+        double d = Double.parseDouble("12.5");
+        String s = Integer.toString(n);
+
+        System.out.println("parseInt(\"25\") + 1 = " + (n + 1));
+        System.out.println("parseDouble(\"12.5\") * 2 = " + (d * 2));
+        System.out.println("toString(25) + 1 = " + (s + 1));
+
+        // esercizio: tre voti scritti come testo
+        String voto1 = "7";
+        String voto2 = "8";
+        String voto3 = "9";
+
+        // senza conversione il + incolla le stringhe
+        System.out.println("Senza conversione: " + (voto1 + voto2 + voto3));
+
+        int v1 = Integer.parseInt(voto1);
+        int v2 = Integer.parseInt(voto2);
+        int v3 = Integer.parseInt(voto3);
+
+        int somma = v1 + v2 + v3;
+        double media = (double) somma / 3;
+
+        System.out.println("Somma: " + somma);
+        System.out.println("Media: " + media);
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>parseInt("25") + 1 = 26
+parseDouble("12.5") * 2 = 25.0
+toString(25) + 1 = 251
+Senza conversione: 789
+Somma: 24
+Media: 8.0</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>"25"</code> tra virgolette è testo, due caratteri. <code>parseInt</code> lo "legge" e restituisce il numero 25: infatti +1 dà 26. Al contrario, dopo <code>toString</code> torna testo e +1 <strong>incolla</strong>: "251".</li>
+        <li>Allo stesso modo <code>"7" + "8" + "9"</code> dà <code>"789"</code>, non 24. Per questo bisogna convertire prima di fare conti. È quello che serve quando i numeri arrivano dalla tastiera o da un file, che danno sempre stringhe.</li>
+        <li>(7 + 8 + 9) / 3 = 24 / 3 = 8, quindi la media è 8.0.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <p><code>Integer.parseInt("sette")</code> o <code>Integer.parseInt("7.5")</code> fanno fermare il programma con <code>NumberFormatException</code>: la stringa deve contenere un intero scritto con le cifre. Per i decimali si usa <code>Double.parseDouble</code>, con il <strong>punto</strong>, non la virgola.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 17 – Method overloading</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Overload = più metodi con lo <strong>stesso nome</strong> nella stessa classe, ma con parametri diversi (nel numero, nel tipo o nell'ordine). Java sceglie quello giusto guardando gli argomenti della chiamata. Teoria: <a href="java-array-wrapper-metodi-overload.html#overload-dei-metodi">Overload dei metodi</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">17</span>somma() con 2 e con 3 parametri <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Ora aggiungere al programma: <code>somma()</code> con un determinato numero di parametri. Creare un altro metodo con lo <strong>stesso nome</strong>, ma un numero diverso di parametri. È un esempio di <strong>method overloading</strong>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Scelgo le firme che poi servono nell'esercizio finale: <code>somma(int a, int b)</code> e <code>somma(int a, int b, int c)</code>. Tutte e due restituiscono un <code>int</code>.</li>
+        <li>Stesso nome, ma uno ha <strong>2</strong> parametri e l'altro <strong>3</strong>: le firme sono diverse, quindi possono convivere.</li>
+        <li>Nel <code>main</code> chiamo <code>somma</code> una volta con due argomenti e una volta con tre: Java conta gli argomenti e sceglie da solo.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        // Java sceglie il metodo guardando QUANTI argomenti passo
+        System.out.println("Somma di 2 numeri: " + somma(5, 10));
+        System.out.println("Somma di 3 numeri: " + somma(5, 10, 15));
+    }
+
+    // versione con 2 parametri
+    static int somma(int a, int b) {
+        return a + b;
+    }
+
+    // stesso nome, ma 3 parametri: e' un overload
+    static int somma(int a, int b, int c) {
+        return a + b + c;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Somma di 2 numeri: 15
+Somma di 3 numeri: 30</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Per Java un metodo è identificato dalla sua <strong>firma</strong>: nome + lista dei tipi dei parametri. Qui le firme sono <code>somma(int, int)</code> e <code>somma(int, int, int)</code>: diverse, quindi sono due metodi distinti. Il vantaggio è che chi usa il programma ricorda un solo nome, "somma", invece di <code>somma2</code>, <code>somma3</code>... Un esempio che usi da sempre: <code>System.out.println</code> è overloaded (una versione per <code>int</code>, una per <code>String</code>, una per <code>double</code>...).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 18 – Overload per tipo</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">18</span>somma() per int e per double <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Effettuare un overload per tipo.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Questa volta il <strong>numero</strong> di parametri resta uguale (2), cambia il loro <strong>tipo</strong>: <code>somma(int a, int b)</code> e <code>somma(double a, double b)</code>.</li>
+        <li>La versione <code>double</code> restituisce un <code>double</code>, perché la somma di due decimali può avere la virgola.</li>
+        <li>Per vedere quale versione sceglie Java, ognuna stampa il proprio nome tra quadre prima del risultato.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        // stesso numero di argomenti: Java guarda il loro TIPO
+        System.out.println("Somma di due int: " + somma(5, 10));
+        System.out.println("Somma di due double: " + somma(7.5, 8.0));
+    }
+
+    static int somma(int a, int b) {
+        System.out.print("[uso somma(int, int)] ");
+        return a + b;
+    }
+
+    // stesso nome e stesso numero, ma tipi diversi: overload per tipo
+    static double somma(double a, double b) {
+        System.out.print("[uso somma(double, double)] ");
+        return a + b;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>[uso somma(int, int)] Somma di due int: 15
+[uso somma(double, double)] Somma di due double: 15.5</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>somma(5, 10)</code>: 5 e 10 sono letterali <code>int</code>, quindi Java sceglie <code>somma(int, int)</code>. <code>somma(7.5, 8.0)</code>: sono letterali <code>double</code> (hanno il punto), quindi sceglie <code>somma(double, double)</code>.</li>
+        <li>Le scritte tra quadre escono <strong>prima</strong> di "Somma di...": Java deve prima eseguire il metodo per sapere il valore da concatenare, e la <code>print</code> dentro il metodo avviene in quel momento. Poi la <code>println</code> del <code>main</code> stampa la riga intera.</li>
+        <li>Il fatto che i due metodi abbiano tipi di ritorno diversi (<code>int</code> e <code>double</code>) qui va bene perché <strong>i parametri</strong> sono diversi. Se cambiasse solo il tipo di ritorno, invece, sarebbe un errore: è la Parte 19.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 19 – Errore da individuare</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">19</span>Overload solo sul tipo di ritorno <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Provare a dichiarare:</p>
+<pre data-lang="java"><code>static int somma(int a, int b) {
+    return a + b;
+}</code></pre>
+      <p>e:</p>
+<pre data-lang="java"><code>static double somma(int a, int b) {
+    return a + b;
+}</code></pre>
+      <p><strong>Domanda.</strong> Perché Java genera un errore?</p>
+      <p><strong>Risposta da motivare.</strong></p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Il programma provato</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+        System.out.println(somma(3, 4));
+    }
+
+    static int somma(int a, int b) {
+        return a + b;
+    }
+
+    static double somma(int a, int b) {
+        return a + b;
+    }
+}</code></pre>
+      <h4>L'errore vero di javac</h4>
+<pre data-lang="testo"><code>GestioneVoti.java:11: error: method somma(int,int) is already defined in class GestioneVoti
+    static double somma(int a, int b) {
+                  ^
+1 error</code></pre>
+      <p>Traduzione: "il metodo <code>somma(int,int)</code> è già definito nella classe <code>GestioneVoti</code>". L'errore è alla riga 11, cioè sul <strong>secondo</strong> metodo: per il compilatore è un doppione del primo.</p>
+      <h4>Risposta motivata</h4>
+      <ol>
+        <li>La <strong>firma</strong> di un metodo, quella che Java usa per distinguere i metodi, è fatta da <strong>nome + tipi dei parametri</strong>. Il tipo di ritorno <strong>non</strong> fa parte della firma. Guarda il messaggio: dice <code>somma(int,int)</code>, senza nominare <code>int</code> o <code>double</code> come ritorno.</li>
+        <li>Qui entrambi i metodi hanno firma <code>somma(int, int)</code>: per Java sono lo stesso metodo scritto due volte.</li>
+        <li>Il motivo pratico: davanti alla chiamata <code>somma(3, 4)</code>, Java sceglie il metodo guardando <strong>solo gli argomenti</strong> (due <code>int</code>), e qui vanno bene tutti e due. Non può decidere in base al ritorno, anche perché il risultato si può perfino ignorare: <code>somma(3, 4);</code> da sola è un'istruzione valida, e lì nessuno "chiede" un <code>int</code> o un <code>double</code>. Sarebbe un'ambiguità impossibile da risolvere, quindi il linguaggio la vieta.</li>
+      </ol>
+      <h4>Come correggere</h4>
+      <p>Si cambiano i <strong>parametri</strong>, non il ritorno: <code>static double somma(double a, double b)</code>, come nella Parte 18. Oppure, se serve davvero un risultato diverso con gli stessi parametri, si usa un altro nome (per esempio <code>sommaComeDouble</code>).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio finale – Gestione voti</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">20</span>GestioneVoti: il programma completo <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Ora realizzare autonomamente il programma completo.</p>
+      <p><strong>Specifiche.</strong> Creare <code>public class GestioneVoti</code> con un array:</p>
+<pre data-lang="java"><code>int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};</code></pre>
+      <p>Il programma deve contenere almeno i seguenti metodi:</p>
+<pre data-lang="java"><code>static void stampaVoti(int[] voti)
+static int calcolaSomma(int[] voti)
+static double calcolaMedia(int[] voti)
+static int trovaMassimo(int[] voti)
+static int trovaMinimo(int[] voti)</code></pre>
+      <p>e almeno <strong>due versioni overloaded</strong> del metodo <code>somma()</code>.</p>
+      <p><strong>Il programma deve produrre un output simile a:</strong></p>
+<pre data-lang="testo"><code>====================================
+       GESTIONE VOTI CLASSE
+====================================
+
+Voti presenti:
+7
+8
+6
+9
+5
+8
+10
+7
+
+------------------------------------
+Numero voti: 8
+Somma: 60
+Media: 7.5
+Voto massimo: 10
+Voto minimo: 5
+------------------------------------
+
+Test metodo somma:
+
+Somma di 2 numeri: 15
+Somma di 3 numeri: 30
+Somma di due double: 15.5</code></pre>
+      <p><strong>I valori dell'output devono naturalmente essere calcolati dal programma e non inseriti manualmente.</strong></p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Riuso tutto</strong>: i cinque metodi sono quelli della Parte 9, i tre <code>somma</code> sono quelli delle Parti 17 e 18. La consegna ne chiede almeno due; ne metto tre, perché l'output di esempio ne usa tre (2 int, 3 int, 2 double).</li>
+        <li><strong>Scelgo i numeri del test</strong> in modo che diano i risultati dell'esempio: <code>somma(5, 10)</code> = 15, <code>somma(5, 10, 15)</code> = 30, <code>somma(7.5, 8.0)</code> = 15.5. Il programma li calcola davvero: nelle <code>println</code> non c'è nessun risultato scritto a mano.</li>
+        <li>Anche "Numero voti: 8" viene da <code>voti.length</code>, come nella Parte 2.</li>
+        <li>Le righe vuote dell'esempio le ottengo con <code>System.out.println()</code> senza argomenti.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        int[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        System.out.println("====================================");
+        System.out.println("       GESTIONE VOTI CLASSE");
+        System.out.println("====================================");
+        System.out.println();
+
+        System.out.println("Voti presenti:");
+        stampaVoti(voti);
+        System.out.println();
+
+        System.out.println("------------------------------------");
+        System.out.println("Numero voti: " + voti.length);
+        System.out.println("Somma: " + calcolaSomma(voti));
+        System.out.println("Media: " + calcolaMedia(voti));
+        System.out.println("Voto massimo: " + trovaMassimo(voti));
+        System.out.println("Voto minimo: " + trovaMinimo(voti));
+        System.out.println("------------------------------------");
+        System.out.println();
+
+        System.out.println("Test metodo somma:");
+        System.out.println();
+        System.out.println("Somma di 2 numeri: " + somma(5, 10));
+        System.out.println("Somma di 3 numeri: " + somma(5, 10, 15));
+        System.out.println("Somma di due double: " + somma(7.5, 8.0));
+    }
+
+    // ---------- metodi sull'array ----------
+
+    // stampa ogni voto su una riga
+    static void stampaVoti(int[] voti) {
+        for (int voto : voti) {
+            System.out.println(voto);
+        }
+    }
+
+    // somma di tutti i voti
+    static int calcolaSomma(int[] voti) {
+        int somma = 0;
+        for (int voto : voti) {
+            somma += voto;
+        }
+        return somma;
+    }
+
+    // media dei voti (il cast evita la divisione intera)
+    static double calcolaMedia(int[] voti) {
+        return (double) calcolaSomma(voti) / voti.length;
+    }
+
+    // voto piu' alto
+    static int trovaMassimo(int[] voti) {
+        int massimo = voti[0];
+        for (int voto : voti) {
+            if (voto &gt; massimo) {
+                massimo = voto;
+            }
+        }
+        return massimo;
+    }
+
+    // voto piu' basso
+    static int trovaMinimo(int[] voti) {
+        int minimo = voti[0];
+        for (int voto : voti) {
+            if (voto &lt; minimo) {
+                minimo = voto;
+            }
+        }
+        return minimo;
+    }
+
+    // ---------- overload di somma() ----------
+
+    static int somma(int a, int b) {
+        return a + b;
+    }
+
+    static int somma(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    static double somma(double a, double b) {
+        return a + b;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>====================================
+       GESTIONE VOTI CLASSE
+====================================
+
+Voti presenti:
+7
+8
+6
+9
+5
+8
+10
+7
+
+------------------------------------
+Numero voti: 8
+Somma: 60
+Media: 7.5
+Voto massimo: 10
+Voto minimo: 5
+------------------------------------
+
+Test metodo somma:
+
+Somma di 2 numeri: 15
+Somma di 3 numeri: 30
+Somma di due double: 15.5</code></pre>
+      <h4>Controllo rispetto alle specifiche</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Richiesta</th><th>Dove</th></tr></thead>
+        <tbody>
+          <tr><td>classe <code>GestioneVoti</code> con l'array dei voti</td><td>prima riga del <code>main</code></td></tr>
+          <tr><td>i cinque metodi con le firme date</td><td><code>stampaVoti</code>, <code>calcolaSomma</code>, <code>calcolaMedia</code>, <code>trovaMassimo</code>, <code>trovaMinimo</code>, firme identiche</td></tr>
+          <tr><td>almeno due versioni overloaded di <code>somma()</code></td><td>tre: per numero (2 e 3 <code>int</code>) e per tipo (2 <code>double</code>)</td></tr>
+          <tr><td>valori calcolati, non scritti a mano</td><td>ogni numero dell'output viene da <code>length</code> o da una chiamata di metodo</td></tr>
+          <tr><td>niente <code>Math.max</code>/<code>Math.min</code></td><td>massimo e minimo con ciclo e <code>if</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Da notare</h4>
+      <p>Prova a cambiare un voto nelle graffe (per esempio il 5 in 4): somma, media e minimo cambiano da soli. È la prova che il programma calcola e non "copia" l'output.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Sfida finale</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">21</span>Integer[] al posto di int[] <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Per gli studenti più veloci: modificare il programma utilizzando <code>Integer[]</code> al posto di <code>int[]</code> e verificare che sia ancora possibile:</p>
+      <ul>
+        <li>attraversare l'array con <code>foreach</code>;</li>
+        <li>calcolare somma;</li>
+        <li>calcolare media;</li>
+        <li>trovare massimo;</li>
+        <li>trovare minimo.</li>
+      </ul>
+      <p>Successivamente spiegare la differenza tra <code>int</code> e <code>Integer</code> e indicare dove entra in gioco <strong>autoboxing/unboxing</strong>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Cambio il tipo dell'array e dei parametri da <code>int[]</code> a <code>Integer[]</code>, e la variabile del <code>foreach</code> da <code>int voto</code> a <code>Integer voto</code>.</li>
+        <li>Le variabili dei risultati (<code>somma</code>, <code>massimo</code>, <code>minimo</code>) le lascio <code>int</code>: i calcoli si fanno sui primitivi.</li>
+        <li>Nei commenti segno <strong>ogni</strong> punto in cui Java converte da solo: AUTOBOXING (<code>int</code> → <code>Integer</code>) o UNBOXING (<code>Integer</code> → <code>int</code>).</li>
+        <li>In fondo aggiungo una prova che mostra la differenza più visibile tra i due array: il valore iniziale delle caselle.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class GestioneVoti {
+
+    public static void main(String[] args) {
+
+        // AUTOBOXING: ogni numero (int) diventa un oggetto Integer
+        Integer[] voti = {7, 8, 6, 9, 5, 8, 10, 7};
+
+        System.out.println("Voti presenti:");
+        stampaVoti(voti);
+
+        System.out.println("Numero voti: " + voti.length);
+        System.out.println("Somma: " + calcolaSomma(voti));
+        System.out.println("Media: " + calcolaMedia(voti));
+        System.out.println("Voto massimo: " + trovaMassimo(voti));
+        System.out.println("Voto minimo: " + trovaMinimo(voti));
+
+        // differenza importante: un Integer[] nuovo e' pieno di null, un int[] di 0
+        int[] vuotoInt = new int[3];
+        Integer[] vuotoInteger = new Integer[3];
+        System.out.println("new int[3]     -&gt; " + vuotoInt[0] + " " + vuotoInt[1] + " " + vuotoInt[2]);
+        System.out.println("new Integer[3] -&gt; " + vuotoInteger[0] + " " + vuotoInteger[1] + " " + vuotoInteger[2]);
+    }
+
+    static void stampaVoti(Integer[] voti) {
+        // nessuna conversione: voto e' un Integer e println lo stampa
+        for (Integer voto : voti) {
+            System.out.println(voto);
+        }
+    }
+
+    static int calcolaSomma(Integer[] voti) {
+        int somma = 0;
+        for (Integer voto : voti) {
+            somma += voto;      // UNBOXING: voto (Integer) -&gt; int per fare il +
+        }
+        return somma;
+    }
+
+    static double calcolaMedia(Integer[] voti) {
+        return (double) calcolaSomma(voti) / voti.length;
+    }
+
+    static int trovaMassimo(Integer[] voti) {
+        int massimo = voti[0];  // UNBOXING: voti[0] (Integer) -&gt; int
+        for (Integer voto : voti) {
+            if (voto &gt; massimo) {   // UNBOXING: &gt; confronta numeri, non oggetti
+                massimo = voto;     // UNBOXING: Integer -&gt; int
+            }
+        }
+        return massimo;
+    }
+
+    static int trovaMinimo(Integer[] voti) {
+        int minimo = voti[0];   // UNBOXING
+        for (Integer voto : voti) {
+            if (voto &lt; minimo) {    // UNBOXING
+                minimo = voto;      // UNBOXING
+            }
+        }
+        return minimo;
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Voti presenti:
+7
+8
+6
+9
+5
+8
+10
+7
+Numero voti: 8
+Somma: 60
+Media: 7.5
+Voto massimo: 10
+Voto minimo: 5
+new int[3]     -&gt; 0 0 0
+new Integer[3] -&gt; null null null</code></pre>
+      <p>Tutto funziona ancora: <code>foreach</code>, somma, media, massimo e minimo danno gli stessi risultati di prima. Il codice è quasi identico proprio grazie ad autoboxing e unboxing, che fanno le conversioni al posto nostro.</p>
+      <h4>Differenza tra int e Integer</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th><code>int</code></th><th><code>Integer</code></th></tr></thead>
+        <tbody>
+          <tr><td>Che cos'è</td><td>tipo <strong>primitivo</strong>: la variabile contiene direttamente il numero</td><td><strong>classe</strong> (wrapper): la variabile è un riferimento a un oggetto che contiene il numero</td></tr>
+          <tr><td>Può valere <code>null</code>?</td><td>no</td><td>sì</td></tr>
+          <tr><td>Valore iniziale in un array</td><td><code>0</code></td><td><code>null</code> (vedi le ultime due righe dell'output)</td></tr>
+          <tr><td>Metodi</td><td>nessuno</td><td>sì: <code>intValue()</code>, <code>doubleValue()</code>, <code>Integer.parseInt</code>...</td></tr>
+          <tr><td>Nelle collezioni (<code>ArrayList</code>, <code>HashMap</code>)</td><td>non si può usare</td><td>obbligatorio: <code>ArrayList&lt;Integer&gt;</code></td></tr>
+          <tr><td>Velocità e memoria</td><td>più leggero e veloce</td><td>più pesante (è un oggetto)</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Dove entrano in gioco autoboxing e unboxing</h4>
+      <ul>
+        <li><strong>Autoboxing</strong> (<code>int</code> → <code>Integer</code>): nella creazione dell'array <code>{7, 8, 6, ...}</code>. Quei numeri sono letterali <code>int</code>, ma ogni casella vuole un <code>Integer</code>: Java li "inscatola" uno per uno.</li>
+        <li><strong>Unboxing</strong> (<code>Integer</code> → <code>int</code>):
+          <ul>
+            <li>in <code>somma += voto</code>: l'addizione si fa sui primitivi;</li>
+            <li>in <code>int massimo = voti[0]</code> e <code>int minimo = voti[0]</code>: assegno un <code>Integer</code> a un <code>int</code>;</li>
+            <li>nei confronti <code>voto &gt; massimo</code> e <code>voto &lt; minimo</code>;</li>
+            <li>in <code>massimo = voto</code> e <code>minimo = voto</code>.</li>
+          </ul>
+        </li>
+        <li><strong>Nessuna conversione</strong> in <code>stampaVoti</code>: <code>println</code> riceve l'oggetto <code>Integer</code> e lo stampa così com'è. E <code>calcolaMedia</code> lavora sull'<code>int</code> restituito da <code>calcolaSomma</code>, quindi lì l'unboxing è già avvenuto prima.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <p>Se una casella di un <code>Integer[]</code> fosse <code>null</code> (per esempio in un <code>new Integer[3]</code> non riempito), la riga <code>somma += voto</code> farebbe un unboxing di <code>null</code> e il programma si fermerebbe con <code>NullPointerException</code>, come nella Parte 15. Con <code>int[]</code> questo non può succedere.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte teorica finale</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Tutte le risposte sono nel capitolo di teoria: per un riepilogo veloce guarda la <a href="java-array-wrapper-metodi-overload.html#mappa-riassuntiva">Mappa riassuntiva</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">22</span>Le 15 domande di teoria <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Rispondere sul quaderno o in un file <code>.txt</code>.</p>
+      <ol>
+        <li>Che cos'è un array?</li>
+        <li>Da quale indice parte un array Java?</li>
+        <li>A cosa serve <code>length</code>?</li>
+        <li>Qual è la differenza tra <code>for</code> e <code>foreach</code>?</li>
+        <li>Che cosa significa <code>return</code>?</li>
+        <li>Qual è la differenza tra un metodo <code>void</code> e un metodo che restituisce un valore?</li>
+        <li>Che cos'è una Wrapper Class?</li>
+        <li>Qual è la Wrapper Class di <code>int</code>?</li>
+        <li>Che cos'è l'autoboxing?</li>
+        <li>Che cos'è l'unboxing?</li>
+        <li>A cosa serve <code>Integer.parseInt()</code>?</li>
+        <li>Che cos'è il method overloading?</li>
+        <li>Quali caratteristiche devono avere due metodi overloaded?</li>
+        <li>È possibile fare overload modificando solamente il tipo di ritorno?</li>
+        <li>Perché è utile dividere un programma in più metodi?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Che cos'è un array?</strong> Una struttura che contiene <strong>più valori dello stesso tipo</strong> sotto un unico nome, in caselle numerate. La dimensione si decide alla creazione e poi non cambia. <em>Esempio:</em> <code>int[] voti = {7, 8, 6};</code> sono tre <code>int</code> in un'unica variabile, invece di <code>voto1</code>, <code>voto2</code>, <code>voto3</code>.</li>
+        <li><strong>Da quale indice parte un array Java?</strong> Da <strong>0</strong>. Di conseguenza l'ultimo indice è <code>length - 1</code>. <em>Esempio:</em> in <code>GestioneVoti</code> gli indici vanno da 0 a 7; <code>voti[8]</code> dà <code>ArrayIndexOutOfBoundsException</code> (Esercizio 1).</li>
+        <li><strong>A cosa serve <code>length</code>?</strong> Dice <strong>quanti elementi</strong> ha l'array. È una proprietà, senza parentesi. Serve per non scrivere numeri "a mano": nei cicli (<code>i &lt; voti.length</code>) e nei calcoli (la media divide per <code>voti.length</code>).</li>
+        <li><strong>Differenza tra <code>for</code> e <code>foreach</code>?</strong> Il <code>for</code> classico usa un indice: posso scegliere da dove partire, saltare elementi, conoscere la posizione e <strong>modificare</strong> le caselle. Il <code>foreach</code> scorre sempre tutti gli elementi in ordine e dà direttamente il valore, senza indice: è più semplice ma serve solo per <strong>leggere</strong> (Parti 4 e 5).</li>
+        <li><strong>Che cosa significa <code>return</code>?</strong> Termina il metodo e <strong>restituisce un valore</strong> al punto in cui il metodo è stato chiamato. Il tipo del valore deve corrispondere al tipo dichiarato del metodo. <em>Esempio:</em> <code>return somma;</code> in <code>calcolaSomma</code> fa "tornare" 60 nel <code>main</code>.</li>
+        <li><strong>Metodo <code>void</code> e metodo che restituisce un valore?</strong> Il metodo <code>void</code> <strong>esegue un'azione</strong> (per esempio stampa) e non restituisce niente: si chiama da solo, <code>stampaVoti(voti);</code>. Quello con un tipo (<code>int</code>, <code>double</code>...) <strong>calcola un risultato</strong> e lo restituisce con <code>return</code>: si usa dentro un'espressione o un'assegnazione, <code>int s = calcolaSomma(voti);</code>.</li>
+        <li><strong>Che cos'è una Wrapper Class?</strong> Una classe che "avvolge" un tipo primitivo dentro un oggetto. Serve dove Java accetta solo oggetti (le collezioni), offre metodi utili (le conversioni) e permette il valore <code>null</code>. Ce n'è una per ogni primitivo: <code>Integer</code>, <code>Double</code>, <code>Float</code>, <code>Boolean</code>, <code>Character</code>...</li>
+        <li><strong>Qual è la Wrapper Class di <code>int</code>?</strong> <code>Integer</code> (attenzione: non "Int"). Le altre si chiamano come il primitivo con la maiuscola, tranne <code>char</code> → <code>Character</code>.</li>
+        <li><strong>Che cos'è l'autoboxing?</strong> La conversione <strong>automatica</strong> da tipo primitivo a wrapper, fatta dal compilatore. <em>Esempio:</em> <code>Integer voto = 8;</code> oppure <code>lista.add(7)</code> su un <code>ArrayList&lt;Integer&gt;</code>: Java scrive per noi <code>Integer.valueOf(8)</code>.</li>
+        <li><strong>Che cos'è l'unboxing?</strong> La conversione automatica inversa, da wrapper a primitivo. <em>Esempio:</em> <code>int x = votoOggetto;</code> oppure <code>somma += voto</code> con <code>voto</code> di tipo <code>Integer</code>. Attenzione: l'unboxing di un <code>null</code> dà <code>NullPointerException</code>.</li>
+        <li><strong>A cosa serve <code>Integer.parseInt()</code>?</strong> Trasforma una <strong>stringa</strong> che contiene un numero intero nel numero <code>int</code> corrispondente, così si possono fare i calcoli. <em>Esempio:</em> <code>Integer.parseInt("25") + 1</code> dà 26, mentre <code>"25" + 1</code> dà "251". Se la stringa non è un intero valido lancia <code>NumberFormatException</code>.</li>
+        <li><strong>Che cos'è il method overloading?</strong> La possibilità di avere nella stessa classe <strong>più metodi con lo stesso nome</strong> ma parametri diversi. Java sceglie quale eseguire guardando gli argomenti della chiamata. <em>Esempio:</em> <code>somma(5, 10)</code>, <code>somma(5, 10, 15)</code> e <code>somma(7.5, 8.0)</code> chiamano tre metodi diversi.</li>
+        <li><strong>Quali caratteristiche devono avere due metodi overloaded?</strong> Lo <strong>stesso nome</strong>, nella stessa classe, e una <strong>lista di parametri diversa</strong>: nel numero (<code>somma(int, int)</code> e <code>somma(int, int, int)</code>), nel tipo (<code>somma(int, int)</code> e <code>somma(double, double)</code>) o nell'ordine dei tipi (<code>f(int, double)</code> e <code>f(double, int)</code>). I nomi dei parametri non contano.</li>
+        <li><strong>Si può fare overload cambiando solo il tipo di ritorno?</strong> <strong>No.</strong> Il tipo di ritorno non fa parte della firma: due metodi con stesso nome e stessi parametri sono lo stesso metodo, e il compilatore dà <code>error: method somma(int,int) is already defined</code> (Parte 19). Java sceglie il metodo dagli argomenti, e da quelli non potrebbe capire quale dei due si vuole.</li>
+        <li><strong>Perché è utile dividere un programma in più metodi?</strong> Perché ogni metodo fa <strong>un solo compito</strong> con un nome chiaro: il <code>main</code> diventa leggibile come un elenco di passi, il codice si scrive una volta e si <strong>riusa</strong> (<code>calcolaMedia</code> riusa <code>calcolaSomma</code>), gli errori si trovano e si correggono in un punto solo, e ogni metodo si può provare da solo. In una parola: codice più <strong>leggibile e manutenibile</strong>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Griglia di valutazione</h2>
+  <p>Così il professore assegna i punti dell'esercitazione:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Competenza</th><th>Punti</th></tr></thead>
+    <tbody>
+      <tr><td>Creazione e gestione degli array</td><td>2</td></tr>
+      <tr><td>Utilizzo corretto di <code>length</code>, <code>for</code>, <code>foreach</code></td><td>1,5</td></tr>
+      <tr><td>Calcolo somma, media, massimo e minimo</td><td>1,5</td></tr>
+      <tr><td>Creazione e utilizzo dei metodi</td><td>2</td></tr>
+      <tr><td>Parametri e valori di ritorno</td><td>1</td></tr>
+      <tr><td>Wrapper Classes, autoboxing e unboxing</td><td>1</td></tr>
+      <tr><td>Method overloading</td><td>1</td></tr>
+      <tr><td><strong>Totale</strong></td><td><strong>10</strong></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip"><span class="callout-title">Dove si prendono i punti</span>Metà del voto (array, <code>length</code>/cicli, somma-media-massimo-minimo: 5 punti) viene dalle Parti 1–8. Metodi e parametri valgono altri 3 punti (Parti 9–12), wrapper e overload 1 punto ciascuno (Parti 13–19). L'esercizio finale li tocca tutti insieme.</div>
+
+  <h2>Fonti</h2>
+  <p>Consegne, specifiche, output di esempio, domande e griglia di valutazione sono tratti dal PDF dell'esercitazione <em>"Array, Wrapper Classes, metodi e method overloading"</em> assegnata su Google Classroom (5ª Informatica). Sono aggiunte in questa pagina tutte le risposte e le spiegazioni, i programmi completi (compilati ed eseguiti con Java 21, con output ed errori del compilatore veri), le firme scelte per <code>somma()</code> nelle Parti 17–18 e alcune prove in più (indice fuori dai limiti, modifica con il <code>foreach</code>, media senza cast, unboxing di <code>null</code>, <code>new Integer[3]</code>). Nelle Parti 14 e 15 la consegna del PDF presenta solo l'argomento: gli esempi sono nostri.</p>
+
+</main>
+</body>
+</html>

@@ -7,6 +7,8 @@
  * Le pagine di tipo "esercizi" finiscono nell'area Esercizi (esercizi.html) e hanno
  * in più: of (il capitolo di teoria a cui si riferiscono, se c'è), n (quanti
  * esercizi contiene) e desc (una riga di descrizione).
+ * Le pagine di tipo "classroom" sono le esercitazioni assegnate su Classroom: finiscono
+ * nella loro area (classroom.html) e hanno gli stessi campi of, n e desc.
  *
  * Va caricato in modo sincrono nell'<head>: applica subito il colore della
  * materia (niente "lampeggio") e poi carica gli altri script nell'ordine giusto.
@@ -28,6 +30,7 @@
       panoramica: "Panoramica",
       teoria: "Teoria",
       esercizi: "Esercizi",
+      classroom: "Classroom",
       laboratorio: "Laboratorio",
       riassunto: "Riassunto",
       verifica: "Verifica",
@@ -57,6 +60,12 @@
           { title: "Esercizi: Collections, ArrayList, Vector e LinkedList", path: "materie/informatica/esercizi-java-liste.html", type: "esercizi", of: "materie/informatica/java-collections-liste.html", n: 19, desc: "Generics, metodi di ArrayList, for, foreach e Iterator, Vector, LinkedList come pila e coda, prestazioni." },
           { title: "Esercizi: HashMap", path: "materie/informatica/esercizi-java-hashmap.html", type: "esercizi", of: "materie/informatica/java-hashmap.html", n: 17, desc: "put, get, containsKey, getOrDefault, remove, scorrere con keySet, values ed entrySet, hash e cassetti." },
           { title: "Esercizi completi: tutto Java insieme", path: "materie/informatica/esercizi-java-progetti.html", type: "esercizi", n: 7, desc: "Tre progetti grandi come una verifica (biblioteca, negozio, torneo) che usano tutti i capitoli insieme, con le tappe per arrivarci." },
+          { title: "Classroom: condizioni e cicli", path: "materie/informatica/classroom-condizioni-cicli.html", type: "classroom", n: 34, desc: "if, else if, if annidati, operatori logici, ternario, switch, Math, Scanner, for, while, do-while, foreach, break e continue, cicli annidati, debug e sfida finale con menu." },
+          { title: "Classroom: array, wrapper, metodi e overload", path: "materie/informatica/classroom-gestione-voti.html", type: "classroom", of: "materie/informatica/java-array-wrapper-metodi-overload.html", n: 22, desc: "Array di voti, indici e length, for e foreach, somma, media con cast, massimo e minimo, metodi void e con return, Integer, autoboxing e unboxing, parseInt e parseDouble, overload per numero e per tipo." },
+          { title: "Classroom: la classe Automobile", path: "materie/informatica/classroom-automobile.html", type: "classroom", of: "materie/informatica/java-programmazione-a-oggetti.html", n: 8, desc: "L'esercitazione dell'ultima slide OOP a tappe: attributi, costruttori in overload con this, accelera, frena e stampaInfo, array di oggetti e for-each." },
+          { title: "Classroom: eccezioni e gestione dei file", path: "materie/informatica/classroom-eccezioni-file.html", type: "classroom", of: "materie/informatica/java-eccezioni.html", n: 11, desc: "RegistroStudenti a menu: try-catch, finally, NumberFormatException, throw, throws, più catch, Path e Files (writeString con APPEND, readAllLines, exists, deleteIfExists)." },
+          { title: "Classroom: ArrayList, Vector e LinkedList", path: "materie/informatica/classroom-liste.html", type: "classroom", of: "materie/informatica/java-collections-liste.html", n: 11, desc: "GestioneStudenti, confronto ArrayList e Vector, coda con LinkedList, registro con la classe Studente, menu con Scanner e switch, test delle prestazioni con nanoTime." },
+          { title: "Classroom: HashMap", path: "materie/informatica/classroom-hashmap.html", type: "classroom", of: "materie/informatica/java-hashmap.html", n: 4, desc: "Rubrica, inventario, registro voti e biblioteca a menu con put, get, containsKey, containsValue, remove, size e clear." },
         ],
       },
       {
@@ -166,12 +175,16 @@
   SITE.topics = function (subject) {
     return SITE.allPages().filter(function (p) { return !p.isIndex && (!subject || p.subject.id === subject.id); });
   };
-  // I capitoli (tutto tranne gli esercizi) e le pagine di esercizi, separati.
+  // I capitoli (tutto tranne esercizi ed esercitazioni Classroom), le pagine di esercizi
+  // e quelle delle esercitazioni Classroom, separati.
   SITE.chapters = function (subject) {
-    return SITE.topics(subject).filter(function (p) { return p.type !== "esercizi"; });
+    return SITE.topics(subject).filter(function (p) { return p.type !== "esercizi" && p.type !== "classroom"; });
   };
   SITE.exercises = function (subject) {
     return SITE.topics(subject).filter(function (p) { return p.type === "esercizi"; });
+  };
+  SITE.classroom = function (subject) {
+    return SITE.topics(subject).filter(function (p) { return p.type === "classroom"; });
   };
   SITE.currentPage = function () {
     var all = SITE.allPages();

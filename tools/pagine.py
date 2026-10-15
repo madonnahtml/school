@@ -1,4 +1,4 @@
-"""Rigenera le pagine "struttura" del sito (home, cerca, riassunti, esercizi, ripasso, panoramiche materie).
+"""Rigenera le pagine "struttura" del sito (home, cerca, riassunti, esercizi, classroom, ripasso, panoramiche materie).
 Le pagine degli argomenti NON vengono toccate. Uso: python3 tools/pagine.py"""
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,6 +51,10 @@ page('index.html', 'Scuola', 'Quaderno di studio diviso per materie, con ricerca
       <span class="home-sum-text"><strong>Esercizi</strong><span>Consegne ed esercizi per ogni argomento, con le soluzioni spiegate.</span></span>
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
+    <a class="home-sum" href="classroom.html">
+      <span class="home-sum-text"><strong>Esercitazioni Classroom</strong><span>Le esercitazioni assegnate su Classroom: consegne, risposte e spiegazioni.</span></span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </div>
 
   <section class="panel review-panel" data-review-summary data-feature="ripasso">
@@ -76,6 +80,16 @@ page('esercizi.html', 'Esercizi · Scuola', 'Consegne ed esercizi per ogni argom
     <p class="lead">Consegne ed esercizi per ogni argomento spiegato, dal più facile al più difficile, con le <strong>soluzioni spiegate passo passo</strong>. In fondo a ogni pagina c'è un esercizio completo che mette insieme tutto il capitolo.</p>
     <p class="ex-count" data-ex-count></p>
     <div class="callout tip"><span class="callout-title">Come allenarsi</span>Leggi la consegna e prova da solo, su carta o al computer. Apri la soluzione solo dopo: anche un tentativo sbagliato ti fa capire molto di più che leggere subito la risposta.</div>
+    <div data-ex-list></div>
+  </div>
+''', attrs=' data-toc="off"')
+
+page('classroom.html', 'Esercitazioni Classroom · Scuola', 'Le esercitazioni assegnate su Classroom: consegne riportate fedelmente, risposte e spiegazioni delle risposte.', '''
+  <div class="esercizi-area" data-classroom>
+    <h1>Esercitazioni Classroom</h1>
+    <p class="lead">Le esercitazioni che il professore ha assegnato su <strong>Classroom</strong>, una pagina per ognuna: la <strong>consegna</strong> riportata fedelmente, la <strong>risposta</strong> (programmi compilati ed eseguiti davvero, con il loro output) e la <strong>spiegazione</strong> di ogni risposta.</p>
+    <p class="ex-count" data-ex-count></p>
+    <div class="callout tip"><span class="callout-title">Come usarle</span>Prima prova a svolgere l'esercitazione da solo, come faresti per consegnarla. Poi apri la risposta e confronta: la spiegazione ti dice <strong>perché</strong> si fa così e quali errori evitare.</div>
     <div data-ex-list></div>
   </div>
 ''', attrs=' data-toc="off"')
@@ -148,6 +162,12 @@ for sid, short, name, desc, intro, steps in SUBJECTS:
   <section data-subject-exercises hidden>
     <h2>Esercizi</h2>
     <p>Consegne ed esercizi per ogni capitolo, con le soluzioni spiegate passo passo.</p>
+    <div data-list></div>
+  </section>
+
+  <section data-subject-classroom hidden>
+    <h2>Esercitazioni Classroom</h2>
+    <p>Le esercitazioni assegnate su Classroom, con consegna, risposta e spiegazione.</p>
     <div data-list></div>
   </section>
 

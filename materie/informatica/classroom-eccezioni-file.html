@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: eccezioni e gestione dei file · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione Classroom di Java con soluzione spiegata: programma RegistroStudenti a menu con try-catch, finally, NumberFormatException, IllegalArgumentException, throw, throws IOException, più catch, Path, Files.writeString con StandardOpenOption.APPEND e CREATE, Files.readAllLines, Files.exists, Files.deleteIfExists, ricerca di uno studente. Differenza tra File/FileWriter e Path/Files, 10 domande di verifica con risposta.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: eccezioni e gestione dei file</h1>
+  <p class="lead">L'esercitazione pratica assegnata su Classroom, <em>Esercitazione pratica Java – Eccezioni e gestione dei file</em>: un programma <strong>RegistroStudenti</strong> a menu, robusto agli errori, che salva i nomi in un file. Consegna riportata fedelmente, con risposta e spiegazione punto per punto. La teoria è nei capitoli <a href="java-eccezioni.html">Java: eccezioni</a> e <a href="java-gestione-dei-file.html">Java: gestione dei file</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>I punti da 1 a 8 sono i <strong>pezzi</strong> del programma: per ognuno trovi la consegna del PDF, il codice che la realizza (preso dal programma finale) e la spiegazione. Prova a scrivere ogni pezzo da solo prima di aprire la risposta. Il blocco <strong>Obiettivo finale</strong> contiene il programma <strong>completo</strong>, compilato ed eseguito con Java 21: le sessioni che vedi sono output vero, con il testo scritto dall'utente inserito dopo i prompt <code>Scelta:</code> e <code>Inserisci il nome dello studente:</code>. Tra un'esecuzione e l'altra il file <code>studenti.txt</code> è stato cancellato, così i risultati sono riproducibili.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Consegna</h2>
+  <p><strong>Livello:</strong> base – classe 5ª<br>
+  <strong>Obiettivo:</strong> realizzare un piccolo programma Java robusto, capace di gestire gli errori e salvare informazioni su file.</p>
+  <p>Realizza un programma Java chiamato <strong>RegistroStudenti</strong> che permetta di gestire un semplice registro di studenti attraverso un menu.</p>
+  <p>Il programma deve utilizzare:</p>
+  <ul>
+    <li><code>try-catch</code></li>
+    <li><code>finally</code></li>
+    <li><code>NumberFormatException</code></li>
+    <li>almeno un secondo tipo di eccezione</li>
+    <li><code>throw</code></li>
+    <li><code>throws</code></li>
+    <li><code>Path</code></li>
+    <li><code>Files</code></li>
+    <li><code>APPEND</code></li>
+    <li><code>Files.exists()</code></li>
+    <li><code>Files.deleteIfExists()</code></li>
+  </ul>
+
+  <div class="callout warn"><span class="callout-title">Attenzione: qui non si usano File e FileWriter</span>Nel capitolo <a href="java-gestione-dei-file.html">Gestione dei file</a> abbiamo usato le classi "vecchie" del pacchetto <code>java.io</code>: <code>File</code>, <code>FileWriter</code>, <code>FileReader</code>. Questa esercitazione chiede invece le classi <strong>moderne</strong> del pacchetto <code>java.nio.file</code>: <code>Path</code> e <code>Files</code>. Fanno le stesse cose, ma con meno codice: niente oggetti da aprire e <strong>niente <code>close()</code></strong> da ricordare, perché ogni metodo di <code>Files</code> apre il file, lavora e lo chiude da solo.</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Operazione</th><th>Capitolo di teoria (<code>java.io</code>)</th><th>Questa esercitazione (<code>java.nio.file</code>)</th></tr></thead>
+    <tbody>
+      <tr><td>indicare il file</td><td><code>File f = new File("studenti.txt");</code></td><td><code>Path p = Path.of("studenti.txt");</code></td></tr>
+      <tr><td>esiste?</td><td><code>f.exists()</code></td><td><code>Files.exists(p)</code></td></tr>
+      <tr><td>scrivere in fondo</td><td><code>new FileWriter("studenti.txt", true)</code> + <code>write</code> + <code>close</code></td><td><code>Files.writeString(p, testo, CREATE, APPEND)</code></td></tr>
+      <tr><td>leggere</td><td><code>FileReader</code> carattere per carattere + <code>close</code></td><td><code>Files.readAllLines(p)</code> → una <code>List&lt;String&gt;</code>, una riga per elemento</td></tr>
+      <tr><td>eliminare</td><td><code>f.delete()</code> (restituisce <code>boolean</code>)</td><td><code>Files.deleteIfExists(p)</code> (restituisce <code>boolean</code>)</td></tr>
+      <tr><td>errori</td><td><code>IOException</code></td><td><code>IOException</code> (e sue sottoclassi, come <code>NoSuchFileException</code>)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Gli <code>import</code> che servono a tutto il programma sono questi:</p>
+<pre data-lang="java"><code>import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.Scanner;</code></pre>
+  <p><code>Path.of(...)</code> esiste da Java 11; nei libri più vecchi trovi <code>Paths.get(...)</code>, che fa la stessa cosa.</p>
+
+  <!-- ============================================================= -->
+  <h2>1. Struttura del menu</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>Integer.parseInt("abc")</code> non può convertire il testo e lancia una <code>NumberFormatException</code>: se la catturi con <code>catch</code> il programma non si ferma. Teoria: <a href="java-eccezioni.html#try-catch-e-finally">try, catch e finally</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Struttura del menu <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Il programma deve mostrare continuamente questo menu:</p>
+<pre data-lang="testo"><code>===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta:</code></pre>
+      <p>La scelta deve essere letta tramite <code>scanner.nextLine()</code> e convertita in intero con <code>Integer.parseInt(...)</code>.</p>
+      <p>Se l'utente inserisce qualcosa che non è un numero, il programma deve intercettare la <code>NumberFormatException</code> e mostrare:</p>
+<pre data-lang="testo"><code>Devi inserire un numero.</code></pre>
+      <p>Il menu deve continuare a essere visualizzato.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"Mostrare <strong>continuamente</strong>" vuol dire un ciclo: <code>while (continua)</code>, con una variabile <code>boolean</code> che diventa <code>false</code> solo quando l'utente sceglie 4.</li>
+        <li>Il menu lo metto in un metodo <code>stampaMenu()</code>: il <code>main</code> resta corto e leggibile. L'ultima riga usa <code>print</code> (non <code>println</code>), così l'utente scrive sulla stessa riga di <code>Scelta:</code>.</li>
+        <li>Leggo la riga intera con <code>nextLine()</code> e la converto con <code>Integer.parseInt</code>. Se dentro c'è <code>abc</code>, <code>parseInt</code> lancia <code>NumberFormatException</code>, il <code>switch</code> viene saltato e si va dritti al <code>catch</code>.</li>
+        <li>Il <code>try-catch</code> è <strong>dentro</strong> il ciclo: dopo il <code>catch</code> il ciclo riparte e il menu ricompare. Se fosse fuori dal ciclo, al primo errore il programma uscirebbe dal <code>while</code>.</li>
+        <li>Un numero fuori dal menu (per esempio 7) non è un'eccezione: lo gestisce il <code>default</code> dello <code>switch</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public static void main(String[] args) {
+    boolean continua = true;
+
+    while (continua) {
+        stampaMenu();
+        try {
+            String riga = scanner.nextLine();
+            System.out.println();
+            int scelta = Integer.parseInt(riga.trim());   // può lanciare NumberFormatException
+
+            switch (scelta) {
+                case 1:
+                    inserisciStudente();
+                    break;
+                case 2:
+                    visualizzaStudenti();
+                    break;
+                case 3:
+                    cancellaRegistro();
+                    break;
+                case 4:
+                    System.out.println("Programma terminato.");
+                    continua = false;
+                    break;
+                default:
+                    System.out.println("Scelta non valida: scegli un numero da 1 a 4.");
+            }
+        } catch (NumberFormatException e) {
+            // catch specifico: l'utente non ha scritto un numero
+            System.out.println("Devi inserire un numero.");
+        } catch (Exception e) {
+            // catch generico: qualsiasi altro errore imprevisto
+            System.out.println("Errore imprevisto: " + e.getMessage());
+        }
+
+        if (continua) {
+            System.out.println();   // riga vuota prima del menu successivo
+        }
+    }
+    scanner.close();
+}
+
+static void stampaMenu() {
+    System.out.println("===== REGISTRO STUDENTI =====");
+    System.out.println("1. Inserisci studente");
+    System.out.println("2. Visualizza studenti");
+    System.out.println("3. Cancella registro");
+    System.out.println("4. Esci");
+    System.out.println("=============================");
+    System.out.print("Scelta: ");
+}</code></pre>
+      <h4>Output (pezzo della sessione vera)</h4>
+<pre data-lang="testo"><code>Scelta: abc
+
+Devi inserire un numero.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 7
+
+Scelta non valida: scegli un numero da 1 a 4.</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>scanner</code> è un attributo <code>static</code> della classe (<code>static Scanner scanner = new Scanner(System.in);</code>), così lo usano sia il <code>main</code> sia i metodi come <code>inserisciStudente()</code>, senza crearne uno nuovo ogni volta.</li>
+        <li><code>trim()</code> toglie gli spazi prima e dopo: senza, un innocuo <code>" 1"</code> farebbe scattare <code>NumberFormatException</code>.</li>
+        <li>Perché <code>nextLine()</code> e non <code>nextInt()</code>? Con <code>nextInt()</code> l'invio rimane nel buffer e il successivo <code>nextLine()</code> (quello del nome) leggerebbe una riga vuota. Leggendo sempre righe intere il problema non esiste.</li>
+        <li>Il secondo <code>catch (Exception e)</code> è il punto 8 della consegna: lo vediamo lì.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>2. Inserimento di uno studente</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Scrivere in <strong>append</strong> vuol dire aggiungere in fondo al file senza cancellare quello che c'è. Con <code>FileWriter</code> si passava <code>true</code>; con <code>Files</code> si passa <code>StandardOpenOption.APPEND</code>. Teoria: <a href="java-gestione-dei-file.html#scrivere-in-un-file-con-filewriter">Scrivere in un file con FileWriter</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Inserimento di uno studente <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Quando l'utente sceglie <code>1</code>, chiedi:</p>
+<pre data-lang="testo"><code>Inserisci il nome dello studente:</code></pre>
+      <p>Il nome deve essere aggiunto al file <code>studenti.txt</code>.</p>
+      <p>Utilizza <code>Path</code> e <code>Files.writeString()</code> con <code>StandardOpenOption.APPEND</code>.</p>
+      <p>Ogni studente deve essere scritto su una nuova riga.</p>
+      <p>Esempio di file:</p>
+<pre data-lang="testo"><code>Mario Rossi
+Luca Bianchi
+Anna Verdi</code></pre>
+      <p><strong>Gestione dell'errore.</strong> L'operazione sul file deve essere inserita in un <code>try-catch</code> per gestire eventuali errori di tipo <code>IOException</code>.</p>
+      <p>In caso di errore, visualizza un messaggio comprensibile all'utente.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il file lo indico una volta sola, come costante della classe: <code>static final Path FILE = Path.of("studenti.txt");</code>. È un percorso <strong>relativo</strong>: il file nasce nella cartella da cui parte il programma.</li>
+        <li><code>Files.writeString(file, testo, opzioni...)</code> scrive una stringa nel file. Per andare a capo aggiungo <code>System.lineSeparator()</code> dopo il nome (su Linux e Mac è <code>\n</code>, su Windows <code>\r\n</code>).</li>
+        <li>Le opzioni sono <strong>due</strong>: <code>APPEND</code> (scrivi in fondo) e <code>CREATE</code> (crea il file se non c'è). Il PDF nomina solo <code>APPEND</code>, ma da solo non basta: vedi "Errori da evitare".</li>
+        <li><code>writeString</code> può lanciare <code>IOException</code> (disco pieno, permessi, ...): la catturo e stampo un messaggio in italiano, non lo stack trace.</li>
+        <li>Prima di scrivere controllo il nome con <code>controllaNome</code> (punto 5), e alla fine un <code>finally</code> stampa "Operazione terminata." (punto 7).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>static final Path FILE = Path.of("studenti.txt");
+
+static void inserisciStudente() {
+    System.out.print("Inserisci il nome dello studente: ");
+    String nome = scanner.nextLine().trim();
+    try {
+        controllaNome(nome);
+        Files.writeString(FILE, nome + System.lineSeparator(),
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        System.out.println("Studente inserito.");
+    } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
+    } catch (IOException e) {
+        System.out.println("Impossibile salvare lo studente nel registro.");
+    } finally {
+        System.out.println("Operazione terminata.");
+    }
+}</code></pre>
+      <h4>Output</h4>
+      <p>Ho eseguito il programma due volte di seguito <strong>senza</strong> cancellare il file: la prima volta ho inserito Mario Rossi, la seconda Luca Bianchi. Ecco <code>studenti.txt</code> alla fine:</p>
+<pre data-lang="testo"><code>Mario Rossi
+Luca Bianchi</code></pre>
+      <p>Mario è ancora lì: è proprio l'effetto di <code>APPEND</code>. Senza, ogni esecuzione cancellerebbe il registro precedente.</p>
+      <p>Per vedere il <code>catch (IOException e)</code> in azione ho creato apposta una <strong>cartella</strong> chiamata <code>studenti.txt</code> (in una cartella non si può scrivere testo). Risultato vero:</p>
+<pre data-lang="testo"><code>Scelta: 1
+
+Inserisci il nome dello studente: Mario Rossi
+Impossibile salvare lo studente nel registro.
+Operazione terminata.</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li><strong>Solo <code>APPEND</code>, senza <code>CREATE</code>.</strong> Se il file non esiste ancora, Java non lo crea e lancia un'eccezione. Prova vera con <code>Files.writeString(file, "Mario Rossi" + System.lineSeparator(), StandardOpenOption.APPEND)</code> e nessun file presente:
+<pre data-lang="testo"><code>Errore: java.nio.file.NoSuchFileException: studenti.txt</code></pre>
+          Al primissimo inserimento il registro non esiste mai, quindi serve <code>CREATE, APPEND</code>.</li>
+        <li><strong>Nessuna opzione.</strong> <code>Files.writeString(FILE, testo)</code> senza opzioni crea il file ma, se c'è già, lo <strong>svuota</strong> e riscrive: ogni studente cancellerebbe quello prima.</li>
+        <li><strong>Dimenticare l'a capo.</strong> Senza <code>System.lineSeparator()</code> i nomi finiscono tutti attaccati sulla stessa riga: <code>Mario RossiLuca Bianchi</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>3. Visualizzazione degli studenti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Prima di leggere un file conviene controllare che esista: con <code>File</code> era <code>f.exists()</code>, con <code>Files</code> è <code>Files.exists(path)</code>. Teoria: <a href="java-gestione-dei-file.html#verificare-se-un-file-esiste">Verificare se un file esiste</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Visualizzazione degli studenti <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Quando l'utente sceglie <code>2</code>, il programma deve leggere tutte le righe del file <code>studenti.txt</code>.</p>
+      <p>Utilizza <code>Files.readAllLines(...)</code> e stampa gli studenti numerandoli:</p>
+<pre data-lang="testo"><code>===== STUDENTI =====
+1. Mario Rossi
+2. Luca Bianchi
+3. Anna Verdi</code></pre>
+      <p>Prima di leggere il file, controlla se esiste utilizzando <code>Files.exists(...)</code>.</p>
+      <p>Se il file non esiste, visualizza:</p>
+<pre data-lang="testo"><code>Il registro non esiste ancora.</code></pre>
+      <p>Anche questa operazione deve avere una propria gestione delle eccezioni.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Primo controllo: <code>if (!Files.exists(FILE))</code> → messaggio e basta. Il <code>!</code> significa "non esiste".</li>
+        <li>Altrimenti leggo: <code>Files.readAllLines</code> restituisce una <code>List&lt;String&gt;</code>, una stringa per ogni riga del file, già senza l'a capo.</li>
+        <li>Per numerare scorro la lista con un <code>for</code> classico: la posizione <code>i</code> parte da 0, ma a schermo stampo <code>i + 1</code>. Attenzione alle parentesi: <code>(i + 1) + ". "</code>, altrimenti Java concatenerebbe "0" e "1" come testo.</li>
+        <li>La lettura vera la fa il metodo <code>leggiStudenti()</code> (punto 6), che dichiara <code>throws IOException</code>: qui la <strong>gestisco</strong> con <code>try-catch</code>, come chiede la consegna.</li>
+        <li>Caso in più: il file esiste ma è vuoto. Stampo "Il registro è vuoto." invece della sola intestazione.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>static void visualizzaStudenti() {
+    try {
+        if (!Files.exists(FILE)) {
+            System.out.println("Il registro non esiste ancora.");
+        } else {
+            List&lt;String&gt; studenti = leggiStudenti();
+            if (studenti.isEmpty()) {
+                System.out.println("Il registro è vuoto.");
+            } else {
+                System.out.println("===== STUDENTI =====");
+                for (int i = 0; i &lt; studenti.size(); i++) {
+                    System.out.println((i + 1) + ". " + studenti.get(i));
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Impossibile leggere il registro.");
+    } finally {
+        System.out.println("Operazione terminata.");
+    }
+}</code></pre>
+      <h4>Output (pezzi delle sessioni vere)</h4>
+      <p>Con il file che non esiste ancora (prima scelta di un programma appena avviato):</p>
+<pre data-lang="testo"><code>Scelta: 2
+
+Il registro non esiste ancora.
+Operazione terminata.</code></pre>
+      <p>Dopo aver inserito due studenti:</p>
+<pre data-lang="testo"><code>Scelta: 2
+
+===== STUDENTI =====
+1. Mario Rossi
+2. Luca Bianchi
+Operazione terminata.</code></pre>
+      <p>E con la cartella al posto del file (il trucco del punto 2): <code>Files.exists</code> risponde <code>true</code>, ma <code>readAllLines</code> fallisce e scatta il <code>catch</code>:</p>
+<pre data-lang="testo"><code>Scelta: 2
+
+Impossibile leggere il registro.
+Operazione terminata.</code></pre>
+      <h4>Perché funziona</h4>
+      <p><code>Files.exists</code> evita l'errore più comune (il file non c'è) con un semplice <code>if</code>, senza passare da un'eccezione. Il <code>try-catch</code> resta comunque necessario per gli errori che nessun <code>if</code> può prevedere, come l'ultimo caso, e perché <code>IOException</code> è <strong>checked</strong>: senza <code>catch</code> il programma non compilerebbe.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>4. Cancellazione del registro</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>Files.deleteIfExists(path)</code> elimina il file se c'è e restituisce <code>true</code>; se non c'è non fa nulla e restituisce <code>false</code>. È il fratello di <code>f.delete()</code> visto in <a href="java-gestione-dei-file.html#eliminare-un-file-con-delete">Eliminare un file con delete</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Cancellazione del registro <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Quando l'utente sceglie <code>3</code>, il programma deve eliminare il file utilizzando <code>Files.deleteIfExists(...)</code>.</p>
+      <p>Se il file viene eliminato:</p>
+<pre data-lang="testo"><code>Registro cancellato.</code></pre>
+      <p>Se il file non esiste:</p>
+<pre data-lang="testo"><code>Il registro non esiste.</code></pre>
+      <p>Eventuali errori di I/O devono essere gestiti tramite <code>try-catch</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Non serve chiamare prima <code>Files.exists</code>: il valore restituito da <code>deleteIfExists</code> mi dice già come è andata. Lo metto direttamente nell'<code>if</code>.</li>
+        <li><code>deleteIfExists</code> può lanciare <code>IOException</code> (per esempio file protetto o cartella non vuota): <code>try-catch</code> obbligatorio.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>static void cancellaRegistro() {
+    try {
+        if (Files.deleteIfExists(FILE)) {
+            System.out.println("Registro cancellato.");
+        } else {
+            System.out.println("Il registro non esiste.");
+        }
+    } catch (IOException e) {
+        System.out.println("Impossibile cancellare il registro.");
+    } finally {
+        System.out.println("Operazione terminata.");
+    }
+}</code></pre>
+      <h4>Output (pezzi delle sessioni vere)</h4>
+<pre data-lang="testo"><code>Scelta: 3
+
+Registro cancellato.
+Operazione terminata.</code></pre>
+<pre data-lang="testo"><code>Scelta: 3
+
+Il registro non esiste.
+Operazione terminata.</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Non confondere <code>Files.deleteIfExists</code> con <code>Files.delete</code>: quest'ultimo, se il file non c'è, <strong>lancia</strong> <code>NoSuchFileException</code> invece di restituire <code>false</code>. Con <code>delete</code> il messaggio "Il registro non esiste." andrebbe scritto in un <code>catch</code>, che è meno chiaro.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>5. Utilizzo di throw</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>throw</code> lancia <strong>tu</strong> un'eccezione quando un dato non va bene: <code>throw new IllegalArgumentException("messaggio");</code>. Teoria: <a href="java-eccezioni.html#throw-e-throws">throw e throws</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Utilizzo di throw <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Crea un metodo <code>controllaNome(String nome)</code>.</p>
+      <p>Il metodo deve controllare che il nome non sia vuoto.</p>
+      <p>Se l'utente non inserisce alcun nome, deve essere generata esplicitamente un'eccezione: <code>throw new IllegalArgumentException(...)</code></p>
+      <p>Il messaggio deve essere:</p>
+<pre data-lang="testo"><code>Il nome non può essere vuoto.</code></pre>
+      <p>Il <code>catch</code> dovrà intercettare l'eccezione e permettere al programma di continuare normalmente.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"Vuoto" per me vuol dire anche "solo spazi": per questo controllo <code>nome.trim().isEmpty()</code> e non solo <code>nome.isEmpty()</code>.</li>
+        <li>Se il nome non va, <code>throw</code> crea l'eccezione con il messaggio richiesto e il metodo si interrompe subito: la riga dopo (la scrittura sul file in <code>inserisciStudente</code>) <strong>non</strong> viene eseguita.</li>
+        <li>Il <code>catch (IllegalArgumentException e)</code> in <code>inserisciStudente</code> stampa <code>e.getMessage()</code>, cioè proprio il testo passato al costruttore. Poi il ciclo del menu continua.</li>
+        <li>Questa è la "seconda eccezione" chiesta dalla consegna, oltre a <code>NumberFormatException</code> (e c'è anche <code>IOException</code>).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>// Punto 5: throw. Se il nome è vuoto lancio io l'eccezione.
+static void controllaNome(String nome) {
+    if (nome == null || nome.trim().isEmpty()) {
+        throw new IllegalArgumentException("Il nome non può essere vuoto.");
+    }
+}
+
+// dentro inserisciStudente():
+try {
+    controllaNome(nome);
+    Files.writeString(...);          // non arriva qui se il nome è vuoto
+    System.out.println("Studente inserito.");
+} catch (IllegalArgumentException e) {
+    System.out.println(e.getMessage());
+} ...</code></pre>
+      <h4>Output (pezzo della sessione vera, l'utente preme solo Invio)</h4>
+<pre data-lang="testo"><code>Scelta: 1
+
+Inserisci il nome dello studente:
+Il nome non può essere vuoto.
+Operazione terminata.</code></pre>
+      <h4>Perché funziona</h4>
+      <p><code>IllegalArgumentException</code> è <strong>unchecked</strong> (figlia di <code>RuntimeException</code>): per questo <code>controllaNome</code> non ha bisogno di <code>throws</code> nella firma. Il file non viene toccato e, controllando dopo con la voce 2, il nome vuoto non compare.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>6. Utilizzo di throws</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>throws</code> nella firma <strong>dichiara</strong> che il metodo può lanciare un'eccezione e che non la gestisce lui: la passa a chi lo chiama. Teoria: <a href="java-eccezioni.html#checked-e-unchecked-exceptions">Checked e unchecked exceptions</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Utilizzo di throws <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Crea un metodo separato <code>leggiStudenti()</code> che si occupi della lettura del file.</p>
+      <p>Il metodo deve dichiarare nella firma:</p>
+<pre data-lang="testo"><code>throws IOException</code></pre>
+      <p>Il metodo chiamante dovrà quindi gestire l'eccezione tramite <code>try-catch</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>leggiStudenti()</code> fa una cosa sola: legge e restituisce le righe. Non stampa, non decide cosa fare in caso di errore.</li>
+        <li><code>Files.readAllLines</code> lancia <code>IOException</code>, che è <strong>checked</strong>: o la catturo o la dichiaro. Qui la dichiaro con <code>throws IOException</code>.</li>
+        <li>Chi chiama (<code>visualizzaStudenti</code>, e nel bonus <code>cercaStudente</code>) mette la chiamata dentro <code>try</code> e scrive il <code>catch (IOException e)</code>. Così ogni chiamante sceglie il suo messaggio.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>// Punto 6: throws. Il metodo non gestisce l'errore, lo passa a chi lo chiama.
+static List&lt;String&gt; leggiStudenti() throws IOException {
+    return Files.readAllLines(FILE);
+}
+
+// nel chiamante, visualizzaStudenti():
+try {
+    ...
+    List&lt;String&gt; studenti = leggiStudenti();
+    ...
+} catch (IOException e) {
+    System.out.println("Impossibile leggere il registro.");
+}</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Se togli <code>throws IOException</code> e non metti nemmeno un <code>try-catch</code>, il programma <strong>non compila</strong>. Errore vero di <code>javac</code>:</p>
+<pre data-lang="testo"><code>SenzaGestione.java:7: error: unreported exception IOException; must be caught or declared to be thrown
+        return Files.readAllLines(Path.of("studenti.txt"));
+                                 ^
+1 error</code></pre>
+      <p>Il compilatore dice proprio le due strade: "must be <strong>caught</strong>" (try-catch) "or <strong>declared</strong> to be thrown" (throws).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>7. Utilizzo di finally</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il blocco <code>finally</code> viene eseguito <strong>sempre</strong>, sia che il <code>try</code> vada a buon fine sia che scatti un <code>catch</code>. Teoria: <a href="java-eccezioni.html#try-catch-e-finally">try, catch e finally</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Utilizzo di finally <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> In almeno una delle operazioni utilizza un blocco <code>finally</code>.</p>
+      <p>Nel <code>finally</code> inserisci un messaggio che confermi la conclusione dell'operazione, ad esempio:</p>
+<pre data-lang="testo"><code>Operazione terminata.</code></pre>
+      <p>Ricorda che il <code>finally</code> deve essere eseguito anche quando si verifica un'eccezione.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La consegna chiede "almeno una" operazione; io l'ho messo in <strong>tutte e tre</strong> (inserisci, visualizza, cancella), come nell'esempio dell'Obiettivo finale dove "Operazione terminata." compare dopo ognuna.</li>
+        <li>Il <code>finally</code> si scrive dopo l'ultimo <code>catch</code>.</li>
+        <li>Nel <code>try</code> del menu invece non l'ho messo, perché nell'esempio del PDF dopo "Devi inserire un numero." non compare "Operazione terminata.".</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>try {
+    controllaNome(nome);
+    Files.writeString(FILE, nome + System.lineSeparator(),
+            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    System.out.println("Studente inserito.");
+} catch (IllegalArgumentException e) {
+    System.out.println(e.getMessage());
+} catch (IOException e) {
+    System.out.println("Impossibile salvare lo studente nel registro.");
+} finally {
+    System.out.println("Operazione terminata.");   // sempre, con o senza errore
+}</code></pre>
+      <h4>Output (pezzi delle sessioni vere)</h4>
+      <p>Senza eccezione e con eccezione: "Operazione terminata." c'è in entrambi i casi.</p>
+<pre data-lang="testo"><code>Inserisci il nome dello studente: Mario Rossi
+Studente inserito.
+Operazione terminata.</code></pre>
+<pre data-lang="testo"><code>Inserisci il nome dello studente:
+Il nome non può essere vuoto.
+Operazione terminata.</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Nel secondo caso <code>controllaNome</code> lancia l'eccezione, il <code>try</code> si interrompe, il <code>catch</code> stampa il messaggio e <strong>poi</strong> Java esegue comunque il <code>finally</code>. Il <code>finally</code> è il posto giusto per le cose che vanno fatte in ogni caso (nel capitolo di teoria: chiudere un file).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>8. Più catch</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Dopo un <code>try</code> si possono mettere più <code>catch</code>: Java li prova dall'alto in basso e usa il <strong>primo</strong> compatibile. Teoria: <a href="java-eccezioni.html#l-oggetto-exception-e-piu-catch">L'oggetto Exception e più catch</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Più catch <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Prevedi almeno un punto del programma in cui possano essere gestiti tipi diversi di eccezione.</p>
+      <p>Ad esempio:</p>
+<pre data-lang="java"><code>try {
+    // codice
+} catch (NumberFormatException e) {
+    // errore di conversione
+} catch (Exception e) {
+    // errore generico
+}</code></pre>
+      <p>I <code>catch</code> più specifici devono essere posizionati prima di quelli generici.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p>Nel programma ci sono <strong>due</strong> punti con più <code>catch</code>:</p>
+      <ol>
+        <li><strong>Nel menu</strong> (<code>main</code>), esattamente lo schema del PDF: prima <code>NumberFormatException</code> (l'utente ha scritto lettere), poi <code>Exception</code> come rete di sicurezza per qualsiasi altro problema imprevisto, così il programma non si chiude mai di colpo.</li>
+        <li><strong>In <code>inserisciStudente</code></strong> (e nel bonus <code>cercaStudente</code>): <code>IllegalArgumentException</code> per il nome vuoto e <code>IOException</code> per i problemi con il file. Sono due eccezioni "sorelle", nessuna è figlia dell'altra, quindi qui l'ordine non è obbligato.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>} catch (NumberFormatException e) {
+    // catch specifico: l'utente non ha scritto un numero
+    System.out.println("Devi inserire un numero.");
+} catch (Exception e) {
+    // catch generico: qualsiasi altro errore imprevisto
+    System.out.println("Errore imprevisto: " + e.getMessage());
+}</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Se inverti l'ordine e metti <code>catch (Exception e)</code> per primo, il programma <strong>non compila</strong>: <code>Exception</code> prende già tutto, quindi il <code>catch</code> di <code>NumberFormatException</code> sotto sarebbe irraggiungibile. Errore vero di <code>javac</code>:</p>
+<pre data-lang="testo"><code>OrdineCatch.java:7: error: exception NumberFormatException has already been caught
+        } catch (NumberFormatException e) {
+          ^
+1 error</code></pre>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Obiettivo finale</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Il programma RegistroStudenti completo <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Il programma deve comportarsi indicativamente così:</p>
+<pre data-lang="testo"><code>===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Mario Rossi
+Studente inserito.
+Operazione terminata.
+
+Scelta: 1
+
+Inserisci il nome dello studente: Luca Bianchi
+Studente inserito.
+Operazione terminata.
+
+Scelta: 2
+
+===== STUDENTI =====
+1. Mario Rossi
+2. Luca Bianchi
+Operazione terminata.
+
+Scelta: abc
+
+Devi inserire un numero.
+
+Scelta: 3
+
+Registro cancellato.
+Operazione terminata.
+
+Scelta: 4
+
+Programma terminato.</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Mettere insieme i pezzi dei punti 1–8: una costante <code>FILE</code>, uno <code>Scanner</code> condiviso, il <code>main</code> con il ciclo del menu e un metodo per ogni voce.</li>
+        <li>Ogni metodo di operazione ha la stessa forma: <code>try</code> con il lavoro, uno o più <code>catch</code> con messaggi in italiano, <code>finally</code> con "Operazione terminata.".</li>
+        <li>Dopo ogni operazione stampo una riga vuota e il menu ricompare. Nell'esempio del PDF il menu è scritto solo all'inizio per brevità ("indicativamente"), ma il punto 1 chiede di mostrarlo <strong>continuamente</strong>: nel programma vero ricompare ogni volta.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.Scanner;
+
+public class RegistroStudenti {
+
+    // Il file del registro: percorso relativo, cioè nella cartella da cui parte il programma
+    static final Path FILE = Path.of("studenti.txt");
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        boolean continua = true;
+
+        while (continua) {
+            stampaMenu();
+            try {
+                String riga = scanner.nextLine();
+                System.out.println();
+                int scelta = Integer.parseInt(riga.trim());   // può lanciare NumberFormatException
+
+                switch (scelta) {
+                    case 1:
+                        inserisciStudente();
+                        break;
+                    case 2:
+                        visualizzaStudenti();
+                        break;
+                    case 3:
+                        cancellaRegistro();
+                        break;
+                    case 4:
+                        System.out.println("Programma terminato.");
+                        continua = false;
+                        break;
+                    default:
+                        System.out.println("Scelta non valida: scegli un numero da 1 a 4.");
+                }
+            } catch (NumberFormatException e) {
+                // catch specifico: l'utente non ha scritto un numero
+                System.out.println("Devi inserire un numero.");
+            } catch (Exception e) {
+                // catch generico: qualsiasi altro errore imprevisto
+                System.out.println("Errore imprevisto: " + e.getMessage());
+            }
+
+            if (continua) {
+                System.out.println();   // riga vuota prima del menu successivo
+            }
+        }
+        scanner.close();
+    }
+
+    static void stampaMenu() {
+        System.out.println("===== REGISTRO STUDENTI =====");
+        System.out.println("1. Inserisci studente");
+        System.out.println("2. Visualizza studenti");
+        System.out.println("3. Cancella registro");
+        System.out.println("4. Esci");
+        System.out.println("=============================");
+        System.out.print("Scelta: ");
+    }
+
+    // Punto 5: throw. Se il nome è vuoto lancio io l'eccezione.
+    static void controllaNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome non può essere vuoto.");
+        }
+    }
+
+    // Punto 2: inserimento in append
+    static void inserisciStudente() {
+        System.out.print("Inserisci il nome dello studente: ");
+        String nome = scanner.nextLine().trim();
+        try {
+            controllaNome(nome);
+            Files.writeString(FILE, nome + System.lineSeparator(),
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            System.out.println("Studente inserito.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Impossibile salvare lo studente nel registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+
+    // Punto 6: throws. Il metodo non gestisce l'errore, lo passa a chi lo chiama.
+    static List&lt;String&gt; leggiStudenti() throws IOException {
+        return Files.readAllLines(FILE);
+    }
+
+    // Punto 3: visualizzazione con controllo di esistenza
+    static void visualizzaStudenti() {
+        try {
+            if (!Files.exists(FILE)) {
+                System.out.println("Il registro non esiste ancora.");
+            } else {
+                List&lt;String&gt; studenti = leggiStudenti();
+                if (studenti.isEmpty()) {
+                    System.out.println("Il registro è vuoto.");
+                } else {
+                    System.out.println("===== STUDENTI =====");
+                    for (int i = 0; i &lt; studenti.size(); i++) {
+                        System.out.println((i + 1) + ". " + studenti.get(i));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Impossibile leggere il registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+
+    // Punto 4: cancellazione
+    static void cancellaRegistro() {
+        try {
+            if (Files.deleteIfExists(FILE)) {
+                System.out.println("Registro cancellato.");
+            } else {
+                System.out.println("Il registro non esiste.");
+            }
+        } catch (IOException e) {
+            System.out.println("Impossibile cancellare il registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione 1: la sessione del PDF</h4>
+      <p>Stesso input dell'esempio della consegna. Output vero; dopo <code>Scelta:</code> e dopo la domanda del nome c'è quello che scrive l'utente.</p>
+<pre data-lang="testo"><code>===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Mario Rossi
+Studente inserito.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Luca Bianchi
+Studente inserito.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 2
+
+===== STUDENTI =====
+1. Mario Rossi
+2. Luca Bianchi
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: abc
+
+Devi inserire un numero.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 3
+
+Registro cancellato.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 4
+
+Programma terminato.</code></pre>
+      <h4>Esempio di esecuzione 2: gli errori gestiti</h4>
+      <p>Programma appena avviato, file <code>studenti.txt</code> assente. L'utente prova a visualizzare e a cancellare un registro che non c'è, inserisce un nome vuoto (preme solo Invio), poi un nome valido, sceglie una voce inesistente, visualizza, cancella ed esce.</p>
+<pre data-lang="testo"><code>===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 2
+
+Il registro non esiste ancora.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 3
+
+Il registro non esiste.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: 
+Il nome non può essere vuoto.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Anna Verdi
+Studente inserito.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 7
+
+Scelta non valida: scegli un numero da 1 a 4.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 2
+
+===== STUDENTI =====
+1. Anna Verdi
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 3
+
+Registro cancellato.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+=============================
+Scelta: 4
+
+Programma terminato.</code></pre>
+      <h4>Dove si trova ogni richiesta della consegna</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Richiesta</th><th>Dove</th></tr></thead>
+        <tbody>
+          <tr><td><code>try-catch</code></td><td>nel <code>main</code> e in ogni metodo di operazione</td></tr>
+          <tr><td><code>finally</code></td><td><code>inserisciStudente</code>, <code>visualizzaStudenti</code>, <code>cancellaRegistro</code></td></tr>
+          <tr><td><code>NumberFormatException</code></td><td><code>main</code>, conversione della scelta</td></tr>
+          <tr><td>secondo tipo di eccezione</td><td><code>IllegalArgumentException</code> e <code>IOException</code></td></tr>
+          <tr><td><code>throw</code></td><td><code>controllaNome</code></td></tr>
+          <tr><td><code>throws</code></td><td><code>leggiStudenti</code></td></tr>
+          <tr><td><code>Path</code>, <code>Files</code></td><td>costante <code>FILE</code> e tutti i metodi sul file</td></tr>
+          <tr><td><code>APPEND</code></td><td><code>inserisciStudente</code> (insieme a <code>CREATE</code>)</td></tr>
+          <tr><td><code>Files.exists()</code></td><td><code>visualizzaStudenti</code></td></tr>
+          <tr><td><code>Files.deleteIfExists()</code></td><td><code>cancellaRegistro</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Nessun input può far "crollare" il programma: lettere → <code>NumberFormatException</code>; numero sbagliato → <code>default</code>; nome vuoto → <code>IllegalArgumentException</code>; problemi con il file → <code>IOException</code>; qualsiasi altra cosa → <code>catch (Exception e)</code> del menu.</li>
+        <li>Il file sopravvive alla chiusura del programma: è questo il senso di salvare su file. Lo cancella solo la voce 3.</li>
+        <li>Nella sessione 2, "Il registro non esiste ancora." (voce 2) e "Il registro non esiste." (voce 3) sono due messaggi diversi, come chiede la consegna ai punti 3 e 4.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Domande di verifica</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Domande di verifica <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Al termine dell'esercitazione rispondi alle seguenti domande:</p>
+      <ol>
+        <li>Qual è la differenza tra <code>try</code>, <code>catch</code> e <code>finally</code>?</li>
+        <li>Perché <code>NumberFormatException</code> può essere utile nella gestione del menu?</li>
+        <li>Qual è la differenza tra <code>throw</code> e <code>throws</code>?</li>
+        <li>Perché <code>IOException</code> deve essere gestita o dichiarata?</li>
+        <li>A cosa servono <code>Path</code> e <code>Files</code>?</li>
+        <li>Qual è la differenza tra <code>Files.readString()</code> e <code>Files.readAllLines()</code>?</li>
+        <li>Perché si utilizza <code>StandardOpenOption.APPEND</code> nell'inserimento degli studenti?</li>
+        <li>Che cosa succede se si tenta di leggere un file che non esiste?</li>
+        <li>Perché è utile utilizzare <code>Files.exists()</code> prima della lettura?</li>
+        <li>Perché è importante avere <code>catch</code> specifici prima di un <code>catch (Exception e)</code>?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposte spiegate</summary><div class="soluzione-body">
+      <ol>
+        <li><strong><code>try</code></strong> contiene il codice che può dare errore; <strong><code>catch</code></strong> viene eseguito solo se nel <code>try</code> scatta un'eccezione del tipo indicato e la gestisce; <strong><code>finally</code></strong> viene eseguito sempre, con o senza errore. Nel registro: il <code>try</code> scrive sul file, il <code>catch</code> stampa "Il nome non può essere vuoto.", il <code>finally</code> stampa "Operazione terminata." in entrambi i casi.</li>
+        <li>Perché la scelta arriva come testo (<code>nextLine()</code>) e l'utente può scrivere qualsiasi cosa. Se scrive <code>abc</code>, <code>Integer.parseInt</code> lancia <code>NumberFormatException</code>: catturandola stampo "Devi inserire un numero." e il menu ricompare, invece di far terminare il programma con un errore rosso.</li>
+        <li><strong><code>throw</code></strong> è un'istruzione che <strong>lancia</strong> un'eccezione adesso: <code>throw new IllegalArgumentException("Il nome non può essere vuoto.");</code>. <strong><code>throws</code></strong> sta nella <strong>firma</strong> di un metodo e <strong>avvisa</strong> che il metodo può lanciare quell'eccezione senza gestirla: <code>static List&lt;String&gt; leggiStudenti() throws IOException</code>. Uno la crea, l'altro la passa al chiamante.</li>
+        <li>Perché è un'eccezione <strong>checked</strong>: rappresenta errori esterni al programma (file mancante, disco pieno, permessi) che possono capitare anche con codice perfetto, quindi il compilatore obbliga a pensarci. Se non la catturi né la dichiari, <code>javac</code> si rifiuta: "unreported exception IOException; must be caught or declared to be thrown" (errore vero, punto 6).</li>
+        <li><code>Path</code> rappresenta il <strong>percorso</strong> di un file (dove si trova, come si chiama): <code>Path.of("studenti.txt")</code>. <code>Files</code> è una classe di soli metodi <code>static</code> che <strong>lavorano</strong> sui file indicati da un <code>Path</code>: <code>writeString</code>, <code>readAllLines</code>, <code>exists</code>, <code>deleteIfExists</code>. Insieme sostituiscono <code>File</code>, <code>FileWriter</code> e <code>FileReader</code>, senza <code>close()</code>.</li>
+        <li><code>readString</code> restituisce <strong>tutto il file in una sola <code>String</code></strong>, a capo compresi; <code>readAllLines</code> restituisce una <strong><code>List&lt;String&gt;</code></strong> con un elemento per riga, senza a capo. Prova vera su un file con due nomi:
+<pre data-lang="testo"><code>readString: [Mario Rossi
+Luca Bianchi
+]
+readAllLines: [Mario Rossi, Luca Bianchi]
+righe.size() = 2</code></pre>
+          Per numerare gli studenti serve la lista, perciò il punto 3 usa <code>readAllLines</code>.</li>
+        <li>Perché ogni nuovo studente deve essere <strong>aggiunto in fondo</strong> e non sostituire quelli già salvati. Senza opzioni <code>writeString</code> svuoterebbe il file a ogni inserimento. Va affiancato da <code>CREATE</code>, perché <code>APPEND</code> da solo su un file che non c'è lancia <code>NoSuchFileException</code> (prova vera al punto 2).</li>
+        <li><code>Files.readAllLines</code> lancia una <code>NoSuchFileException</code>, che è una sottoclasse di <code>IOException</code>. Prova vera:
+<pre data-lang="testo"><code>Errore: java.nio.file.NoSuchFileException: non_esiste.txt</code></pre>
+          Se nessuno la cattura, il programma si interrompe con lo stack trace.</li>
+        <li>Perché il file mancante è un caso <strong>normale e prevedibile</strong> (all'inizio il registro non c'è mai): con un <code>if</code> lo si gestisce in modo chiaro e si dà un messaggio preciso, "Il registro non esiste ancora.", senza usare un'eccezione per una situazione ordinaria. Il <code>try-catch</code> resta per gli errori davvero imprevisti.</li>
+        <li>Perché Java usa il <strong>primo</strong> <code>catch</code> compatibile: <code>Exception</code> è compatibile con tutto, quindi se fosse il primo i <code>catch</code> specifici non verrebbero mai usati e non potresti dare messaggi precisi ("Devi inserire un numero."). Infatti Java non compila nemmeno quel codice: "exception NumberFormatException has already been caught" (errore vero, punto 8).</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Bonus</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Cerca studente <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Aggiungi una quinta voce al menu:</p>
+<pre data-lang="testo"><code>5. Cerca studente</code></pre>
+      <p>L'utente inserisce un nome e il programma verifica se è presente nel file.</p>
+      <p>Se lo trova:</p>
+<pre data-lang="testo"><code>Studente trovato.</code></pre>
+      <p>Altrimenti:</p>
+<pre data-lang="testo"><code>Studente non trovato.</code></pre>
+      <p>Gestisci anche gli eventuali errori di lettura del file.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Tre aggiunte al programma: la riga <code>5. Cerca studente</code> nel menu (dopo <code>4. Esci</code>, così i numeri delle altre voci non cambiano), un <code>case 5</code> nello <code>switch</code>, e un metodo <code>cercaStudente()</code>.</li>
+        <li>Il metodo riusa quello che c'è già: <code>controllaNome</code> per il nome vuoto, <code>Files.exists</code> per il file mancante, <code>leggiStudenti()</code> (con il suo <code>throws IOException</code>) per leggere.</li>
+        <li>La ricerca è un classico ciclo con una variabile <code>boolean trovato</code>: parte da <code>false</code>, diventa <code>true</code> al primo nome uguale e <code>break</code> ferma il ciclo. Il messaggio lo stampo <strong>dopo</strong> il ciclo, una volta sola.</li>
+        <li>Confronto con <code>equalsIgnoreCase</code>, così "mario rossi" trova "Mario Rossi". Mai <code>==</code> tra stringhe.</li>
+        <li>"Errori di lettura del file" → <code>catch (IOException e)</code>; in più <code>catch (IllegalArgumentException e)</code> per il nome vuoto e il solito <code>finally</code>.</li>
+      </ol>
+      <h4>Codice: le parti nuove</h4>
+<pre data-lang="java"><code>// in stampaMenu(), dopo "4. Esci"
+System.out.println("5. Cerca studente");
+
+// nello switch del main, dopo il case 4
+case 5:
+    cercaStudente();
+    break;
+default:
+    System.out.println("Scelta non valida: scegli un numero da 1 a 5.");
+
+// Bonus: ricerca di uno studente nel file
+static void cercaStudente() {
+    System.out.print("Nome da cercare: ");
+    String nome = scanner.nextLine().trim();
+    try {
+        controllaNome(nome);
+        if (!Files.exists(FILE)) {
+            System.out.println("Il registro non esiste ancora.");
+        } else {
+            List&lt;String&gt; studenti = leggiStudenti();
+            boolean trovato = false;
+            for (int i = 0; i &lt; studenti.size(); i++) {
+                if (studenti.get(i).equalsIgnoreCase(nome)) {
+                    trovato = true;
+                    break;   // trovato: inutile continuare a cercare
+                }
+            }
+            if (trovato) {
+                System.out.println("Studente trovato.");
+            } else {
+                System.out.println("Studente non trovato.");
+            }
+        }
+    } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
+    } catch (IOException e) {
+        System.out.println("Impossibile leggere il registro.");
+    } finally {
+        System.out.println("Operazione terminata.");
+    }
+}</code></pre>
+      <h4>Codice completo con il bonus</h4>
+<pre data-lang="java"><code>import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.Scanner;
+
+public class RegistroStudenti {
+
+    // Il file del registro: percorso relativo, cioè nella cartella da cui parte il programma
+    static final Path FILE = Path.of("studenti.txt");
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        boolean continua = true;
+
+        while (continua) {
+            stampaMenu();
+            try {
+                String riga = scanner.nextLine();
+                System.out.println();
+                int scelta = Integer.parseInt(riga.trim());   // può lanciare NumberFormatException
+
+                switch (scelta) {
+                    case 1:
+                        inserisciStudente();
+                        break;
+                    case 2:
+                        visualizzaStudenti();
+                        break;
+                    case 3:
+                        cancellaRegistro();
+                        break;
+                    case 4:
+                        System.out.println("Programma terminato.");
+                        continua = false;
+                        break;
+                    case 5:
+                        cercaStudente();
+                        break;
+                    default:
+                        System.out.println("Scelta non valida: scegli un numero da 1 a 5.");
+                }
+            } catch (NumberFormatException e) {
+                // catch specifico: l'utente non ha scritto un numero
+                System.out.println("Devi inserire un numero.");
+            } catch (Exception e) {
+                // catch generico: qualsiasi altro errore imprevisto
+                System.out.println("Errore imprevisto: " + e.getMessage());
+            }
+
+            if (continua) {
+                System.out.println();   // riga vuota prima del menu successivo
+            }
+        }
+        scanner.close();
+    }
+
+    static void stampaMenu() {
+        System.out.println("===== REGISTRO STUDENTI =====");
+        System.out.println("1. Inserisci studente");
+        System.out.println("2. Visualizza studenti");
+        System.out.println("3. Cancella registro");
+        System.out.println("4. Esci");
+        System.out.println("5. Cerca studente");
+        System.out.println("=============================");
+        System.out.print("Scelta: ");
+    }
+
+    // Punto 5: throw. Se il nome è vuoto lancio io l'eccezione.
+    static void controllaNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome non può essere vuoto.");
+        }
+    }
+
+    // Punto 2: inserimento in append
+    static void inserisciStudente() {
+        System.out.print("Inserisci il nome dello studente: ");
+        String nome = scanner.nextLine().trim();
+        try {
+            controllaNome(nome);
+            Files.writeString(FILE, nome + System.lineSeparator(),
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            System.out.println("Studente inserito.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Impossibile salvare lo studente nel registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+
+    // Punto 6: throws. Il metodo non gestisce l'errore, lo passa a chi lo chiama.
+    static List&lt;String&gt; leggiStudenti() throws IOException {
+        return Files.readAllLines(FILE);
+    }
+
+    // Punto 3: visualizzazione con controllo di esistenza
+    static void visualizzaStudenti() {
+        try {
+            if (!Files.exists(FILE)) {
+                System.out.println("Il registro non esiste ancora.");
+            } else {
+                List&lt;String&gt; studenti = leggiStudenti();
+                if (studenti.isEmpty()) {
+                    System.out.println("Il registro è vuoto.");
+                } else {
+                    System.out.println("===== STUDENTI =====");
+                    for (int i = 0; i &lt; studenti.size(); i++) {
+                        System.out.println((i + 1) + ". " + studenti.get(i));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Impossibile leggere il registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+
+    // Bonus: ricerca di uno studente nel file
+    static void cercaStudente() {
+        System.out.print("Nome da cercare: ");
+        String nome = scanner.nextLine().trim();
+        try {
+            controllaNome(nome);
+            if (!Files.exists(FILE)) {
+                System.out.println("Il registro non esiste ancora.");
+            } else {
+                List&lt;String&gt; studenti = leggiStudenti();
+                boolean trovato = false;
+                for (int i = 0; i &lt; studenti.size(); i++) {
+                    if (studenti.get(i).equalsIgnoreCase(nome)) {
+                        trovato = true;
+                        break;   // trovato: inutile continuare a cercare
+                    }
+                }
+                if (trovato) {
+                    System.out.println("Studente trovato.");
+                } else {
+                    System.out.println("Studente non trovato.");
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Impossibile leggere il registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+
+    // Punto 4: cancellazione
+    static void cancellaRegistro() {
+        try {
+            if (Files.deleteIfExists(FILE)) {
+                System.out.println("Registro cancellato.");
+            } else {
+                System.out.println("Il registro non esiste.");
+            }
+        } catch (IOException e) {
+            System.out.println("Impossibile cancellare il registro.");
+        } finally {
+            System.out.println("Operazione terminata.");
+        }
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+      <p>File assente all'avvio. L'utente cerca subito (registro inesistente), inserisce due studenti, cerca "mario rossi" in minuscolo, cerca uno studente che non c'è, prova una ricerca vuota ed esce.</p>
+<pre data-lang="testo"><code>===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 5
+
+Nome da cercare: Mario Rossi
+Il registro non esiste ancora.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Mario Rossi
+Studente inserito.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 1
+
+Inserisci il nome dello studente: Luca Bianchi
+Studente inserito.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 5
+
+Nome da cercare: mario rossi
+Studente trovato.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 5
+
+Nome da cercare: Anna Verdi
+Studente non trovato.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 5
+
+Nome da cercare: 
+Il nome non può essere vuoto.
+Operazione terminata.
+
+===== REGISTRO STUDENTI =====
+1. Inserisci studente
+2. Visualizza studenti
+3. Cancella registro
+4. Esci
+5. Cerca studente
+=============================
+Scelta: 4
+
+Programma terminato.</code></pre>
+      <p>E con <code>studenti.txt</code> sostituito da una cartella, per far scattare l'errore di lettura (output vero):</p>
+<pre data-lang="testo"><code>Scelta: 5
+
+Nome da cercare: Mario Rossi
+Impossibile leggere il registro.
+Operazione terminata.</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Stampare "Studente non trovato." <strong>dentro</strong> il ciclo, nell'<code>else</code>: uscirebbe una volta per ogni riga diversa dal nome cercato.</li>
+        <li>Usare <code>studenti.contains(nome)</code> va bene, ma distingue maiuscole e minuscole: "mario rossi" non troverebbe "Mario Rossi".</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Fonti</h2>
+  <p>Consegna tratta dal PDF <em>Esercitazione pratica Java – Eccezioni e gestione dei file</em> (livello base, classe 5ª), assegnato su Google Classroom, riportata fedelmente. Sono aggiunti: le soluzioni con codice compilato ed eseguito (Java 21), gli esempi di esecuzione con output vero, le prove degli errori (cartella al posto del file, <code>APPEND</code> senza <code>CREATE</code>, errori di compilazione), la tabella <code>File</code>/<code>FileWriter</code> contro <code>Path</code>/<code>Files</code> e le risposte alle domande di verifica. Due precisazioni rispetto al PDF: <code>StandardOpenOption.APPEND</code> va usato insieme a <code>CREATE</code>, altrimenti il primo inserimento fallisce con <code>NoSuchFileException</code>; nell'esempio dell'Obiettivo finale il menu è scritto una volta sola per brevità, ma il programma lo ripete a ogni giro, come richiesto al punto 1.</p>
+
+</main>
+</body>
+</html>
