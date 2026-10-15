@@ -1,0 +1,2229 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: condizioni e cicli · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione Classroom di Java con soluzioni spiegate: condizioni if, else, else if, if annidati, operatori di confronto e logici (&amp;&amp;, ||, !), operatore ternario, switch con break e default, classe Math (abs, min, max, pow, sqrt, PI), Scanner, cicli for, while, do-while, foreach su array, break e continue, cicli annidati, esercizio integrato, sfida finale con menu, debug di cicli infiniti e domande teoriche.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: condizioni e cicli</h1>
+  <p class="lead">L'esercitazione assegnata su Classroom "Esercitazione pratica completa – Java": si parte dalle condizioni più semplici e si arriva a un programma completo con menu, calcoli e cicli. Qui trovi ogni consegna riportata fedelmente, con risposta, codice, output vero e spiegazione. Per la parte su array e <code>foreach</code> il capitolo di teoria è <a href="java-array-wrapper-metodi-overload.html">Array, wrapper, metodi e overload</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a scrivere il programma da solo e solo dopo apri la <strong>risposta spiegata</strong>. Ogni programma è stato compilato ed eseguito con Java 21: l'output che vedi è quello vero. Negli esempi di esecuzione, il numero dopo i due punti di una domanda (per esempio <code>Età: 20</code>) è quello scritto dall'utente con la tastiera. I nomi delle classi non sono imposti dal PDF: usane pure altri, basta che il file si chiami come la classe.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <p><strong>Argomenti:</strong> condizioni, operatori di confronto e logici, classe <code>Math</code>, <code>Scanner</code>, cicli <code>while</code>, <code>do-while</code>, <code>for</code>, <code>foreach</code>, <code>break</code>, <code>continue</code>.</p>
+  <p><strong>Obiettivo:</strong> realizzare programmi Java partendo da semplici istruzioni condizionali fino a un programma completo che utilizza contemporaneamente condizioni, calcoli e cicli.</p>
+
+  <!-- ============================================================= -->
+  <h2>Parte 1 – Ripasso rapido</h2>
+  <p>Prima di iniziare, completa mentalmente queste associazioni:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Strumento</th><th>Utilizzo</th></tr></thead>
+    <tbody>
+      <tr><td><code>if</code></td><td>Una condizione</td></tr>
+      <tr><td><code>if...else</code></td><td>Due possibilità</td></tr>
+      <tr><td><code>else if</code></td><td>Più condizioni/intervalli</td></tr>
+      <tr><td><code>if</code> annidato</td><td>Condizioni dipendenti</td></tr>
+      <tr><td><code>?:</code></td><td>Scelta semplice tra due valori</td></tr>
+      <tr><td><code>switch</code></td><td>Confronto con valori specifici</td></tr>
+      <tr><td><code>for</code></td><td>Numero di iterazioni noto</td></tr>
+      <tr><td><code>while</code></td><td>Numero di iterazioni non noto</td></tr>
+      <tr><td><code>do-while</code></td><td>Il blocco deve essere eseguito almeno una volta</td></tr>
+      <tr><td><code>foreach</code></td><td>Attraversare tutti gli elementi di un array</td></tr>
+      <tr><td><code>break</code></td><td>Interrompere il ciclo</td></tr>
+      <tr><td><code>continue</code></td><td>Saltare l'iterazione corrente</td></tr>
+    </tbody>
+  </table></div>
+  <p>In pratica la tabella dice <strong>quale attrezzo scegliere</strong>: le prime sei righe servono a <em>decidere</em> (eseguire un pezzo di codice oppure un altro), le ultime sei a <em>ripetere</em> (e a controllare la ripetizione). Ogni parte dell'esercitazione allena una riga della tabella.</p>
+
+  <!-- ============================================================= -->
+  <h2>Parte 2 – Operatori di confronto</h2>
+  <p>Gli operatori da utilizzare sono: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</p>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un confronto mette a paragone due valori e dà come risultato <code>true</code> (vero) o <code>false</code> (falso). Attenzione: <code>==</code> (due uguali) confronta, <code>=</code> (uno solo) assegna.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Confronti <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi un programma che dichiari:</p>
+<pre data-lang="java"><code>int a = 15;
+int b = 10;</code></pre>
+      <p>e visualizzi il risultato dei seguenti confronti:</p>
+      <ul>
+        <li><code>a == b</code></li>
+        <li><code>a != b</code></li>
+        <li><code>a &gt; b</code></li>
+        <li><code>a &lt; b</code></li>
+        <li><code>a &gt;= b</code></li>
+        <li><code>a &lt;= b</code></li>
+      </ul>
+      <p><strong>Domanda:</strong> che tipo di valore restituisce ogni confronto?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Un confronto si può stampare direttamente: Java lo calcola e scrive <code>true</code> o <code>false</code>.</li>
+        <li>Il confronto va messo <strong>tra parentesi</strong> dentro la concatenazione: <code>"a == b -&gt; " + (a == b)</code>. Senza parentesi Java proverebbe prima a fare <code>"testo" + a</code> e poi a confrontare una stringa con un numero, e non compila.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Confronti {
+    public static void main(String[] args) {
+        int a = 15;
+        int b = 10;
+
+        System.out.println("a == b -&gt; " + (a == b));
+        System.out.println("a != b -&gt; " + (a != b));
+        System.out.println("a &gt; b  -&gt; " + (a &gt; b));
+        System.out.println("a &lt; b  -&gt; " + (a &lt; b));
+        System.out.println("a &gt;= b -&gt; " + (a &gt;= b));
+        System.out.println("a &lt;= b -&gt; " + (a &lt;= b));
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>a == b -&gt; false
+a != b -&gt; true
+a &gt; b  -&gt; true
+a &lt; b  -&gt; false
+a &gt;= b -&gt; true
+a &lt;= b -&gt; false</code></pre>
+      <h4>Risposta alla domanda</h4>
+      <p>Ogni confronto restituisce un valore di tipo <strong><code>boolean</code></strong>, cioè <code>true</code> oppure <code>false</code>. Per questo si può anche salvare in una variabile: <code>boolean uguali = (a == b);</code>. Ed è proprio questo valore che <code>if</code>, <code>while</code> e <code>for</code> usano per decidere cosa fare.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 3 – if, else e else if</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Java controlla le condizioni <strong>dall'alto verso il basso</strong> ed esegue solo il <strong>primo</strong> ramo la cui condizione è vera; l'<code>else</code> finale scatta se nessuna lo è.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Maggiore, minore o uguale <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi all'utente due numeri interi.</p>
+      <p>Il programma deve stabilire se:</p>
+      <ul>
+        <li>il primo è maggiore del secondo;</li>
+        <li>il primo è minore del secondo;</li>
+        <li>i due numeri sono uguali.</li>
+      </ul>
+      <p>Utilizza: <code>if</code>, <code>else if</code>, <code>else</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Leggo i due numeri con <code>Scanner</code> e <code>nextInt()</code>.</li>
+        <li>I casi sono tre e si escludono a vicenda: con <code>if</code> controllo "maggiore", con <code>else if</code> "minore".</li>
+        <li>Se non è né maggiore né minore, l'unica possibilità rimasta è che siano uguali: basta l'<code>else</code>, senza scrivere <code>primo == secondo</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class MaggioreMinoreUguale {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Primo numero: ");
+        int primo = in.nextInt();
+        System.out.print("Secondo numero: ");
+        int secondo = in.nextInt();
+
+        if (primo &gt; secondo) {
+            System.out.println("Il primo è maggiore del secondo");
+        } else if (primo &lt; secondo) {
+            System.out.println("Il primo è minore del secondo");
+        } else {
+            System.out.println("I due numeri sono uguali");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (tre esecuzioni)</h4>
+<pre data-lang="testo"><code>Primo numero: 12
+Secondo numero: 7
+Il primo è maggiore del secondo
+
+Primo numero: 3
+Secondo numero: 9
+Il primo è minore del secondo
+
+Primo numero: 5
+Secondo numero: 5
+I due numeri sono uguali</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Per provare un programma con <code>if</code> bisogna eseguirlo <strong>una volta per ogni ramo</strong>: qui tre esecuzioni, una per caso. Se provi solo con 12 e 7 non sai se gli altri due rami sono giusti.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Controllo del voto <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi all'utente un voto compreso tra <code>0</code> e <code>10</code>.</p>
+      <p>Visualizza:</p>
+      <ul>
+        <li><code>Eccellente</code> → 9-10</li>
+        <li><code>Buono</code> → 8</li>
+        <li><code>Sufficiente</code> → 6-7</li>
+        <li><code>Insufficiente</code> → 0-5</li>
+      </ul>
+      <p>Utilizza <code>if / else if / else</code>.</p>
+      <p><strong>Attenzione:</strong> l'ordine delle condizioni è importante.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Parto dalla fascia <strong>più alta</strong>: <code>voto &gt;= 9</code>. Se è falsa so già che il voto è al massimo 8.</li>
+        <li>Quindi nel ramo successivo basta <code>voto &gt;= 8</code> (che a quel punto significa "esattamente 8"), poi <code>voto &gt;= 6</code> (cioè 6 o 7).</li>
+        <li>Tutto il resto (0-5) va nell'<code>else</code>.</li>
+        <li>In più, come prima condizione, scarto i voti fuori dall'intervallo 0-10 con <code>||</code>: un 12 altrimenti diventerebbe "Eccellente".</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class ControlloVoto {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Voto (0-10): ");
+        int voto = in.nextInt();
+
+        // prima scarto i valori fuori intervallo, poi controllo dal voto più alto
+        if (voto &lt; 0 || voto &gt; 10) {
+            System.out.println("Voto non valido");
+        } else if (voto &gt;= 9) {
+            System.out.println("Eccellente");
+        } else if (voto &gt;= 8) {
+            System.out.println("Buono");
+        } else if (voto &gt;= 6) {
+            System.out.println("Sufficiente");
+        } else {
+            System.out.println("Insufficiente");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (cinque esecuzioni)</h4>
+<pre data-lang="testo"><code>Voto (0-10): 10
+Eccellente
+
+Voto (0-10): 8
+Buono
+
+Voto (0-10): 7
+Sufficiente
+
+Voto (0-10): 4
+Insufficiente
+
+Voto (0-10): 12
+Voto non valido</code></pre>
+      <h4>Perché l'ordine è importante</h4>
+      <p>Se scrivessi per prima <code>voto &gt;= 6</code>, un 9 la renderebbe vera e stamperebbe "Sufficiente": Java non guarderebbe più i rami sotto. Con gli <code>else if</code> si va <strong>dalla condizione più restrittiva alla più larga</strong>. È esattamente l'errore dell'<a href="#ex-31">esercizio 31</a>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 4 – Operatori logici</h2>
+  <p>Utilizza:</p>
+<pre data-lang="java"><code>&amp;&amp;   // AND
+||   // OR
+!    // NOT</code></pre>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>a &amp;&amp; b</code> è vero solo se <strong>entrambe</strong> sono vere; <code>a || b</code> è vero se <strong>almeno una</strong> è vera; <code>!a</code> <strong>rovescia</strong> il valore. Servono a unire più confronti in una sola condizione.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Accesso <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Dichiara:</p>
+<pre data-lang="java"><code>int eta;
+boolean badge;</code></pre>
+      <p>Chiedi all'utente età e possesso del badge.</p>
+      <p>L'accesso è consentito solo se:</p>
+      <ul>
+        <li>l'utente ha almeno 18 anni;</li>
+        <li>possiede il badge.</li>
+      </ul>
+      <p>Utilizza <code>&amp;&amp;</code>.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>Età: 20
+Badge valido? true
+
+Accesso consentito</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Per leggere un <code>boolean</code> c'è <code>nextBoolean()</code>: l'utente scrive <code>true</code> o <code>false</code>.</li>
+        <li>Le due richieste devono valere <strong>insieme</strong>: <code>eta &gt;= 18 &amp;&amp; badge</code>.</li>
+        <li><code>badge</code> è già un <code>boolean</code>: scrivere <code>badge == true</code> funzionerebbe, ma è inutile.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Accesso {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int eta;
+        boolean badge;
+
+        System.out.print("Età: ");
+        eta = in.nextInt();
+        System.out.print("Badge valido? ");
+        badge = in.nextBoolean();   // l'utente scrive true oppure false
+
+        if (eta &gt;= 18 &amp;&amp; badge) {
+            System.out.println("Accesso consentito");
+        } else {
+            System.out.println("Accesso negato");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Età: 20
+Badge valido? true
+Accesso consentito
+
+Età: 16
+Badge valido? true
+Accesso negato</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Scrivere <code>18 &lt;= eta &lt;= 99</code> come in matematica: in Java non compila, va spezzato in <code>eta &gt;= 18 &amp;&amp; eta &lt;= 99</code>.</li>
+        <li>Se l'utente scrive <code>si</code> invece di <code>true</code>, <code>nextBoolean()</code> si ferma con un errore (<code>InputMismatchException</code>): il PDF chiede proprio <code>true</code>/<code>false</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Giorno del weekend <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi un numero da <code>1</code> a <code>7</code>.</p>
+      <p>Il programma deve visualizzare <code>Weekend</code> se il numero è <code>6</code> oppure <code>7</code>.</p>
+      <p>Utilizza <code>||</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"6 oppure 7" si traduce con l'OR: <code>giorno == 6 || giorno == 7</code>.</li>
+        <li>Ho aggiunto un <code>else</code> con "Giorno feriale" per vedere qualcosa anche negli altri casi (il PDF non lo chiede).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Weekend {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Numero del giorno (1-7): ");
+        int giorno = in.nextInt();
+
+        if (giorno == 6 || giorno == 7) {
+            System.out.println("Weekend");
+        } else {
+            System.out.println("Giorno feriale");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Numero del giorno (1-7): 6
+Weekend
+
+Numero del giorno (1-7): 3
+Giorno feriale</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Scrivere <code>giorno == 6 || 7</code>: ogni lato di <code>||</code> deve essere un confronto completo, e <code>7</code> da solo non è un <code>boolean</code>, quindi non compila.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Negazione <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Dichiara:</p>
+<pre data-lang="java"><code>boolean piove;</code></pre>
+      <p>Se non piove, stampa:</p>
+<pre data-lang="testo"><code>Possiamo uscire</code></pre>
+      <p>Utilizza l'operatore <code>!</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Do a <code>piove</code> un valore: <code>false</code> (non piove). Una variabile locale va inizializzata prima di essere letta, altrimenti il compilatore dà errore.</li>
+        <li><code>!piove</code> vale <code>true</code> quando <code>piove</code> è <code>false</code>: è proprio "se non piove".</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Negazione {
+    public static void main(String[] args) {
+        boolean piove = false;
+
+        if (!piove) {          // si legge: "se NON piove"
+            System.out.println("Possiamo uscire");
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Possiamo uscire</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Se cambi la prima riga in <code>boolean piove = true;</code> il programma non stampa niente: <code>!true</code> è <code>false</code> e il blocco dell'<code>if</code> viene saltato. <code>if (!piove)</code> si legge meglio di <code>if (piove == false)</code>, anche se fanno la stessa cosa.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 5 – if annidati</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Accesso con controllo doppio <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizza un programma che chieda:</p>
+<pre data-lang="testo"><code>Età:
+Possiedi il badge? true/false</code></pre>
+      <p>Il programma deve comportarsi così:</p>
+      <ol>
+        <li>se l'età è inferiore a 18 → <code>Accesso vietato</code>;</li>
+        <li>se l'età è almeno 18:
+          <ul>
+            <li>se il badge è valido → <code>Accesso consentito</code>;</li>
+            <li>altrimenti → <code>Badge non valido</code>.</li>
+          </ul>
+        </li>
+      </ol>
+      <p>Utilizza un <code>if</code> annidato.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il primo controllo è sull'età. Se è minore di 18 il badge non interessa nemmeno.</li>
+        <li>Nell'<code>else</code> (età almeno 18) metto un <strong>secondo <code>if</code></strong>, dentro il primo, che guarda il badge. La seconda domanda dipende dalla risposta alla prima: è questo il caso dell'<code>if</code> annidato.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class AccessoDoppio {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Età: ");
+        int eta = in.nextInt();
+        System.out.print("Possiedi il badge? true/false ");
+        boolean badge = in.nextBoolean();
+
+        if (eta &lt; 18) {
+            System.out.println("Accesso vietato");
+        } else {
+            // qui dentro so già che eta &gt;= 18
+            if (badge) {
+                System.out.println("Accesso consentito");
+            } else {
+                System.out.println("Badge non valido");
+            }
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (tre esecuzioni, una per ramo)</h4>
+<pre data-lang="testo"><code>Età: 15
+Possiedi il badge? true/false true
+Accesso vietato
+
+Età: 20
+Possiedi il badge? true/false true
+Accesso consentito
+
+Età: 20
+Possiedi il badge? true/false false
+Badge non valido</code></pre>
+      <h4>Differenza con l'esercizio 4</h4>
+      <p>Con <code>&amp;&amp;</code> c'erano solo due esiti (consentito / negato). Con l'<code>if</code> annidato ce ne sono tre, e il messaggio dice <strong>perché</strong> l'accesso non va: troppo giovane oppure badge mancante. Nota che il programma chiede il badge anche al quindicenne: per non chiederlo si potrebbe spostare la seconda domanda dentro l'<code>else</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 6 – Operatore ternario</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>condizione ? valoreSeVera : valoreSeFalsa</code> è un <code>if...else</code> compatto che <strong>produce un valore</strong>, da assegnare a una variabile o stampare.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Numero maggiore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi due numeri interi e trova il maggiore utilizzando esclusivamente il ternario.</p>
+      <p>Struttura attesa:</p>
+<pre data-lang="java"><code>int maggiore = ... ? ... : ...;</code></pre>
+      <p>Visualizza il risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La condizione è <code>a &gt; b</code>; se è vera il maggiore è <code>a</code>, altrimenti <code>b</code>.</li>
+        <li>Riempio lo schema: <code>int maggiore = a &gt; b ? a : b;</code></li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class NumeroMaggiore {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Primo numero: ");
+        int a = in.nextInt();
+        System.out.print("Secondo numero: ");
+        int b = in.nextInt();
+
+        int maggiore = a &gt; b ? a : b;   // condizione ? valore se vera : valore se falsa
+
+        System.out.println("Il maggiore è " + maggiore);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Primo numero: 8
+Secondo numero: 13
+Il maggiore è 13</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Se i numeri sono uguali, <code>a &gt; b</code> è falso e viene scelto <code>b</code>: va bene lo stesso, perché è uguale ad <code>a</code>. I due valori dopo <code>?</code> e <code>:</code> devono essere dello stesso tipo della variabile (qui <code>int</code>).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Maggiorenne o minorenne <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi l'età e assegna a una variabile <code>String</code>: <code>Maggiorenne</code> oppure <code>Minorenne</code>, utilizzando il ternario.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p>Qui il ternario produce una <code>String</code>: <code>String stato = eta &gt;= 18 ? "Maggiorenne" : "Minorenne";</code></p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Maggiorenne {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Età: ");
+        int eta = in.nextInt();
+
+        String stato = eta &gt;= 18 ? "Maggiorenne" : "Minorenne";
+
+        System.out.println(stato);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Età: 17
+Minorenne
+
+Età: 18
+Maggiorenne</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Il caso limite è 18: con <code>eta &gt; 18</code> un diciottenne risulterebbe "Minorenne". Prova sempre il valore di confine.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 7 – switch</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Giorno della settimana <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi un numero da <code>1</code> a <code>7</code>.</p>
+      <p>Utilizza <code>switch</code> per visualizzare:</p>
+<pre data-lang="testo"><code>1 → Lunedì
+2 → Martedì
+3 → Mercoledì
+4 → Giovedì
+5 → Venerdì
+6 → Sabato
+7 → Domenica</code></pre>
+      <p>Per ogni <code>case</code> utilizza <code>break</code>.</p>
+      <p>Se il numero non è valido, visualizza <code>Valore non valido</code> utilizzando <code>default</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>switch (n)</code> confronta <code>n</code> con i valori dei <code>case</code> e salta a quello uguale.</li>
+        <li>Ogni <code>case</code> finisce con <code>break</code>, che fa uscire dallo <code>switch</code>.</li>
+        <li><code>default</code> raccoglie tutti gli altri valori (0, 8, -3…). Essendo l'ultimo non ha bisogno di <code>break</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class GiornoSettimana {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Numero (1-7): ");
+        int n = in.nextInt();
+
+        switch (n) {
+            case 1:
+                System.out.println("Lunedì");
+                break;
+            case 2:
+                System.out.println("Martedì");
+                break;
+            case 3:
+                System.out.println("Mercoledì");
+                break;
+            case 4:
+                System.out.println("Giovedì");
+                break;
+            case 5:
+                System.out.println("Venerdì");
+                break;
+            case 6:
+                System.out.println("Sabato");
+                break;
+            case 7:
+                System.out.println("Domenica");
+                break;
+            default:
+                System.out.println("Valore non valido");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Numero (1-7): 3
+Mercoledì
+
+Numero (1-7): 9
+Valore non valido</code></pre>
+      <h4>Perché serve il break</h4>
+      <p>Senza <code>break</code>, dopo il <code>case</code> giusto Java <strong>continua</strong> a eseguire anche i <code>case</code> successivi (si chiama <em>fall-through</em>): con 3 stamperebbe da Mercoledì fino a "Valore non valido". Lo vedi provato nella domanda 13 della <a href="#ex-34">Parte 18</a>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 8 – Classe Math</h2>
+  <p>Utilizza i metodi presenti nella classe <code>Math</code>.</p>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>Math</code> non si importa e non si crea: si scrive <code>Math.</code> seguito dal metodo. <code>abs</code>, <code>min</code>, <code>max</code> restituiscono lo stesso tipo che ricevono; <code>pow</code> e <code>sqrt</code> restituiscono sempre un <code>double</code>; <code>Math.PI</code> è una costante (senza parentesi).</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Valore assoluto <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi due numeri e calcola la loro distanza utilizzando <code>Math.abs()</code>.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>Primo numero: 10
+Secondo numero: 25
+
+Distanza: 15</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La distanza è la differenza, ma senza segno: 10 - 25 = -15, e una distanza negativa non ha senso.</li>
+        <li><code>Math.abs</code> toglie il segno: <code>Math.abs(-15)</code> vale 15. Così l'ordine in cui l'utente scrive i numeri non conta più.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class ValoreAssoluto {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Primo numero: ");
+        int a = in.nextInt();
+        System.out.print("Secondo numero: ");
+        int b = in.nextInt();
+
+        int distanza = Math.abs(a - b);   // il segno non conta: 10-25 e 25-10 danno 15
+
+        System.out.println("Distanza: " + distanza);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Primo numero: 10
+Secondo numero: 25
+Distanza: 15
+
+Primo numero: 25
+Secondo numero: 10
+Distanza: 15</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">12</span>Minimo e massimo <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi due numeri.</p>
+      <p>Utilizza <code>Math.min()</code> e <code>Math.max()</code> per visualizzare:</p>
+<pre data-lang="testo"><code>Numero minore: ...
+Numero maggiore: ...</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p><code>Math.min(a, b)</code> restituisce il più piccolo dei due, <code>Math.max(a, b)</code> il più grande. Posso metterli direttamente nella stampa, senza variabili d'appoggio.</p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class MinimoMassimo {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Primo numero: ");
+        int a = in.nextInt();
+        System.out.print("Secondo numero: ");
+        int b = in.nextInt();
+
+        System.out.println("Numero minore: " + Math.min(a, b));
+        System.out.println("Numero maggiore: " + Math.max(a, b));
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Primo numero: 14
+Secondo numero: -3
+Numero minore: -3
+Numero maggiore: 14</code></pre>
+      <h4>Perché funziona</h4>
+      <p>È la versione "pronta" del ternario dell'esercizio 8: <code>Math.max(a, b)</code> fa la stessa cosa di <code>a &gt; b ? a : b</code>. Ricevono <strong>due</strong> valori alla volta: per tre numeri si annidano, <code>Math.max(a, Math.max(b, c))</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">13</span>Potenza e radice <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi un numero <code>n</code>.</p>
+      <p>Calcola:</p>
+      <ol>
+        <li><code>n²</code> utilizzando <code>Math.pow()</code>;</li>
+        <li>la radice quadrata di <code>n</code> utilizzando <code>Math.sqrt()</code>.</li>
+      </ol>
+      <p>Ricorda che questi metodi restituiscono un <code>double</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><code>Math.pow(base, esponente)</code>: per il quadrato <code>Math.pow(n, 2)</code>.</li>
+        <li><code>Math.sqrt(n)</code> calcola la radice quadrata.</li>
+        <li>Entrambi restituiscono <code>double</code>, quindi i risultati vanno in variabili <code>double</code>: scrivere <code>int q = Math.pow(n, 2);</code> non compila (da <code>double</code> a <code>int</code> si perderebbe precisione).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class PotenzaRadice {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("n: ");
+        int n = in.nextInt();
+
+        double quadrato = Math.pow(n, 2);   // n elevato alla 2
+        double radice = Math.sqrt(n);
+
+        System.out.println("n al quadrato: " + quadrato);
+        System.out.println("Radice quadrata di n: " + radice);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>n: 9
+n al quadrato: 81.0
+Radice quadrata di n: 3.0
+
+n: 2
+n al quadrato: 4.0
+Radice quadrata di n: 1.4142135623730951</code></pre>
+      <h4>Da notare</h4>
+      <p>Vedi <code>81.0</code> e non <code>81</code>: è la prova che il risultato è un <code>double</code>. Con un numero negativo <code>Math.sqrt</code> non dà errore ma restituisce <code>NaN</code> ("Not a Number").</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">14</span>Cerchio <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi all'utente il raggio di un cerchio.</p>
+      <p>Calcola:</p>
+<pre data-lang="testo"><code>Circonferenza = 2 × π × r
+Area = π × r²</code></pre>
+      <p>Utilizza: <code>Math.PI</code>, <code>Math.pow()</code>.</p>
+      <p>Visualizza entrambi i risultati.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il raggio può avere la virgola: lo leggo come <code>double</code> con <code>nextDouble()</code>.</li>
+        <li>Traduco le formule: <code>2 * Math.PI * r</code> e <code>Math.PI * Math.pow(r, 2)</code>. In Java il "per" è sempre <code>*</code>, non si può sottintendere.</li>
+        <li>Stampo i valori completi e, per leggibilità, anche arrotondati a 2 decimali con <code>printf</code> e <code>%.2f</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Cerchio {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.print("Raggio: ");
+        double r = in.nextDouble();
+
+        double circonferenza = 2 * Math.PI * r;
+        double area = Math.PI * Math.pow(r, 2);
+
+        System.out.println("Circonferenza: " + circonferenza);
+        System.out.println("Area: " + area);
+        System.out.printf("Arrotondati: circonferenza %.2f, area %.2f%n", circonferenza, area);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Raggio: 3
+Circonferenza: 18.84955592153876
+Area: 28.274333882308138
+Arrotondati: circonferenza 18.85, area 28.27</code></pre>
+      <div class="callout warn"><span class="callout-title">Virgola o punto?</span>Su un computer impostato in italiano <code>Scanner</code> vuole i decimali con la <strong>virgola</strong> (<code>2,5</code>; scrivere <code>2.5</code> dà <code>InputMismatchException</code>) e <code>printf</code> stampa <code>18,85</code>. L'output qui sopra viene da un computer in inglese, per questo c'è il punto. La stampa con <code>+</code> (<code>"Area: " + area</code>) usa invece sempre il punto.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 9 – Ciclo for</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>for (inizio; condizione; aggiornamento)</code>: tutto ciò che controlla il ciclo sta in una riga. Si usa quando <strong>sai già quante volte</strong> ripetere.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">15</span>Contare <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizza un <code>for</code> per stampare:</p>
+<pre data-lang="testo"><code>1
+2
+3
+...
+20</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p><code>i</code> parte da 1, il ciclo continua finché <code>i &lt;= 20</code>, e a ogni giro <code>i++</code> aggiunge 1. Dentro stampo <code>i</code>.</p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Contare {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 20; i++) {
+            System.out.println(i);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Con <code>i &lt; 20</code> il 20 non verrebbe stampato; con <code>i = 0</code> si partirebbe da 0. Gli estremi si controllano sempre: primo e ultimo valore stampati.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">16</span>Numeri pari <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Stampa tutti i numeri pari compresi tra <code>1</code> e <code>100</code>.</p>
+      <p>Utilizza <code>i % 2 == 0</code> all'interno del <code>for</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il <code>for</code> passa per tutti i numeri da 1 a 100.</li>
+        <li><code>%</code> dà il <strong>resto</strong> della divisione: un numero è pari se diviso per 2 dà resto 0. Stampo solo quando <code>i % 2 == 0</code>.</li>
+        <li>Per non avere una colonna di 50 righe, stampo sulla stessa riga con <code>print</code> e vado a capo ogni 20 numeri (cioè ogni 10 pari).</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class NumeriPari {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 100; i++) {
+            if (i % 2 == 0) {
+                System.out.print(i + " ");
+            }
+            if (i % 20 == 0) {          // a capo ogni 10 numeri pari, per leggibilità
+                System.out.println();
+            }
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>2 4 6 8 10 12 14 16 18 20
+22 24 26 28 30 32 34 36 38 40
+42 44 46 48 50 52 54 56 58 60
+62 64 66 68 70 72 74 76 78 80
+82 84 86 88 90 92 94 96 98 100 </code></pre>
+      <h4>Perché funziona</h4>
+      <p>Lo stesso risultato si ottiene senza <code>if</code> con <code>for (int i = 2; i &lt;= 100; i += 2)</code>, che fa la metà dei giri. Il PDF però chiede di usare <code>%</code>, che è il modo generale per "è divisibile per…" (vale anche per i multipli di 3, 5…).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">17</span>Somma <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi all'utente 5 numeri.</p>
+      <p>Utilizza un <code>for</code> per leggere i numeri e calcolare la somma totale.</p>
+      <p>Alla fine visualizza:</p>
+<pre data-lang="testo"><code>Somma: ...</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Mi serve un <strong>accumulatore</strong>: <code>int somma = 0;</code> dichiarato <strong>prima</strong> del ciclo.</li>
+        <li>Il <code>for</code> gira 5 volte; a ogni giro leggo un numero e lo aggiungo: <code>somma = somma + n;</code>.</li>
+        <li>Dopo il ciclo stampo il risultato.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Somma {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int somma = 0;                  // l'accumulatore parte da 0
+
+        for (int i = 1; i &lt;= 5; i++) {
+            System.out.print("Numero " + i + ": ");
+            int n = in.nextInt();
+            somma = somma + n;          // oppure somma += n;
+        }
+
+        System.out.println("Somma: " + somma);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Numero 1: 4
+Numero 2: 10
+Numero 3: -2
+Numero 4: 7
+Numero 5: 6
+Somma: 25</code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Dichiarare <code>somma</code> <strong>dentro</strong> il ciclo: ripartirebbe da 0 a ogni giro e dopo il ciclo non esisterebbe nemmeno.</li>
+        <li>Stampare la somma dentro il ciclo: vedresti 5 somme parziali invece del totale.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 10 – while</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>while (condizione) { ... }</code> controlla la condizione <strong>prima</strong> di ogni giro. Tre passi da non dimenticare: inizializzare, controllare, aggiornare.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">18</span>Contatore <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizza <code>while</code> per stampare i numeri da <code>1</code> a <code>20</code>.</p>
+      <p>Ricorda di aggiornare la variabile di controllo.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p>È l'esercizio 15 scritto con <code>while</code>: le tre parti del <code>for</code> si separano. L'inizializzazione va prima del ciclo, la condizione tra le parentesi del <code>while</code>, l'aggiornamento <code>i++</code> come ultima istruzione del blocco.</p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Contatore {
+    public static void main(String[] args) {
+        int i = 1;                 // 1) inizializzo la variabile di controllo
+        while (i &lt;= 20) {          // 2) controllo la condizione
+            System.out.println(i);
+            i++;                   // 3) aggiorno: senza questa riga il ciclo è infinito
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</code></pre>
+      <h4>Perché "ricorda di aggiornare"</h4>
+      <p>Senza <code>i++</code> la variabile resta 1 per sempre, <code>i &lt;= 20</code> è sempre vero e il ciclo non finisce mai: è il bug dell'<a href="#ex-30">esercizio 30</a>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">19</span>Lettura fino a zero <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi continuamente numeri all'utente.</p>
+      <p>Il programma deve terminare quando l'utente inserisce <code>0</code>.</p>
+      <p>Alla fine visualizza quanti numeri sono stati inseriti, escluso lo <code>0</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Non so quanti numeri arriveranno: serve <code>while</code>, non <code>for</code>.</li>
+        <li>Uso la tecnica della <strong>lettura anticipata</strong>: leggo il primo numero <strong>prima</strong> del ciclo, così la condizione <code>n != 0</code> ha già un valore da controllare.</li>
+        <li>Dentro il ciclo prima conto il numero, poi leggo il successivo come <strong>ultima</strong> istruzione. Quando arriva lo 0 il ciclo si ferma prima di contarlo.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class LetturaFinoAZero {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int quanti = 0;
+
+        System.out.print("Numero (0 per finire): ");
+        int n = in.nextInt();
+        while (n != 0) {
+            quanti++;                               // conto solo i numeri diversi da 0
+            System.out.print("Numero (0 per finire): ");
+            n = in.nextInt();
+        }
+
+        System.out.println("Numeri inseriti: " + quanti);
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Numero (0 per finire): 5
+Numero (0 per finire): 12
+Numero (0 per finire): -3
+Numero (0 per finire): 8
+Numero (0 per finire): 0
+Numeri inseriti: 4</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Lo 0 viene letto, ma la condizione del <code>while</code> lo blocca prima di arrivare a <code>quanti++</code>: per questo il conteggio è 4 e non 5. Se l'utente scrive subito 0, il ciclo non parte nemmeno e stampa <code>Numeri inseriti: 0</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 11 – do-while</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>do { ... } while (condizione);</code> esegue il blocco <strong>prima</strong> e controlla <strong>dopo</strong>: il corpo gira almeno una volta. Notare il <strong>punto e virgola</strong> finale.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">20</span>Validazione <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Chiedi all'utente un numero compreso tra <code>1</code> e <code>100</code>.</p>
+      <p>Continua a chiedere il numero finché non viene inserito un valore valido.</p>
+      <p>Utilizza <code>do-while</code>.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>Inserisci un numero tra 1 e 100: 150
+Valore non valido.
+Inserisci un numero tra 1 e 100: 200
+Valore non valido.
+
+Inserisci un numero tra 1 e 100: 45
+
+Numero valido!</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>La domanda va fatta <strong>almeno una volta</strong>: è il caso tipico del <code>do-while</code>.</li>
+        <li>Un numero non è valido se è <code>&lt; 1</code> <strong>oppure</strong> <code>&gt; 100</code>: <code>n &lt; 1 || n &gt; 100</code>. Il ciclo si ripete finché questa condizione è vera.</li>
+        <li>La variabile <code>n</code> va dichiarata <strong>fuori</strong> dal <code>do</code>, altrimenti la condizione del <code>while</code> (che sta fuori dalle graffe) non la vedrebbe.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Validazione {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n;
+
+        do {
+            System.out.print("Inserisci un numero tra 1 e 100: ");
+            n = in.nextInt();
+            if (n &lt; 1 || n &gt; 100) {
+                System.out.println("Valore non valido.");
+            }
+        } while (n &lt; 1 || n &gt; 100);    // ripeto finché il valore è fuori intervallo
+
+        System.out.println("Numero valido!");
+        in.close();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Inserisci un numero tra 1 e 100: 150
+Valore non valido.
+Inserisci un numero tra 1 e 100: 200
+Valore non valido.
+Inserisci un numero tra 1 e 100: 45
+Numero valido!</code></pre>
+      <h4>Errori da evitare</h4>
+      <p>Scrivere <code>n &lt; 1 &amp;&amp; n &gt; 100</code>: un numero non può essere insieme minore di 1 e maggiore di 100, quindi la condizione è sempre falsa e il programma accetterebbe anche 150. Per "fuori dall'intervallo" si usa <code>||</code>; per "dentro" si usa <code>&amp;&amp;</code> (<code>n &gt;= 1 &amp;&amp; n &lt;= 100</code>).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">21</span>Menu <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizza un menu che venga mostrato almeno una volta:</p>
+<pre data-lang="testo"><code>1. Saluta
+2. Informazioni
+0. Esci</code></pre>
+      <p>Utilizza:</p>
+      <ul>
+        <li><code>do-while</code> per ripetere il menu;</li>
+        <li><code>switch</code> per gestire la scelta.</li>
+      </ul>
+      <p>Il programma termina quando l'utente sceglie <code>0</code>.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il menu va mostrato almeno una volta: <code>do-while</code>, con condizione <code>scelta != 0</code>.</li>
+        <li>Dentro il ciclo: stampo il menu, leggo la scelta, la gestisco con lo <code>switch</code>.</li>
+        <li>Il <code>default</code> gestisce le scelte che non esistono (per esempio 5): il menu viene semplicemente riproposto.</li>
+        <li><code>scelta</code> è dichiarata prima del <code>do</code>, per lo stesso motivo dell'esercizio 20.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Menu {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int scelta;
+
+        do {
+            System.out.println("1. Saluta");
+            System.out.println("2. Informazioni");
+            System.out.println("0. Esci");
+            System.out.print("Scelta: ");
+            scelta = in.nextInt();
+
+            switch (scelta) {
+                case 1:
+                    System.out.println("Ciao! Benvenuto nel programma.");
+                    break;
+                case 2:
+                    System.out.println("Esempio di menu con do-while e switch.");
+                    break;
+                case 0:
+                    System.out.println("Arrivederci!");
+                    break;
+                default:
+                    System.out.println("Scelta non valida.");
+            }
+            System.out.println();
+        } while (scelta != 0);
+
+        in.close();
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+<pre data-lang="testo"><code>1. Saluta
+2. Informazioni
+0. Esci
+Scelta: 1
+Ciao! Benvenuto nel programma.
+
+1. Saluta
+2. Informazioni
+0. Esci
+Scelta: 2
+Esempio di menu con do-while e switch.
+
+1. Saluta
+2. Informazioni
+0. Esci
+Scelta: 5
+Scelta non valida.
+
+1. Saluta
+2. Informazioni
+0. Esci
+Scelta: 0
+Arrivederci!</code></pre>
+      <h4>Perché funziona</h4>
+      <p>Il <code>break</code> dentro lo <code>switch</code> esce <strong>solo dallo switch</strong>, non dal ciclo: dopo ogni scelta il <code>do-while</code> ricontrolla <code>scelta != 0</code> e, se è vera, ripropone il menu. Con 0 viene stampato il saluto e poi la condizione diventa falsa.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 12 – foreach e array</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>for (int n : numeri)</code> si legge "per ogni <code>n</code> in <code>numeri</code>": a ogni giro <code>n</code> contiene il valore successivo dell'array. Non c'è indice, si parte sempre dal primo e si arriva all'ultimo. Teoria: <a href="java-array-wrapper-metodi-overload.html#length-for-e-foreach">length, for e foreach</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">22</span>Stampa di un array <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Dato:</p>
+<pre data-lang="java"><code>int[] numeri = {10, 20, 30, 40, 50};</code></pre>
+      <p>utilizza <code>foreach</code> per stampare tutti gli elementi.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p>Il tipo della variabile del foreach è quello degli elementi (<code>int</code>), dopo i due punti c'è l'array. Dentro il ciclo uso <code>n</code>, non <code>numeri[i]</code>.</p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class StampaArray {
+    public static void main(String[] args) {
+        int[] numeri = {10, 20, 30, 40, 50};
+
+        for (int n : numeri) {      // "per ogni n contenuto in numeri"
+            System.out.println(n);
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>10
+20
+30
+40
+50</code></pre>
+      <h4>Perché funziona</h4>
+      <p>È equivalente a <code>for (int i = 0; i &lt; numeri.length; i++) System.out.println(numeri[i]);</code>, ma più corto e senza rischio di sbagliare gli indici. In cambio non sai a che posizione sei e non puoi modificare l'array: assegnare <code>n = 0</code> cambia solo la copia.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">23</span>Ricerca <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Dato un array di interi, chiedi all'utente un numero da cercare.</p>
+      <p>Utilizza <code>foreach</code> e <code>break</code>.</p>
+      <p>Quando trovi il numero: <code>Numero trovato!</code> e interrompi la ricerca.</p>
+      <p>Se il numero non viene trovato: <code>Numero non trovato.</code></p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Uso una variabile <strong>flag</strong> <code>boolean trovato = false;</code>: all'inizio non ho trovato niente.</li>
+        <li>Scorro l'array con il foreach; se l'elemento è uguale al cercato metto <code>trovato = true</code> ed esco con <code>break</code>.</li>
+        <li>Solo <strong>dopo</strong> il ciclo decido cosa stampare. "Non trovato" non si può stampare dentro il ciclo: al primo elemento diverso direi "non trovato" anche se il numero è più avanti.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class Ricerca {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int[] numeri = {4, 8, 15, 16, 23, 42};
+        boolean trovato = false;
+
+        System.out.print("Numero da cercare: ");
+        int cercato = in.nextInt();
+
+        for (int n : numeri) {
+            if (n == cercato) {
+                trovato = true;
+                break;              // inutile continuare: esco subito dal ciclo
+            }
+        }
+
+        if (trovato) {
+            System.out.println("Numero trovato!");
+        } else {
+            System.out.println("Numero non trovato.");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Output (due esecuzioni)</h4>
+<pre data-lang="testo"><code>Numero da cercare: 15
+Numero trovato!
+
+Numero da cercare: 7
+Numero non trovato.</code></pre>
+      <h4>Perché il break</h4>
+      <p>Con 15 il ciclo controlla 4, 8, 15 e si ferma: 16, 23 e 42 non vengono nemmeno guardati. Senza <code>break</code> il risultato sarebbe giusto lo stesso, ma il ciclo farebbe giri inutili. Il <code>break</code> esce dal ciclo più interno in cui si trova.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 13 – break e continue</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>break</code> esce <strong>subito dal ciclo</strong>; <code>continue</code> salta <strong>solo il resto del giro</strong> corrente e passa al successivo (nel <code>for</code> esegue comunque l'aggiornamento <code>i++</code>).</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">24</span>Break <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi un <code>for</code> da <code>1</code> a <code>10</code>.</p>
+      <p>Quando <code>i</code> raggiunge <code>5</code>, utilizza <code>break</code>.</p>
+      <p>Prevedi quale sarà l'output prima di eseguire il programma.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Previsione</h4>
+      <ol>
+        <li>Giri con <code>i</code> = 1, 2, 3, 4: <code>i == 5</code> è falso, quindi si arriva alla stampa. Escono 1, 2, 3, 4.</li>
+        <li>Giro con <code>i</code> = 5: <code>i == 5</code> è vero, il <code>break</code> esce dal ciclo <strong>prima</strong> della stampa. Il 5 non compare.</li>
+        <li>I valori da 6 a 10 non vengono mai raggiunti. Il programma prosegue dopo il ciclo e stampa "Fine ciclo".</li>
+      </ol>
+      <p>Previsione: <strong>1 2 3 4</strong> (uno per riga), poi "Fine ciclo".</p>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Break {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 10; i++) {
+            if (i == 5) {
+                break;
+            }
+            System.out.println(i);
+        }
+        System.out.println("Fine ciclo");
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1
+2
+3
+4
+Fine ciclo</code></pre>
+      <h4>Attenzione alla posizione</h4>
+      <p>La previsione dipende da <strong>dove</strong> sta la stampa. Se il <code>println(i)</code> fosse <strong>prima</strong> dell'<code>if</code>, il 5 verrebbe stampato e solo dopo si uscirebbe: output 1, 2, 3, 4, 5.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">25</span>Continue <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi un <code>for</code> da <code>1</code> a <code>30</code>.</p>
+      <p>Utilizza <code>continue</code> per saltare i multipli di <code>3</code>.</p>
+      <p>L'output non deve contenere:</p>
+<pre data-lang="testo"><code>3, 6, 9, 12, ...</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>"Multiplo di 3" = resto 0 nella divisione per 3: <code>i % 3 == 0</code>.</li>
+        <li>In quel caso <code>continue</code>: la stampa sotto viene saltata e il <code>for</code> passa a <code>i++</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Continue {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 30; i++) {
+            if (i % 3 == 0) {
+                continue;           // salto il resto del giro: passo subito a i++
+            }
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29 </code></pre>
+      <h4>Perché funziona</h4>
+      <p>A differenza del <code>break</code>, il ciclo arriva fino a 30: salta solo i giri dei multipli di 3 (30 compreso). Sono 20 numeri stampati, cioè 30 meno i 10 multipli di 3. Senza <code>continue</code> si scriverebbe <code>if (i % 3 != 0) System.out.print(...)</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 14 – Cicli annidati</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un ciclo dentro un altro: per <strong>ogni</strong> giro del ciclo esterno, quello interno fa <strong>tutti</strong> i suoi giri. Giri totali = giri esterni × giri interni.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">26</span>Rettangolo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizza due <code>for</code> annidati per stampare una griglia di dimensione <code>4 × 5</code>.</p>
+      <p>Output atteso:</p>
+<pre data-lang="testo"><code>* * * * *
+* * * * *
+* * * * *
+* * * * *</code></pre>
+      <p>Il ciclo esterno deve gestire le righe, quello interno le colonne.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Esterno: 4 giri, uno per riga.</li>
+        <li>Interno: 5 giri, ognuno stampa <code>"* "</code> con <code>print</code> (senza andare a capo), così le stelle restano sulla stessa riga.</li>
+        <li>Finito l'interno, <code>println()</code> va a capo: è <strong>dentro</strong> l'esterno ma <strong>fuori</strong> dall'interno.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Rettangolo {
+    public static void main(String[] args) {
+        for (int riga = 1; riga &lt;= 4; riga++) {           // ciclo esterno: righe
+            for (int colonna = 1; colonna &lt;= 5; colonna++) { // ciclo interno: colonne
+                System.out.print("* ");
+            }
+            System.out.println();                         // fine riga: vado a capo
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>* * * * *
+* * * * *
+* * * * *
+* * * * * </code></pre>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Mettere <code>println()</code> dentro il ciclo interno: ogni stella andrebbe su una riga diversa (20 righe).</li>
+        <li>Usare la stessa variabile <code>i</code> nei due cicli: il ciclo interno rovinerebbe il contatore di quello esterno. Servono due nomi diversi.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">27</span>Tabellina <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizza due cicli <code>for</code> annidati per stampare le tabelline da <code>1</code> a <code>10</code>.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>1 x 1 = 1
+1 x 2 = 2
+...
+2 x 1 = 2
+...</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Esterno <code>i</code> da 1 a 10: quale tabellina.</li>
+        <li>Interno <code>j</code> da 1 a 10: il moltiplicatore. Stampo <code>i + " x " + j + " = " + (i * j)</code>.</li>
+        <li>Il prodotto lo metto tra parentesi per chiarezza. Qui funzionerebbe anche senza, perché <code>*</code> viene calcolato prima di <code>+</code>; con una somma invece le parentesi sono obbligatorie: <code>"= " + i + j</code> attaccherebbe i due numeri come testo (con 2 e 3 scriverebbe <code>23</code>).</li>
+        <li>Dopo ogni tabellina una riga vuota, per leggerla meglio.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>public class Tabellina {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 10; i++) {          // quale tabellina
+            for (int j = 1; j &lt;= 10; j++) {      // per quanto moltiplico
+                System.out.println(i + " x " + j + " = " + (i * j));
+            }
+            System.out.println();                // riga vuota tra una tabellina e l'altra
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+      <p>Sono 100 righe di calcoli (10 tabelline × 10 righe), più le righe vuote:</p>
+<pre data-lang="testo"><code>1 x 1 = 1
+1 x 2 = 2
+1 x 3 = 3
+1 x 4 = 4
+1 x 5 = 5
+1 x 6 = 6
+1 x 7 = 7
+1 x 8 = 8
+1 x 9 = 9
+1 x 10 = 10
+
+2 x 1 = 2
+2 x 2 = 4
+2 x 3 = 6
+2 x 4 = 8
+2 x 5 = 10
+2 x 6 = 12
+2 x 7 = 14
+2 x 8 = 16
+2 x 9 = 18
+2 x 10 = 20
+
+3 x 1 = 3
+3 x 2 = 6
+3 x 3 = 9
+3 x 4 = 12
+3 x 5 = 15
+3 x 6 = 18
+3 x 7 = 21
+3 x 8 = 24
+3 x 9 = 27
+3 x 10 = 30
+
+4 x 1 = 4
+4 x 2 = 8
+4 x 3 = 12
+4 x 4 = 16
+4 x 5 = 20
+4 x 6 = 24
+4 x 7 = 28
+4 x 8 = 32
+4 x 9 = 36
+4 x 10 = 40
+
+5 x 1 = 5
+5 x 2 = 10
+5 x 3 = 15
+5 x 4 = 20
+5 x 5 = 25
+5 x 6 = 30
+5 x 7 = 35
+5 x 8 = 40
+5 x 9 = 45
+5 x 10 = 50
+
+6 x 1 = 6
+6 x 2 = 12
+6 x 3 = 18
+6 x 4 = 24
+6 x 5 = 30
+6 x 6 = 36
+6 x 7 = 42
+6 x 8 = 48
+6 x 9 = 54
+6 x 10 = 60
+
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70
+
+8 x 1 = 8
+8 x 2 = 16
+8 x 3 = 24
+8 x 4 = 32
+8 x 5 = 40
+8 x 6 = 48
+8 x 7 = 56
+8 x 8 = 64
+8 x 9 = 72
+8 x 10 = 80
+
+9 x 1 = 9
+9 x 2 = 18
+9 x 3 = 27
+9 x 4 = 36
+9 x 5 = 45
+9 x 6 = 54
+9 x 7 = 63
+9 x 8 = 72
+9 x 9 = 81
+9 x 10 = 90
+
+10 x 1 = 10
+10 x 2 = 20
+10 x 3 = 30
+10 x 4 = 40
+10 x 5 = 50
+10 x 6 = 60
+10 x 7 = 70
+10 x 8 = 80
+10 x 9 = 90
+10 x 10 = 100</code></pre>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 15 – Esercizio integrato</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">28</span>Analisi di numeri <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizza un programma che chieda numeri all'utente fino all'inserimento di <code>0</code>.</p>
+      <p>Il programma deve calcolare:</p>
+      <ul>
+        <li>quantità di numeri inseriti;</li>
+        <li>somma;</li>
+        <li>media;</li>
+        <li>valore massimo;</li>
+        <li>valore minimo;</li>
+        <li>quantità di numeri pari;</li>
+        <li>quantità di numeri dispari.</li>
+      </ul>
+      <p><strong>Requisiti.</strong> Devi utilizzare:</p>
+      <ul>
+        <li><code>Scanner</code>;</li>
+        <li><code>while</code>;</li>
+        <li><code>if</code>;</li>
+        <li><code>else</code>;</li>
+        <li>operatori di confronto;</li>
+        <li>operatore <code>%</code>;</li>
+        <li>almeno un operatore logico dove appropriato.</li>
+      </ul>
+      <p><strong>Attenzione.</strong> Lo <code>0</code> serve per terminare l'inserimento e <strong>non deve essere considerato tra i numeri analizzati</strong>.</p>
+      <p><strong>Output finale di esempio</strong></p>
+<pre data-lang="testo"><code>Numeri inseriti: 5
+Somma: 37
+Media: 7.4
+Massimo: 15
+Minimo: 2
+Numeri pari: 2
+Numeri dispari: 3</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>Struttura.</strong> È l'esercizio 19 (lettura anticipata + <code>while (n != 0)</code>) con più contatori. Così lo 0 non entra mai nel ciclo e non viene analizzato.</li>
+        <li><strong>Variabili.</strong> Prima del ciclo: <code>quanti</code>, <code>somma</code>, <code>pari</code>, <code>dispari</code> a 0, più <code>massimo</code> e <code>minimo</code>.</li>
+        <li><strong>Massimo e minimo.</strong> Non posso partire da 0: se l'utente inserisce solo numeri negativi il massimo resterebbe 0, che non è stato inserito. Il trucco: il <strong>primo</strong> numero diventa sia massimo sia minimo. Lo scrivo con l'operatore logico: <code>if (quanti == 1 || n &gt; massimo)</code>. Al primo giro la parte sinistra è vera e Java non guarda nemmeno la destra.</li>
+        <li><strong>Pari e dispari.</strong> <code>n % 2 == 0</code> → pari, altrimenti (<code>else</code>) dispari. L'<code>else</code> è importante con i negativi: <code>-9 % 2</code> vale <code>-1</code>, non <code>1</code>, quindi il test <code>n % 2 == 1</code> sbaglierebbe.</li>
+        <li><strong>Media.</strong> <code>somma / quanti</code> tra due <code>int</code> darebbe un intero (37 / 5 = 7). Con il cast <code>(double) somma / quanti</code> si ottiene 7.4.</li>
+        <li><strong>Nessun numero.</strong> Se il primo numero è 0, <code>quanti</code> è 0 e la media sarebbe una divisione per zero: lo controllo con un <code>if</code> prima di stampare.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class AnalisiNumeri {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int quanti = 0;
+        int somma = 0;
+        int massimo = 0;
+        int minimo = 0;
+        int pari = 0;
+        int dispari = 0;
+
+        System.out.print("Numero (0 per finire): ");
+        int n = in.nextInt();
+
+        while (n != 0) {                 // lo 0 non entra mai nel ciclo
+            quanti++;
+            somma += n;
+
+            // il primo numero è sia massimo sia minimo; poi confronto
+            if (quanti == 1 || n &gt; massimo) {
+                massimo = n;
+            }
+            if (quanti == 1 || n &lt; minimo) {
+                minimo = n;
+            }
+
+            if (n % 2 == 0) {
+                pari++;
+            } else {
+                dispari++;
+            }
+
+            System.out.print("Numero (0 per finire): ");
+            n = in.nextInt();
+        }
+
+        if (quanti &gt; 0) {
+            double media = (double) somma / quanti;
+            System.out.println("Numeri inseriti: " + quanti);
+            System.out.println("Somma: " + somma);
+            System.out.println("Media: " + media);
+            System.out.println("Massimo: " + massimo);
+            System.out.println("Minimo: " + minimo);
+            System.out.println("Numeri pari: " + pari);
+            System.out.println("Numeri dispari: " + dispari);
+        } else {
+            System.out.println("Nessun numero inserito.");
+        }
+        in.close();
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione (gli stessi numeri del PDF)</h4>
+<pre data-lang="testo"><code>Numero (0 per finire): 5
+Numero (0 per finire): 2
+Numero (0 per finire): 15
+Numero (0 per finire): 8
+Numero (0 per finire): 7
+Numero (0 per finire): 0
+Numeri inseriti: 5
+Somma: 37
+Media: 7.4
+Massimo: 15
+Minimo: 2
+Numeri pari: 2
+Numeri dispari: 3</code></pre>
+      <h4>Altre due prove: numeri negativi e nessun numero</h4>
+<pre data-lang="testo"><code>Numero (0 per finire): -4
+Numero (0 per finire): -9
+Numero (0 per finire): 6
+Numero (0 per finire): 0
+Numeri inseriti: 3
+Somma: -7
+Media: -2.3333333333333335
+Massimo: 6
+Minimo: -9
+Numeri pari: 2
+Numeri dispari: 1
+
+Numero (0 per finire): 0
+Nessun numero inserito.</code></pre>
+      <h4>Requisiti rispettati</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Requisito</th><th>Dove</th></tr></thead>
+        <tbody>
+          <tr><td><code>Scanner</code></td><td>lettura con <code>nextInt()</code></td></tr>
+          <tr><td><code>while</code></td><td><code>while (n != 0)</code></td></tr>
+          <tr><td><code>if</code> / <code>else</code></td><td>pari/dispari, controllo "nessun numero"</td></tr>
+          <tr><td>operatori di confronto</td><td><code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>==</code></td></tr>
+          <tr><td><code>%</code></td><td><code>n % 2 == 0</code></td></tr>
+          <tr><td>operatore logico</td><td><code>quanti == 1 || n &gt; massimo</code> (e lo stesso per il minimo)</td></tr>
+        </tbody>
+      </table></div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 16 – Sfida finale</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">29</span>Mini programma interattivo <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizza un programma Java con un menu:</p>
+<pre data-lang="testo"><code>===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci</code></pre>
+      <p><strong>Opzione 1 – Area cerchio.</strong> Chiedi il raggio e calcola l'area utilizzando <code>Math.PI</code> e <code>Math.pow()</code>.</p>
+      <p><strong>Opzione 2 – Confronto.</strong> Chiedi due numeri e visualizza quale è maggiore oppure se sono uguali. Puoi utilizzare <code>Math.max()</code> e gli operatori di confronto.</p>
+      <p><strong>Opzione 3 – Inserimento numeri.</strong> Chiedi numeri all'utente fino a quando viene inserito <code>0</code>. Memorizza i numeri in un array predisposto. Successivamente utilizza <code>foreach</code> per attraversare gli elementi.</p>
+      <p><strong>Opzione 4 – Statistiche.</strong> Visualizza:</p>
+      <ul>
+        <li>somma;</li>
+        <li>media;</li>
+        <li>massimo;</li>
+        <li>minimo;</li>
+        <li>numero di pari;</li>
+        <li>numero di dispari.</li>
+      </ul>
+      <p>Puoi utilizzare <code>Math.min()</code> e <code>Math.max()</code> quando appropriato.</p>
+      <p><strong>Opzione 0 – Uscita.</strong> Visualizza:</p>
+<pre data-lang="testo"><code>Programma terminato.</code></pre>
+      <p><strong>Vincoli della sfida.</strong> Nel programma finale devi utilizzare almeno:</p>
+      <ul>
+        <li><code>if / else</code>;</li>
+        <li><code>else if</code> oppure <code>switch</code>;</li>
+        <li><code>&amp;&amp;</code> oppure <code>||</code>;</li>
+        <li><code>Math</code>;</li>
+        <li><code>do-while</code> oppure <code>while</code>;</li>
+        <li><code>for</code>;</li>
+        <li><code>foreach</code>;</li>
+        <li>almeno un <code>break</code> oppure <code>continue</code>.</li>
+      </ul>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Passo 1 · Lo scheletro: il menu dell'esercizio 21</h4>
+      <p>Un <code>do-while</code> che stampa il menu, legge <code>scelta</code> e la passa a uno <code>switch</code>, finché <code>scelta != 0</code>. Ogni opzione è un <code>case</code>; le scelte inesistenti finiscono nel <code>default</code>.</p>
+      <h4>Passo 2 · L'array predisposto</h4>
+      <p>Prima del ciclo creo <code>int[] numeri = new int[50];</code> e un contatore <code>quanti</code> che dice quante celle sono occupate. Devono stare <strong>fuori</strong> dal <code>do-while</code>: l'opzione 3 li riempie, l'opzione 4 li legge in un giro successivo del menu. Un array nuovo di <code>int</code> ha tutte le celle a 0, e 0 non può mai essere un numero inserito (è il terminatore): quindi <strong>la prima cella a 0 segna la fine dei dati</strong>.</p>
+      <h4>Passo 3 · Opzione 1 e 2</h4>
+      <ul>
+        <li>Area: <code>Math.PI * Math.pow(r, 2)</code>, con un <code>if / else</code> che rifiuta i raggi negativi.</li>
+        <li>Confronto: se <code>a == b</code> sono uguali, altrimenti il maggiore è <code>Math.max(a, b)</code>.</li>
+      </ul>
+      <h4>Passo 4 · Opzione 3: inserire e attraversare</h4>
+      <ol>
+        <li>Un <code>do-while</code> legge numeri fino allo 0. Memorizzo il numero solo se <code>n != 0 &amp;&amp; quanti &lt; numeri.length</code>: non è il terminatore <strong>e</strong> c'è ancora posto. Se l'array è pieno lo segnalo (<code>else if</code>) invece di andare oltre l'ultima cella, che darebbe <code>ArrayIndexOutOfBoundsException</code>.</li>
+        <li>Se si sceglie di nuovo l'opzione 3, i nuovi numeri si <strong>aggiungono</strong> dopo quelli già presenti (riparto da <code>quanti</code>).</li>
+        <li>Poi un <strong>foreach</strong> attraversa l'array e stampa i numeri; alla prima cella a 0 esce con <strong><code>break</code></strong>, perché da lì in poi le celle sono vuote.</li>
+      </ol>
+      <h4>Passo 5 · Opzione 4: statistiche con for e Math</h4>
+      <p>Se <code>quanti == 0</code> non c'è niente da calcolare. Altrimenti un <strong><code>for</code></strong> classico da 0 a <code>quanti - 1</code> (solo le celle occupate) calcola somma, pari, dispari e aggiorna <code>massimo = Math.max(massimo, numeri[i])</code> e <code>minimo = Math.min(minimo, numeri[i])</code>, partendo dal primo elemento. La media usa il cast a <code>double</code>.</p>
+      <h4>Codice completo</h4>
+<pre data-lang="java"><code>import java.util.Scanner;
+
+public class MiniProgramma {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int[] numeri = new int[50];   // array predisposto: le celle libere valgono 0
+        int quanti = 0;               // quante celle sono occupate
+        int scelta;
+        int n;
+
+        do {
+            System.out.println("===== MENU =====");
+            System.out.println("1. Calcola area cerchio");
+            System.out.println("2. Confronta due numeri");
+            System.out.println("3. Inserisci numeri");
+            System.out.println("4. Visualizza statistiche");
+            System.out.println("0. Esci");
+            System.out.print("Scelta: ");
+            scelta = in.nextInt();
+
+            switch (scelta) {
+                case 1:
+                    System.out.print("Raggio: ");
+                    double r = in.nextDouble();
+                    if (r &lt; 0) {
+                        System.out.println("Il raggio non può essere negativo.");
+                    } else {
+                        double area = Math.PI * Math.pow(r, 2);
+                        System.out.printf("Area: %.2f%n", area);
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Primo numero: ");
+                    int a = in.nextInt();
+                    System.out.print("Secondo numero: ");
+                    int b = in.nextInt();
+                    if (a == b) {
+                        System.out.println("I due numeri sono uguali.");
+                    } else {
+                        System.out.println("Il maggiore è " + Math.max(a, b));
+                    }
+                    break;
+
+                case 3:
+                    do {
+                        System.out.print("Numero (0 per terminare): ");
+                        n = in.nextInt();
+                        if (n != 0 &amp;&amp; quanti &lt; numeri.length) {
+                            numeri[quanti] = n;
+                            quanti++;
+                        } else if (n != 0) {
+                            System.out.println("Array pieno: numero non memorizzato.");
+                        }
+                    } while (n != 0);
+
+                    // foreach: scorro l'array; la prima cella a 0 è libera, quindi mi fermo
+                    System.out.print("Numeri memorizzati:");
+                    for (int x : numeri) {
+                        if (x == 0) {
+                            break;
+                        }
+                        System.out.print(" " + x);
+                    }
+                    System.out.println();
+                    break;
+
+                case 4:
+                    if (quanti == 0) {
+                        System.out.println("Nessun numero inserito: usa prima l'opzione 3.");
+                    } else {
+                        int somma = 0;
+                        int massimo = numeri[0];
+                        int minimo = numeri[0];
+                        int pari = 0;
+                        int dispari = 0;
+                        for (int i = 0; i &lt; quanti; i++) {   // solo le celle occupate
+                            somma += numeri[i];
+                            massimo = Math.max(massimo, numeri[i]);
+                            minimo = Math.min(minimo, numeri[i]);
+                            if (numeri[i] % 2 == 0) {
+                                pari++;
+                            } else {
+                                dispari++;
+                            }
+                        }
+                        double media = (double) somma / quanti;
+                        System.out.println("Somma: " + somma);
+                        System.out.printf("Media: %.2f%n", media);
+                        System.out.println("Massimo: " + massimo);
+                        System.out.println("Minimo: " + minimo);
+                        System.out.println("Numeri pari: " + pari);
+                        System.out.println("Numeri dispari: " + dispari);
+                    }
+                    break;
+
+                case 0:
+                    System.out.println("Programma terminato.");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida.");
+            }
+            System.out.println();
+        } while (scelta != 0);
+
+        in.close();
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione (tutte le opzioni, errori compresi)</h4>
+<pre data-lang="testo"><code>===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 1
+Raggio: 3
+Area: 28.27
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 1
+Raggio: -2
+Il raggio non può essere negativo.
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 2
+Primo numero: 7
+Secondo numero: 12
+Il maggiore è 12
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 2
+Primo numero: 5
+Secondo numero: 5
+I due numeri sono uguali.
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 4
+Nessun numero inserito: usa prima l'opzione 3.
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 3
+Numero (0 per terminare): 4
+Numero (0 per terminare): 9
+Numero (0 per terminare): 15
+Numero (0 per terminare): -2
+Numero (0 per terminare): 0
+Numeri memorizzati: 4 9 15 -2
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 4
+Somma: 26
+Media: 6.50
+Massimo: 15
+Minimo: -2
+Numeri pari: 2
+Numeri dispari: 2
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 7
+Scelta non valida.
+
+===== MENU =====
+1. Calcola area cerchio
+2. Confronta due numeri
+3. Inserisci numeri
+4. Visualizza statistiche
+0. Esci
+Scelta: 0
+Programma terminato.</code></pre>
+      <h4>Vincoli della sfida: dove sono</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Vincolo</th><th>Dove nel programma</th></tr></thead>
+        <tbody>
+          <tr><td><code>if / else</code></td><td>raggio negativo (opz. 1), numeri uguali (opz. 2), "nessun numero" e pari/dispari (opz. 4)</td></tr>
+          <tr><td><code>else if</code> oppure <code>switch</code></td><td>tutti e due: <code>switch (scelta)</code> per il menu, <code>else if (n != 0)</code> per l'array pieno</td></tr>
+          <tr><td><code>&amp;&amp;</code> oppure <code>||</code></td><td><code>n != 0 &amp;&amp; quanti &lt; numeri.length</code> (opz. 3)</td></tr>
+          <tr><td><code>Math</code></td><td><code>Math.PI</code>, <code>Math.pow</code>, <code>Math.max</code>, <code>Math.min</code></td></tr>
+          <tr><td><code>do-while</code> oppure <code>while</code></td><td><code>do-while</code> del menu e <code>do-while</code> di inserimento</td></tr>
+          <tr><td><code>for</code></td><td>calcolo delle statistiche (opz. 4)</td></tr>
+          <tr><td><code>foreach</code></td><td>stampa dei numeri memorizzati (opz. 3)</td></tr>
+          <tr><td><code>break</code> oppure <code>continue</code></td><td><code>break</code> nel foreach alla prima cella vuota, oltre ai <code>break</code> dello <code>switch</code></td></tr>
+        </tbody>
+      </table></div>
+      <h4>Controlla di aver capito</h4>
+      <ul>
+        <li>Perché <code>numeri</code> e <code>quanti</code> sono dichiarati prima del <code>do</code>? (Se fossero dentro, verrebbero ricreati vuoti a ogni giro del menu e l'opzione 4 non troverebbe mai i numeri inseriti con la 3.)</li>
+        <li>Perché nell'opzione 4 uso un <code>for</code> fino a <code>quanti</code> e non un foreach su tutto l'array? (Il foreach passerebbe anche sulle 46 celle vuote: tutti zeri, che falserebbero minimo, pari e media.)</li>
+        <li>Perché la media è 6.50? (26 / 4 = 6.5, stampato con <code>%.2f</code>. Su un computer in italiano uscirebbe <code>6,50</code>, come per l'esercizio 14.)</li>
+        <li>Potrei dichiarare un'altra variabile <code>r</code> nel <code>case 4</code>? (No: tutti i <code>case</code> di uno <code>switch</code> stanno nello stesso blocco di graffe, e <code>double r</code> del <code>case 1</code> è dichiarata lì; il compilatore direbbe <code>variable r is already defined in method main(String[])</code>. Le variabili del <code>case 4</code> invece stanno dentro l'<code>else { }</code>, che è un blocco a sé.)</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 17 – Debug: trova gli errori</h2>
+  <div class="callout warn"><span class="callout-title">Come abbiamo provato i cicli infiniti</span>Un ciclo infinito non si ferma da solo: dal terminale si interrompe con <kbd>Ctrl</kbd>+<kbd>C</kbd>. Per provarli senza bloccare il computer li abbiamo lanciati con <code>timeout 1</code> (il programma viene fermato dopo 1 secondo) e <code>head</code> (mostra solo le prime righe).</div>
+
+  <div class="esercizio" id="ex-30">
+    <div class="esercizio-head"><span class="esercizio-num">30</span>Esercizio 30 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Individua e correggi gli errori nel seguente codice:</p>
+<pre data-lang="java"><code>int i = 1;
+
+while (i &lt;= 10) {
+    System.out.println(i);
+}</code></pre>
+      <p><strong>Domanda:</strong> cosa succede se il programma viene eseguito così?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>L'errore</h4>
+      <p>Manca l'<strong>aggiornamento</strong> della variabile di controllo (<code>i++</code>). Il programma compila senza problemi: è un errore di logica, non di sintassi.</p>
+      <h4>Cosa succede</h4>
+      <p><code>i</code> vale 1 e nessuno lo cambia mai, quindi <code>i &lt;= 10</code> è <strong>sempre vero</strong>: il ciclo è <strong>infinito</strong> e stampa <code>1</code> all'infinito, finché non lo si ferma a mano. Lanciato per un solo secondo:</p>
+<pre data-lang="bash"><code>timeout 1 java Debug30Errato | head -5</code></pre>
+<pre data-lang="testo"><code>1
+1
+1
+1
+1</code></pre>
+      <p>In quel secondo il programma ha stampato <strong>588373 righe</strong>, tutte uguali a <code>1</code>.</p>
+      <h4>Codice corretto</h4>
+<pre data-lang="java"><code>public class Debug30 {
+    public static void main(String[] args) {
+        int i = 1;
+
+        while (i &lt;= 10) {
+            System.out.println(i);
+            i++;                 // mancava l'aggiornamento della variabile
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</code></pre>
+      <p>In alternativa si poteva usare un <code>for (int i = 1; i &lt;= 10; i++)</code>, dove l'aggiornamento è nell'intestazione ed è difficile dimenticarlo.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio" id="ex-31">
+    <div class="esercizio-head"><span class="esercizio-num">31</span>Esercizio 31 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Individua il problema:</p>
+<pre data-lang="java"><code>int voto = 9;
+
+if (voto &gt;= 6) {
+    System.out.println("Sufficiente");
+} else if (voto &gt;= 8) {
+    System.out.println("Buono");
+} else if (voto &gt;= 9) {
+    System.out.println("Eccellente");
+}</code></pre>
+      <p><strong>Domanda:</strong> perché <code>Buono</code> ed <code>Eccellente</code> non vengono raggiunti per i valori previsti?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Cosa succede</h4>
+<pre data-lang="testo"><code>Sufficiente</code></pre>
+      <p>Con <code>voto = 9</code> il programma stampa "Sufficiente" invece di "Eccellente".</p>
+      <h4>Perché</h4>
+      <p>In una catena <code>if / else if</code> viene eseguito solo il <strong>primo</strong> ramo vero, e poi gli altri vengono saltati. Ogni voto da 8 in su è anche <code>&gt;= 6</code>, quindi si ferma sempre al primo ramo: i rami "Buono" ed "Eccellente" si raggiungono solo se il voto è minore di 6, ma in quel caso le loro condizioni (<code>&gt;= 8</code>, <code>&gt;= 9</code>) sono false. Non vengono mai eseguiti. Il compilatore non segnala niente: è un errore di logica.</p>
+      <h4>Codice corretto</h4>
+      <p>Le condizioni vanno ordinate <strong>dalla più restrittiva alla più larga</strong>. Ho anche aggiunto l'<code>else</code> per l'insufficienza e provato quattro voti con un foreach:</p>
+<pre data-lang="java"><code>public class Debug31Corretto {
+    public static void main(String[] args) {
+        int[] prove = {9, 8, 6, 4};
+
+        for (int voto : prove) {
+            System.out.print(voto + " -&gt; ");
+            if (voto &gt;= 9) {                 // dalla condizione più restrittiva...
+                System.out.println("Eccellente");
+            } else if (voto &gt;= 8) {
+                System.out.println("Buono");
+            } else if (voto &gt;= 6) {          // ...alla più larga
+                System.out.println("Sufficiente");
+            } else {
+                System.out.println("Insufficiente");
+            }
+        }
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>9 -&gt; Eccellente
+8 -&gt; Buono
+6 -&gt; Sufficiente
+4 -&gt; Insufficiente</code></pre>
+      <p>Un'altra correzione possibile è lasciare l'ordine ma rendere gli intervalli esclusivi: <code>voto &gt;= 6 &amp;&amp; voto &lt;= 7</code>, <code>voto == 8</code>, <code>voto &gt;= 9</code>. Funziona, ma è più lunga.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio" id="ex-32">
+    <div class="esercizio-head"><span class="esercizio-num">32</span>Esercizio 32 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Trova l'errore:</p>
+<pre data-lang="java"><code>do {
+    System.out.println("Ciao");
+} while (true)</code></pre>
+      <p>Quale elemento manca?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>L'elemento mancante</h4>
+      <p>Manca il <strong>punto e virgola</strong> dopo <code>while (true)</code>. Il <code>do-while</code> è l'unico ciclo che finisce con <code>;</code>. È un errore di sintassi, quindi il programma <strong>non compila</strong>:</p>
+<pre data-lang="testo"><code>Debug32Errato.java:5: error: ';' expected
+        } while (true)
+                      ^
+1 error</code></pre>
+      <h4>E dopo aver messo il punto e virgola?</h4>
+      <p>Con <code>} while (true);</code> il programma compila, ma la condizione è sempre vera: è un <strong>ciclo infinito</strong> che stampa "Ciao" senza fine. Lanciato con <code>timeout 1 java Debug32PuntoEVirgola | head -4</code>:</p>
+<pre data-lang="testo"><code>Ciao
+Ciao
+Ciao
+Ciao</code></pre>
+      <p>Se dopo il ciclo ci fosse un'altra istruzione, il compilatore darebbe anche <code>error: unreachable statement</code>: sa che da un <code>while (true)</code> senza <code>break</code> non si esce mai. Quindi la correzione completa è il punto e virgola <strong>più</strong> una condizione che prima o poi diventa falsa (oppure un <code>break</code> dentro il ciclo).</p>
+      <h4>Codice corretto</h4>
+<pre data-lang="java"><code>public class Debug32 {
+    public static void main(String[] args) {
+        int volte = 0;
+        do {
+            System.out.println("Ciao");
+            volte++;
+        } while (volte &lt; 3);     // punto e virgola + una condizione che prima o poi diventa falsa
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Ciao
+Ciao
+Ciao</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio" id="ex-33">
+    <div class="esercizio-head"><span class="esercizio-num">33</span>Esercizio 33 <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Analizza:</p>
+<pre data-lang="java"><code>for (int i = 1; i &lt;= 10; i++) {
+    if (i == 5)
+        continue;
+
+    System.out.println(i);
+}</code></pre>
+      <p>Scrivi l'output completo.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Previsione</h4>
+      <ol>
+        <li>Il <code>for</code> va da 1 a 10. Per <code>i</code> diverso da 5 la condizione dell'<code>if</code> è falsa e si arriva alla stampa.</li>
+        <li>L'<code>if</code> senza graffe controlla <strong>solo l'istruzione successiva</strong>, cioè il <code>continue</code>. La stampa non fa parte dell'<code>if</code>.</li>
+        <li>Con <code>i == 5</code> scatta <code>continue</code>: la stampa viene saltata, ma il ciclo <strong>non</strong> finisce. Si esegue <code>i++</code> e si riparte da 6.</li>
+      </ol>
+      <p>Previsione: tutti i numeri da 1 a 10 tranne il 5.</p>
+      <h4>Output (eseguito davvero)</h4>
+<pre data-lang="testo"><code>1
+2
+3
+4
+6
+7
+8
+9
+10</code></pre>
+      <h4>Confronto con l'esercizio 24</h4>
+      <p>Stesso ciclo, stessa condizione, risultato diverso: con <code>break</code> l'output si ferma a 4, con <code>continue</code> manca solo il 5. Il codice è corretto (non c'è un errore da correggere): l'esercizio serve a leggere un ciclo e prevedere cosa fa. Mettere comunque le graffe <code>if (i == 5) { continue; }</code> è una buona abitudine.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Parte 18 – Domande teoriche finali</h2>
+
+  <div class="esercizio" id="ex-34">
+    <div class="esercizio-head"><span class="esercizio-num">34</span>Domande teoriche finali <span class="badge badge-verifica">domande</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Rispondi senza consultare gli appunti.</p>
+      <ol>
+        <li>Qual è la differenza fondamentale tra <code>while</code> e <code>do-while</code>?</li>
+        <li>Quando è preferibile utilizzare <code>for</code>?</li>
+        <li>Quando si utilizza <code>foreach</code>?</li>
+        <li>Qual è la differenza tra <code>break</code> e <code>continue</code>?</li>
+        <li>Cosa restituisce un operatore di confronto?</li>
+        <li>Qual è la differenza tra <code>=</code> e <code>==</code>?</li>
+        <li>Come funziona <code>&amp;&amp;</code>?</li>
+        <li>Come funziona <code>||</code>?</li>
+        <li>Cosa fa <code>!</code>?</li>
+        <li>Quando è utile un <code>if</code> annidato?</li>
+        <li>Quando è preferibile utilizzare il ternario?</li>
+        <li>Quando è utile <code>switch</code>?</li>
+        <li>Cosa succede se manca <code>break</code> in uno <code>switch</code>?</li>
+        <li>A cosa serve <code>Math.abs()</code>?</li>
+        <li>A cosa servono <code>Math.min()</code> e <code>Math.max()</code>?</li>
+        <li>Cosa restituisce <code>Math.pow()</code>?</li>
+        <li>Cosa restituisce <code>Math.sqrt()</code>?</li>
+        <li>A cosa serve <code>Math.PI</code>?</li>
+        <li>Perché un ciclo può diventare infinito?</li>
+        <li>Qual è la differenza tra un ciclo annidato e un ciclo normale?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposte spiegate</summary><div class="soluzione-body">
+      <ol>
+        <li><strong><code>while</code> controlla la condizione prima, <code>do-while</code> dopo.</strong> Quindi il <code>while</code> può non eseguire mai il blocco (condizione falsa subito), il <code>do-while</code> lo esegue <strong>almeno una volta</strong>. Per questo il <code>do-while</code> è perfetto per menu e validazione dell'input (esercizi 20 e 21).</li>
+        <li><strong>Quando il numero di iterazioni è noto</strong> prima di iniziare: contare da 1 a 20, leggere 5 numeri, scorrere un array con l'indice. Inizializzazione, condizione e aggiornamento stanno nella stessa riga, quindi è difficile dimenticare l'aggiornamento.</li>
+        <li><strong>Per attraversare tutti gli elementi di un array</strong> (o di una collezione), dal primo all'ultimo, quando serve il valore ma non la posizione: <code>for (int n : numeri)</code>. Non va bene se ti serve l'indice o se devi modificare le celle.</li>
+        <li><strong><code>break</code> esce dal ciclo, <code>continue</code> salta solo il giro corrente.</strong> Con <code>break</code> a <code>i == 5</code> l'output è 1-4; con <code>continue</code> è 1-10 senza il 5 (esercizi 24 e 33).</li>
+        <li><strong>Un <code>boolean</code></strong>: <code>true</code> o <code>false</code>. Per esempio <code>15 &gt; 10</code> vale <code>true</code> (esercizio 1).</li>
+        <li><strong><code>=</code> assegna, <code>==</code> confronta.</strong> <code>x = 5</code> mette 5 in <code>x</code>; <code>x == 5</code> chiede "x vale 5?" e dà un <code>boolean</code>. Scrivere <code>if (x = 5)</code> con un <code>int</code> non compila: <code>incompatible types: int cannot be converted to boolean</code>.</li>
+        <li><strong>AND logico: è vero solo se entrambe le condizioni sono vere.</strong> Se la prima è falsa Java non valuta nemmeno la seconda (valutazione "a corto circuito"). Esempio: <code>eta &gt;= 18 &amp;&amp; badge</code>.</li>
+        <li><strong>OR logico: è vero se almeno una condizione è vera</strong> (falso solo se sono false entrambe). Se la prima è vera la seconda non viene valutata. Esempio: <code>giorno == 6 || giorno == 7</code>.</li>
+        <li><strong>NOT: inverte un <code>boolean</code></strong>: <code>!true</code> è <code>false</code> e viceversa. <code>if (!piove)</code> = "se non piove".</li>
+        <li><strong>Quando una condizione ha senso solo se un'altra è già vera</strong> (condizioni dipendenti): il badge si controlla solo per chi ha almeno 18 anni. Permette di dare un messaggio diverso per ogni motivo (esercizio 7).</li>
+        <li><strong>Quando bisogna scegliere tra due valori</strong> da assegnare o stampare, con una condizione semplice: <code>String s = eta &gt;= 18 ? "Maggiorenne" : "Minorenne";</code>. Se nei due casi bisogna <em>fare</em> cose diverse (più istruzioni), è meglio l'<code>if...else</code>.</li>
+        <li><strong>Quando si confronta una variabile con tanti valori specifici</strong> (1, 2, 3… oppure "A", "B"), come le voci di un menu o i giorni della settimana. Non va bene per gli intervalli (<code>voto &gt;= 6</code>): lì servono gli <code>else if</code>.</li>
+        <li><strong>L'esecuzione "cade" nei <code>case</code> successivi</strong> (fall-through): vengono eseguite anche le istruzioni dei <code>case</code> sotto, fino al primo <code>break</code> o alla fine dello <code>switch</code>. Provato: con <code>n = 2</code> e nessun <code>break</code>, uno <code>switch</code> con <code>case 1</code> "Uno", <code>case 2</code> "Due", <code>case 3</code> "Tre" e <code>default</code> "Altro" stampa <code>Due</code>, <code>Tre</code>, <code>Altro</code>.</li>
+        <li><strong>Restituisce il valore assoluto</strong>, cioè il numero senza segno: <code>Math.abs(-15)</code> = 15. Serve per le distanze: <code>Math.abs(a - b)</code> (esercizio 11).</li>
+        <li><strong>Restituiscono il più piccolo e il più grande di due valori</strong>: <code>Math.min(14, -3)</code> = -3, <code>Math.max(14, -3)</code> = 14. Usati in un ciclo aggiornano minimo e massimo: <code>max = Math.max(max, x)</code> (esercizio 29).</li>
+        <li><strong>Un <code>double</code></strong>: la base elevata all'esponente. <code>Math.pow(9, 2)</code> = <code>81.0</code>, anche se 9 e 2 sono interi.</li>
+        <li><strong>Un <code>double</code></strong>: la radice quadrata. <code>Math.sqrt(9)</code> = <code>3.0</code>; <code>Math.sqrt(2)</code> = <code>1.4142135623730951</code>; con un negativo dà <code>NaN</code>.</li>
+        <li><strong>È la costante π</strong> (3.141592653589793) già pronta, più precisa di scrivere 3.14. Si usa senza parentesi perché non è un metodo: <code>Math.PI * Math.pow(r, 2)</code>.</li>
+        <li><strong>Perché la sua condizione non diventa mai falsa.</strong> Le cause tipiche: dimenticare di aggiornare la variabile di controllo (esercizio 30), aggiornarla nel verso sbagliato (<code>i--</code> invece di <code>i++</code>), una condizione sempre vera come <code>while (true)</code> senza <code>break</code> (esercizio 32), oppure leggere l'input fuori dal ciclo invece che dentro.</li>
+        <li><strong>Un ciclo annidato è un ciclo dentro un altro</strong>: per ogni giro dell'esterno, l'interno fa tutti i suoi giri, quindi i giri totali si moltiplicano (4 × 5 = 20 stelle, 10 × 10 = 100 righe di tabelline). Un ciclo normale ripete una sola dimensione; quello annidato serve per le strutture a due dimensioni: righe e colonne, tabelle, griglie.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Checklist di autovalutazione</h2>
+  <p>Al termine dell'esercitazione verifica di saper fare ognuna di queste cose. Accanto, l'esercizio in cui l'hai allenata: se una voce non ti torna, rifai quello.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>So…</th><th>Esercizi</th></tr></thead>
+    <tbody>
+      <tr><td>usare <code>if</code></td><td>6</td></tr>
+      <tr><td>usare <code>if...else</code></td><td>4, 5, 9</td></tr>
+      <tr><td>usare <code>else if</code></td><td>2, 3, 31</td></tr>
+      <tr><td>usare condizioni con <code>&amp;&amp;</code>, <code>||</code>, <code>!</code></td><td>4, 5, 6, 20</td></tr>
+      <tr><td>creare un <code>if</code> annidato</td><td>7</td></tr>
+      <tr><td>utilizzare il ternario</td><td>8, 9</td></tr>
+      <tr><td>utilizzare <code>switch</code></td><td>10, 21</td></tr>
+      <tr><td>usare <code>Math.abs()</code></td><td>11</td></tr>
+      <tr><td>usare <code>Math.min()</code> e <code>Math.max()</code></td><td>12, 29</td></tr>
+      <tr><td>usare <code>Math.pow()</code> e <code>Math.sqrt()</code></td><td>13, 14</td></tr>
+      <tr><td>usare <code>Math.PI</code></td><td>14, 29</td></tr>
+      <tr><td>utilizzare <code>for</code></td><td>15, 16, 17</td></tr>
+      <tr><td>utilizzare <code>while</code></td><td>18, 19, 28</td></tr>
+      <tr><td>utilizzare <code>do-while</code></td><td>20, 21</td></tr>
+      <tr><td>utilizzare <code>foreach</code></td><td>22, 23</td></tr>
+      <tr><td>utilizzare <code>break</code></td><td>23, 24</td></tr>
+      <tr><td>utilizzare <code>continue</code></td><td>25, 33</td></tr>
+      <tr><td>creare cicli annidati</td><td>26, 27</td></tr>
+      <tr><td>utilizzare <code>Scanner</code></td><td>dal 2 in poi</td></tr>
+      <tr><td>combinare condizioni, calcoli e cicli in un unico programma</td><td>28, 29</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ============================================================= -->
+  <h2>Regola finale da ricordare</h2>
+  <div class="callout tip"><span class="callout-title">Regola finale da ricordare</span>
+    <div class="table-wrap"><table>
+      <tbody>
+        <tr><td><code>for</code></td><td>iterazioni note</td></tr>
+        <tr><td><code>while</code></td><td>iterazioni incerte</td></tr>
+        <tr><td><code>do-while</code></td><td>almeno una esecuzione</td></tr>
+        <tr><td><code>foreach</code></td><td>attraversamento di un array</td></tr>
+        <tr><td><code>break</code></td><td>uscita dal ciclo</td></tr>
+        <tr><td><code>continue</code></td><td>salto dell'iterazione</td></tr>
+        <tr><td><code>if</code></td><td>decisione</td></tr>
+        <tr><td><code>switch</code></td><td>valori specifici</td></tr>
+        <tr><td><code>Math</code></td><td>calcoli matematici</td></tr>
+        <tr><td><code>&amp;&amp; || !</code></td><td>logica</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Consegne tratte dal PDF "Esercitazione pratica completa – Java" (Condizioni e Cicli) assegnato dal professore su Google Classroom, riportate fedelmente, comprese la tabella della Parte 1 con la colonna "Utilizzo", la checklist e la regola finale. Aggiunti da noi: le soluzioni con il ragionamento, il codice completo (compilato ed eseguito con Java 21) con l'output vero, le prove dei cicli infiniti dell'esercizio 30 e 32 fatte con <code>timeout</code>, le risposte alle 20 domande teoriche e la colonna "Esercizi" della checklist. I nomi delle classi sono scelti da noi perché il PDF non li indica. Nel PDF non ci sono refusi da segnalare: il punto e virgola mancante dell'esercizio 32 è l'errore voluto dall'esercizio.</p>
+
+</main>
+</body>
+</html>
