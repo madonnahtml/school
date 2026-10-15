@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: HashMap · Scuola</title>
+  <meta name="description" content="Informatica, esercitazione Classroom sulle HashMap in Java con risposte spiegate: rubrica telefonica HashMap&lt;String, String&gt;, inventario HashMap&lt;String, Integer&gt;, registro voti HashMap&lt;String, Double&gt;, sfida finale biblioteca con menu e Scanner usando solo put, get, containsKey, containsValue, remove, size e clear. Codice compilato e output vero.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: HashMap</h1>
+  <p class="lead">L'esercitazione sulle HashMap assegnata su Google Classroom: tre esercizi guidati (rubrica, inventario, registro voti) e una sfida finale, una biblioteca con menu. Qui trovi la consegna riportata fedelmente, la risposta e la spiegazione di ogni passo. La teoria è nel capitolo <a href="java-hashmap.html">Java: HashMap</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong> (è quella del PDF del professore), prova a scrivere il programma da solo e solo dopo apri la <strong>risposta spiegata</strong>. Ogni programma è stato compilato ed eseguito con Java 21: l'output che vedi è quello vero.</div>
+  <div class="callout warn"><span class="callout-title">Attenzione all'ordine</span>Una <code>HashMap</code> <strong>non</strong> tiene le coppie nell'ordine in cui le hai inserite. Quando un programma stampa la mappa intera, le righe qui sotto sono quelle uscite davvero sul nostro computer, ma sul tuo <strong>l'ordine può essere diverso</strong>: conta che ci siano tutte le coppie, non la loro posizione. Più dettagli in <a href="esercizi-java-hashmap.html">Esercizi: HashMap</a> e in <a href="java-hashmap.html#come-funziona-dentro">Come funziona dentro</a>.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 1 – Rubrica telefonica</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>put(k, v)</code> aggiunge una coppia, oppure <strong>sostituisce</strong> il valore se la chiave c'è già; <code>get(k)</code> legge, <code>containsKey(k)</code> controlla, <code>remove(k)</code> toglie, <code>size()</code> conta le coppie. Teoria: <a href="java-hashmap.html#aggiungere-e-modificare-con-put">Aggiungere e modificare con put()</a>, <a href="java-hashmap.html#leggere-con-get-e-controllare">Leggere con get() e controllare</a>, <a href="java-hashmap.html#rimuovere-svuotare-e-contare">Rimuovere, svuotare e contare</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Rubrica telefonica <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Crea un programma Java che utilizzi una:</p>
+<pre data-lang="java"><code>HashMap&lt;String, String&gt;</code></pre>
+      <p>per rappresentare una rubrica telefonica.</p>
+      <p>Inserisci:</p>
+<pre data-lang="testo"><code>"Marco" → "3331234567"
+"Luca"  → "3477654321"
+"Anna"  → "3201112233"</code></pre>
+      <p>Poi:</p>
+      <ol>
+        <li>stampa tutta la rubrica;</li>
+        <li>stampa il numero di Marco;</li>
+        <li>verifica se <code>"Anna"</code> è presente;</li>
+        <li>modifica il numero di Luca;</li>
+        <li>elimina Marco;</li>
+        <li>stampa il numero di contatti rimasti.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Cerco per <strong>nome</strong>, quindi il nome è la chiave e il numero è il valore. Il numero è una <code>String</code> e non un <code>int</code>: non ci devo fare calcoli, e <code>3331234567</code> non ci starebbe neanche in un <code>int</code> (il massimo è circa 2,1 miliardi).</li>
+        <li>Per stampare tutta la rubrica basta <code>System.out.println(rubrica)</code>: Java scrive la mappa nella forma <code>{chiave=valore, ...}</code>.</li>
+        <li>"Verifica se Anna è presente" è un lavoro per <code>containsKey</code>, che risponde <code>true</code>/<code>false</code>.</li>
+        <li>"Modifica il numero di Luca": non esiste un metodo "modifica", si usa ancora <code>put</code>. La chiave <code>"Luca"</code> c'è già, quindi il vecchio numero viene <strong>sostituito</strong>. Il nuovo numero non è dato dal PDF: ne ho scelto uno io.</li>
+        <li>Per eliminare uso <code>remove("Marco")</code>, per contare <code>size()</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Rubrica {
+    public static void main(String[] args) {
+        // nome -&gt; numero di telefono
+        HashMap&lt;String, String&gt; rubrica = new HashMap&lt;&gt;();
+        rubrica.put("Marco", "3331234567");
+        rubrica.put("Luca", "3477654321");
+        rubrica.put("Anna", "3201112233");
+
+        // 1. stampa tutta la rubrica
+        System.out.println("Rubrica: " + rubrica);
+
+        // 2. stampa il numero di Marco
+        System.out.println("Numero di Marco: " + rubrica.get("Marco"));
+
+        // 3. verifica se "Anna" è presente
+        if (rubrica.containsKey("Anna")) {
+            System.out.println("Anna è presente in rubrica");
+        } else {
+            System.out.println("Anna non è in rubrica");
+        }
+
+        // 4. modifica il numero di Luca (put su una chiave che esiste già = sostituisce)
+        rubrica.put("Luca", "3489998877");
+        System.out.println("Nuovo numero di Luca: " + rubrica.get("Luca"));
+
+        // 5. elimina Marco
+        rubrica.remove("Marco");
+        System.out.println("Marco eliminato. Rubrica: " + rubrica);
+
+        // 6. stampa il numero di contatti rimasti
+        System.out.println("Contatti rimasti: " + rubrica.size());
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Rubrica: {Marco=3331234567, Luca=3477654321, Anna=3201112233}
+Numero di Marco: 3331234567
+Anna è presente in rubrica
+Nuovo numero di Luca: 3489998877
+Marco eliminato. Rubrica: {Luca=3489998877, Anna=3201112233}
+Contatti rimasti: 2</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li>Dopo il <code>put("Luca", "3489998877")</code> le coppie sono ancora 3, non 4: una chiave non può comparire due volte, quindi il <code>put</code> ha cambiato il valore invece di aggiungere una riga.</li>
+        <li>Dopo il <code>remove</code> restano Luca e Anna, quindi <code>size()</code> vale 2.</li>
+        <li>L'ordine delle coppie stampate (qui Marco, Luca, Anna) è quello uscito sul nostro computer: non è garantito.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li><code>rubrica.get("marco")</code> con la minuscola dà <code>null</code>: le chiavi <code>String</code> distinguono maiuscole e minuscole.</li>
+        <li>Usare <code>containsValue("Anna")</code> per il punto 3: cercherebbe "Anna" tra i <strong>numeri</strong> e risponderebbe <code>false</code>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 2 – Inventario</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Per <strong>aumentare</strong> un valore numerico si legge il vecchio valore con <code>get</code>, si somma e si rimette con <code>put</code>: <code>m.put(k, m.get(k) + 2)</code>. Teoria: <a href="java-hashmap.html#aggiungere-e-modificare-con-put">Aggiungere e modificare con put()</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Inventario <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Crea una <code>HashMap</code> per rappresentare un piccolo inventario:</p>
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt;</code></pre>
+      <p>Dove:</p>
+<pre data-lang="testo"><code>prodotto → quantità</code></pre>
+      <p>Inserisci:</p>
+<pre data-lang="testo"><code>"Mouse" → 10
+"Tastiera" → 5
+"Monitor" → 3</code></pre>
+      <p>Poi il programma deve:</p>
+      <ul>
+        <li>stampare l'inventario;</li>
+        <li>mostrare quanti Mouse sono disponibili;</li>
+        <li>aggiungere 2 Mouse;</li>
+        <li>eliminare il Monitor;</li>
+        <li>stampare il numero di prodotti rimasti.</li>
+      </ul>
+      <p><strong>Suggerimento:</strong> per aggiungere 2 Mouse puoi fare:</p>
+<pre data-lang="java"><code>int quantita = inventario.get("Mouse");
+
+inventario.put("Mouse", quantita + 2);</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Il valore è una quantità, un numero intero: tra <code>&lt; &gt;</code> va la classe <code>Integer</code>, non <code>int</code>.</li>
+        <li>"Aggiungere 2 Mouse" non vuol dire <code>put("Mouse", 2)</code>: quello metterebbe 2 <strong>al posto</strong> di 10. Si segue il suggerimento: leggo 10 con <code>get</code>, sommo 2, rimetto 12 con <code>put</code>.</li>
+        <li><code>int quantita = inventario.get("Mouse");</code> funziona perché Java trasforma da solo l'<code>Integer</code> restituito in <code>int</code> (unboxing).</li>
+        <li>Monitor si toglie con <code>remove</code>, i prodotti rimasti si contano con <code>size()</code>.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class Inventario {
+    public static void main(String[] args) {
+        // prodotto -&gt; quantità
+        HashMap&lt;String, Integer&gt; inventario = new HashMap&lt;&gt;();
+        inventario.put("Mouse", 10);
+        inventario.put("Tastiera", 5);
+        inventario.put("Monitor", 3);
+
+        // stampare l'inventario
+        System.out.println("Inventario: " + inventario);
+
+        // mostrare quanti Mouse sono disponibili
+        System.out.println("Mouse disponibili: " + inventario.get("Mouse"));
+
+        // aggiungere 2 Mouse (come nel suggerimento: leggo, sommo, rimetto)
+        int quantita = inventario.get("Mouse");
+        inventario.put("Mouse", quantita + 2);
+        System.out.println("Dopo l'arrivo di 2 Mouse: " + inventario.get("Mouse"));
+
+        // eliminare il Monitor
+        inventario.remove("Monitor");
+        System.out.println("Monitor eliminato. Inventario: " + inventario);
+
+        // stampare il numero di prodotti rimasti
+        System.out.println("Prodotti rimasti: " + inventario.size());
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Inventario: {Monitor=3, Mouse=10, Tastiera=5}
+Mouse disponibili: 10
+Dopo l'arrivo di 2 Mouse: 12
+Monitor eliminato. Inventario: {Mouse=12, Tastiera=5}
+Prodotti rimasti: 2</code></pre>
+      <p>Qui si vede bene che l'ordine non è quello di inserimento: abbiamo messo Mouse, Tastiera, Monitor e la stampa comincia da Monitor.</p>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li><strong>"Prodotti rimasti" è 2, non 15.</strong> <code>size()</code> conta le <strong>coppie</strong> (i tipi di prodotto: Mouse e Tastiera), non i pezzi in magazzino (12 + 5). Per sommare i pezzi servirebbe scorrere i valori con <code>values()</code>.</li>
+        <li>Il suggerimento funziona solo se la chiave esiste: <code>inventario.get("Webcam")</code> darebbe <code>null</code>, e mettere <code>null</code> in un <code>int</code> provoca una <code>NullPointerException</code>. Con un prodotto che potrebbe mancare, prima si controlla con <code>containsKey</code> (oppure si usa <code>getOrDefault(k, 0)</code>).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio 3 – Registro voti</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span><code>clear()</code> svuota la mappa in un colpo solo: dopo, <code>size()</code> vale 0 e la stampa è <code>{}</code>. Teoria: <a href="java-hashmap.html#rimuovere-svuotare-e-contare">Rimuovere, svuotare e contare</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Registro voti <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Realizza un programma che utilizzi:</p>
+<pre data-lang="java"><code>HashMap&lt;String, Double&gt;</code></pre>
+      <p>per memorizzare il voto di alcuni studenti.</p>
+      <p>Esempio:</p>
+<pre data-lang="testo"><code>Mario → 7.5
+Lucia → 8.0
+Paolo → 6.5</code></pre>
+      <p>Il programma deve:</p>
+      <ol>
+        <li>creare la <code>HashMap</code>;</li>
+        <li>inserire gli studenti;</li>
+        <li>stampare il voto di Lucia;</li>
+        <li>modificare il voto di Paolo portandolo a <code>7.0</code>;</li>
+        <li>verificare se esiste uno studente chiamato <code>"Mario"</code>;</li>
+        <li>eliminare Lucia;</li>
+        <li>stampare quanti studenti sono rimasti;</li>
+        <li>infine svuotare completamente la <code>HashMap</code>.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>I voti hanno la virgola, quindi il valore è <code>Double</code> (la classe di <code>double</code>).</li>
+        <li>Seguo gli 8 punti nell'ordine, uno per riga di codice: è lo stesso schema degli esercizi 1 e 2 con in più <code>clear()</code>.</li>
+        <li>"Portare il voto di Paolo a 7.0" è di nuovo un <code>put</code> su una chiave già presente.</li>
+        <li>"Verificare se esiste Mario" è <code>containsKey("Mario")</code>: stampo direttamente il <code>boolean</code>.</li>
+        <li>Dopo <code>clear()</code> stampo la mappa e <code>size()</code> per far vedere che è davvero vuota.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class RegistroVoti {
+    public static void main(String[] args) {
+        // 1. creare la HashMap: studente -&gt; voto
+        HashMap&lt;String, Double&gt; voti = new HashMap&lt;&gt;();
+
+        // 2. inserire gli studenti
+        voti.put("Mario", 7.5);
+        voti.put("Lucia", 8.0);
+        voti.put("Paolo", 6.5);
+        System.out.println("Registro: " + voti);
+
+        // 3. stampare il voto di Lucia
+        System.out.println("Voto di Lucia: " + voti.get("Lucia"));
+
+        // 4. modificare il voto di Paolo portandolo a 7.0
+        voti.put("Paolo", 7.0);
+        System.out.println("Nuovo voto di Paolo: " + voti.get("Paolo"));
+
+        // 5. verificare se esiste uno studente chiamato "Mario"
+        System.out.println("Esiste Mario? " + voti.containsKey("Mario"));
+
+        // 6. eliminare Lucia
+        voti.remove("Lucia");
+        System.out.println("Lucia eliminata. Registro: " + voti);
+
+        // 7. stampare quanti studenti sono rimasti
+        System.out.println("Studenti rimasti: " + voti.size());
+
+        // 8. svuotare completamente la HashMap
+        voti.clear();
+        System.out.println("Dopo clear(): " + voti + ", studenti: " + voti.size());
+    }
+}</code></pre>
+      <h4>Output</h4>
+<pre data-lang="testo"><code>Registro: {Paolo=6.5, Lucia=8.0, Mario=7.5}
+Voto di Lucia: 8.0
+Nuovo voto di Paolo: 7.0
+Esiste Mario? true
+Lucia eliminata. Registro: {Paolo=7.0, Mario=7.5}
+Studenti rimasti: 2
+Dopo clear(): {}, studenti: 0</code></pre>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><code>voti.put("Mario", 7.5)</code> compila anche se il valore è un <code>Double</code>: Java "impacchetta" da solo il <code>double</code> 7.5 (autoboxing). Attenzione però: <code>voti.put("Paolo", 7)</code> <strong>non</strong> compila, perché 7 è un <code>int</code> e Java non lo converte in <code>Double</code>. Per questo si scrive <code>7.0</code>, come chiede la consegna.</li>
+        <li>Un <code>Double</code> stampato mostra sempre la parte decimale: <code>8.0</code>, non <code>8</code>.</li>
+        <li><code>clear()</code> svuota la mappa ma la mappa <strong>esiste ancora</strong>: si può riempire di nuovo con <code>put</code>. È diverso da <code>voti = null</code>, che butterebbe via la mappa.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Sfida finale</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Un programma a menu è un ciclo <code>do ... while</code> che stampa le voci, legge la scelta con <code>Scanner</code> e la smista con uno <code>switch</code>, finché l'utente non sceglie di uscire. Per le HashMap, il riepilogo di tutti i metodi è in <a href="java-hashmap.html#mappa-riassuntiva">Mappa riassuntiva</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>La biblioteca <span class="badge badge-difficile">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi un programma per una <strong>biblioteca</strong> utilizzando:</p>
+<pre data-lang="java"><code>HashMap&lt;String, Integer&gt;</code></pre>
+      <p>dove:</p>
+<pre data-lang="testo"><code>titolo del libro → numero di copie</code></pre>
+      <p>Inserisci almeno 4 libri.</p>
+      <p>Il programma deve permettere di:</p>
+<pre data-lang="testo"><code>1. Visualizzare tutti i libri
+2. Cercare un libro
+3. Aggiungere un libro
+4. Modificare il numero di copie
+5. Eliminare un libro
+6. Visualizzare quanti libri sono presenti
+7. Svuotare la biblioteca</code></pre>
+      <p>Per questa sfida prova a utilizzare soltanto i metodi che abbiamo visto:</p>
+<pre data-lang="java"><code>put()
+get()
+containsKey()
+containsValue()
+remove()
+size()
+clear()</code></pre>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>La struttura.</strong> La consegna elenca 7 azioni da fare "a richiesta": è un programma a <strong>menu</strong>. Un ciclo <code>do ... while</code> stampa il menu, legge la scelta e la passa a uno <code>switch</code> con un <code>case</code> per voce. Aggiungo la voce <code>0. Esci</code>, altrimenti il programma non finirebbe mai.</li>
+        <li><strong>I dati di partenza.</strong> Prima del ciclo metto 4 libri con <code>put</code>, come chiesto.</li>
+        <li><strong>Leggere l'input.</strong> I titoli hanno spazi ("I promessi sposi"), quindi li leggo con <code>nextLine()</code>. Anche i numeri li leggo come riga e li converto con <code>Integer.parseInt</code>: così non c'è il classico problema di <code>nextInt()</code> che lascia l'"a capo" nel buffer e fa saltare il <code>nextLine()</code> successivo. Il metodo <code>leggiNumero</code> ripete la domanda se l'utente non scrive un numero (<code>try</code>/<code>catch</code> su <code>NumberFormatException</code>).</li>
+        <li><strong>Voce per voce, con i soli metodi permessi:</strong>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Voce</th><th>Metodi usati</th><th>Idea</th></tr></thead>
+            <tbody>
+              <tr><td>1. Visualizzare tutti</td><td><code>size</code>, <code>containsValue</code> + stampa della mappa</td><td>se è vuota lo dico; altrimenti stampo la mappa e avviso se c'è un libro con 0 copie</td></tr>
+              <tr><td>2. Cercare</td><td><code>containsKey</code>, <code>get</code></td><td>se il titolo c'è stampo le copie, se no un messaggio</td></tr>
+              <tr><td>3. Aggiungere</td><td><code>containsKey</code>, <code>put</code></td><td>se il titolo c'è già <strong>non</strong> faccio <code>put</code>: sostituirebbe le copie</td></tr>
+              <tr><td>4. Modificare</td><td><code>containsKey</code>, <code>get</code>, <code>put</code></td><td>solo se il titolo esiste; <code>put</code> su chiave esistente = sostituisce</td></tr>
+              <tr><td>5. Eliminare</td><td><code>containsKey</code>, <code>remove</code></td><td>controllo prima, così posso dire "non c'è"</td></tr>
+              <tr><td>6. Quanti libri</td><td><code>size</code></td><td>numero di titoli diversi</td></tr>
+              <tr><td>7. Svuotare</td><td><code>clear</code></td><td>chiedo conferma: è un'operazione che non si può annullare</td></tr>
+            </tbody>
+          </table></div>
+        </li>
+        <li><strong>Gli errori gestiti.</strong> Titolo non trovato (cerca, modifica, elimina), titolo già presente (aggiungi), numero di copie negativo, scelta che non esiste nel menu (<code>default</code>), testo al posto di un numero.</li>
+      </ol>
+      <h4>Codice</h4>
+<pre data-lang="java"><code>import java.util.HashMap;
+import java.util.Scanner;
+
+public class Biblioteca {
+
+    // Legge un numero intero; se l'utente scrive altro, lo richiede
+    static int leggiNumero(Scanner sc, String messaggio) {
+        while (true) {
+            System.out.print(messaggio);
+            String riga = sc.nextLine();
+            try {
+                return Integer.parseInt(riga.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Devi scrivere un numero intero.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // titolo del libro -&gt; numero di copie
+        HashMap&lt;String, Integer&gt; biblioteca = new HashMap&lt;&gt;();
+        biblioteca.put("I promessi sposi", 3);
+        biblioteca.put("Il piccolo principe", 5);
+        biblioteca.put("Pinocchio", 2);
+        biblioteca.put("1984", 4);
+
+        int scelta;
+        do {
+            System.out.println();
+            System.out.println("===== BIBLIOTECA =====");
+            System.out.println("1. Visualizzare tutti i libri");
+            System.out.println("2. Cercare un libro");
+            System.out.println("3. Aggiungere un libro");
+            System.out.println("4. Modificare il numero di copie");
+            System.out.println("5. Eliminare un libro");
+            System.out.println("6. Visualizzare quanti libri sono presenti");
+            System.out.println("7. Svuotare la biblioteca");
+            System.out.println("0. Esci");
+            scelta = leggiNumero(sc, "Scelta: ");
+
+            String titolo;
+            int copie;
+            switch (scelta) {
+                case 1:
+                    if (biblioteca.size() == 0) {
+                        System.out.println("La biblioteca è vuota.");
+                    } else {
+                        // stampa della mappa intera: {titolo=copie, ...}
+                        System.out.println("Libri (titolo=copie): " + biblioteca);
+                        if (biblioteca.containsValue(0)) {
+                            System.out.println("Attenzione: c'è almeno un libro con 0 copie.");
+                        }
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Titolo da cercare: ");
+                    titolo = sc.nextLine();
+                    if (biblioteca.containsKey(titolo)) {
+                        System.out.println("\"" + titolo + "\" c'è: " + biblioteca.get(titolo) + " copie.");
+                    } else {
+                        System.out.println("\"" + titolo + "\" non è in biblioteca.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Titolo del nuovo libro: ");
+                    titolo = sc.nextLine();
+                    if (biblioteca.containsKey(titolo)) {
+                        // put sostituirebbe le copie: meglio avvisare
+                        System.out.println("\"" + titolo + "\" c'è già: usa la voce 4 per cambiare le copie.");
+                    } else {
+                        copie = leggiNumero(sc, "Numero di copie: ");
+                        if (copie &lt; 0) {
+                            System.out.println("Il numero di copie non può essere negativo.");
+                        } else {
+                            biblioteca.put(titolo, copie);
+                            System.out.println("Aggiunto \"" + titolo + "\" con " + copie + " copie.");
+                        }
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Titolo da modificare: ");
+                    titolo = sc.nextLine();
+                    if (biblioteca.containsKey(titolo)) {
+                        System.out.println("Copie attuali: " + biblioteca.get(titolo));
+                        copie = leggiNumero(sc, "Nuovo numero di copie: ");
+                        if (copie &lt; 0) {
+                            System.out.println("Il numero di copie non può essere negativo.");
+                        } else {
+                            biblioteca.put(titolo, copie);   // chiave esistente: sostituisce
+                            System.out.println("Ora \"" + titolo + "\" ha " + copie + " copie.");
+                        }
+                    } else {
+                        System.out.println("\"" + titolo + "\" non è in biblioteca.");
+                    }
+                    break;
+
+                case 5:
+                    System.out.print("Titolo da eliminare: ");
+                    titolo = sc.nextLine();
+                    if (biblioteca.containsKey(titolo)) {
+                        biblioteca.remove(titolo);
+                        System.out.println("\"" + titolo + "\" eliminato.");
+                    } else {
+                        System.out.println("\"" + titolo + "\" non è in biblioteca.");
+                    }
+                    break;
+
+                case 6:
+                    System.out.println("Titoli presenti: " + biblioteca.size());
+                    break;
+
+                case 7:
+                    System.out.print("Vuoi davvero svuotare la biblioteca? (s/n): ");
+                    String risposta = sc.nextLine();
+                    if (risposta.equals("s")) {
+                        biblioteca.clear();
+                        System.out.println("Biblioteca svuotata.");
+                    } else {
+                        System.out.println("Operazione annullata.");
+                    }
+                    break;
+
+                case 0:
+                    System.out.println("Arrivederci!");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida.");
+            }
+        } while (scelta != 0);
+
+        sc.close();
+    }
+}</code></pre>
+      <h4>Esempio di esecuzione</h4>
+      <p>Una sessione che tocca tutte e 7 le voci, compresi gli errori. Dopo i due punti c'è quello che ha scritto l'utente. Il menu completo è stampato a ogni giro: per non ripeterlo 17 volte lo abbiamo sostituito con <code>[... menu ...]</code> dopo la prima volta. Il resto è l'output vero.</p>
+<pre data-lang="testo"><code>===== BIBLIOTECA =====
+1. Visualizzare tutti i libri
+2. Cercare un libro
+3. Aggiungere un libro
+4. Modificare il numero di copie
+5. Eliminare un libro
+6. Visualizzare quanti libri sono presenti
+7. Svuotare la biblioteca
+0. Esci
+Scelta: 1
+Libri (titolo=copie): {Pinocchio=2, 1984=4, I promessi sposi=3, Il piccolo principe=5}
+
+[... menu ...]
+Scelta: 2
+Titolo da cercare: Pinocchio
+"Pinocchio" c'è: 2 copie.
+
+[... menu ...]
+Scelta: 2
+Titolo da cercare: Harry Potter
+"Harry Potter" non è in biblioteca.
+
+[... menu ...]
+Scelta: 3
+Titolo del nuovo libro: Il nome della rosa
+Numero di copie: 2
+Aggiunto "Il nome della rosa" con 2 copie.
+
+[... menu ...]
+Scelta: 3
+Titolo del nuovo libro: Pinocchio
+"Pinocchio" c'è già: usa la voce 4 per cambiare le copie.
+
+[... menu ...]
+Scelta: 4
+Titolo da modificare: Il piccolo principe
+Copie attuali: 5
+Nuovo numero di copie: 0
+Ora "Il piccolo principe" ha 0 copie.
+
+[... menu ...]
+Scelta: 1
+Libri (titolo=copie): {Il nome della rosa=2, Pinocchio=2, 1984=4, I promessi sposi=3, Il piccolo principe=0}
+Attenzione: c'è almeno un libro con 0 copie.
+
+[... menu ...]
+Scelta: 4
+Titolo da modificare: Divina Commedia
+"Divina Commedia" non è in biblioteca.
+
+[... menu ...]
+Scelta: 5
+Titolo da eliminare: 1984
+"1984" eliminato.
+
+[... menu ...]
+Scelta: 5
+Titolo da eliminare: 1984
+"1984" non è in biblioteca.
+
+[... menu ...]
+Scelta: 6
+Titoli presenti: 4
+
+[... menu ...]
+Scelta: 9
+Scelta non valida.
+
+[... menu ...]
+Scelta: ciao
+Devi scrivere un numero intero.
+Scelta: 7
+Vuoi davvero svuotare la biblioteca? (s/n): n
+Operazione annullata.
+
+[... menu ...]
+Scelta: 7
+Vuoi davvero svuotare la biblioteca? (s/n): s
+Biblioteca svuotata.
+
+[... menu ...]
+Scelta: 1
+La biblioteca è vuota.
+
+[... menu ...]
+Scelta: 6
+Titoli presenti: 0
+
+[... menu ...]
+Scelta: 0
+Arrivederci!</code></pre>
+      <h4>Come si "visualizzano tutti i libri" con quei 7 metodi</h4>
+      <p>Il punto delicato della sfida è la voce 1. Nell'elenco dei metodi permessi non c'è nessun modo per <strong>scorrere</strong> la mappa: <code>keySet()</code>, <code>values()</code> ed <code>entrySet()</code> (vedi <a href="java-hashmap.html#scorrere-una-hashmap">Scorrere una HashMap</a>) non ci sono, e una mappa non ha indici, quindi niente <code>for (int i = 0; ...)</code> con <code>get(i)</code>. Ci sono due strade:</p>
+<pre data-lang="java"><code>import java.util.HashMap;
+
+public class ElencoLibri {
+    public static void main(String[] args) {
+        HashMap&lt;String, Integer&gt; biblioteca = new HashMap&lt;&gt;();
+        biblioteca.put("I promessi sposi", 3);
+        biblioteca.put("Il piccolo principe", 5);
+        biblioteca.put("Pinocchio", 2);
+        biblioteca.put("1984", 4);
+
+        // Modo A: stampa della mappa (usa toString, che Java chiama da solo)
+        System.out.println(biblioteca);
+
+        // Modo B: for-each sulle chiavi + get (keySet non è nell'elenco della sfida)
+        for (String titolo : biblioteca.keySet()) {
+            System.out.println("- " + titolo + ": " + biblioteca.get(titolo) + " copie");
+        }
+    }
+}</code></pre>
+<pre data-lang="testo"><code>{Pinocchio=2, 1984=4, I promessi sposi=3, Il piccolo principe=5}
+- Pinocchio: 2 copie
+- 1984: 4 copie
+- I promessi sposi: 3 copie
+- Il piccolo principe: 5 copie</code></pre>
+      <ul>
+        <li><strong>Modo A, stampa della mappa</strong> (quello scelto nel programma). <code>System.out.println(biblioteca)</code> non usa nessun metodo fuori dall'elenco scritto da noi: è Java che, per trasformare la mappa in testo, chiama da solo <code>toString()</code>. Risultato: tutte le coppie in una riga, <code>{titolo=copie, ...}</code>.</li>
+        <li><strong>Modo B, for-each su <code>keySet()</code></strong> con <code>get</code> per ogni titolo. L'elenco viene più bello (una riga per libro, con il testo che vogliamo), ma usa <code>keySet()</code>, che la consegna non mette tra i metodi visti.</li>
+      </ul>
+      <p><strong>Scelta motivata:</strong> nel programma usiamo il modo A perché la consegna chiede di provare a usare <strong>soltanto</strong> quei sette metodi, e la stampa della mappa li rispetta mostrando comunque tutti i titoli con le loro copie. Il modo B è la versione "da programma vero": se il professore lo permette, basta sostituire nel <code>case 1</code> la riga della stampa con il <code>for</code>. In tutti e due i casi l'ordine dei libri <strong>non è garantito</strong> (si vede anche nella sessione: Pinocchio esce per primo).</p>
+      <h4>Perché funziona</h4>
+      <ul>
+        <li><strong><code>containsKey</code> prima di tutto.</strong> In cerca, modifica ed elimina il controllo serve a dare un messaggio chiaro invece di stampare <code>null</code>. In "aggiungi" serve a non distruggere i dati: un <code>put</code> su un titolo esistente avrebbe cambiato le copie di Pinocchio da 2 al nuovo numero, senza avvisare.</li>
+        <li><strong><code>containsValue(0)</code></strong> è il modo naturale di usare il settimo metodo: risponde alla domanda "c'è almeno un libro esaurito?" senza dover scorrere la mappa. Nella sessione, dopo aver messo a 0 le copie del Piccolo principe, l'avviso compare.</li>
+        <li><strong>"Quanti libri sono presenti"</strong> l'abbiamo letto come numero di <strong>titoli</strong>, cioè <code>size()</code>. Il numero totale di copie (2 + 2 + 3 + 0) richiederebbe di sommare tutti i valori, e quindi <code>values()</code>, che non è nell'elenco.</li>
+        <li><strong>Voce 7 con conferma:</strong> dopo <code>clear()</code> la voce 1 dice "La biblioteca è vuota" e la voce 6 dice 0: la mappa esiste ancora ed è pronta per nuovi <code>put</code>.</li>
+        <li>Dopo aver eliminato "1984", il secondo tentativo dà "non è in biblioteca": la chiave non c'è più.</li>
+      </ul>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Leggere la scelta con <code>nextInt()</code> e il titolo con <code>nextLine()</code>: il titolo risulterebbe vuoto, perché <code>nextLine()</code> legge l'"a capo" rimasto dopo il numero.</li>
+        <li>Confrontare la risposta della conferma con <code>==</code> (<code>risposta == "s"</code>): con le <code>String</code> si usa <code>equals</code>.</li>
+        <li>Dimenticare <code>break</code> in un <code>case</code>: lo <code>switch</code> proseguirebbe nel <code>case</code> successivo.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>PDF "Esercitazione HashMap" assegnato su Google Classroom (esercizi 1–3 e sfida finale), riportato fedelmente. Nell'esercizio 1 il PDF non indica il nuovo numero di Luca: quello usato qui è inventato. Sono aggiunte nostre le risposte spiegate, tutti i programmi con il loro output vero, la voce "0. Esci" del menu, la gestione degli errori nella sfida e il confronto tra la stampa della mappa e il for-each su <code>keySet()</code>. Teoria collegata: <a href="java-hashmap.html">Java: HashMap</a>.</p>
+</main>
+</body>
+</html>

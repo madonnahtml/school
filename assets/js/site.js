@@ -63,7 +63,7 @@
           { title: "Classroom: condizioni e cicli", path: "materie/informatica/classroom-condizioni-cicli.html", type: "classroom", n: 0, desc: "" },
           { title: "Classroom: array, wrapper, metodi e overload", path: "materie/informatica/classroom-gestione-voti.html", type: "classroom", of: "materie/informatica/java-array-wrapper-metodi-overload.html", n: 0, desc: "" },
           { title: "Classroom: la classe Automobile", path: "materie/informatica/classroom-automobile.html", type: "classroom", of: "materie/informatica/java-programmazione-a-oggetti.html", n: 0, desc: "" },
-          { title: "Classroom: eccezioni e gestione dei file", path: "materie/informatica/classroom-eccezioni-file.html", type: "classroom", of: "materie/informatica/java-eccezioni.html", n: 0, desc: "" },
+          { title: "Classroom: eccezioni e gestione dei file", path: "materie/informatica/classroom-eccezioni-file.html", type: "classroom", of: "materie/informatica/java-eccezioni.html", n: 11, desc: "RegistroStudenti a menu: try-catch, finally, NumberFormatException, throw, throws, più catch, Path e Files (writeString con APPEND, readAllLines, exists, deleteIfExists)." },
           { title: "Classroom: ArrayList, Vector e LinkedList", path: "materie/informatica/classroom-liste.html", type: "classroom", of: "materie/informatica/java-collections-liste.html", n: 0, desc: "" },
           { title: "Classroom: HashMap", path: "materie/informatica/classroom-hashmap.html", type: "classroom", of: "materie/informatica/java-hashmap.html", n: 0, desc: "" },
         ],
