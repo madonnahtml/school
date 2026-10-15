@@ -9,6 +9,7 @@ Solo HTML, CSS e JavaScript: niente da compilare o installare. Funziona da compu
 - **Materie come quaderni**: in home ogni materia è una copertina colorata; aprendola si sceglie il capitolo, con l'elenco dei paragrafi.
 - **Riassunti** (`riassunti.html`): le idee da ricordare di ogni capitolo, paragrafo per paragrafo, divise per materia. Ogni scheda porta al paragrafo nel capitolo.
 - **Esercizi** (`esercizi.html`): l'area con consegne ed esercizi per ogni argomento, con le soluzioni spiegate passo passo e un esercizio completo alla fine di ogni pagina. Raccoglie da sola tutte le pagine di tipo `esercizi`; ogni capitolo di teoria ha il link ai suoi esercizi e viceversa.
+- **Esercitazioni Classroom** (`classroom.html`): le esercitazioni assegnate dal professore su Classroom, una pagina per ognuna, con la consegna riportata fedelmente, la risposta (programmi compilati ed eseguiti con Java 21, con l'output vero) e la spiegazione di ogni risposta. Raccoglie da sola tutte le pagine di tipo `classroom`; ogni capitolo di teoria ha il link alla sua esercitazione.
 - **Progressi**: ogni capitolo si può segnare come *studiato*; menu, copertine e panoramiche mostrano quanti ne hai fatti. In fondo a ogni capitolo c'è il link al successivo.
 - **Ripasso** (`ripasso.html`, ora **disattivato**): raccoglie da solo flashcard e quiz delle pagine, con metodo a scatole (Leitner) e quiz a punteggio. Per ora le pagine non hanno flashcard né quiz; si riattiva in `assets/js/site.js` con `features: { ripasso: true }`.
 - **Codice colorato** (c, cpp, java, python, js, sql, bash, html) con pulsante Copia.
@@ -21,18 +22,18 @@ Progressi e ripasso sono salvati nel browser del dispositivo che usi.
 ## Struttura
 
 ```
-index.html · cerca.html · riassunti.html · esercizi.html · ripasso.html · componenti.html
+index.html · cerca.html · riassunti.html · esercizi.html · classroom.html · ripasso.html · componenti.html
 materie/<materia>/index.html     panoramica della materia
 materie/<materia>/<pagina>.html  argomenti
 assets/js/site.js                ELENCO DI MATERIE E PAGINE (si parte da qui)
 assets/js/riassunti.js           TESTI DEI RIASSUNTI (uno per capitolo, diviso per paragrafo)
-assets/js/layout.js              menu, barra in basso, home, capitoli, riassunti, progressi, indice
+assets/js/layout.js              menu, barra in basso, home, capitoli, riassunti, esercizi, classroom, progressi, indice
 assets/js/components.js          codice, flashcard, quiz, schemi di rete
 assets/js/search.js              ricerca
 assets/js/ripasso.js             pagina Ripasso
 assets/css/style.css             grafica
 sw.js · manifest.webmanifest     offline e installazione come app
-tools/pagine.py                  rigenera home, cerca, riassunti, esercizi, ripasso e panoramiche
+tools/pagine.py                  rigenera home, cerca, riassunti, esercizi, classroom, ripasso e panoramiche
 ```
 
 ## Aggiungere una pagina
@@ -42,8 +43,8 @@ tools/pagine.py                  rigenera home, cerca, riassunti, esercizi, ripa
    ```js
    { title: "Subnetting", path: "materie/sistemi-e-reti/subnetting.html", type: "esercizi" },
    ```
-   Tipi: `teoria`, `esercizi`, `laboratorio`, `riassunto`, `verifica`, `vocabolario`.
-   Le pagine `esercizi` vanno nell'area Esercizi; si possono aggiungere `of` (il capitolo di teoria collegato), `n` (quanti esercizi) e `desc` (una riga di descrizione).
+   Tipi: `teoria`, `esercizi`, `classroom`, `laboratorio`, `riassunto`, `verifica`, `vocabolario`.
+   Le pagine `esercizi` vanno nell'area Esercizi e le pagine `classroom` nell'area Esercitazioni Classroom; per entrambe si possono aggiungere `of` (il capitolo di teoria collegato), `n` (quanti esercizi) e `desc` (una riga di descrizione).
 
 3. (Facoltativo) aggiungi il suo riassunto in `assets/js/riassunti.js`: una voce per ogni `<h2>` della pagina, con lo stesso titolo.
 
