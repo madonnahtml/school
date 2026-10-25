@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Allenamento: il punto di pareggio · Scuola</title>
+  <meta name="description" content="GPOI, esercizi di allenamento dal facile al difficile sul BEP: margine di contribuzione, BEP e fatturato di pareggio, risultato sopra e sotto la soglia, CVU da componenti e semivariabili, costi mensili e annuali, utile obiettivo, cambi di prezzo e costi, prezzo minimo, capacità e lotti, servizi.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Allenamento: il punto di pareggio</h1>
+  <p class="lead">Undici esercizi nuovi sul capitolo <a href="break-even-point.html">Il punto di pareggio (BEP)</a>: dai calcoli base fino ai casi con capacità produttiva, lotti e servizi. Per la parte su Excel ci sono gli <a href="esercizi-bep-excel.html">esercizi con Excel</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Segui sempre il <strong>metodo in 6 passi</strong>: periodo e unità → CF e CVU → MDC → BEP → fatturato e arrotondamento → verifica. Prova da solo, poi apri la soluzione e confronta <em>i passaggi</em>, non solo il risultato.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Le formule di base</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>
+<pre data-lang="testo"><code>MDC  = PV − CVU          BEP = CF / MDC         RBEP = PV × BEP
+U    = MDC × Q − CF      Q obiettivo = (CF + utile) / MDC</code></pre>
+  Se il BEP è decimale si arrotonda <strong>per eccesso</strong>. Teoria: <a href="break-even-point.html#la-formula-del-bep">La formula del BEP</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Il primo BEP <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda che produce borracce ha costi fissi mensili di 6.000 €, un costo variabile di 10 € a borraccia e un prezzo di vendita di 25 €. Calcola MDC, BEP e fatturato di pareggio, e verifica il risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Cosa bisogna fare:</strong> prima quanto lascia ogni borraccia (MDC), poi quante borracce servono per coprire i costi fissi.</p>
+<pre data-lang="testo"><code>MDC  = 25 − 10     = 15 € a borraccia
+BEP  = 6.000 / 15  = 400 borracce al mese
+RBEP = 25 × 400    = 10.000 € al mese
+
+Verifica:  RT = 10.000 €
+           CT = 6.000 + 10 × 400 = 10.000 €   →  U = 0 ✓</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Sopra o sotto la soglia? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Con i dati dell'esercizio 01, calcola il risultato se si vendono 350, 400 e 520 borracce. Prova a farlo in due modi.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Modo 1: la formula dell'utile</h4>
+<pre data-lang="testo"><code>U = MDC × Q − CF
+Q = 350:  15 × 350 − 6.000 =   −750 €   (perdita)
+Q = 400:  15 × 400 − 6.000 =      0 €   (pareggio)
+Q = 520:  15 × 520 − 6.000 = +1.800 €   (utile)</code></pre>
+      <h4>Modo 2: la distanza dal BEP</h4>
+      <p>Ogni borraccia in più o in meno rispetto al BEP sposta il risultato di un MDC (15 €).</p>
+<pre data-lang="testo"><code>350 → mancano 50 borracce:  −50 × 15  =   −750 €
+520 → 120 oltre il BEP:     +120 × 15 = +1.800 €</code></pre>
+      <p class="hand">Il secondo modo è comodissimo per controllare i calcoli in verifica.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Trovare CF e CVU dai dati</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>CVU = somma dei costi di <strong>una</strong> unità (attenzione alle unità di misura). I semivariabili si dividono: quota fissa nei CF, quota per unità nel CVU. Non mescolare costi <strong>mensili e annuali</strong>. Teoria: <a href="break-even-point.html#metodo-per-gli-esercizi">Metodo per gli esercizi</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Le candele artigianali <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un laboratorio fa candele. Per ogni candela servono 300 g di cera a 8 €/kg, uno stoppino da 0,10 € e un vasetto da 1,50 €. L'energia costa 40 € al mese più 0,20 € a candela. Affitto 500 € al mese, assicurazione 60 € al mese. Ogni candela si vende a 12 €.</p>
+      <ol>
+        <li>Calcola CF e CVU.</li>
+        <li>Calcola BEP e fatturato di pareggio.</li>
+        <li>Quante candele bisogna vendere davvero per non essere in perdita?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Separare i costi</h4>
+      <p><strong>Cosa bisogna fare:</strong> mettere ogni voce nel suo contenitore. L'energia è semivariabile: i 40 € vanno nei CF, gli 0,20 € nel CVU. La cera è in grammi ma il prezzo è al kg: 300 g = 0,3 kg.</p>
+<pre data-lang="testo"><code>CF  = 500 + 60 + 40 = 600 € al mese
+
+Cera     = 0,3 kg × 8 €/kg = 2,40 €
+CVU = 2,40 + 0,10 + 1,50 + 0,20 = 4,20 € a candela</code></pre>
+      <h4>2. BEP</h4>
+<pre data-lang="testo"><code>MDC  = 12 − 4,20     = 7,80 €
+BEP  = 600 / 7,80    = 76,92 candele
+RBEP = 76,92 × 12    ≈ 923,08 €</code></pre>
+      <h4>3. Arrotondare</h4>
+      <p>Non si vendono 0,92 candele: si arrotonda <strong>per eccesso</strong> a <strong>77</strong>. Verifica: 77 × 7,80 − 600 = +0,60 €. Con 76 sarebbe −7,20 €.</p>
+      <div class="callout warn"><span class="callout-title">Errori tipici</span>Usare 300 × 8 = 2.400 € (dimenticando la conversione in kg) o lasciare l'energia tutta nei CF o tutta nel CVU.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Mensile o annuale? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una piccola tipografia ha questi costi fissi: affitto 800 € al mese, assicurazione 1.200 € all'anno, ammortamento delle macchine 3.600 € all'anno, stipendio dell'impiegato 1.500 € al mese. Ogni confezione di biglietti da visita costa 27 € di materiali e si vende a 45 €.</p>
+      <ol>
+        <li>Calcola i costi fissi <strong>annuali</strong>.</li>
+        <li>Calcola il BEP annuale e quello medio mensile.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Portare tutto allo stesso periodo</h4>
+      <p><strong>Cosa bisogna fare:</strong> scegliere il periodo (qui l'anno) e trasformare le voci mensili moltiplicando per 12.</p>
+<pre data-lang="testo"><code>Affitto       800 × 12   =  9.600 €
+Assicurazione            =  1.200 €
+Ammortamento             =  3.600 €
+Stipendio   1.500 × 12   = 18.000 €
+CF annuali               = 32.400 €</code></pre>
+      <h4>2. BEP</h4>
+<pre data-lang="testo"><code>MDC = 45 − 27 = 18 €
+BEP annuale = 32.400 / 18 = 1.800 confezioni
+BEP medio mensile = 1.800 / 12 = 150 confezioni</code></pre>
+      <div class="callout warn"><span class="callout-title">Errore tipico</span>Sommare 800 + 1.200 + 3.600 + 1.500 = 7.100 € e dividere per 18: si mescolano mesi e anni e il risultato (394,4) non ha senso.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Usare il BEP per decidere</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il BEP scende se <strong>CF ↓</strong>, <strong>CVU ↓</strong> o <strong>PV ↑</strong>. Va sempre confrontato con la <strong>capacità produttiva</strong> e con la domanda. Teoria: <a href="break-even-point.html#a-cosa-serve-e-come-abbassarlo">A cosa serve e come abbassarlo</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>L'utile obiettivo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Con i dati della tipografia (CF annuali 32.400 €, MDC 18 €), quante confezioni bisogna vendere in un anno per avere un utile di 9.000 €? Verifica il risultato.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Cosa bisogna fare:</strong> il margine totale deve coprire <strong>i costi fissi e anche l'utile</strong> desiderato: si aggiunge l'utile al numeratore.</p>
+<pre data-lang="testo"><code>Q obiettivo = (32.400 + 9.000) / 18 = 41.400 / 18 = 2.300 confezioni
+Verifica: U = 18 × 2.300 − 32.400 = 41.400 − 32.400 = 9.000 € ✓</code></pre>
+      <p class="hand">Scorciatoia: oltre il BEP (1.800) servono 9.000 / 18 = 500 confezioni in più → 2.300.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Dal fatturato al risultato <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda ha CF = 12.000 €, PV = 40 € e CVU = 25 €. Nel mese ha fatturato 36.000 €. Calcola quante unità ha venduto, il risultato del mese e il BEP. Controlla con la distanza dal BEP.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Cosa bisogna fare:</strong> il fatturato è in euro, ma le formule vogliono le unità: si divide il fatturato per il prezzo.</p>
+<pre data-lang="testo"><code>Q   = 36.000 / 40 = 900 unità
+MDC = 40 − 25     = 15 €
+U   = 15 × 900 − 12.000 = 13.500 − 12.000 = +1.500 €
+BEP = 12.000 / 15 = 800 unità
+Controllo: 900 − 800 = 100 unità oltre il BEP → 100 × 15 = 1.500 € ✓</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Che cosa succede se…? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Parti dall'azienda dell'esercizio 06 (CF 12.000 €, PV 40 €, CVU 25 €, BEP 800). Calcola il nuovo BEP in ogni caso, cambiando un dato alla volta.</p>
+      <ol type="a">
+        <li>Il prezzo sale a 45 €.</li>
+        <li>Il costo variabile sale a 28 €.</li>
+        <li>I costi fissi salgono a 15.000 €.</li>
+        <li>Il prezzo scende a 25 €.</li>
+      </ol>
+      <p>Poi spiega perché, nel caso a, aumentare il prezzo potrebbe non essere una buona idea.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Cosa bisogna fare:</strong> per ogni caso ricalcola prima l'MDC (se cambia PV o CVU), poi il BEP.</p>
+<pre data-lang="testo"><code>a) MDC = 45 − 25 = 20   BEP = 12.000 / 20 = 600     (scende)
+b) MDC = 40 − 28 = 12   BEP = 12.000 / 12 = 1.000   (sale)
+c) MDC = 15             BEP = 15.000 / 15 = 1.000   (sale)
+d) MDC = 25 − 25 = 0    BEP impossibile: nessuna vendita copre i CF</code></pre>
+      <p>Nel caso d il prezzo è uguale al costo variabile: ogni vendita lascia 0 € per i costi fissi, e la perdita resta sempre 12.000 €.</p>
+      <p><strong>Perché alzare il prezzo può non convenire:</strong> la formula non considera la <strong>reazione del mercato</strong>. A 45 € i clienti potrebbero comprare molto meno (legge della domanda): un BEP più basso non serve se poi non si raggiunge nemmeno quello.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Trova il prezzo giusto <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda ha CF = 18.000 € al mese e CVU = 14 €. Pensa di vendere 1.200 unità al mese.</p>
+      <ol>
+        <li>Qual è il prezzo minimo per andare in pareggio vendendo 1.200 unità?</li>
+        <li>Quale prezzo serve per avere un utile di 6.000 € con le stesse 1.200 unità?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Cosa bisogna fare:</strong> qui l'incognita non è Q ma il prezzo. Si usa la formula al contrario: prima si trova l'<strong>MDC necessario</strong>, poi si aggiunge il CVU.</p>
+      <h4>1. Pareggio</h4>
+<pre data-lang="testo"><code>BEP = CF / MDC   →   MDC = CF / BEP = 18.000 / 1.200 = 15 €
+PV  = CVU + MDC = 14 + 15 = 29 €</code></pre>
+      <h4>2. Utile di 6.000 €</h4>
+<pre data-lang="testo"><code>MDC = (CF + utile) / Q = (18.000 + 6.000) / 1.200 = 20 €
+PV  = 14 + 20 = 34 €
+Verifica: (34 − 14) × 1.200 − 18.000 = 24.000 − 18.000 = 6.000 € ✓</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Capacità produttiva e lotti <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una fabbrica di cover ha CF = 50.000 € al mese, CVU = 11,50 €, PV = 18 €. L'impianto produce al massimo 7.000 pezzi al mese, in lotti da 1.000.</p>
+      <ol>
+        <li>Calcola il BEP. Il pareggio è raggiungibile?</li>
+        <li>L'azienda alza il prezzo a 19 €. Calcola il nuovo BEP.</li>
+        <li>Con il prezzo a 19 €, quanti lotti interi servono per non essere in perdita? Qual è il risultato?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. BEP e capacità</h4>
+<pre data-lang="testo"><code>MDC = 18 − 11,50 = 6,50 €
+BEP = 50.000 / 6,50 = 7.692,3  →  7.693 pezzi</code></pre>
+      <p><strong>Cosa bisogna fare:</strong> confrontare il BEP con la capacità. 7.693 &gt; 7.000: anche lavorando al massimo l'azienda resta in perdita. Il pareggio <strong>non è raggiungibile</strong> a queste condizioni.</p>
+      <h4>2. Con PV = 19 €</h4>
+<pre data-lang="testo"><code>MDC = 19 − 11,50 = 7,50 €
+BEP = 50.000 / 7,50 = 6.666,67  →  6.667 pezzi   (≤ 7.000 ✓)</code></pre>
+      <h4>3. Lotti interi</h4>
+      <p>6 lotti = 6.000 pezzi non bastano; servono <strong>7 lotti = 7.000 pezzi</strong>, cioè tutta la capacità.</p>
+<pre data-lang="testo"><code>6 lotti:  7,50 × 6.000 − 50.000 = −5.000 €
+7 lotti:  7,50 × 7.000 − 50.000 = +2.500 €</code></pre>
+      <p class="hand">Il margine è stretto: l'azienda deve lavorare a piena capacità <em>e</em> vendere tutto, con un prezzo più alto che potrebbe ridurre le vendite.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Il BEP di una palestra <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una palestra ha costi fissi di 96.000 € all'anno. L'abbonamento costa 50 € al mese; ogni iscritto genera un costo variabile di 8 € al mese (asciugamani, pulizia, acqua). La palestra può ospitare al massimo 250 iscritti.</p>
+      <ol>
+        <li>Qual è l'unità venduta? Calcola MDC annuale per iscritto.</li>
+        <li>Quanti iscritti servono per il pareggio?</li>
+        <li>Quanti per un utile di 20.000 € all'anno? È possibile?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Unità e periodo</h4>
+      <p><strong>Cosa bisogna fare:</strong> l'unità è <strong>un iscritto per un anno</strong>. I costi fissi sono annuali, quindi porto anche prezzo e costo variabile all'anno.</p>
+<pre data-lang="testo"><code>PV  = 50 × 12 = 600 € all'anno
+CVU =  8 × 12 =  96 € all'anno
+MDC = 600 − 96 = 504 € all'anno per iscritto</code></pre>
+      <h4>2. Pareggio</h4>
+<pre data-lang="testo"><code>BEP = 96.000 / 504 = 190,48  →  191 iscritti</code></pre>
+      <h4>3. Utile obiettivo</h4>
+<pre data-lang="testo"><code>Q = (96.000 + 20.000) / 504 = 230,16  →  231 iscritti</code></pre>
+      <p>231 ≤ 250: è <strong>possibile</strong> rispetto alla capacità, ma serve riempire più del 92% dei posti. Bisogna verificare se in zona ci sono abbastanza clienti.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: il food truck</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Il food truck di panini <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Marta apre un food truck aperto 26 giorni al mese. Costi mensili: noleggio del furgone 1.400 €, assicurazione 150 €, permesso comunale 250 €, stipendio dell'aiutante 1.800 €. Per ogni panino: pane 0,60 €, carne 2,10 €, verdure 0,30 €, carta 0,20 €; inoltre la banca trattiene una commissione del 2% del prezzo su ogni pagamento con carta (supponi che tutti paghino con carta). Ogni panino costa 8 €. Al massimo si possono preparare 50 panini al giorno.</p>
+      <ol>
+        <li>Calcola CF e CVU (attenzione alla commissione).</li>
+        <li>Calcola il BEP mensile e quanti panini al giorno servono in media.</li>
+        <li>Quanti panini servono per un utile di 1.500 € al mese? Sono compatibili con la capacità?</li>
+        <li>Indica due modi per abbassare il BEP e un rischio per ciascuno.</li>
+        <li>Spiega perché, anche al BEP, Marta potrebbe avere problemi di cassa il primo mese.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. CF e CVU</h4>
+      <p><strong>Cosa bisogna fare:</strong> la commissione è una percentuale del <strong>prezzo</strong> e si paga per ogni panino: è un costo variabile.</p>
+<pre data-lang="testo"><code>CF  = 1.400 + 150 + 250 + 1.800 = 3.600 € al mese
+
+Commissione = 2% × 8 = 0,16 € a panino
+CVU = 0,60 + 2,10 + 0,30 + 0,20 + 0,16 = 3,36 €</code></pre>
+      <h4>2. BEP</h4>
+<pre data-lang="testo"><code>MDC = 8 − 3,36 = 4,64 €
+BEP = 3.600 / 4,64 = 775,86  →  776 panini al mese
+Al giorno: 776 / 26 ≈ 29,8  →  circa 30 panini
+Verifica con 776: 776 × 4,64 − 3.600 = +0,64 € ✓</code></pre>
+      <h4>3. Utile obiettivo e capacità</h4>
+<pre data-lang="testo"><code>Q = (3.600 + 1.500) / 4,64 = 1.099,1  →  1.100 panini al mese
+Al giorno: 1.100 / 26 ≈ 42,3 panini
+Capacità: 50 × 26 = 1.300 panini al mese  →  compatibile ✓</code></pre>
+      <p>Verifica: 1.100 × 4,64 − 3.600 = 1.504 € (poco più di 1.500 per l'arrotondamento).</p>
+      <h4>4. Abbassare il BEP</h4>
+      <ul>
+        <li><strong>Alzare il prezzo</strong> (MDC ↑): rischio di perdere clienti.</li>
+        <li><strong>Ridurre il CVU</strong>, per esempio carne meno cara: rischio di peggiorare la qualità.</li>
+        <li><strong>Ridurre i CF</strong>, per esempio lavorare senza aiutante: rischio di non riuscire a preparare abbastanza panini (meno capacità).</li>
+      </ul>
+      <h4>5. Pareggio economico ≠ cassa</h4>
+      <p>Il BEP guarda costi e ricavi del mese, non <em>quando</em> si paga. Marta potrebbe dover pagare in anticipo noleggio, assicurazione e permesso, mentre la banca le accredita gli incassi delle carte qualche giorno dopo. Al BEP l'utile è zero, ma la cassa può essere negativa per un periodo.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Esercizi creati per l'allenamento sui contenuti della dispensa del corso di GPOI <em>Il BEP e il punto di pareggio</em>.</p>
+</main>
+</body>
+</html>

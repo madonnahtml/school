@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Allenamento: i costi aziendali · Scuola</title>
+  <meta name="description" content="GPOI, esercizi di allenamento dal facile al difficile sui costi: efficacia ed efficienza, indici di economicità e redditività, diretto e variabile, configurazioni di costo, ammortamento e costo medio, make or buy, ripartizione, scostamenti, analisi marginale, direct e full costing, Life Cycle Cost.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Allenamento: i costi aziendali</h1>
+  <p class="lead">Undici esercizi nuovi, dal più facile al più difficile, su tutto il capitolo <a href="costi-aziendali.html">I costi aziendali</a>. Per la sola classificazione fissi, variabili e semivariabili ci sono anche gli <a href="esercizi-costi-fissi-variabili.html">esercizi della scheda</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Prova a rispondere <strong>prima</strong> di aprire la soluzione. Negli esercizi di calcolo scrivi sempre la <strong>formula</strong> prima dei numeri: è quello che si guarda in verifica, e ti protegge dagli errori.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Concetti di base</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Efficacia = raggiungere l'obiettivo; efficienza = risultati / risorse. Economicità = costi / ricavi; redditività = reddito / capitale investito. <strong>Diretto/indiretto</strong> (lo attribuisco al prodotto senza ripartirlo?) e <strong>fisso/variabile</strong> (cambia con la quantità?) sono due criteri diversi. Teoria: <a href="costi-aziendali.html#efficacia-ed-efficienza">Efficacia ed efficienza</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Efficace, efficiente o tutte e due? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una squadra deve consegnare un sito entro 10 giorni, con un budget di 80 ore. Per ogni caso di' se è stata efficace, efficiente, entrambe o nessuna delle due.</p>
+      <ol type="a">
+        <li>Consegna in tempo un sito completo, usando 60 ore.</li>
+        <li>Consegna in tempo un sito completo, usando 120 ore.</li>
+        <li>Usa solo 40 ore, ma il sito non ha il carrello richiesto dal cliente.</li>
+        <li>Usa 120 ore e il sito arriva in ritardo e senza carrello.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Come si ragiona:</strong> due domande separate. «L'obiettivo è raggiunto?» → efficacia. «Le risorse sono state usate bene, a parità di risultato?» → efficienza.</p>
+      <ol type="a">
+        <li><strong>Efficace ed efficiente</strong>: obiettivo raggiunto con meno ore del previsto.</li>
+        <li><strong>Efficace ma non efficiente</strong>: obiettivo raggiunto, ma con molte più risorse.</li>
+        <li><strong>Non efficace</strong>: manca un requisito. Le poche ore non bastano a dire che è efficiente: risparmiare su un lavoro incompleto non è un buon uso delle risorse.</li>
+        <li><strong>Né l'una né l'altra</strong>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Due criteri, una tabella <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda produce zaini. Classifica ogni costo come <strong>diretto o indiretto</strong> e come <strong>fisso o variabile</strong>.</p>
+      <ol type="a">
+        <li>il tessuto usato per ogni zaino;</li>
+        <li>le cerniere di ogni zaino;</li>
+        <li>l'affitto del capannone;</li>
+        <li>l'energia elettrica delle macchine da cucire, che cresce con le ore lavorate;</li>
+        <li>il canone mensile di un software di progettazione usato solo per la linea "zaini da scuola";</li>
+        <li>lo stipendio fisso del responsabile della qualità, che controlla tutti i prodotti.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <p><strong>Come si ragiona:</strong> fai le due domande <strong>una alla volta</strong>. 1) «Posso dire esattamente quanto ne usa questo prodotto, senza ripartire?» → diretto. 2) «Se faccio uno zaino in più, il costo totale cambia?» → variabile.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Diretto / indiretto</th><th>Fisso / variabile</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td>Diretto</td><td>Variabile</td></tr>
+          <tr><td>b</td><td>Diretto</td><td>Variabile</td></tr>
+          <tr><td>c</td><td>Indiretto</td><td>Fisso</td></tr>
+          <tr><td>d</td><td><strong>Indiretto</strong></td><td><strong>Variabile</strong></td></tr>
+          <tr><td>e</td><td><strong>Diretto</strong> (della linea zaini da scuola)</td><td><strong>Fisso</strong></td></tr>
+          <tr><td>f</td><td>Indiretto</td><td>Fisso</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hand">I casi d ed e dimostrano che diretto non vuol dire variabile e indiretto non vuol dire fisso.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Chi è più economica, chi più redditizia? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Confronta due aziende.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Costi</th><th>Ricavi</th><th>Reddito</th><th>Capitale investito</th></tr></thead>
+        <tbody>
+          <tr><td>Alfa</td><td>45.000 €</td><td>60.000 €</td><td>15.000 €</td><td>120.000 €</td></tr>
+          <tr><td>Beta</td><td>38.000 €</td><td>47.500 €</td><td>9.500 €</td><td>50.000 €</td></tr>
+        </tbody>
+      </table></div>
+      <ol>
+        <li>Calcola per entrambe l'indice di economicità e l'indice di redditività.</li>
+        <li>Quale azienda pesa di meno i costi sui ricavi? Quale rende di più rispetto al capitale?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Applicare le due formule</h4>
+<pre data-lang="testo"><code>Economicità = Costi / Ricavi
+Alfa:  45.000 / 60.000 = 0,75
+Beta:  38.000 / 47.500 = 0,80
+
+Redditività = Reddito / Capitale investito × 100
+Alfa:  15.000 / 120.000 × 100 = 12,5%
+Beta:   9.500 /  50.000 × 100 = 19%</code></pre>
+      <h4>2. Interpretare</h4>
+      <ul>
+        <li>Per l'economicità <strong>più basso è meglio</strong>: Alfa (0,75) spende 75 centesimi ogni euro di ricavo, Beta 80. È più economica <strong>Alfa</strong>.</li>
+        <li>Per la redditività <strong>più alto è meglio</strong>: <strong>Beta</strong> guadagna 19 € ogni 100 € investiti, Alfa 12,5 €.</li>
+      </ul>
+      <p class="hand">Alfa guadagna di più in assoluto (15.000 contro 9.500), ma ha bisogno di molto più capitale: un indice da solo non racconta tutto.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Calcolare il costo di un prodotto</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Conversione = lavoro diretto + indiretti di produzione; pieno industriale = conversione + materiali diretti; pieno aziendale = pieno industriale + quota costi di periodo. <code>CT = CF + v × q</code>. Ammortamento a quote costanti = costo del bene / anni di vita utile. Teoria: <a href="costi-aziendali.html#le-tre-configurazioni-di-costo">Le tre configurazioni di costo</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Le tre configurazioni di una commessa <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda produce 50 armadietti per una scuola. Costi della commessa: materiali diretti 2.400 €, lavoro diretto 1.800 €, costi indiretti di produzione attribuiti 900 €, quota dei costi di periodo 600 €.</p>
+      <ol>
+        <li>Calcola costo di conversione, costo pieno industriale e costo pieno aziendale.</li>
+        <li>Calcola il costo pieno aziendale di un armadietto.</li>
+        <li>Se la scuola paga 130 € ad armadietto, la commessa è in utile?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Le scatole una dentro l'altra</h4>
+      <p><strong>Cosa bisogna fare:</strong> partire dalla scatola più piccola e aggiungere una voce alla volta, senza ri-sommare quello che c'è già.</p>
+<pre data-lang="testo"><code>Conversione       = 1.800 + 900   = 2.700 €
+Pieno industriale = 2.700 + 2.400 = 5.100 €
+Pieno aziendale   = 5.100 + 600   = 5.700 €</code></pre>
+      <h4>2. Per unità</h4>
+<pre data-lang="testo"><code>5.700 / 50 = 114 € ad armadietto</code></pre>
+      <h4>3. Confronto con il prezzo</h4>
+<pre data-lang="testo"><code>Ricavi = 50 × 130 = 6.500 €
+Utile  = 6.500 − 5.700 = 800 €   (16 € ad armadietto)</code></pre>
+      <p>Sì, la commessa copre tutti i costi considerati, anche la quota di costi di periodo.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Ammortamento e costo medio <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una stamperia compra una macchina da 9.000 € che dura 3 anni (valore residuo zero, quote costanti). Ha poi costi fissi mensili di 2.000 € e un costo variabile di 15 € per maglietta stampata.</p>
+      <ol>
+        <li>Calcola la quota di ammortamento annua e mensile.</li>
+        <li>Calcola i costi fissi mensili totali.</li>
+        <li>Calcola costo totale e costo medio per 150 e per 300 magliette al mese.</li>
+        <li>Perché il costo medio scende?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Ammortamento</h4>
+      <p><strong>Cosa bisogna fare:</strong> dividere il costo della macchina per gli anni in cui la si usa, poi per 12 mesi.</p>
+<pre data-lang="testo"><code>Quota annua   = 9.000 / 3  = 3.000 €
+Quota mensile = 3.000 / 12 = 250 €</code></pre>
+      <p class="hand">L'ammortamento non dipende da quante magliette stampo: è un costo fisso.</p>
+      <h4>2. Costi fissi del mese</h4>
+<pre data-lang="testo"><code>CF = 2.000 + 250 = 2.250 €</code></pre>
+      <h4>3. Costo totale e medio</h4>
+<pre data-lang="testo"><code>CT = CF + v × q            Costo medio = CT / q
+
+q = 150:  CT = 2.250 + 15 × 150 = 4.500 €    medio = 30,00 €
+q = 300:  CT = 2.250 + 15 × 300 = 6.750 €    medio = 22,50 €</code></pre>
+      <h4>4. Perché scende</h4>
+      <p>I 2.250 € di costi fissi si dividono su più magliette: 15 € a maglietta con 150 pezzi, 7,50 € con 300. Il costo variabile resta 15 €, quindi il costo medio cala.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Ripartire i costi comuni <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un laboratorio ha 4.500 € di costi comuni (affitto, server, pulizie) da dividere tra tre progetti che usano 120, 200 e 180 ore di laboratorio.</p>
+      <ol>
+        <li>Ripartisci i costi in base alle ore.</li>
+        <li>Il progetto C usa poche ore ma tantissima potenza dei server. La base "ore" è adatta per lui?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Ripartizione proporzionale</h4>
+      <p><strong>Cosa bisogna fare:</strong> sommare la base, trovare la quota di ogni progetto e moltiplicarla per il costo comune.</p>
+<pre data-lang="testo"><code>Ore totali = 120 + 200 + 180 = 500
+
+A = 4.500 × 120/500 = 4.500 × 24% = 1.080 €
+B = 4.500 × 200/500 = 4.500 × 40% = 1.800 €
+C = 4.500 × 180/500 = 4.500 × 36% = 1.620 €
+Controllo: 1.080 + 1.800 + 1.620 = 4.500 ✓</code></pre>
+      <h4>2. La scelta della base</h4>
+      <p>No: se C consuma soprattutto server, ripartire per ore gli assegna <strong>meno costi</strong> di quelli che provoca e lo fa sembrare più conveniente. Meglio un criterio più <strong>causale</strong>, per esempio dividere la parte "server" in base all'uso dei server.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Decidere con i costi</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Tra alternative contano solo i costi <strong>evitabili</strong> (quelli che cambiano). Scostamento = costo effettivo − costo standard. Un'unità in più conviene se <code>Rm &gt; Cm</code>. Teoria: <a href="costi-aziendali.html#costi-evitabili-e-non-evitabili">Costi evitabili e non evitabili</a> e <a href="costi-aziendali.html#il-grafico-costi-ricavi-e-l-analisi-marginale">l'analisi marginale</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Produrre dentro o comprare fuori? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Per realizzare internamente le custodie dei suoi prodotti, un'azienda spenderebbe: materiali 1.600 €, ore di lavoro straordinario 900 €, quota di affitto del capannone 700 €, quota dello stipendio del responsabile di reparto 1.200 €. Affitto e stipendio restano dovuti in ogni caso. Un fornitore offre le stesse custodie a 2.800 €.</p>
+      <ol>
+        <li>Quali costi sono evitabili?</li>
+        <li>Quale alternativa conviene e di quanto?</li>
+        <li>Un collega confronta 4.400 € con 2.800 € e dice di comprare fuori. Dove sbaglia?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Separare i costi</h4>
+      <p><strong>Cosa bisogna fare:</strong> per ogni voce chiediti «se compro fuori, questo costo sparisce?».</p>
+      <ul>
+        <li>Materiali (1.600 €) e straordinari (900 €): spariscono → <strong>evitabili</strong>.</li>
+        <li>Affitto (700 €) e stipendio (1.200 €): restano → <strong>non evitabili</strong>.</li>
+      </ul>
+      <h4>2. Il confronto giusto</h4>
+<pre data-lang="testo"><code>Produrre dentro: costi evitabili = 1.600 + 900 = 2.500 €
+Comprare fuori:  2.800 €
+Conviene PRODURRE DENTRO, con un risparmio di 300 €</code></pre>
+      <h4>3. L'errore</h4>
+      <p>Il collega ha messo affitto e stipendio <strong>solo</strong> nell'alternativa interna (2.500 + 1.900 = 4.400). Ma quei 1.900 € si pagano anche comprando fuori. Confronto corretto con i totali: 4.400 € dentro contro 2.800 + 1.900 = 4.700 € fuori. La differenza resta 300 € a favore della produzione interna.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Standard e scostamenti <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Per sviluppare un modulo software lo standard prevede 25 ore a 36 € l'ora.</p>
+      <ol>
+        <li>Calcola il costo standard.</li>
+        <li>Il modulo A richiede 30 ore, il modulo B 20 ore (stesso costo orario). Calcola gli scostamenti e di' se sono favorevoli o sfavorevoli.</li>
+        <li>Lo scostamento di A prova che il programmatore è stato lento?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>Standard = 25 × 36 = 900 €
+
+A: effettivo = 30 × 36 = 1.080 €   scostamento = 1.080 − 900 = +180 €  SFAVOREVOLE
+B: effettivo = 20 × 36 =   720 €   scostamento =   720 − 900 = −180 €  FAVOREVOLE</code></pre>
+      <p><strong>Come si legge:</strong> se l'effettivo supera lo standard si è speso più del previsto (sfavorevole); se è minore, si è risparmiato (favorevole).</p>
+      <p><strong>3.</strong> No: lo scostamento dice <em>quanto</em>, non <em>perché</em>. Bisogna verificare se i requisiti sono cambiati, se ci sono stati problemi tecnici o se lo standard era sbagliato. Solo dopo si può parlare di inefficienza.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Quante unità conviene produrre? <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un piccolo laboratorio vende ogni pezzo a 40 €. I costi totali sono questi:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>q</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead>
+        <tbody><tr><td>C(q)</td><td>50</td><td>80</td><td>100</td><td>115</td><td>135</td><td>165</td><td>210</td></tr></tbody>
+      </table></div>
+      <ol>
+        <li>Calcola costo marginale, ricavo marginale e profitto per ogni quantità.</li>
+        <li>Quante unità conviene produrre? Rispondi in due modi: guardando il profitto e confrontando Rm e Cm.</li>
+        <li>Tra quali quantità si trova il primo pareggio?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Costruire la tabella</h4>
+      <p><strong>Cosa bisogna fare:</strong> Cm = C(q) − C(q−1), cioè quanto costa <em>l'ultima</em> unità; con prezzo costante Rm = 40; profitto = 40·q − C(q).</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>q</th><th>C(q)</th><th>Cm</th><th>Rm</th><th>R = 40q</th><th>Profitto</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>50</td><td>–</td><td>–</td><td>0</td><td>−50</td></tr>
+          <tr><td>1</td><td>80</td><td>30</td><td>40</td><td>40</td><td>−40</td></tr>
+          <tr><td>2</td><td>100</td><td>20</td><td>40</td><td>80</td><td>−20</td></tr>
+          <tr><td>3</td><td>115</td><td>15</td><td>40</td><td>120</td><td>+5</td></tr>
+          <tr><td>4</td><td>135</td><td>20</td><td>40</td><td>160</td><td>+25</td></tr>
+          <tr><td><strong>5</strong></td><td>165</td><td>30</td><td>40</td><td>200</td><td><strong>+35</strong></td></tr>
+          <tr><td>6</td><td>210</td><td>45</td><td>40</td><td>240</td><td>+30</td></tr>
+        </tbody>
+      </table></div>
+      <h4>2. La quantità migliore</h4>
+      <ul>
+        <li><strong>Dal profitto</strong>: il massimo è 35 € a q = 5.</li>
+        <li><strong>Da Rm e Cm</strong>: la 5ª unità costa 30 € e porta 40 € → conviene (+10). La 6ª costa 45 € e porta 40 € → non conviene (−5). Mi fermo a <strong>5</strong>.</li>
+      </ul>
+      <h4>3. Il pareggio</h4>
+      <p>Il profitto passa da −20 (q = 2) a +5 (q = 3): il primo pareggio è <strong>tra 2 e 3 unità</strong>.</p>
+      <p class="hand">Vendere la 6ª unità aumenta il ricavo, ma riduce il profitto: vendere di più non vuol dire guadagnare di più.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">10</span>Direct costing, full costing e il criterio che cambia tutto <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'azienda fa due prodotti. Costi diretti: A 6.000 €, B 4.000 €. Ricavi: A 8.000 €, B 6.500 €. Costi indiretti comuni: 3.000 €.</p>
+      <ol>
+        <li>Calcola il margine di ogni prodotto con il direct costing.</li>
+        <li>Con il full costing, ripartisci gli indiretti in base alle <strong>ore macchina</strong> (A 100, B 200) e calcola il risultato.</li>
+        <li>Ripeti ripartendo in base alle <strong>ore di lavoro</strong> (A 300, B 100).</li>
+        <li>Che cosa insegna il confronto?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Direct costing</h4>
+      <p>Al prodotto vanno solo i suoi costi diretti.</p>
+<pre data-lang="testo"><code>A: 8.000 − 6.000 = 2.000 €
+B: 6.500 − 4.000 = 2.500 €</code></pre>
+      <h4>2. Full costing, base ore macchina</h4>
+<pre data-lang="testo"><code>Ore totali 300:  A = 3.000 × 100/300 = 1.000 €   B = 3.000 × 200/300 = 2.000 €
+A: 8.000 − (6.000 + 1.000) = +1.000 €
+B: 6.500 − (4.000 + 2.000) =   +500 €</code></pre>
+      <h4>3. Full costing, base ore di lavoro</h4>
+<pre data-lang="testo"><code>Ore totali 400:  A = 3.000 × 300/400 = 2.250 €   B = 3.000 × 100/400 = 750 €
+A: 8.000 − (6.000 + 2.250) =   −250 €   ← sembra in perdita!
+B: 6.500 − (4.000 +   750) = +1.750 €</code></pre>
+      <h4>4. La lezione</h4>
+      <ul>
+        <li>Il risultato <strong>complessivo</strong> non cambia: 2.000 + 2.500 − 3.000 = 1.500 € in tutti i casi (1.000 + 500 = −250 + 1.750 = 1.500).</li>
+        <li>Cambia invece come appare <strong>ogni prodotto</strong>: con un criterio A guadagna, con l'altro sembra in perdita.</li>
+        <li>Il full costing dà una visione più completa, ma <strong>dipende dalla base di ripartizione</strong>: bisogna scegliere quella che rispecchia davvero il consumo di risorse, prima di decidere, per esempio, di eliminare A.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Esercizio completo: quale stampante?</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">11</span>Due stampanti e il costo del ciclo di vita <span class="badge badge-verifica">completo</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Una scuola deve scegliere tra due stampanti, da usare per 5 anni.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Acquisto</th><th>Toner all'anno</th><th>Manutenzione all'anno</th><th>Smaltimento finale</th></tr></thead>
+        <tbody>
+          <tr><td>Stampante A</td><td>400 €</td><td>120 €</td><td>30 €</td><td>20 €</td></tr>
+          <tr><td>Stampante B</td><td>700 €</td><td>60 €</td><td>20 €</td><td>20 €</td></tr>
+        </tbody>
+      </table></div>
+      <ol>
+        <li>Classifica le voci: per la scuola quali sono costi una tantum e quali ricorrenti?</li>
+        <li>Calcola il costo dell'intero ciclo di vita delle due stampanti.</li>
+        <li>Quale conviene? Da quale anno B diventa più conveniente?</li>
+        <li>Quali altri costi aggiungerebbe un'analisi <em>Whole Life Cycle Cost</em>?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Le voci</h4>
+      <p>Una tantum: acquisto e smaltimento. Ricorrenti (ogni anno): toner e manutenzione.</p>
+      <h4>2. Costo del ciclo di vita</h4>
+      <p><strong>Cosa bisogna fare:</strong> sommare acquisto + (costi annui × anni) + smaltimento.</p>
+<pre data-lang="testo"><code>A: 400 + (120 + 30) × 5 + 20 = 400 + 750 + 20 = 1.170 €
+B: 700 + ( 60 + 20) × 5 + 20 = 700 + 400 + 20 = 1.120 €</code></pre>
+      <h4>3. La scelta</h4>
+      <p>Su 5 anni conviene <strong>B</strong> (50 € in meno), anche se all'acquisto costa 300 € in più. Ogni anno B fa risparmiare 150 − 80 = 70 €: servono 300 / 70 ≈ 4,3 anni per recuperare la differenza. Quindi B diventa più conveniente durante il <strong>5° anno</strong>: se la scuola la usasse solo 4 anni converrebbe A (1.020 contro 1.040 €).</p>
+      <h4>4. Whole Life Cycle Cost</h4>
+      <p>Aggiungerebbe costi come l'<strong>energia elettrica</strong> consumata, l'<strong>installazione</strong> e la configurazione, e i <strong>costi esterni</strong> per la collettività, per esempio l'impatto ambientale delle cartucce.</p>
+      <p class="hand">Il prezzo più basso all'acquisto non garantisce il costo più basso nel tempo.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Esercizi creati per l'allenamento sui contenuti degli appunti del corso di GPOI <em>I costi aziendali</em> e dell'estratto del libro sulla classificazione dei costi.</p>
+</main>
+</body>
+</html>
