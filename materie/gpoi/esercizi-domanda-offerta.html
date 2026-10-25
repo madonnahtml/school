@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: domanda, ricavo e tassa sul venditore · Scuola</title>
+  <meta name="description" content="GPOI, esercizi del libro a pagina 29 con soluzioni spiegate passo passo: domanda e ricavo dei panini (dati incoerenti, grafico, ricavo massimo) e impatto di una tassa di 5 euro sul venditore.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: domanda, ricavo e tassa sul venditore</h1>
+  <p class="lead">Gli esercizi 4 e 7 di pagina 29 del libro, con le correzioni del professore, spiegati passaggio per passaggio. Teoria: <a href="modello-microeconomico.html">Il modello microeconomico</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a risolverla e poi apri la <strong>soluzione spiegata</strong>. Ogni passaggio dice <em>che cosa</em> fare e <em>perché</em>, così puoi rifare lo stesso ragionamento con altri numeri.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Domanda e ricavo</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>La domanda lega prezzo P e quantità Q. Il <strong>ricavo</strong> è R = P × Q. Prezzi e quantità <strong>non possono essere negativi</strong>: se la formula dà un valore negativo, i dati non hanno senso economico e va detto. Nel grafico P va sull'asse verticale e Q su quello orizzontale. Teoria: <a href="modello-microeconomico.html#la-domanda">La domanda</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Domanda e ricavo dei panini (es. 4 p. 29) <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Il barista della scuola ha una curva di domanda giornaliera data da:</p>
+<pre data-lang="testo"><code>Q = 80 − (10/3)·P</code></pre>
+      <p>dove P è il prezzo medio di un panino in euro e Q il numero di panini venduti al giorno.</p>
+      <ol type="a">
+        <li>Calcola il ricavo se si vendono 170 panini.</li>
+        <li>Rappresenta graficamente la domanda e il ricavo complessivo.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <div class="callout warn"><span class="callout-title">L'esercizio ha un'incongruenza</span>Con questa funzione <strong>non si possono vendere 170 panini</strong> a un prezzo non negativo. Bisogna accorgersene e scriverlo: è proprio questo che il professore vuole vedere.</div>
+
+      <h4>a) Prezzo e ricavo con 170 panini</h4>
+      <p><strong>Cosa bisogna fare:</strong> per calcolare il ricavo R = P × Q serve il prezzo. Conosco Q = 170, quindi lo sostituisco nella domanda e ricavo P.</p>
+      <p><strong>Passo 1.</strong> Sostituisco Q = 170:</p>
+<pre data-lang="testo"><code>170 = 80 − (10/3)·P</code></pre>
+      <p><strong>Passo 2.</strong> Porto 80 a sinistra (cambiando segno), così a destra resta solo il termine con P:</p>
+<pre data-lang="testo"><code>170 − 80 = −(10/3)·P
+      90 = −(10/3)·P</code></pre>
+      <p><strong>Passo 3.</strong> Per isolare P moltiplico entrambi i lati per l'inverso di −10/3, cioè per <strong>−3/10</strong>:</p>
+<pre data-lang="testo"><code>P = 90 × (−3/10) = −27 €</code></pre>
+      <p><strong>Passo 4.</strong> Applicando la formula del ricavo in modo meccanico si otterrebbe:</p>
+<pre data-lang="testo"><code>R = P × Q = (−27) × 170 = −4.590 €</code></pre>
+      <p><strong>Passo 5: controllo il senso economico.</strong> Un prezzo di −27 € vorrebbe dire <em>pagare i clienti</em> 27 € per ogni panino: non è un ricavo di vendita ammissibile. Infatti, se il prezzo deve essere P ≥ 0:</p>
+<pre data-lang="testo"><code>P ≥ 0   →   Q = 80 − (10/3)·P ≤ 80</code></pre>
+      <p>La quantità massima è <strong>80 panini</strong> (a prezzo zero). Quindi <strong>170 panini sono incompatibili</strong> con la funzione data. Probabilmente c'è un refuso, ma non si può sapere quale dato correggere: in verifica si scrive il calcolo e si segnala l'incongruenza.</p>
+
+      <h4>b) Grafico della domanda</h4>
+      <p><strong>Cosa bisogna fare:</strong> nel grafico P sta sull'asse verticale, quindi conviene scrivere <strong>P in funzione di Q</strong> (forma inversa).</p>
+<pre data-lang="testo"><code>Q = 80 − (10/3)·P
+(10/3)·P = 80 − Q             (porto P a sinistra e Q a destra)
+P = (3/10)·(80 − Q)           (moltiplico per 3/10)
+P = 24 − 0,3·Q</code></pre>
+      <p>È una <strong>retta decrescente</strong>. Per disegnarla bastano due punti, i due "estremi":</p>
+      <ul>
+        <li><strong>Q = 0</strong> → P = 24: a 24 € nessuno compra. Punto (0; 24).</li>
+        <li><strong>P = 0</strong> → Q = 80: a prezzo zero si prendono 80 panini. Punto (80; 0).</li>
+      </ul>
+      <p>Il tratto economicamente ammissibile è <strong>0 ≤ Q ≤ 80</strong> (prezzi tra 24 € e 0 €).</p>
+
+      <figure style="margin: 1em 0;">
+        <svg viewBox="0 0 320 225" role="img" aria-label="Retta di domanda P = 24 − 0,3Q da (0;24) a (80;0)" style="width: 100%; max-width: 440px; height: auto; display: block; font: 11px var(--font-body);">
+          <line x1="40" y1="190" x2="310" y2="190" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+          <line x1="40" y1="195" x2="40" y2="12" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+          <line x1="40" y1="26.8" x2="300" y2="190" style="stroke: var(--pen); stroke-width: 2.4;"/>
+          <line x1="170" y1="108.4" x2="170" y2="190" style="stroke: var(--ink-faint); stroke-dasharray: 2 3;"/>
+          <line x1="40" y1="108.4" x2="170" y2="108.4" style="stroke: var(--ink-faint); stroke-dasharray: 2 3;"/>
+          <circle cx="40" cy="26.8" r="4" style="fill: var(--pen);"/>
+          <circle cx="170" cy="108.4" r="4" style="fill: var(--pen);"/>
+          <circle cx="300" cy="190" r="4" style="fill: var(--pen);"/>
+          <text x="48" y="24" style="fill: var(--ink);">(0; 24)</text>
+          <text x="178" y="104" style="fill: var(--ink);">(40; 12)</text>
+          <text x="262" y="180" style="fill: var(--ink);">(80; 0)</text>
+          <text x="150" y="60" style="fill: var(--pen); font-weight: 700;">P = 24 − 0,3Q</text>
+          <text x="36" y="193" text-anchor="end" style="fill: var(--ink-soft);">0</text>
+          <text x="36" y="111" text-anchor="end" style="fill: var(--ink-soft);">12</text>
+          <text x="36" y="30" text-anchor="end" style="fill: var(--ink-soft);">24</text>
+          <text x="170" y="204" text-anchor="middle" style="fill: var(--ink-soft);">40</text>
+          <text x="300" y="204" text-anchor="middle" style="fill: var(--ink-soft);">80</text>
+          <text x="175" y="220" text-anchor="middle" style="fill: var(--ink-soft);">Q (panini al giorno)</text>
+          <text x="4" y="10" style="fill: var(--ink-soft);">P (€)</text>
+        </svg>
+        <figcaption>Curva di domanda: retta decrescente tra (0; 24) e (80; 0).</figcaption>
+      </figure>
+
+      <h4>b) Grafico del ricavo complessivo</h4>
+      <p><strong>Cosa bisogna fare:</strong> scrivere il ricavo in funzione della sola Q, sostituendo P con la forma inversa appena trovata (si suppone che la quantità domandata venga tutta venduta).</p>
+<pre data-lang="testo"><code>R = P × Q = (24 − 0,3·Q) × Q = 24·Q − 0,3·Q²</code></pre>
+      <p>C'è un Q² con coefficiente negativo (−0,3): è una <strong>parabola con la concavità verso il basso</strong> (una "collina"). Per disegnarla si costruisce una tabella: si sceglie Q, si calcola P con la domanda, poi R = P × Q.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Panini Q</th><th>Prezzo P = 24 − 0,3Q</th><th>Ricavo R = P × Q</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>24 €</td><td>0 €</td></tr>
+          <tr><td>20</td><td>18 €</td><td>360 €</td></tr>
+          <tr><td>40</td><td>12 €</td><td>480 €</td></tr>
+          <tr><td>60</td><td>6 €</td><td>360 €</td></tr>
+          <tr><td>80</td><td>0 €</td><td>0 €</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Il ricavo massimo</strong> è nel vertice della parabola. Per una funzione aQ² + bQ + c l'ascissa del vertice è <strong>−b / (2a)</strong>. Qui a = −0,3 e b = 24:</p>
+<pre data-lang="testo"><code>Q = −24 / (2 × (−0,3)) = −24 / (−0,6) = 40 panini
+P = 24 − 0,3 × 40 = 12 €
+R = 12 × 40 = 480 €   (ricavo massimo)</code></pre>
+
+      <figure style="margin: 1em 0;">
+        <svg viewBox="0 0 320 225" role="img" aria-label="Parabola del ricavo R = 24Q − 0,3Q², massimo in (40; 480)" style="width: 100%; max-width: 440px; height: auto; display: block; font: 11px var(--font-body);">
+          <line x1="40" y1="190" x2="310" y2="190" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+          <line x1="40" y1="195" x2="40" y2="12" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+          <path d="M40,190 Q170,-136.4 300,190" style="fill: none; stroke: var(--bad); stroke-width: 2.4;"/>
+          <line x1="170" y1="26.8" x2="170" y2="190" style="stroke: var(--ink-faint); stroke-dasharray: 2 3;"/>
+          <circle cx="170" cy="26.8" r="4" style="fill: var(--bad);"/>
+          <text x="170" y="18" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">massimo (40; 480)</text>
+          <text x="182" y="130" style="fill: var(--bad); font-weight: 700;">R = 24Q − 0,3Q²</text>
+          <text x="36" y="193" text-anchor="end" style="fill: var(--ink-soft);">0</text>
+          <text x="36" y="30" text-anchor="end" style="fill: var(--ink-soft);">480</text>
+          <text x="105" y="204" text-anchor="middle" style="fill: var(--ink-soft);">20</text>
+          <text x="170" y="204" text-anchor="middle" style="fill: var(--ink-soft);">40</text>
+          <text x="235" y="204" text-anchor="middle" style="fill: var(--ink-soft);">60</text>
+          <text x="300" y="204" text-anchor="middle" style="fill: var(--ink-soft);">80</text>
+          <text x="175" y="220" text-anchor="middle" style="fill: var(--ink-soft);">Q (panini al giorno)</text>
+          <text x="4" y="10" style="fill: var(--ink-soft);">R (€)</text>
+        </svg>
+        <figcaption>Ricavo giornaliero: cresce fino a 40 panini, poi cala perché il prezzo scende troppo.</figcaption>
+      </figure>
+
+      <div class="callout tip"><span class="callout-title">Da ricordare</span>
+        <ul>
+          <li>Prima di accettare un risultato, controlla che P e Q siano <strong>≥ 0</strong>.</li>
+          <li>480 € è il <strong>massimo ricavo</strong>, non per forza il massimo profitto: per il profitto servono anche i costi.</li>
+          <li>Vendere di più non vuol dire ricavare di più: oltre 40 panini il prezzo cala così tanto che il ricavo scende.</li>
+        </ul>
+      </div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Una tassa sul venditore</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Una tassa per unità pagata dal venditore crea una differenza tra il prezzo pagato dal compratore e quello che resta al venditore. Teoria: <a href="modello-microeconomico.html#l-equilibrio-di-mercato">L'equilibrio di mercato</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Impatto di una tassa di 5 € sul venditore (es. 7 p. 29) <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Lo Stato introduce una tassa di 5 € per ogni unità venduta, a carico dei venditori. Spiega che cosa succede al prezzo pagato dai compratori, al prezzo netto ricevuto dai venditori e alla quantità scambiata, nel modello ordinario di domanda e offerta.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Il risultato in una riga</h4>
+      <p>Il prezzo pagato dai compratori <strong>sale</strong>, il prezzo netto dei venditori <strong>scende</strong>, la quantità scambiata <strong>diminuisce</strong>. Ecco come ci si arriva, passo per passo.</p>
+
+      <h4>Passo 1. Dare un nome ai due prezzi</h4>
+      <p><strong>Cosa bisogna fare:</strong> con la tassa i prezzi diventano due. Chiamo P<sub>c</sub> il prezzo pagato dal <strong>compratore</strong> e P<sub>v</sub> il prezzo netto che resta al <strong>venditore</strong>:</p>
+<pre data-lang="testo"><code>Pv = Pc − 5</code></pre>
+      <p class="hand">Se il compratore paga 23 €, il venditore tiene 18 € e versa 5 € allo Stato.</p>
+
+      <h4>Passo 2. Capire quale curva si sposta</h4>
+      <p><strong>Cosa bisogna fare:</strong> chiedersi su chi agisce la tassa. La paga il venditore, quindi cambia la sua <strong>offerta</strong>. Per offrire la stessa quantità di prima, il venditore deve ricevere dal compratore <strong>5 € in più</strong>, per compensare la tassa.</p>
+      <ul>
+        <li>La curva di <strong>offerta</strong> si sposta <strong>verso l'alto di 5 €</strong> (che è come dire verso sinistra: a ogni prezzo si offre di meno).</li>
+        <li>La curva di <strong>domanda non cambia</strong>: i gusti e il reddito dei compratori sono gli stessi.</li>
+      </ul>
+
+      <h4>Passo 3. Trovare il nuovo equilibrio</h4>
+      <p><strong>Cosa bisogna fare:</strong> applicare la regola "offerta diminuisce → prezzo ↑, quantità ↓". L'incrocio tra la domanda e la nuova offerta dà:</p>
+<pre data-lang="testo"><code>Pc aumenta        Q diminuisce        Pv = Pc − 5 diminuisce</code></pre>
+      <p>Attenzione: P<sub>c</sub> <strong>non</strong> sale per forza di tutti i 5 €. Con domanda decrescente e offerta crescente il peso della tassa viene <strong>diviso</strong> tra compratori e venditori.</p>
+
+      <h4>Passo 4. Capire chi paga di più la tassa</h4>
+      <p>Dipende dalle <strong>elasticità</strong>, cioè da quanto compratori e venditori cambiano la quantità quando il prezzo cambia. Chi reagisce di meno (è meno elastico) non riesce a "scappare" e paga la parte maggiore.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Situazione</th><th>Chi sostiene la quota maggiore</th></tr></thead>
+        <tbody>
+          <tr><td>Domanda meno elastica dell'offerta</td><td><strong>Compratori</strong></td></tr>
+          <tr><td>Offerta meno elastica della domanda</td><td><strong>Venditori</strong></td></tr>
+        </tbody>
+      </table></div>
+      <p>Sapere solo che le curve sono "normali" non basta a calcolare la ripartizione esatta: servono le funzioni.</p>
+
+      <h4>Esempio con i numeri</h4>
+      <p>Prima della tassa il prezzo è 20 €, dopo diventa 23 €:</p>
+<pre data-lang="testo"><code>Compratore: paga 23 − 20 = 3 € in più
+Venditore:  tiene 23 − 5 = 18 €, cioè 20 − 18 = 2 € in meno
+Controllo:  3 + 2 = 5 €  (le due quote sommano sempre alla tassa)</code></pre>
+      <p>Con le funzioni della teoria (Qd = 100 − 2P, Qs = 10 + P) si può calcolare tutto: P<sub>c</sub> passa da 30 € a circa 31,67 € (+1,67 €), P<sub>v</sub> scende a circa 26,67 € (−3,33 €), Q da 40 a circa 36,67. Lì il venditore paga la quota maggiore. Vedi <a href="modello-microeconomico.html#l-equilibrio-di-mercato">l'esempio nella teoria</a>.</p>
+
+      <div class="callout tip"><span class="callout-title">Risposta da scrivere in verifica</span>La tassa sposta la curva di offerta verso l'alto di 5 € per unità. Il nuovo equilibrio ha un prezzo maggiore per i compratori, un prezzo netto minore per i venditori e una quantità scambiata inferiore. Il peso della tassa si divide secondo le elasticità: grava di più sulla parte meno elastica, anche se è il venditore a versarla allo Stato.</div>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Correzioni del corso di GPOI: <em>Domanda e ricavo dei panini</em> (esercizio 4 di pagina 29) e <em>Impatto di una tassa sul venditore</em> (esercizio 7 di pagina 29) del libro <em>Nuovo Gestione del progetto e organizzazione d'impresa</em>.</p>
+</main>
+</body>
+</html>

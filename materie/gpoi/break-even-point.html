@@ -205,19 +205,19 @@ U = MDC × Q − CF        (utile a una quantità qualsiasi)</code></pre>
   <p>Il <strong>metodo analitico</strong> trasforma ricavi e costi totali in formule e risolve un'equazione che lega i tre fattori da cui dipende il BEP: <strong>costi fissi</strong>, <strong>prezzo di vendita</strong> e <strong>costi variabili</strong>. Nella dispensa si usano i simboli PVu e CVu (u = unitario):</p>
 <pre data-lang="testo"><code>MDC = PVu − CVu                         ("quantità di profitto" che resta di ogni unità)
 BEP = Costi fissi / Margine di contribuzione = CF / (PVu − CVu)</code></pre>
-  <div class="callout info"><span class="callout-title">Esercizio 2: Calcolo BEP con Excel</span>Usando il foglio dell'esercizio 1, scrivere nella cella <strong>I3</strong> "MDC" e nella <strong>I4</strong> "BEP"; calcolare nelle celle <strong>J3</strong> e <strong>J4</strong> margine di contribuzione e punto di pareggio con il metodo analitico.</div>
-  <p>In Excel la formula comincia sempre con <code>=</code> e usa i <strong>riferimenti di cella</strong>, così se cambi un dato il BEP si ricalcola da solo. Esempio, supponendo che nel foglio dell'esercizio 1 i dati stiano in queste celle (adatta i riferimenti a dove li hai messi tu):</p>
+  <div class="callout info"><span class="callout-title">Esercizio 2: Calcolo BEP con Excel</span>Usando il foglio dell'esercizio 1 (azienda Galilei), scrivere nella cella <strong>I3</strong> "MDC" e nella <strong>I4</strong> "BEP"; calcolare nelle celle <strong>J3</strong> e <strong>J4</strong> margine di contribuzione e punto di pareggio con il metodo analitico.</div>
+  <p>In Excel la formula comincia sempre con <code>=</code> e usa i <strong>riferimenti di cella</strong>, così se cambi un dato il BEP si ricalcola da solo. Nel foglio dell'esercizio 1 (azienda Galilei) i dati stanno in E3 (costi fissi, 2.000 €), E4 (costo variabile unitario, 6 €) ed E5 (prezzo unitario, 60 €):</p>
   <div class="table-wrap">
     <table>
       <thead><tr><th>Cella</th><th>Contenuto</th><th>Cella</th><th>Formula</th></tr></thead>
       <tbody>
-        <tr><td>B2</td><td>CF (es. 1.200)</td><td>I3</td><td><code>MDC</code></td></tr>
-        <tr><td>B3</td><td>PVu (es. 5)</td><td>J3</td><td><code>=B3-B4</code> → 3</td></tr>
-        <tr><td>B4</td><td>CVu (es. 2)</td><td>I4 / J4</td><td><code>BEP</code> / <code>=B2/J3</code> → 400</td></tr>
+        <tr><td>E3</td><td>CF = <code>=SOMMA(B3:B5)</code> → 2.000</td><td>I3 / J3</td><td><code>MDC</code> / <code>=E5-E4</code> → 54</td></tr>
+        <tr><td>E4</td><td>CVu = <code>=E5*10%</code> → 6</td><td>I4 / J4</td><td><code>BEP</code> / <code>=E3/J3</code> → 37,04</td></tr>
+        <tr><td>E5</td><td>PVu → 60</td><td></td><td></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="hand">Se il BEP viene decimale, per la quantità minima intera: <code>=ARROTONDA.ECCESSO.MAT(B2/J3)</code> oppure <code>=ARROTONDA.PER.ECC(B2/J3;0)</code>.</p>
+  <p class="hand">Se il BEP viene decimale, per la quantità minima intera: <code>=ARROTONDA.PER.ECC(E3/J3;0)</code> → 38. Tutti i passaggi, compreso il grafico, sono in <a href="esercizi-bep-excel.html">Esercizi: il BEP con Excel</a>.</p>
 
   <!-- ============================================================= -->
   <h2>Esercizi risolti del libro</h2>

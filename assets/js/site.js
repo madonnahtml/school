@@ -109,6 +109,9 @@
           { title: "Il modello microeconomico", path: "materie/gpoi/modello-microeconomico.html", type: "teoria" },
           { title: "I costi aziendali", path: "materie/gpoi/costi-aziendali.html", type: "teoria" },
           { title: "Il punto di pareggio (BEP)", path: "materie/gpoi/break-even-point.html", type: "teoria" },
+          { title: "Esercizi: domanda, ricavo e tassa sul venditore", path: "materie/gpoi/esercizi-domanda-offerta.html", type: "esercizi", of: "materie/gpoi/modello-microeconomico.html", n: 2, desc: "Esercizi 4 e 7 di pagina 29: domanda e ricavo dei panini (dati incoerenti, grafico, ricavo massimo) e tassa di 5 € sul venditore." },
+          { title: "Esercizi: costi fissi, variabili e semivariabili", path: "materie/gpoi/esercizi-costi-fissi-variabili.html", type: "esercizi", of: "materie/gpoi/costi-aziendali.html", n: 6, desc: "Classificare i costi del panificio e dell'impresa informatica, vero o falso, contratti diversi, costo totale delle magliette, quota fissa e variabile dai dati." },
+          { title: "Esercizi: il BEP con Excel", path: "materie/gpoi/esercizi-bep-excel.html", type: "esercizi", of: "materie/gpoi/break-even-point.html", n: 2, desc: "Azienda Galilei cella per cella: tabella ricavi e costi, funzione SE, formattazione condizionale, grafico a linee, MDC e BEP con il metodo analitico." },
         ],
       },
       {

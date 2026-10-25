@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: il BEP con Excel · Scuola</title>
+  <meta name="description" content="GPOI, esercizi sul Break Even Point con Excel spiegati passo passo: azienda Galilei, foglio di calcolo con ricavi, costi variabili, fissi e totali, funzione SE, formattazione condizionale, grafico a linee, MDC e BEP con il metodo analitico.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: il BEP con Excel</h1>
+  <p class="lead">Gli esercizi 1 (metodo grafico) e 2 (metodo analitico) delle dispense "Calcolo del Break Even Point", spiegati cella per cella. Teoria: <a href="break-even-point.html">Il punto di pareggio (BEP)</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Apri Excel accanto alla pagina e rifai i passaggi uno alla volta. Prima viene il <strong>calcolo a mano</strong>, così sai già quali numeri devono uscire; poi il <strong>foglio di calcolo</strong> con ogni formula spiegata. Le formule sono scritte per Excel in italiano (<code>SOMMA</code>, <code>SE</code>, separatore <code>;</code>); in inglese diventano <code>SUM</code>, <code>IF</code> e il separatore è la virgola.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo grafico con Excel</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il BEP è il punto in cui la retta dei <strong>ricavi totali</strong> incrocia quella dei <strong>costi totali</strong>: profitto e perdita sono zero. Oltre il BEP si è nell'<strong>area di profitto</strong>, prima nell'<strong>area di perdita</strong>. I ricavi partono da 0, i costi totali partono dai costi fissi, i costi variabili partono da 0 e i costi fissi sono una retta orizzontale. Teoria: <a href="break-even-point.html#il-metodo-grafico">Il metodo grafico</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Calcolo BEP con Excel: l'azienda Galilei <span class="badge badge-medio">Excel</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> L'azienda Galilei produce schermi per tablet. Sostiene questi costi: affitto capannone 750 €; stipendi 1.000 €; assicurazioni 250 €; costi pari al <strong>10% del prezzo</strong> per ciascuna unità prodotta. Il prezzo di vendita unitario è 60 €. Si calcoli il punto di Break Even.</p>
+      <p><strong>Predisposizione dei dati sul foglio di calcolo</strong></p>
+      <ol>
+        <li>Inserire il titolo "Calcolo del BEP con Excel" nella cella A1 ed eseguire <em>Unisci e centra</em> dell'intervallo A1:G1.</li>
+        <li>Indicare a partire dalla cella A3, a cascata, le voci di costo fisse, e a partire da B3 i rispettivi importi in formato valuta.</li>
+        <li>Indicare a partire dalla cella D3, a cascata, le voci "Costi fissi", "Costi variabili", "Prezzo unitario".</li>
+        <li>Intestare la riga 7: A7 "Quantità venduta", B7 "Ricavi", C7 "Costi variabili", D7 "Costi fissi", E7 "Costi totali", F7 "Utile/Perdita".</li>
+        <li>La quantità aumenta di 2 unità per volta, da 0 a 100 pezzi.</li>
+      </ol>
+      <p><strong>Calcolare</strong>: i ricavi (prezzo × quantità); i costi variabili; i costi fissi; i costi totali (variabili + fissi); il risultato (ricavi − costi); in colonna G una funzione che scriva "Utile" se il risultato è maggiore di 0 e "Perdita" se è minore di 0; una formattazione che colori G in rosso per le perdite e in verde per gli utili.</p>
+      <p><strong>Analisi grafica</strong>: inserire un grafico a linee con le quantità sull'asse delle ascisse e gli euro sulle ordinate, che mostri ricavi, costi variabili, costi fissi e costi totali; inserire una forma ovale sul punto di Break Even.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+
+      <h4>Passo 0. Fai prima il conto a mano</h4>
+      <p><strong>Cosa bisogna fare:</strong> separare i costi fissi da quelli variabili e trovare il costo variabile di <em>una</em> unità. Così sai già che cosa deve uscire dal foglio.</p>
+<pre data-lang="testo"><code>CF  = 750 + 1.000 + 250 = 2.000 €         (affitto, stipendi, assicurazioni)
+CVU = 10% di 60 € = 0,10 × 60 = 6 €        (il costo "per unità prodotta")
+MDC = PV − CVU = 60 − 6 = 54 €
+BEP = CF / MDC = 2.000 / 54 ≈ 37,04 schermi  →  almeno 38 schermi</code></pre>
+      <p class="hand">Il "10% del prezzo" è un costo <strong>variabile</strong>: si paga per ogni unità. Il 10% si calcola sul prezzo (60 €), quindi vale 6 € a schermo.</p>
+
+      <h4>Passo 1. Titolo</h4>
+      <p>Scrivi <code>Calcolo del BEP con Excel</code> in <strong>A1</strong>. Seleziona da A1 a G1 e premi <em>Home → Unisci e allinea al centro</em>.</p>
+
+      <h4>Passo 2. I costi fissi (colonne A e B)</h4>
+      <p>Scrivi le voci una sotto l'altra ("a cascata") da A3, e gli importi da B3. Poi seleziona B3:B5 e scegli il formato <em>Valuta</em> (Home → Formato numero → Valuta).</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Cella</th><th>Contenuto</th><th>Cella</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td>A3</td><td>Affitto capannone</td><td>B3</td><td>750</td></tr>
+          <tr><td>A4</td><td>Stipendi</td><td>B4</td><td>1000</td></tr>
+          <tr><td>A5</td><td>Assicurazioni</td><td>B5</td><td>250</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hand">Scrivi i numeri senza il simbolo € e senza il punto delle migliaia: ci pensa il formato Valuta.</p>
+
+      <h4>Passo 3. Il riepilogo (colonne D ed E)</h4>
+      <p>In D3:D5 scrivi le tre etichette; accanto, in colonna E, metti i valori. I costi fissi e il costo variabile si <strong>calcolano con una formula</strong>, non si ricopiano a mano: se un dato cambia, cambia tutto il foglio.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Cella</th><th>Scrivi</th><th>Che cosa fa</th><th>Risultato</th></tr></thead>
+        <tbody>
+          <tr><td>D3 / E3</td><td>Costi fissi / <code>=SOMMA(B3:B5)</code></td><td>Somma i tre costi fissi</td><td>2.000 €</td></tr>
+          <tr><td>D4 / E4</td><td>Costi variabili / <code>=E5*10%</code></td><td>Il 10% del prezzo unitario: costo variabile <strong>per unità</strong></td><td>6 €</td></tr>
+          <tr><td>D5 / E5</td><td>Prezzo unitario / <code>60</code></td><td>Il dato del testo</td><td>60 €</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>Passo 4. Le intestazioni della tabella (riga 7)</h4>
+      <p>A7 <code>Quantità venduta</code> · B7 <code>Ricavi</code> · C7 <code>Costi variabili</code> · D7 <code>Costi fissi</code> · E7 <code>Costi totali</code> · F7 <code>Utile/Perdita</code> · G7 (facoltativo) <code>Esito</code>.</p>
+
+      <h4>Passo 5. Le quantità da 0 a 100, di 2 in 2</h4>
+      <p>In <strong>A8</strong> scrivi <code>0</code>. In <strong>A9</strong> scrivi <code>=A8+2</code> (la quantità di sopra più 2). Poi trascina il quadratino in basso a destra di A9 fino ad <strong>A58</strong>: l'ultima cella vale 100. Sono 51 righe (0, 2, 4 … 100).</p>
+
+      <h4>Passo 6. Le formule della riga 8</h4>
+      <p><strong>Cosa bisogna fare:</strong> scrivere le formule una volta sola nella riga 8 e poi copiarle fino alla riga 58. Il segno <strong>$</strong> blocca la cella (riferimento assoluto): quando trascini, <code>A8</code> diventa <code>A9</code>, <code>A10</code>…, ma <code>$E$5</code> resta sempre il prezzo.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Cella</th><th>Formula</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td>B8</td><td><code>=A8*$E$5</code></td><td>Ricavi = quantità × prezzo unitario</td></tr>
+          <tr><td>C8</td><td><code>=A8*$E$4</code></td><td>Costi variabili totali = quantità × costo variabile unitario</td></tr>
+          <tr><td>D8</td><td><code>=$E$3</code></td><td>Costi fissi: sempre 2.000 €, a qualunque quantità</td></tr>
+          <tr><td>E8</td><td><code>=C8+D8</code></td><td>Costi totali = variabili + fissi</td></tr>
+          <tr><td>F8</td><td><code>=B8-E8</code></td><td>Risultato = ricavi − costi totali</td></tr>
+          <tr><td>G8</td><td><code>=SE(F8&gt;0;"Utile";"Perdita")</code></td><td>Scrive "Utile" se il risultato è positivo, altrimenti "Perdita"</td></tr>
+        </tbody>
+      </table></div>
+      <p>Seleziona B8:G8 e trascina fino alla riga 58 (oppure doppio clic sul quadratino).</p>
+      <div class="callout warn"><span class="callout-title">Attenzione ai refusi della consegna</span>Nell'elenco "Calcolare" la dispensa mette due volte la colonna C e chiama "costi fissi" la somma in colonna D. Segui le <strong>intestazioni della riga 7</strong>: C = costi variabili, D = costi fissi, E = costi totali (la somma), F = risultato, G = "Utile"/"Perdita".</div>
+      <p class="hand">Se vuoi gestire anche il caso esatto del pareggio (risultato = 0): <code>=SE(F8&gt;0;"Utile";SE(F8&lt;0;"Perdita";"Pareggio"))</code>. Qui non capita mai, perché il BEP (37,04) non è un numero pari.</p>
+
+      <h4>Che cosa deve uscire</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>A Quantità</th><th>B Ricavi</th><th>C Costi var.</th><th>D Costi fissi</th><th>E Costi totali</th><th>F Risultato</th><th>G</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0 €</td><td>0 €</td><td>2.000 €</td><td>2.000 €</td><td>−2.000 €</td><td><span class="contro">Perdita</span></td></tr>
+          <tr><td>2</td><td>120 €</td><td>12 €</td><td>2.000 €</td><td>2.012 €</td><td>−1.892 €</td><td><span class="contro">Perdita</span></td></tr>
+          <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+          <tr><td>36</td><td>2.160 €</td><td>216 €</td><td>2.000 €</td><td>2.216 €</td><td>−56 €</td><td><span class="contro">Perdita</span></td></tr>
+          <tr><td><strong>38</strong></td><td>2.280 €</td><td>228 €</td><td>2.000 €</td><td>2.228 €</td><td><strong>+52 €</strong></td><td><span class="pro">Utile</span></td></tr>
+          <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+          <tr><td>100</td><td>6.000 €</td><td>600 €</td><td>2.000 €</td><td>2.600 €</td><td>3.400 €</td><td><span class="pro">Utile</span></td></tr>
+        </tbody>
+      </table></div>
+      <p>Il passaggio da "Perdita" a "Utile" avviene tra 36 e 38 schermi: coincide con il BEP calcolato a mano (37,04). Ogni schermo in più fa guadagnare 54 € (l'MDC): da 36 a 38 il risultato sale di 2 × 54 = 108 € (da −56 a +52).</p>
+
+      <h4>Passo 7. Formattazione condizionale (rosso e verde)</h4>
+      <ol>
+        <li>Seleziona <strong>G8:G58</strong>.</li>
+        <li><em>Home → Formattazione condizionale → Regole evidenziazione celle → Testo contenente…</em></li>
+        <li>Scrivi <code>Perdita</code> e scegli <em>Testo rosso</em> (o un formato personalizzato con carattere rosso).</li>
+        <li>Ripeti con <code>Utile</code> e scegli un <em>Formato personalizzato</em> con carattere verde.</li>
+      </ol>
+      <p class="hand">In alternativa: <em>Nuova regola → Formatta solo le celle che contengono → Valore della cella uguale a "Utile"</em>.</p>
+
+      <h4>Passo 8. Il grafico a linee</h4>
+      <ol>
+        <li>Seleziona <strong>B7:E58</strong> (ricavi, costi variabili, costi fissi e costi totali, con le intestazioni: diventano i nomi delle linee).</li>
+        <li><em>Inserisci → Grafico a linee</em>.</li>
+        <li>Clic destro sul grafico → <em>Seleziona dati</em> → in <em>Etichette asse orizzontale (categorie)</em> premi <em>Modifica</em> e seleziona <strong>A8:A58</strong>. Così sull'asse x ci sono le quantità.</li>
+        <li>Aggiungi titoli: grafico "Analisi grafica del BEP", asse x "Quantità", asse y "Euro".</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Errore tipico</span>Se selezioni anche la colonna A, Excel la disegna come <strong>quinta linea</strong> (una retta da 0 a 100) invece di usarla per l'asse x. Per questo si seleziona da B e poi si impostano le etichette con <em>Seleziona dati</em>. Con un grafico a <em>dispersione con linee rette</em> puoi invece selezionare A7:E58 direttamente.</div>
+      <p>Nel grafico devi vedere: la linea dei <strong>costi fissi</strong> orizzontale a 2.000 €; i <strong>costi variabili</strong> che partono da 0; i <strong>costi totali</strong> che partono da 2.000 € e sono paralleli ai costi variabili; i <strong>ricavi</strong> che partono da 0 e salgono più ripidi.</p>
+
+      <h4>Passo 9. L'ovale sul BEP</h4>
+      <p><em>Inserisci → Forme → Ovale</em>, disegnalo sul punto in cui la linea dei <strong>ricavi</strong> incrocia quella dei <strong>costi totali</strong> (a circa 37 schermi e circa 2.222 €). Poi <em>Formato forma → Riempimento forma → Nessun riempimento</em>, così si vede l'incrocio sotto.</p>
+      <p class="hand">Controllo: il fatturato di pareggio è PV × BEP = 60 × 37,04 ≈ 2.222 €.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo analitico con Excel</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Il metodo analitico usa le formule. Il <strong>margine di contribuzione</strong> è quello che resta del prezzo dopo aver tolto il costo variabile unitario; il BEP divide i costi fissi per il margine:
+<pre data-lang="testo"><code>MDC = PVu − CVu
+BEP = CF / MDC = CF / (PVu − CVu)</code></pre>
+  Teoria: <a href="break-even-point.html#il-bep-con-excel">Il BEP con Excel</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Calcolo BEP con Excel: MDC e BEP <span class="badge badge-facile">Excel</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Utilizzando il foglio di calcolo dell'esercizio 1, indicare nella cella I3 "MDC" e nella cella I4 "BEP". Calcolare rispettivamente nelle celle J3 e J4 il margine di contribuzione e il punto di pareggio aziendale mediante il metodo analitico.</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Cosa bisogna fare</h4>
+      <p>Trasformare le due formule in formule di Excel, usando le celle del foglio dell'esercizio 1 invece dei numeri: E3 = costi fissi, E4 = costo variabile unitario, E5 = prezzo unitario.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Cella</th><th>Scrivi</th><th>Perché</th><th>Risultato</th></tr></thead>
+        <tbody>
+          <tr><td>I3</td><td><code>MDC</code></td><td>Etichetta</td><td></td></tr>
+          <tr><td>J3</td><td><code>=E5-E4</code></td><td>MDC = prezzo unitario − costo variabile unitario</td><td>54 €</td></tr>
+          <tr><td>I4</td><td><code>BEP</code></td><td>Etichetta</td><td></td></tr>
+          <tr><td>J4</td><td><code>=E3/J3</code></td><td>BEP = costi fissi / MDC (uso l'MDC appena calcolato in J3)</td><td>37,04</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hand">Puoi anche scrivere tutto in una formula: <code>=E3/(E5-E4)</code>. Le parentesi sono obbligatorie: senza, Excel farebbe prima la divisione E3/E5.</p>
+
+      <h4>Interpretare il risultato</h4>
+      <ul>
+        <li>Ogni schermo venduto lascia <strong>54 €</strong> per coprire i costi fissi.</li>
+        <li>Servono <strong>37,04</strong> schermi per coprirli tutti; siccome gli schermi non si vendono a pezzi, si arrotonda <strong>per eccesso</strong>: <strong>38 schermi</strong>. In Excel: <code>=ARROTONDA.PER.ECC(E3/J3;0)</code>.</li>
+        <li>Il risultato analitico <strong>conferma</strong> quello grafico dell'esercizio 1: la colonna G passa da "Perdita" a "Utile" proprio tra 36 e 38.</li>
+        <li>Verifica a mano a 38 schermi: 38 × 54 − 2.000 = 2.052 − 2.000 = <strong>+52 €</strong>, lo stesso valore della cella F della riga 38.</li>
+      </ul>
+      <div class="callout tip"><span class="callout-title">Prova anche tu</span>Cambia il prezzo in E5 da 60 a 70 €: il costo variabile (10%) diventa 7 €, l'MDC 63 € e il BEP 2.000 / 63 ≈ 31,75 → 32 schermi. Tutto il foglio, grafico compreso, si aggiorna da solo: è il vantaggio di usare i riferimenti di cella.</div>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Dispense del corso di GPOI <em>Calcolo del Break Even Point: metodo grafico con Excel</em> (esercizio 1) e <em>metodo analitico con Excel</em> (esercizio 2).</p>
+</main>
+</body>
+</html>
