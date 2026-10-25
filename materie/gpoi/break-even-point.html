@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il punto di pareggio (BEP) · Scuola</title>
+  <meta name="description" content="GPOI: Break Even Point, margine di contribuzione, fatturato di pareggio, metodo grafico, utile obiettivo, arrotondamenti, limiti del modello ed esercizi risolti.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il punto di pareggio (BEP)</h1>
+  <p class="lead">Quante unità bisogna vendere per coprire tutti i costi? Teoria, grafico, metodo e gli esercizi del libro risolti passo passo.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li><strong>BEP</strong> = la quantità a cui Ricavi totali = Costi totali (utile zero).</li>
+      <li><strong>MDC = PV − CVU</strong>: quanto ogni unità contribuisce a coprire i costi fissi.</li>
+      <li><strong>BEP = CF / MDC</strong>, fatturato di pareggio = PV × BEP.</li>
+      <li><strong>Utile obiettivo</strong>: Q = (CF + utile) / MDC.</li>
+      <li>Se il BEP è decimale si arrotonda <strong>per eccesso</strong>.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Che cos'è il BEP</h2>
+  <p class="ref">Paragrafo 1</p>
+  <p><strong>BEP</strong> = <em>Break Even Point</em>, punto di pareggio. Risponde a: «<strong>Quanto devo vendere per non essere in perdita?</strong>»</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Situazione</th><th>Confronto</th><th>Risultato</th></tr></thead>
+      <tbody>
+        <tr><td>Sotto il BEP</td><td>RT &lt; CT</td><td><span class="contro">Perdita</span></td></tr>
+        <tr><td>Al BEP</td><td>RT = CT</td><td>Pareggio (U = 0)</td></tr>
+        <tr><td>Sopra il BEP</td><td>RT &gt; CT</td><td><span class="pro">Utile</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Cosa NON è</span>Non è la quantità che dà il massimo profitto e non garantisce che il mercato compri quella quantità. Contano le unità <strong>vendute</strong>: produrle e lasciarle in magazzino non basta.</div>
+
+  <!-- ============================================================= -->
+  <h2>I costi da riconoscere</h2>
+  <p class="ref">Paragrafo 2</p>
+  <div class="cards">
+    <div class="card"><strong>Costi fissi (CF)</strong><p>Non cambiano con la quantità nel periodo: affitto, assicurazione, ammortamenti, stipendi fissi.</p></div>
+    <div class="card"><strong>Costo variabile unitario (CVU)</strong><p>Il costo di <strong>una</strong> unità: materia prima, componenti, imballaggio. Totale: CV = CVU × Q.</p></div>
+    <div class="card"><strong>Costi semivariabili</strong><p>Hanno una parte fissa e una variabile: canone 100 €/mese + 2 € a unità → 100 € vanno nei CF e 2 € nel CVU.</p></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>La formula del BEP</h2>
+  <p class="ref">Paragrafi 3-5</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Simbolo</th><th>Significato</th><th>Unità</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Q</strong></td><td>Quantità venduta</td><td>pezzi o servizi</td></tr>
+        <tr><td><strong>PV</strong></td><td>Prezzo di vendita unitario</td><td>€/unità</td></tr>
+        <tr><td><strong>CF</strong></td><td>Costi fissi del periodo</td><td>€</td></tr>
+        <tr><td><strong>CVU</strong></td><td>Costo variabile unitario</td><td>€/unità</td></tr>
+        <tr><td><strong>RT, CT</strong></td><td>Ricavi totali, costi totali</td><td>€</td></tr>
+        <tr><td><strong>MDC</strong></td><td>Margine di contribuzione unitario</td><td>€/unità</td></tr>
+        <tr><td><strong>U</strong></td><td>Risultato economico (utile)</td><td>€</td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="testo"><code>RT = PV × Q
+CT = CF + CVU × Q
+U  = RT − CT = (PV − CVU) × Q − CF
+
+Al pareggio U = 0:
+PV × Q = CF + CVU × Q
+(PV − CVU) × Q = CF
+
+BEP = CF / (PV − CVU) = CF / MDC</code></pre>
+  <div class="callout def"><span class="callout-title">Margine di contribuzione</span><strong>MDC = PV − CVU</strong>: quello che resta del prezzo dopo aver pagato il costo variabile di quell'unità. Ogni vendita "versa" l'MDC per coprire i costi fissi; solo quando sono coperti tutti, l'MDC diventa utile. Non è l'utile unitario.</div>
+  <p class="hand">PV = 30 €, CVU = 18 € → MDC = 12 €. Con CF = 1.200 € servono 1.200 / 12 = 100 unità.</p>
+
+  <!-- ============================================================= -->
+  <h2>Fatturato di pareggio e arrotondamenti</h2>
+  <p class="ref">Paragrafo 6</p>
+<pre data-lang="testo"><code>RBEP = PV × BEP        (fatturato di pareggio, in €)</code></pre>
+  <ul>
+    <li>Il BEP esiste solo se <strong>PV &gt; CVU</strong> (MDC positivo). Se PV = CVU nessuna vendita copre i CF; se PV &lt; CVU ogni vendita peggiora la perdita. Un BEP negativo non ha senso economico.</li>
+    <li>Se il BEP viene <strong>decimale</strong> e il prodotto non si può dividere, si arrotonda <strong>per eccesso</strong> (mai per difetto: si resterebbe in perdita).</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo grafico</h2>
+  <p class="ref">Paragrafo 7</p>
+  <p>Nel <strong>diagramma di redditività</strong> la quantità venduta va sull'asse orizzontale, euro (costi e ricavi) su quello verticale.</p>
+  <ul>
+    <li>La retta dei <strong>ricavi</strong> parte dall'<strong>origine</strong> (0 vendite = 0 €).</li>
+    <li>La retta dei <strong>costi totali</strong> parte dal valore dei <strong>costi fissi</strong> (anche a 0 vendite pago i CF).</li>
+    <li>Il loro <strong>incrocio</strong> è il BEP: a sinistra area di perdita, a destra area di utile.</li>
+  </ul>
+
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 360 250" role="img" aria-label="Diagramma di redditività del bar: ricavi e costi totali si incrociano a 400 panini e 2.000 euro" style="width: 100%; max-width: 520px; height: auto; display: block; font: 11px var(--font-body);">
+      <polygon points="40,210 240,83.3 40,134" style="fill: var(--bad); opacity: 0.12;"/>
+      <polygon points="240,83.3 340,20 340,58" style="fill: var(--good); opacity: 0.16;"/>
+      <line x1="40" y1="210" x2="345" y2="210" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <line x1="40" y1="215" x2="40" y2="12" style="stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <line x1="40" y1="134" x2="340" y2="134" style="stroke: var(--ink-faint); stroke-width: 1.2; stroke-dasharray: 4 4;"/>
+      <line x1="40" y1="134" x2="340" y2="58" style="stroke: var(--bad); stroke-width: 2.2;"/>
+      <line x1="40" y1="210" x2="340" y2="20" style="stroke: var(--pen); stroke-width: 2.2;"/>
+      <line x1="240" y1="83.3" x2="240" y2="210" style="stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 2 3;"/>
+      <line x1="40" y1="83.3" x2="240" y2="83.3" style="stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 2 3;"/>
+      <circle cx="240" cy="83.3" r="4.5" style="fill: var(--ink);"/>
+      <text x="246" y="78" style="fill: var(--ink); font-weight: 700;">BEP</text>
+      <text x="300" y="28" style="fill: var(--pen); font-weight: 700;">RT</text>
+      <text x="314" y="76" style="fill: var(--bad); font-weight: 700;">CT</text>
+      <text x="290" y="146" style="fill: var(--ink-faint);">CF</text>
+      <text x="100" y="160" style="fill: var(--bad);">perdita</text>
+      <text x="296" y="60" style="fill: var(--good);">utile</text>
+      <text x="36" y="213" text-anchor="end" style="fill: var(--ink-soft);">0</text>
+      <text x="36" y="137" text-anchor="end" style="fill: var(--ink-soft);">1.200</text>
+      <text x="36" y="86" text-anchor="end" style="fill: var(--ink-soft);">2.000</text>
+      <text x="36" y="23" text-anchor="end" style="fill: var(--ink-soft);">3.000</text>
+      <text x="140" y="225" text-anchor="middle" style="fill: var(--ink-soft);">200</text>
+      <text x="240" y="225" text-anchor="middle" style="fill: var(--ink-soft);">400</text>
+      <text x="340" y="225" text-anchor="middle" style="fill: var(--ink-soft);">600</text>
+      <text x="190" y="243" text-anchor="middle" style="fill: var(--ink-soft);">Q (panini venduti)</text>
+      <text x="46" y="12" style="fill: var(--ink-soft);">€</text>
+    </svg>
+    <figcaption>Il bar dell'esempio: le rette si incrociano a 400 panini e 2.000 €.</figcaption>
+  </figure>
+
+  <h3>Esempio: il bar che vende panini</h3>
+  <p>CF = 1.200 € al mese, CVU = 2 €, PV = 5 €; tutti i panini prodotti vengono venduti.</p>
+<pre data-lang="testo"><code>MDC  = 5 − 2       = 3 €/panino
+BEP  = 1.200 / 3   = 400 panini al mese
+RBEP = 400 × 5     = 2.000 € al mese</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Q</th><th>RT</th><th>CT</th><th>U = RT − CT</th></tr></thead>
+      <tbody>
+        <tr><td>300</td><td>1.500 €</td><td>1.800 €</td><td>−300 €</td></tr>
+        <tr><td>400</td><td>2.000 €</td><td>2.000 €</td><td>0 €</td></tr>
+        <tr><td>500</td><td>2.500 €</td><td>2.200 €</td><td>+300 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">I 100 panini oltre il BEP danno 100 × 3 = 300 € di utile: sopra il BEP ogni unità porta un MDC di utile.</p>
+
+  <!-- ============================================================= -->
+  <h2>Utile obiettivo</h2>
+  <p class="ref">Paragrafo 15</p>
+  <p>Se voglio non solo pareggiare ma guadagnare una certa cifra, l'MDC totale deve coprire <strong>i costi fissi e l'utile desiderato</strong>:</p>
+<pre data-lang="testo"><code>Q obiettivo = (CF + utile desiderato) / MDC
+
+U = MDC × Q − CF        (utile a una quantità qualsiasi)</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>A cosa serve e come abbassarlo</h2>
+  <p class="ref">Paragrafi 8-9</p>
+  <p>Il BEP serve per <strong>prevedere</strong> (prima di lanciare un prodotto: quanto devo vendere?) e <strong>controllare</strong> (durante l'attività: risultati attesi contro reali, cambi di prezzi o costi). Va confrontato con la <strong>domanda prevista</strong> e con la <strong>capacità produttiva</strong>: se il BEP è 1.000 unità al mese ma l'impianto ne fa 800, il pareggio è impossibile.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Intervento (il resto uguale)</th><th>Effetto</th></tr></thead>
+      <tbody>
+        <tr><td>Ridurre i <strong>CF</strong></td><td>Scende il numeratore → BEP ↓</td></tr>
+        <tr><td>Ridurre il <strong>CVU</strong></td><td>Sale l'MDC → BEP ↓</td></tr>
+        <tr><td>Aumentare il <strong>PV</strong></td><td>Sale l'MDC → BEP ↓</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Ma attenzione</span>Un prezzo più alto può far calare le vendite; tagliare i costi può peggiorare la qualità. La formula da sola non basta per decidere.</div>
+
+  <!-- ============================================================= -->
+  <h2>Ipotesi e limiti del modello</h2>
+  <p class="ref">Paragrafo 10</p>
+  <p>Il modello base suppone: <strong>un solo prodotto</strong>, <strong>PV e CVU costanti</strong>, CF fissi nell'intervallo, <strong>produzione = vendite</strong> (niente rimanenze).</p>
+  <p>I cinque limiti:</p>
+  <ol>
+    <li>È un'analisi <strong>statica</strong> (una fotografia).</li>
+    <li>Non considera le <strong>rimanenze</strong>.</li>
+    <li>Suppone costi <strong>lineari</strong>.</li>
+    <li>Separare fissi e variabili non è sempre facile.</li>
+    <li>Non rappresenta le <strong>reazioni del mercato</strong> (sconti, concorrenti, aumenti dell'energia, nuove assunzioni cambiano la soglia).</li>
+  </ol>
+  <div class="callout info"><span class="callout-title">Pareggio economico ≠ finanziario</span>Incassi e pagamenti avvengono in momenti diversi e alcuni costi, come gli <strong>ammortamenti</strong>, non sono un pagamento in quel periodo. Essere al BEP non vuol dire avere la cassa in pari.</div>
+
+  <!-- ============================================================= -->
+  <h2>Metodo per gli esercizi</h2>
+  <p class="ref">Paragrafo 11</p>
+  <ol>
+    <li>Fissa il <strong>periodo</strong> (mese o anno) e l'<strong>unità venduta</strong>.</li>
+    <li>Somma i <strong>CF</strong> e calcola il <strong>CVU</strong> (sommando i costi di una unità).</li>
+    <li>Calcola <strong>MDC = PV − CVU</strong> e controlla che sia positivo.</li>
+    <li>Calcola <strong>BEP = CF / MDC</strong>.</li>
+    <li>Calcola il fatturato <strong>RBEP = PV × BEP</strong> e arrotonda per eccesso se serve.</li>
+    <li><strong>Verifica</strong>: RT e CT al BEP devono essere uguali.</li>
+  </ol>
+  <div class="callout warn"><span class="callout-title">Errori tipici</span>Mescolare costi <strong>mensili e annuali</strong> (500 € al mese di affitto = 6.000 € in un calcolo annuale); confondere il <strong>CVU</strong> con i costi variabili <strong>totali</strong>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il BEP con Excel</h2>
+  <p class="ref">Dispensa "Calcolo del BEP", metodo analitico con Excel</p>
+  <p>Il <strong>metodo analitico</strong> trasforma ricavi e costi totali in formule e risolve un'equazione che lega i tre fattori da cui dipende il BEP: <strong>costi fissi</strong>, <strong>prezzo di vendita</strong> e <strong>costi variabili</strong>. Nella dispensa si usano i simboli PVu e CVu (u = unitario):</p>
+<pre data-lang="testo"><code>MDC = PVu − CVu                         ("quantità di profitto" che resta di ogni unità)
+BEP = Costi fissi / Margine di contribuzione = CF / (PVu − CVu)</code></pre>
+  <div class="callout info"><span class="callout-title">Esercizio 2: Calcolo BEP con Excel</span>Usando il foglio dell'esercizio 1 (azienda Galilei), scrivere nella cella <strong>I3</strong> "MDC" e nella <strong>I4</strong> "BEP"; calcolare nelle celle <strong>J3</strong> e <strong>J4</strong> margine di contribuzione e punto di pareggio con il metodo analitico.</div>
+  <p>In Excel la formula comincia sempre con <code>=</code> e usa i <strong>riferimenti di cella</strong>, così se cambi un dato il BEP si ricalcola da solo. Nel foglio dell'esercizio 1 (azienda Galilei) i dati stanno in E3 (costi fissi, 2.000 €), E4 (costo variabile unitario, 6 €) ed E5 (prezzo unitario, 60 €):</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Cella</th><th>Contenuto</th><th>Cella</th><th>Formula</th></tr></thead>
+      <tbody>
+        <tr><td>E3</td><td>CF = <code>=SOMMA(B3:B5)</code> → 2.000</td><td>I3 / J3</td><td><code>MDC</code> / <code>=E5-E4</code> → 54</td></tr>
+        <tr><td>E4</td><td>CVu = <code>=E5*10%</code> → 6</td><td>I4 / J4</td><td><code>BEP</code> / <code>=E3/J3</code> → 37,04</td></tr>
+        <tr><td>E5</td><td>PVu → 60</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Se il BEP viene decimale, per la quantità minima intera: <code>=ARROTONDA.PER.ECC(E3/J3;0)</code> → 38. Tutti i passaggi, compreso il grafico, sono in <a href="esercizi-bep-excel.html">Esercizi: il BEP con Excel</a>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi risolti del libro</h2>
+  <p class="ref">Paragrafi 12-17</p>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">1</span>Primo esempio <span class="badge badge-facile">base</span></div>
+    <div class="esercizio-body">
+      <p>CF = 200.000 €, PV = 900 €, CVU = 400 €. Trova BEP e fatturato di pareggio.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="testo"><code>MDC  = 900 − 400       = 500 €/unità
+BEP  = 200.000 / 500   = 400 unità
+RBEP = 900 × 400       = 360.000 €
+Verifica: CT = 200.000 + 400 × 400 = 360.000 € = RT</code></pre>
+        <p>Con 401 unità: U = 401 × 500 − 200.000 = <strong>500 €</strong>. I 900 € del prezzo non sono tutti utile: 400 € coprono il costo variabile.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">2</span>Secondo esempio: dal fatturato al risultato <span class="badge badge-facile">base</span></div>
+    <div class="esercizio-body">
+      <p>CF = 16.000 €, PV = 20 €, CVU = 4 €. Trova BEP, fatturato di pareggio e risultato se il fatturato effettivo è 14.000 €.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="testo"><code>MDC  = 20 − 4          = 16 €/unità
+BEP  = 16.000 / 16     = 1.000 unità
+RBEP = 20 × 1.000      = 20.000 €
+
+Q venduta = 14.000 / 20 = 700 unità
+CV = 700 × 4 = 2.800 €     CT = 16.000 + 2.800 = 18.800 €
+U  = 14.000 − 18.800 = −4.800 €</code></pre>
+        <p><strong>Perdita di 4.800 €.</strong> Controprova: mancano 300 unità al BEP, ognuna vale 16 € di MDC → 300 × 16 = 4.800 €.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">3</span>Aspirapolvere Alfa (es. 1 p. 46) <span class="badge badge-medio">calcolo del CVU</span></div>
+    <div class="esercizio-body">
+      <p>Ogni aspirapolvere usa 200 g di plastica a 200 €/kg, 3 componenti da 10 € e un imballaggio da 10 €. PV = 200 €, impianti e macchinari = 120.000 € (presi come CF). Calcola il BEP.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="testo"><code>Plastica   = 0,200 kg × 200 €/kg = 40 €
+Componenti = 3 × 10              = 30 €
+CVU        = 40 + 30 + 10        = 80 €
+MDC        = 200 − 80            = 120 €
+BEP        = 120.000 / 120       = 1.000 aspirapolvere
+RBEP       = 1.000 × 200         = 200.000 €</code></pre>
+        <p>Attento all'unità di misura: 200 g = <strong>0,2 kg</strong>. Nella realtà un investimento in impianti andrebbe trasformato nella sua quota di competenza (ammortamento); qui l'esercizio lo prende tutto come CF.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">4</span>Mobilificio e utile obiettivo (es. 4 p. 46) <span class="badge badge-medio">utile obiettivo</span></div>
+    <div class="esercizio-body">
+      <p>Per ogni mobile: materie prime 600 €, accessori 350 €, lavorazioni esterne 150 €. CF = 132.000 €, PV = 1.540 €. Trova il BEP e quanti mobili servono per un utile di 88.000 €.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="testo"><code>CVU = 600 + 350 + 150   = 1.100 €
+MDC = 1.540 − 1.100     = 440 €
+BEP = 132.000 / 440     = 300 mobili
+
+Q obiettivo = (132.000 + 88.000) / 440 = 500 mobili
+Verifica: RT = 500 × 1.540 = 770.000 €
+          CT = 132.000 + 500 × 1.100 = 682.000 €
+          U  = 88.000 €</code></pre>
+        <p>I 200 mobili oltre il BEP danno 200 × 440 = 88.000 €.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">5</span>Azienda manifatturiera a lotti (es. 2 p. 46) <span class="badge badge-difficile">arrotondamenti</span></div>
+    <div class="esercizio-body">
+      <p>PV = 9,50 €, lotti da 5.000 pezzi. CF: impianti 85.000, manutenzioni 8.600, fitti 11.650, oneri finanziari 8.650, altri 1.200. CVU: manodopera 4,50, materie prime 2,70, consumo 0,05, energia 0,02, altri 0,01. Trova il BEP, la quantità minima intera e il numero di lotti.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+<pre data-lang="testo"><code>CF  = 85.000 + 8.600 + 11.650 + 8.650 + 1.200 = 115.100 €
+CVU = 4,50 + 2,70 + 0,05 + 0,02 + 0,01         = 7,28 €
+MDC = 9,50 − 7,28                               = 2,22 €
+BEP = 115.100 / 2,22 = 51.846,85 pezzi
+RBEP teorico ≈ 51.846,85 × 9,50 ≈ 492.545,05 €</code></pre>
+        <ul>
+          <li><strong>Pezzi singoli</strong>: si arrotonda per eccesso a <strong>51.847</strong> → U = 51.847 × 2,22 − 115.100 = +0,34 €. Con 51.846 sarebbe −1,88 €.</li>
+          <li><strong>Lotti interi</strong>: 10 lotti = 50.000 pezzi non bastano (U = 475.000 − 479.100 = −4.100 €). Servono <strong>11 lotti = 55.000 pezzi</strong> (U = 522.500 − 515.500 = +7.000 €).</li>
+        </ul>
+        <p>Il BEP teorico resta 51.846,85: 55.000 è solo il primo volume <em>a lotti interi</em> senza perdita (supponendo di vendere tutto).</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">6</span>Albergo con 40 camere (es. 3 p. 46) <span class="badge badge-difficile">servizi</span></div>
+    <div class="esercizio-body">
+      <p>40 camere doppie, aperto tutto l'anno (365 giorni), 70 € per camera a notte (B&amp;B), costo variabile 6 € per camera occupata. Costi annui: personale amministrativo e direzionale 74.000, affitto 43.000, utenze 59.000, assicurazioni 18.000, imposte 12.000, pubblicità 25.000, spese amministrative 24.000, spese commerciali 27.000, ammortamenti 13.000, altri 28.400, personale extra 55.000, personale fisso 127.000, manutenzione 17.400. Trova l'occupazione media di pareggio e quella per un utile annuo di 10.000 €.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <p>L'unità venduta è la <strong>camera per una notte</strong> (non l'ospite). Tutte le voci sono considerate costi fissi, come nel libro.</p>
+<pre data-lang="testo"><code>CF  = somma delle 13 voci = 522.800 € annui
+MDC = 70 − 6 = 64 € per camera-notte
+BEP = 522.800 / 64 = 8.168,75 camere-notte  →  almeno 8.169
+Media giornaliera = 8.168,75 / 365 ≈ 22,38 camere
+Occupazione       = 22,38 / 40 × 100 ≈ 55,95%
+RBEP              = 8.168,75 × 70 = 571.812,50 €
+
+Utile 10.000 €:
+Q = (522.800 + 10.000) / 64 = 8.325 camere-notte
+Media giornaliera = 8.325 / 365 ≈ 22,81 camere (≈ 57%)
+Verifica: 8.325 × 64 − 522.800 = 10.000 €</code></pre>
+        <p>Se si vuole lo <strong>stesso numero intero</strong> di camere ogni giorno, ne servono <strong>23</strong> in entrambi i casi. La capacità annua è 40 × 365 = 14.600: il volume è possibile, ma va verificata la domanda.</p>
+        <div class="callout warn"><span class="callout-title">Errore nella dispensa</span>La dispensa scrive <strong>CF = 622.800 €</strong>, ma le voci elencate sommano a <strong>522.800 €</strong> (controlla: 74 + 43 + 59 + 18 + 12 + 25 + 24 + 27 + 13 + 28,4 + 55 + 127 + 17,4 = 522,8 migliaia). Con 622.800 € la dispensa ottiene: BEP 9.731,25 (almeno 9.732), 26,66 camere al giorno, occupazione 66,65%, RBEP 681.187,50 €; per l'utile 9.887,50 (almeno 9.888), 27,09 camere al giorno, 28 camere se uguali ogni giorno. Il procedimento è lo stesso: chiedi al professore quale valore usare.</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Formule da ricordare</h2>
+<pre data-lang="testo"><code>MDC         = PV − CVU
+BEP         = CF / MDC
+RBEP        = PV × BEP
+U           = MDC × Q − CF
+Q obiettivo = (CF + utile desiderato) / MDC</code></pre>
+  <p>Il BEP è una soglia di copertura dei costi: per dire se un'attività è sostenibile va affiancato a domanda, capacità produttiva e flussi di cassa.</p>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Il BEP è la quantità a cui ricavi e costi totali si eguagliano: sotto si perde, sopra si guadagna.</li>
+    <li>Si calcola con BEP = CF / (PV − CVU); il fatturato di pareggio è PV × BEP; per un utile obiettivo si aggiunge l'utile ai CF.</li>
+    <li>Si arrotonda per eccesso, si abbassa riducendo CF o CVU o alzando il PV, e ha limiti: statico, lineare, senza rimanenze né reazioni del mercato.</li>
+  </ol>
+
+  <h2>Fonti</h2>
+  <p>Dispensa del corso di GPOI <em>Il BEP e il punto di pareggio: teoria, esempi pratici ed esercizi risolti</em>, con gli esercizi 1-4 di pagina 46 del libro; dispensa <em>Calcolo del Break Even Point: metodo analitico con Excel</em> (esercizio 2).</p>
+</main>
+</body>
+</html>

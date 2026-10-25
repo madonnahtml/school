@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Esercizi: costi fissi, variabili e semivariabili · Scuola</title>
+  <meta name="description" content="GPOI, esercizi sui costi delle imprese con soluzioni spiegate passo passo: classificare costi fissi, variabili e semivariabili, contratti diversi, calcolo del costo totale, quota fissa e costo variabile unitario dai dati.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Esercizi: costi fissi, variabili e semivariabili</h1>
+  <p class="lead">I sei esercizi della scheda "Esercizi sui costi delle imprese", risolti spiegando che cosa fare a ogni passaggio. Teoria: <a href="costi-aziendali.html">I costi aziendali</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, prova a rispondere e poi apri la <strong>soluzione spiegata</strong>: non trovi solo il risultato, ma il ragionamento da ripetere uguale in verifica. Per tutti gli esercizi si considera <strong>un mese</strong> di attività, senza ampliare i locali né cambiare la capacità produttiva.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo per classificare un costo</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>
+    <ul>
+      <li><strong>Fisso (F)</strong>: nel periodo non cambia se cambia la quantità. Es. affitto del laboratorio.</li>
+      <li><strong>Variabile (V)</strong>: cambia con la quantità prodotta o venduta. Es. materie prime.</li>
+      <li><strong>Semivariabile (SV)</strong>: una <strong>quota fissa</strong> + una <strong>quota che dipende</strong> dalla produzione o dall'uso. Es. energia con canone + consumi.</li>
+    </ul>
+    Teoria: <a href="costi-aziendali.html#costi-fissi-variabili-e-semivariabili">Costi fissi, variabili e semivariabili</a>.
+  </div>
+  <p>Per ogni voce fatti sempre <strong>una sola domanda</strong>: <em>«Se produco (o vendo) un pezzo in più, questo costo cambia?»</em></p>
+  <ol class="stack">
+    <li><b>1</b><strong>Leggi come è calcolato</strong><span>Non guardare il nome ("stipendio", "bolletta"): guarda la formula del contratto. Le parole spia sono «al mese» e «per ogni…».</span></li>
+    <li><b>2</b><strong>C'è solo un importo al mese?</strong><span>Allora è <strong>fisso</strong>: lo paghi uguale con 0 o con 1.000 pezzi.</span></li>
+    <li><b>3</b><strong>C'è solo un importo «per ogni pezzo / ora / ordine»?</strong><span>Allora è <strong>variabile</strong>: con 0 pezzi vale 0.</span></li>
+    <li><b>4</b><strong>Ci sono tutti e due («X € al mese più Y € per ogni…»)?</strong><span>Allora è <strong>semivariabile</strong>: X va nei costi fissi, Y nel costo variabile unitario.</span></li>
+  </ol>
+
+  <!-- ============================================================= -->
+  <h2>Classificare le voci di costo</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Il panificio <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un panificio produce pane e prodotti da forno. Classifica ogni costo come fisso (F), variabile (V) o semivariabile (SV) e motiva la risposta.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>N.</th><th>Costo sostenuto</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Affitto del laboratorio: 1.200 € al mese.</td></tr>
+          <tr><td>2</td><td>Farina: 0,80 € per ogni chilogrammo di pane prodotto.</td></tr>
+          <tr><td>3</td><td>Assicurazione del laboratorio: quota mensile di 90 €.</td></tr>
+          <tr><td>4</td><td>Sacchetti: 0,10 € per ogni confezione venduta.</td></tr>
+          <tr><td>5</td><td>Energia dei forni: 70 € mensili fissi più una quota legata alle ore di funzionamento.</td></tr>
+          <tr><td>6</td><td>Retribuzione del commesso: 1.500 € mensili, senza straordinari o premi.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Cosa bisogna fare</h4>
+      <p>Per ogni riga cerca le parole spia: «al mese / mensile» (importo fisso) e «per ogni…» (importo che cresce con la quantità). Poi applica il metodo dei 4 passi.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>N.</th><th>Risposta</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>F</strong></td><td>1.200 € al mese, sia che faccia 10 kg di pane sia 1.000 kg.</td></tr>
+          <tr><td>2</td><td><strong>V</strong></td><td>«per ogni chilogrammo prodotto»: più pane = più farina. Con 0 kg costa 0.</td></tr>
+          <tr><td>3</td><td><strong>F</strong></td><td>Quota mensile, non dipende dalla produzione.</td></tr>
+          <tr><td>4</td><td><strong>V</strong></td><td>«per ogni confezione venduta»: cresce con le vendite. Se non vendo nulla, non uso sacchetti.</td></tr>
+          <tr><td>5</td><td><strong>SV</strong></td><td>Ha una parte fissa (70 € al mese) e una parte che dipende dalle ore di funzionamento dei forni.</td></tr>
+          <tr><td>6</td><td><strong>F</strong></td><td>1.500 € al mese uguali per tutti i mesi, senza premi legati alle vendite.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout warn"><span class="callout-title">Errore tipico (era nella scheda compilata)</span>I <strong>sacchetti</strong> sembrano una piccola spesa "di contorno", ma il criterio non è quanto costano: è <strong>come</strong> si calcolano. «0,10 € per ogni confezione» → è <strong>variabile</strong>, non fisso.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>L'impresa informatica <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'impresa assembla computer su ordinazione. Individua la categoria di ciascun costo.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>N.</th><th>Costo sostenuto</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Componenti elettronici: 420 € per ogni computer assemblato.</td></tr>
+          <tr><td>2</td><td>Affitto del laboratorio: 900 € mensili.</td></tr>
+          <tr><td>3</td><td>Servizio cloud: 30 € mensili più 0,50 € per ogni ordine gestito.</td></tr>
+          <tr><td>4</td><td>Imballaggio: 8 € per computer spedito.</td></tr>
+          <tr><td>5</td><td>Software gestionale: abbonamento di 100 € mensili, indipendente dagli ordini.</td></tr>
+          <tr><td>6</td><td>Compenso del commerciale: 1.000 € mensili più 15 € per ogni computer venduto.</td></tr>
+          <tr><td>7</td><td>Collegamento Internet: 40 € mensili con traffico illimitato.</td></tr>
+          <tr><td>8</td><td>Collaudo esterno: 12 € per ogni computer assemblato.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Cosa bisogna fare</h4>
+      <p>Stesso metodo: per ogni voce chiediti «con un computer in più, cambia?». Se c'è un «più» tra un importo mensile e un importo «per ogni», è semivariabile.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>N.</th><th>Risposta</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>V</strong></td><td>420 € per ogni computer: 10 computer = 4.200 €.</td></tr>
+          <tr><td>2</td><td><strong>F</strong></td><td>Mensile, uguale qualunque sia la produzione.</td></tr>
+          <tr><td>3</td><td><strong>SV</strong></td><td>30 € fissi + 0,50 € per ordine.</td></tr>
+          <tr><td>4</td><td><strong>V</strong></td><td>8 € per ogni computer spedito.</td></tr>
+          <tr><td>5</td><td><strong>F</strong></td><td>Il testo lo dice: «indipendente dagli ordini».</td></tr>
+          <tr><td>6</td><td><strong>SV</strong></td><td>1.000 € fissi + 15 € per ogni computer venduto. Uno "stipendio" può quindi essere anche semivariabile.</td></tr>
+          <tr><td>7</td><td><strong>F</strong></td><td>Traffico illimitato: usare di più la rete non costa di più.</td></tr>
+          <tr><td>8</td><td><strong>V</strong></td><td>12 € per ogni computer assemblato.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hand">Riassunto: F = 2, 5, 7 · V = 1, 4, 8 · SV = 3, 6.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Vero o falso <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Indica se ogni affermazione è vera o falsa. Correggi quelle false.</p>
+      <ol>
+        <li>Un costo fisso si annulla automaticamente quando l'impresa non produce.</li>
+        <li>Il costo totale delle materie prime aumenta se aumenta la produzione, mantenendo invariati il consumo per prodotto e il prezzo delle materie prime.</li>
+        <li>Un costo semivariabile comprende una quota fissa e una quota variabile.</li>
+        <li>Una bolletta dell'energia elettrica è sempre un costo variabile.</li>
+        <li>Uno stipendio mensile costante, senza premi o straordinari, è un costo fisso nel periodo considerato.</li>
+        <li>Se la produzione raddoppia, anche l'affitto mensile del laboratorio deve raddoppiare.</li>
+        <li>Un compenso di 800 € mensili più 3 € per ogni prodotto venduto è un costo semivariabile.</li>
+        <li>Un costo fisso totale rimane invariato anche quando viene ripartito su un numero maggiore di prodotti; cambia invece il costo fisso per prodotto.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Cosa bisogna fare</h4>
+      <p>Per ogni frase confrontala con la <strong>definizione</strong>. Le parole assolute come «sempre», «automaticamente», «deve» sono spesso il segnale di una frase falsa. Quando è falsa, riscrivila giusta.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>N.</th><th>V/F</th><th>Spiegazione (e correzione)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>F</strong></td><td>Il costo fisso <strong>resta</strong> anche se non produco: l'affitto si paga comunque. <em>Correzione: un costo fisso rimane anche quando l'impresa non produce.</em></td></tr>
+          <tr><td>2</td><td><strong>V</strong></td><td>Costo materie prime = consumo per prodotto × prezzo × quantità: se la quantità sale e il resto è uguale, sale il totale.</td></tr>
+          <tr><td>3</td><td><strong>V</strong></td><td>È proprio la definizione.</td></tr>
+          <tr><td>4</td><td><strong>F</strong></td><td>Dipende dal contratto: di solito ha un canone fisso più i consumi, quindi è <strong>semivariabile</strong>; con una tariffa a forfait sarebbe fissa. <em>Correzione: per classificarla bisogna sapere come è calcolata.</em></td></tr>
+          <tr><td>5</td><td><strong>V</strong></td><td>Importo mensile costante, non legato alla quantità.</td></tr>
+          <tr><td>6</td><td><strong>F</strong></td><td>L'affitto è fisso: raddoppiare la produzione nello stesso locale non cambia l'affitto. <em>Correzione: l'affitto resta uguale (finché non serve un locale più grande).</em></td></tr>
+          <tr><td>7</td><td><strong>V</strong></td><td>800 € fissi + 3 € per prodotto: quota fissa + quota variabile.</td></tr>
+          <tr><td>8</td><td><strong>V</strong></td><td>Es. 1.200 € di affitto: con 100 prodotti sono 12 € a prodotto, con 200 prodotti 6 €. Il totale resta 1.200 €.</td></tr>
+        </tbody>
+      </table></div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>La stessa voce con contratti diversi <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'impresa può stipulare diversi contratti per i propri servizi. Classifica ciascuna situazione e spiega perché lo stesso tipo di servizio può generare costi di categorie diverse.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Situazione</th><th>Condizioni contrattuali</th></tr></thead>
+        <tbody>
+          <tr><td>A – Trasporto</td><td>6 € per ogni pacco spedito, senza canone.</td></tr>
+          <tr><td>B – Trasporto</td><td>250 € mensili, indipendentemente dai pacchi spediti entro il limite previsto dal contratto.</td></tr>
+          <tr><td>C – Trasporto</td><td>100 € mensili più 3 € per ogni pacco spedito.</td></tr>
+          <tr><td>D – Manutenzione</td><td>180 € mensili per assistenza a canone, senza addebiti aggiuntivi.</td></tr>
+          <tr><td>E – Manutenzione</td><td>2 € per ogni ora di funzionamento dei macchinari, senza canone.</td></tr>
+          <tr><td>F – Manutenzione</td><td>80 € mensili più 1 € per ogni ora di funzionamento dei macchinari.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>Cosa bisogna fare</h4>
+      <p>Ignora il nome del servizio (trasporto, manutenzione) e guarda <strong>solo la formula del contratto</strong>: solo canone → F; solo «per ogni» → V; canone + «per ogni» → SV.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Situazione</th><th>Risposta</th><th>Perché</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td><strong>V</strong></td><td>Solo 6 € a pacco: 0 pacchi = 0 €.</td></tr>
+          <tr><td>B</td><td><strong>F</strong></td><td>250 € uguali, entro il limite del contratto (oltre il limite il costo potrebbe cambiare).</td></tr>
+          <tr><td>C</td><td><strong>SV</strong></td><td>100 € fissi + 3 € a pacco.</td></tr>
+          <tr><td>D</td><td><strong>F</strong></td><td>Canone mensile, nessun addebito in più.</td></tr>
+          <tr><td>E</td><td><strong>V</strong></td><td>2 € per ora di funzionamento: più lavorano le macchine, più si paga.</td></tr>
+          <tr><td>F</td><td><strong>SV</strong></td><td>80 € fissi + 1 € per ora.</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Perché lo stesso servizio dà categorie diverse?</strong> Perché la classificazione non dipende da <em>che cosa</em> si compra, ma da <strong>come viene calcolato il prezzo</strong> nel contratto, cioè da come il costo reagisce al variare della quantità.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Calcolare il costo totale</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>
+<pre data-lang="testo"><code>CF  = somma dei costi fissi + quote fisse dei semivariabili
+CVU = somma dei costi per unità + quote variabili dei semivariabili
+CT  = CF + CVU × q</code></pre>
+  Il semivariabile va <strong>spezzato in due</strong>: la parte fissa nei CF, la parte per unità nel CVU.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Il laboratorio di magliette <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Un'impresa produce magliette personalizzate e sostiene questi costi:</p>
+      <ul>
+        <li>affitto: 800 € al mese;</li>
+        <li>assicurazione: 100 € al mese;</li>
+        <li>stipendio amministrativo fisso: 1.400 € al mese;</li>
+        <li>tessuto: 4 € per maglietta;</li>
+        <li>stampa: 2 € per maglietta;</li>
+        <li>confezione: 1 € per maglietta;</li>
+        <li>energia dei macchinari: 60 € al mese più 0,50 € per maglietta.</li>
+      </ul>
+      <ol>
+        <li>Classifica tutte le voci di costo.</li>
+        <li>Calcola la somma delle voci interamente fisse.</li>
+        <li>Calcola il costo variabile per maglietta, includendo la parte variabile dell'energia.</li>
+        <li>Calcola il costo totale mensile per 200 magliette.</li>
+        <li>Calcola il costo totale mensile per 300 magliette.</li>
+        <li>Quali costi rimangono se l'impresa non produce magliette, ma mantiene attivi tutti i contratti?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Classificare</h4>
+      <p>Si applica il metodo: «al mese» → F; «per maglietta» → V; tutte e due → SV.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Voce</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td>Affitto, assicurazione, stipendio amministrativo</td><td><strong>F</strong></td></tr>
+          <tr><td>Tessuto, stampa, confezione</td><td><strong>V</strong></td></tr>
+          <tr><td>Energia dei macchinari</td><td><strong>SV</strong> (60 € fissi + 0,50 € a maglietta)</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>2. Somma delle voci interamente fisse</h4>
+      <p>Si sommano solo le voci F (l'energia <strong>non</strong> va qui, perché non è interamente fissa):</p>
+<pre data-lang="testo"><code>800 + 100 + 1.400 = 2.300 €</code></pre>
+
+      <h4>3. Costo variabile per maglietta</h4>
+      <p>Si sommano tutti i costi «per maglietta», compresa la parte variabile dell'energia:</p>
+<pre data-lang="testo"><code>CVU = 4 + 2 + 1 + 0,50 = 7,50 € per maglietta</code></pre>
+
+      <h4>4-5. Costo totale per 200 e per 300 magliette</h4>
+      <p>Prima si trovano <strong>tutti</strong> i costi fissi del mese: le voci fisse + la quota fissa dell'energia. Poi si usa CT = CF + CVU × q.</p>
+<pre data-lang="testo"><code>CF totali = 2.300 + 60 = 2.360 €
+
+q = 200:  CT = 2.360 + 7,50 × 200 = 2.360 + 1.500 = 3.860 €
+q = 300:  CT = 2.360 + 7,50 × 300 = 2.360 + 2.250 = 4.610 €</code></pre>
+      <p class="hand">Controllo: 100 magliette in più costano 100 × 7,50 = 750 € in più (4.610 − 3.860 = 750). Cresce solo la parte variabile.</p>
+
+      <h4>6. Se non si produce nulla</h4>
+      <p>Con q = 0 la parte variabile vale zero e restano solo i costi fissi: <strong>affitto 800 €, assicurazione 100 €, stipendio 1.400 € e la quota fissa dell'energia 60 €</strong>, in tutto <strong>2.360 €</strong>.</p>
+      <div class="callout warn"><span class="callout-title">Errori tipici</span>Dimenticare i <strong>60 €</strong> dell'energia nel costo totale (risultato sbagliato: 3.800 €), oppure mettere 0,50 € nei costi fissi.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Individuare il costo dai dati <span class="badge badge-difficile">difficile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> La tabella riporta i costi mensili di un'impresa a diversi livelli di produzione. Le condizioni contrattuali e i prezzi rimangono invariati.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Voce</th><th>0 prodotti</th><th>100 prodotti</th><th>200 prodotti</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>600 €</td><td>600 €</td><td>600 €</td></tr>
+          <tr><td>B</td><td>0 €</td><td>300 €</td><td>600 €</td></tr>
+          <tr><td>C</td><td>100 €</td><td>300 €</td><td>500 €</td></tr>
+          <tr><td>D</td><td>250 €</td><td>250 €</td><td>250 €</td></tr>
+          <tr><td>E</td><td>0 €</td><td>150 €</td><td>300 €</td></tr>
+          <tr><td>F</td><td>50 €</td><td>100 €</td><td>150 €</td></tr>
+        </tbody>
+      </table></div>
+      <ol>
+        <li>Classifica ogni voce come fissa, variabile o semivariabile.</li>
+        <li>Per ogni costo semivariabile, individua la quota fissa e il costo variabile per prodotto.</li>
+        <li>Calcola il costo totale quando l'impresa produce 100 prodotti.</li>
+        <li>Calcola il costo totale quando l'impresa produce 200 prodotti.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione spiegata</summary><div class="soluzione-body">
+      <h4>1. Classificare guardando le colonne</h4>
+      <p>Qui non c'è il contratto, ci sono i numeri. Si guardano <strong>due cose</strong> per ogni riga:</p>
+      <ol>
+        <li><strong>La colonna «0 prodotti»</strong>: è la parte che si paga anche senza produrre, cioè la quota fissa.</li>
+        <li><strong>Se il valore cambia</strong> passando da 0 a 100 a 200.</li>
+      </ol>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Valore a 0</th><th>Cambia?</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td>maggiore di 0</td><td>no</td><td><strong>Fisso</strong></td></tr>
+          <tr><td>0</td><td>sì</td><td><strong>Variabile</strong></td></tr>
+          <tr><td>maggiore di 0</td><td>sì</td><td><strong>Semivariabile</strong></td></tr>
+        </tbody>
+      </table></div>
+      <p>Quindi: <strong>A</strong> e <strong>D</strong> fissi; <strong>B</strong> ed <strong>E</strong> variabili; <strong>C</strong> e <strong>F</strong> semivariabili.</p>
+
+      <h4>2. Quota fissa e costo variabile per prodotto</h4>
+      <p>La <strong>quota fissa</strong> è il valore a 0 prodotti. Il <strong>costo variabile per prodotto</strong> si trova così: di quanto aumenta il costo, diviso per quanti prodotti in più.</p>
+<pre data-lang="testo"><code>costo variabile per prodotto = (costo a 100 − costo a 0) / 100
+
+C:  quota fissa 100 €   variabile = (300 − 100) / 100 = 2,00 € a prodotto
+F:  quota fissa  50 €   variabile = (100 −  50) / 100 = 0,50 € a prodotto</code></pre>
+      <p class="hand">Controllo su 200: C = 100 + 2 × 200 = 500 € ✓ · F = 50 + 0,50 × 200 = 150 € ✓. Con lo stesso metodo: B = 3 € e E = 1,50 € a prodotto.</p>
+
+      <h4>3-4. Costo totale</h4>
+      <p>Il costo totale è la <strong>somma della colonna</strong>:</p>
+<pre data-lang="testo"><code>100 prodotti:  600 + 300 + 300 + 250 + 150 + 100 = 1.700 €
+200 prodotti:  600 + 600 + 500 + 250 + 300 + 150 = 2.400 €</code></pre>
+      <div class="callout tip"><span class="callout-title">In più: la formula del costo totale</span>Somma la colonna «0 prodotti» per avere i CF totali, e somma i costi variabili per prodotto per avere il CVU:
+<pre data-lang="testo"><code>CF  = 600 + 0 + 100 + 250 + 0 + 50 = 1.000 €
+CVU = 3 + 2 + 1,50 + 0,50          = 7 € a prodotto
+CT  = 1.000 + 7 × q
+q = 100 → 1.700 €     q = 200 → 2.400 €   (stessi risultati)</code></pre>
+      Con questa formula puoi calcolare il costo totale a <strong>qualunque</strong> quantità, per esempio 150 prodotti: 1.000 + 1.050 = 2.050 €.</div>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Scheda del corso di GPOI <em>Esercizi sui costi delle imprese</em> (sei esercizi su costi fissi, variabili e semivariabili).</p>
+</main>
+</body>
+</html>

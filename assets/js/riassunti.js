@@ -864,6 +864,361 @@ SITE.riassunti = {
     ],
   },
 
+  /* ---------------- GPOI ---------------- */
+  "materie/gpoi/azienda-funzioni-aziendali.html": {
+    breve: "Che cos'è un'azienda, come è organizzata, come si classifica e quali operazioni di gestione compie.",
+    sezioni: [
+      {
+        titolo: "Bisogni, beni e servizi",
+        punti: [
+          "Il <strong>bisogno</strong> è soggettivo; si soddisfa con <strong>beni</strong> (oggetti) o <strong>servizi</strong> (prestazioni).",
+          "Bisogni <strong>economici</strong> (risorse scarse) e <strong>non economici</strong>; <strong>primari</strong> (sopravvivenza) e <strong>secondari</strong> (benessere). Le due classificazioni si combinano.",
+        ],
+      },
+      {
+        titolo: "L'azienda e i suoi scopi",
+        punti: [
+          "<strong>Azienda</strong>: insieme organizzato di persone, mezzi e beni che soddisfa bisogni con beni o servizi.",
+          "Scopo <strong>lucrativo</strong> (profitto) o <strong>non lucrativo</strong>; anche il non profit gestisce denaro e costi.",
+          "<strong>Impresa</strong> = attività svolta; <strong>azienda</strong> = beni organizzati per svolgerla.",
+        ],
+      },
+      {
+        titolo: "Le attività economiche",
+        punti: [
+          "<strong>Produzione</strong>, <strong>consumo</strong>, <strong>risparmio</strong>, <strong>investimento</strong>.",
+          "Il bene economico è utile, limitato e ha un prezzo; può essere <strong>durevole</strong> o <strong>non durevole</strong>.",
+        ],
+      },
+      {
+        titolo: "Primo, secondo e terzo settore",
+        punti: [
+          "Primo: istituzioni pubbliche. Secondo: imprese di mercato. Terzo: non profit (ODV, APS, cooperative sociali…), registrate nel <strong>RUNTS</strong>.",
+          "<strong>Terzo settore ≠ settore terziario</strong> (commercio e servizi).",
+        ],
+      },
+      {
+        titolo: "L'azienda come sistema",
+        punti: [
+          "Persone, mezzi e organizzazione collegati: ogni decisione ha effetti sulle altre parti.",
+          "Soggetti <strong>interni</strong> (soci, dirigenti, dipendenti) ed <strong>esterni</strong> (clienti, fornitori, banche, PA).",
+          "Beni <strong>materiali</strong> (fabbricati, macchinari) e <strong>immateriali</strong> (brevetti, marchi, licenze).",
+          "L'<strong>organigramma</strong> disegna aree, responsabili e rapporti gerarchici.",
+        ],
+      },
+      {
+        titolo: "Le funzioni aziendali",
+        punti: [
+          "Gruppi di attività con uno scopo comune: R&amp;S, produzione, qualità, marketing, logistica, vendite, amministrazione, personale, sistemi informativi.",
+          "Devono collaborare: marketing → R&amp;S → produzione → vendite.",
+        ],
+      },
+      {
+        titolo: "Classificazione delle aziende",
+        punti: [
+          "Per finalità: di <strong>erogazione</strong>, di <strong>consumo</strong>, di <strong>produzione</strong> (diretta o indiretta).",
+          "Per natura: <strong>private</strong> o <strong>pubbliche</strong> (privata non vuol dire lucrativa).",
+          "Per settore: primario, secondario, terziario, quaternario (informatica).",
+        ],
+      },
+      {
+        titolo: "La gestione aziendale",
+        punti: [
+          "<strong>Finanziamento</strong> → <strong>investimento</strong> → <strong>trasformazione</strong> → <strong>disinvestimento</strong>.",
+          "Capitale <strong>proprio</strong> (di rischio, dei soci) e di <strong>debito</strong> (da terzi, da restituire).",
+          "Finanziamento = procurarsi denaro; investimento = impiegarlo.",
+        ],
+      },
+      {
+        titolo: "Aspetto tecnico, economico e finanziario",
+        punti: [
+          "Tecnico: come si produce. Economico: costi e ricavi. Finanziario: entrate, uscite, crediti, debiti.",
+          "<strong>Risultato economico = Ricavi − Costi</strong>: utile, perdita o pareggio.",
+          "Ricavo ≠ incasso: una vendita a credito è un ricavo oggi e un'entrata quando il cliente paga.",
+        ],
+      },
+      {
+        titolo: "Capitale e lavoro",
+        punti: [
+          "Capitale: fattori <strong>generici</strong> (denaro) e <strong>specifici</strong> (beni per produrre).",
+          "Il <strong>lavoro</strong> usa e combina il capitale.",
+        ],
+      },
+      {
+        titolo: "ATECO, processi industriali e ISTAT",
+        punti: [
+          "<strong>ATECO</strong>: classifica l'attività economica in 6 livelli (sezione → sottocategoria).",
+          "<strong>DIN 8580</strong>: classifica il tipo di lavorazione (deformazione, unione, separazione…).",
+          "<strong>ISTAT</strong>: produce dati statistici affidabili utili anche alle imprese.",
+        ],
+      },
+      {
+        titolo: "Non confondere",
+        punti: [
+          "Azienda/impresa, terzo settore/terziario, privata/lucrativa, finanziamento/investimento, economico/finanziario, ATECO/processi.",
+        ],
+      },
+    ],
+  },
+
+  "materie/gpoi/modello-microeconomico.html": {
+    breve: "Domanda, offerta ed equilibrio: come consumatori e imprese determinano prezzi e quantità.",
+    sezioni: [
+      {
+        titolo: "Microeconomia e modelli",
+        punti: [
+          "<strong>Micro</strong>: scelte dei singoli; <strong>macro</strong>: grandezze aggregate (PIL, inflazione, disoccupazione).",
+          "Il <strong>modello</strong> semplifica la realtà con variabili e ipotesi.",
+          "<strong>Scarsità</strong> → bisogna scegliere; <strong>razionalità</strong> = ipotesi di confronto costi-benefici.",
+        ],
+      },
+      {
+        titolo: "Fattori produttivi e le tre domande",
+        punti: [
+          "<strong>Lavoro</strong> e <strong>capitale fisico</strong> (server, computer: non il denaro).",
+          "Cosa, come e per chi produrre; economia di mercato o pianificata.",
+        ],
+      },
+      {
+        titolo: "Agenti economici e mercati",
+        punti: [
+          "Consumatori → domanda; imprese → offerta. Il mercato non richiede un luogo fisico.",
+          "Mercato dei beni e dei fattori; flussi reali e monetari in senso opposto.",
+        ],
+      },
+      {
+        titolo: "La domanda",
+        punti: [
+          "Quantità che gli acquirenti sono <strong>disposti e in grado</strong> di comprare ai vari prezzi.",
+          "Legge della domanda: P ↑ → Q ↓, <strong>ceteris paribus</strong>.",
+          "<code>Q = a − bP</code>; P sull'asse verticale; niente quantità negative (Q = 0 se P &gt; a/b).",
+        ],
+      },
+      {
+        titolo: "Movimento lungo la curva o spostamento",
+        punti: [
+          "Cambia il prezzo del bene → <strong>movimento</strong>; cambia altro → <strong>spostamento</strong>.",
+          "Reddito ↑: domanda ↑ per beni <strong>normali</strong>, ↓ per beni <strong>inferiori</strong>.",
+          "Prezzo del <strong>sostituto</strong> ↑ → domanda ↑; del <strong>complemento</strong> ↑ → domanda ↓.",
+        ],
+      },
+      {
+        titolo: "La domanda di mercato",
+        punti: [
+          "<strong>Somma orizzontale</strong>: a parità di prezzo si sommano le quantità.",
+          "Ogni domanda individuale va limitata a valori ≥ 0: la domanda aggregata può essere <strong>a tratti</strong>.",
+        ],
+      },
+      {
+        titolo: "L'offerta",
+        punti: [
+          "Legge dell'offerta: P ↑ → Q offerta ↑.",
+          "A destra con costi minori, tecnologia, più produttori, sussidi; a sinistra con costi maggiori e imposte.",
+          "Beni alternativi, produzione congiunta e aspettative cambiano l'offerta.",
+        ],
+      },
+      {
+        titolo: "L'equilibrio di mercato",
+        punti: [
+          "<strong>Qd = Qs</strong>. Sopra: eccedenza di offerta; sotto: eccesso di domanda.",
+          "Domanda ↑ → P e Q ↑; offerta ↑ → P ↓ e Q ↑.",
+          "Un'imposta per unità alza il prezzo al compratore, abbassa il netto al venditore e riduce Q, ma non di tutta l'imposta.",
+        ],
+      },
+      {
+        titolo: "Metodo ed errori da evitare",
+        punti: [
+          "Prima: quale bene, cosa cambia, movimento o spostamento. Poi prezzo, quantità e ricavo.",
+          "Non sommare prezzi, non accettare quantità negative, non confondere ricavo e profitto.",
+        ],
+      },
+    ],
+  },
+
+  "materie/gpoi/costi-aziendali.html": {
+    breve: "Come si classificano e si calcolano i costi, dal profitto al costo pieno, fino a ERP e ciclo di vita.",
+    sezioni: [
+      {
+        titolo: "Efficacia ed efficienza",
+        punti: [
+          "<strong>Efficacia</strong> = raggiungere l'obiettivo; <strong>efficienza</strong> = risultati / risorse.",
+          "Efficienza organizzativa, economica e di mercato.",
+          "Economicità = costi/ricavi; redditività = reddito/capitale investito.",
+        ],
+      },
+      {
+        titolo: "Ricavi, costi e profitto",
+        punti: [
+          "<code>R = p × q</code>, <code>P = R − C</code>; q sono le unità vendute.",
+        ],
+      },
+      {
+        titolo: "Oggetto e configurazione di costo",
+        punti: [
+          "L'<strong>oggetto</strong> è ciò di cui misuro il costo; la <strong>configurazione</strong> è l'insieme di voci incluse.",
+          "I costi sono più difficili dei ricavi perché molti vanno ripartiti.",
+        ],
+      },
+      {
+        titolo: "Costi di prodotto e costi di periodo",
+        punti: [
+          "Di prodotto: lavoro diretto, materiali diretti, costi indiretti di produzione (fissi o variabili).",
+          "Di periodo: R&amp;S, amministrazione, spese generali e di vendita.",
+          "L'<strong>ammortamento</strong> ripartisce un bene pluriennale su più esercizi.",
+        ],
+      },
+      {
+        titolo: "Le tre configurazioni di costo",
+        punti: [
+          "Conversione = lavoro diretto + indiretti di produzione.",
+          "Pieno industriale = conversione + materiali diretti.",
+          "Pieno aziendale = pieno industriale + quota costi di periodo.",
+        ],
+      },
+      {
+        titolo: "Costi fissi, variabili e semivariabili",
+        punti: [
+          "<code>CT = CF + CV</code>, <code>CV = v × q</code> se v è costante.",
+          "Fisso non è per sempre; variabile non è per forza proporzionale (conta anche cosa produco).",
+          "Costi a scatti e misti. Diretto/indiretto ≠ fisso/variabile.",
+        ],
+      },
+      {
+        titolo: "Costi evitabili e non evitabili",
+        punti: [
+          "Nelle decisioni contano solo i costi <strong>evitabili</strong>; i costi comuni non cambiano la scelta.",
+          "Materiali diretti evitabili, indiretti fissi non evitabili; più lungo l'orizzonte, più costi evitabili.",
+        ],
+      },
+      {
+        titolo: "Il grafico costi-ricavi e l'analisi marginale",
+        punti: [
+          "Intersezioni = pareggio; tra qA e qB c'è profitto, massimo in q*.",
+          "<code>Cm = C(q+1) − C(q)</code>, <code>Rm = p</code>; conviene produrre finché Rm &gt; Cm.",
+        ],
+      },
+      {
+        titolo: "Come si calcola il costo di un prodotto",
+        punti: [
+          "<strong>Direct costing</strong> (solo costi diretti) e <strong>full costing</strong> (anche quota di indiretti).",
+          "Costi <strong>storici</strong>, <strong>standard</strong> e <strong>normalizzati</strong>; scostamento = effettivo − standard.",
+        ],
+      },
+      {
+        titolo: "Attribuzione causale e proporzionale",
+        punti: [
+          "Causale: consumo reale; proporzionale: base di allocazione (ore, quantità).",
+          "Quota = costo comune × base del prodotto / base totale.",
+        ],
+      },
+      {
+        titolo: "Portafoglio applicativo ed ERP",
+        punti: [
+          "Segmenti direzionale e istituzionale (orizzontali), operativo (verticale).",
+          "<strong>ERP</strong>: moduli integrati su una base dati comune (es. SAP).",
+        ],
+      },
+      {
+        titolo: "Il costo del ciclo di vita",
+        punti: [
+          "<strong>LCC</strong>: concept, progettazione, ingegnerizzazione, produzione, logistica.",
+          "I costi si decidono all'inizio; il Whole LCC aggiunge uso, manutenzione, smaltimento e costi esterni.",
+        ],
+      },
+      {
+        titolo: "Schema per il ripasso",
+        punti: [
+          "Per ogni costo chiediti: prodotto o periodo? diretto o indiretto? fisso o variabile? evitabile o no?",
+        ],
+      },
+    ],
+  },
+
+  "materie/gpoi/break-even-point.html": {
+    breve: "Il punto di pareggio: quante unità vendere perché i ricavi coprano tutti i costi.",
+    sezioni: [
+      {
+        titolo: "Che cos'è il BEP",
+        punti: [
+          "La quantità a cui <strong>RT = CT</strong>: sotto perdita, sopra utile.",
+          "Non è il massimo profitto e conta solo il venduto.",
+        ],
+      },
+      {
+        titolo: "I costi da riconoscere",
+        punti: [
+          "CF fissi nel periodo, CVU per unità; i semivariabili si dividono tra CF e CVU.",
+        ],
+      },
+      {
+        titolo: "La formula del BEP",
+        punti: [
+          "<code>MDC = PV − CVU</code>; <code>BEP = CF / MDC</code>.",
+          "L'MDC copre prima i costi fissi, poi diventa utile.",
+        ],
+      },
+      {
+        titolo: "Fatturato di pareggio e arrotondamenti",
+        punti: [
+          "<code>RBEP = PV × BEP</code>; serve PV &gt; CVU.",
+          "BEP decimale → arrotonda <strong>per eccesso</strong>.",
+        ],
+      },
+      {
+        titolo: "Il metodo grafico",
+        punti: [
+          "Ricavi dall'origine, costi totali dai costi fissi: l'incrocio è il BEP.",
+        ],
+      },
+      {
+        titolo: "Utile obiettivo",
+        punti: [
+          "<code>Q = (CF + utile) / MDC</code>; <code>U = MDC × Q − CF</code>.",
+        ],
+      },
+      {
+        titolo: "A cosa serve e come abbassarlo",
+        punti: [
+          "Previsione e controllo; va confrontato con domanda e capacità produttiva.",
+          "Si abbassa riducendo CF o CVU o alzando PV, ma con cautela sul mercato.",
+        ],
+      },
+      {
+        titolo: "Ipotesi e limiti del modello",
+        punti: [
+          "Statico, senza rimanenze, lineare, separazione CF/CV difficile, senza reazioni del mercato.",
+          "Pareggio economico ≠ pareggio finanziario.",
+        ],
+      },
+      {
+        titolo: "Metodo per gli esercizi",
+        punti: [
+          "Periodo e unità → CF e CVU → MDC → BEP → RBEP → verifica RT = CT.",
+          "Non mescolare dati mensili e annuali.",
+        ],
+      },
+      {
+        titolo: "Il BEP con Excel",
+        punti: [
+          "Metodo analitico: <code>MDC = PVu − CVu</code>, <code>BEP = CF / (PVu − CVu)</code> con riferimenti di cella.",
+        ],
+      },
+      {
+        titolo: "Esercizi risolti del libro",
+        punti: [
+          "Aspirapolvere: BEP 1.000; mobilificio: BEP 300, 500 per 88.000 € di utile; lotti: 51.847 pezzi o 11 lotti.",
+          "Albergo: le voci sommano a 522.800 € (la dispensa scrive 622.800 €).",
+        ],
+      },
+      {
+        titolo: "Formule da ricordare",
+        punti: [
+          "MDC = PV − CVU · BEP = CF / MDC · RBEP = PV × BEP · Q obiettivo = (CF + utile) / MDC.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Storia ---------------- */
   "materie/storia/unita-d-italia.html": {
     breve: "Come la penisola, divisa in più Stati, diventò un solo regno tra il 1848 e il 1871.",
