@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>I costi aziendali · Scuola</title>
+  <meta name="description" content="GPOI: efficacia ed efficienza, ricavi e profitto, configurazioni di costo, costi fissi e variabili, evitabili, marginali, direct e full costing, standard, ERP e Life Cycle Cost.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>I costi aziendali</h1>
+  <p class="lead">Come si classificano i costi, come si calcolano ricavi, profitti e costo di un prodotto, e quali strumenti (ERP, Life Cycle Cost) aiutano a controllarli.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li><strong>Profitto</strong> = Ricavi − Costi, con R = p × q.</li>
+      <li><strong>Configurazioni</strong>: conversione → pieno industriale → pieno aziendale.</li>
+      <li><strong>Fissi e variabili</strong>: CT = CF + v × q. Diretto/indiretto è un'altra cosa.</li>
+      <li><strong>Evitabili</strong>: tra due alternative contano solo i costi che cambiano.</li>
+      <li><strong>Marginale</strong>: un'unità in più conviene se Rm &gt; Cm.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Efficacia ed efficienza</h2>
+  <p class="ref">Paragrafo 1</p>
+  <div class="compare">
+    <div>
+      <h4>Efficacia</h4>
+      <p><strong>Raggiungere l'obiettivo</strong>. Rapporto risultati ottenuti / obiettivi previsti.</p>
+      <p class="hand">Correggo tutti i 20 bug entro venerdì.</p>
+    </div>
+    <div>
+      <h4>Efficienza</h4>
+      <p><strong>Usare bene le risorse</strong>. Rapporto risultati / risorse impiegate.</p>
+      <p class="hand">Li correggo in 40 ore invece delle solite 60, con la stessa qualità.</p>
+    </div>
+  </div>
+  <p>Non coincidono: un progetto può rispettare i requisiti (efficace) ma costare più del previsto (poco efficiente).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Efficienza</th><th>Che cosa considera</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Organizzativa</strong></td><td>Struttura, procedure, persone (es. eliminare passaggi inutili)</td></tr>
+        <tr><td><strong>Economica</strong></td><td>Costi, ricavi, reddito e capitale</td></tr>
+        <tr><td><strong>Di mercato</strong></td><td>Quote di mercato, fatturato, penetrazione</td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="testo"><code>Indice di economicità = Costi / Ricavi                (più basso = meglio)
+Indice di redditività = Reddito / Capitale investito  (× 100 per la %)
+
+Es. costi 8.000, ricavi 10.000          →  economicità 0,8
+    reddito 2.000, capitale 20.000      →  redditività 10%</code></pre>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Tagliare i costi non deve rovinare il risultato: un servizio economico ma inutilizzabile non serve a nessuno.</div>
+
+  <!-- ============================================================= -->
+  <h2>Ricavi, costi e profitto</h2>
+  <p class="ref">Paragrafo 2</p>
+<pre data-lang="testo"><code>R = p × q        (p = prezzo unitario costante, q = unità vendute)
+P = R − C        (profitto)
+
+R &gt; C → utile     R = C → pareggio     R &lt; C → perdita</code></pre>
+  <p>Esempio: 150 interventi a 60 € → R = 9.000 €; con costi di 7.200 € → <strong>profitto 1.800 €</strong>.</p>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>In R = p × q, <strong>q sono le unità vendute</strong>: usare la stessa q per produzione e vendite vuol dire supporre che si venda tutto. E il ricavo non è per forza un incasso immediato.</div>
+
+  <!-- ============================================================= -->
+  <h2>Oggetto e configurazione di costo</h2>
+  <p class="ref">Paragrafo 3</p>
+  <div class="cards">
+    <div class="card"><strong>Oggetto di costo</strong><p>Ciò di cui voglio sapere il costo: un prodotto, un servizio, una commessa, un reparto.</p></div>
+    <div class="card"><strong>Configurazione di costo</strong><p>Quali voci includo nel calcolo. Lo stesso oggetto ha costi diversi a seconda delle voci (solo ore di sviluppo, oppure anche test, server, gestione e spese generali).</p></div>
+  </div>
+  <p>Calcolare i costi è più difficile che calcolare i ricavi: una fattura dice chiaramente cosa ho venduto, ma lo stipendio di un dirigente o un server condiviso servono a molti prodotti e vanno <strong>ripartiti</strong>.</p>
+  <p class="hand">Domanda guida: «Quali risorse includo e per quale decisione mi serve questo costo?»</p>
+
+  <!-- ============================================================= -->
+  <h2>Costi di prodotto e costi di periodo</h2>
+  <p class="ref">Paragrafo 4</p>
+  <h3>Costi di prodotto</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Componente</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Lavoro diretto</strong></td><td>Lavoro attribuibile al prodotto</td><td>Ore di un tecnico su una commessa</td></tr>
+        <tr><td><strong>Materiali diretti</strong></td><td>Materie prime e componenti del prodotto</td><td>Componenti per assemblare un PC</td></tr>
+        <tr><td><strong>Costi indiretti di produzione</strong> (overheads)</td><td>Risorse comuni alla produzione, da ripartire con un criterio</td><td>Affitto del laboratorio, manutenzione impianti</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Il libro divide i costi indiretti di produzione in due gruppi, a seconda che dipendano o no dal volume prodotto:</p>
+  <div class="compare">
+    <div>
+      <h4>Indiretti fissi</h4>
+      <p>Non dipendono dal volume: <strong>affitti</strong> di capannoni e uffici, <strong>ammortamenti</strong> dei macchinari, <strong>assicurazioni</strong>.</p>
+    </div>
+    <div>
+      <h4>Indiretti variabili</h4>
+      <p>Dipendono dal livello di attività: <strong>lavoro indiretto</strong> (supervisione, manutenzione, controllo qualità) ed <strong>energia</strong>.</p>
+    </div>
+  </div>
+  <div class="callout def"><span class="callout-title">Ammortamento</span>Distribuisce il costo di un bene che dura più anni su più esercizi. Attrezzatura da 4.000 €, 4 anni, valore residuo 0, quote costanti → <strong>1.000 € all'anno</strong>. Non è un nuovo acquisto ogni anno.</div>
+  <h3>Costi di periodo</h3>
+  <p>Non sono legati direttamente alla realizzazione del prodotto: <strong>ricerca e sviluppo, amministrazione, spese generali, vendita</strong> (es. una campagna pubblicitaria). Si chiamano anche "spese discrezionali", ma non sono tutti eliminabili.</p>
+  <p>Il confine tra prodotto e periodo non è univoco: alcune aziende mettono nei costi di prodotto <strong>solo la trasformazione fisica</strong>; altre ci mettono tutte le <strong>attività primarie</strong> (logistica in entrata, operations, logistica in uscita, marketing e vendite, servizio).</p>
+
+  <!-- ============================================================= -->
+  <h2>Le tre configurazioni di costo</h2>
+  <p class="ref">Paragrafo 5</p>
+<pre data-lang="testo"><code>Costo di conversione     = Lavoro diretto + Costi indiretti di produzione
+Costo pieno industriale  = Costo di conversione + Materiali diretti
+Costo pieno aziendale    = Costo pieno industriale + Quota costi di periodo</code></pre>
+  <p class="hand">Sono scatole una dentro l'altra: ognuna contiene la precedente.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Commessa</th><th>Importo</th></tr></thead>
+      <tbody>
+        <tr><td>Materiali diretti</td><td>1.200 €</td></tr>
+        <tr><td>Lavoro diretto</td><td>800 €</td></tr>
+        <tr><td>Costi indiretti di produzione</td><td>500 €</td></tr>
+        <tr><td>Quota costi di periodo</td><td>300 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul>
+    <li>Conversione = 800 + 500 = <strong>1.300 €</strong></li>
+    <li>Pieno industriale = 1.300 + 1.200 = <strong>2.500 €</strong></li>
+    <li>Pieno aziendale = 2.500 + 300 = <strong>2.800 €</strong></li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">Errore tipico</span>Ri-sommare voci già incluse: il pieno industriale contiene <strong>già</strong> il lavoro diretto e gli indiretti.</div>
+
+  <!-- ============================================================= -->
+  <h2>Costi fissi, variabili e semivariabili</h2>
+  <p class="ref">Paragrafo 6</p>
+  <p>Questa classificazione guarda <strong>come cambia il costo se cambia l'attività</strong>, in un certo periodo e intervallo produttivo.</p>
+  <div class="compare">
+    <div>
+      <h4>Costi fissi (CF)</h4>
+      <p>Restano uguali <strong>in totale</strong> nel breve periodo. Es. l'affitto del laboratorio.</p>
+      <p>Fisso non vuol dire per sempre: se affitto un secondo locale, sale.</p>
+    </div>
+    <div>
+      <h4>Costi variabili (CV)</h4>
+      <p>Cambiano con il livello di attività. Es. materiali.</p>
+      <p>Variabile non vuol dire per forza proporzionale: sconti, straordinari e inefficienze cambiano il costo unitario.</p>
+    </div>
+  </div>
+<pre data-lang="testo"><code>CV = v × q          (solo se il costo variabile unitario v è costante)
+CT = CF + CV</code></pre>
+  <p>Nel grafico del libro la retta dei <strong>CF è orizzontale</strong> (non cambia con l'output) e la curva <strong>CT</strong> è la curva CV <strong>spostata verso l'alto</strong> dei costi fissi: CT è la somma verticale di CF e CV.</p>
+  <div class="callout tip"><span class="callout-title">Dal libro</span>I costi variabili non dipendono solo da <em>quanto</em> produco, ma da <strong>cosa produco</strong>. Una volta erano soprattutto materiali e lavoro diretto, proporzionali al volume; oggi contano anche altri parametri, come l'<strong>ampiezza della gamma</strong> dei prodotti. Il lavoro indiretto dipende dall'attività, ma non in modo direttamente proporzionale.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>CF = 2.000 €, v = 10 €</th><th>q = 100</th><th>q = 200</th></tr></thead>
+      <tbody>
+        <tr><td>Costo totale CT</td><td>3.000 €</td><td>4.000 €</td></tr>
+        <tr><td>Costo fisso per unità</td><td>20 €</td><td>10 €</td></tr>
+        <tr><td>Costo medio totale</td><td>30 €</td><td>20 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Più produco, più il costo fisso si "spalma" e il costo medio scende.</p>
+  <div class="cards">
+    <div class="card"><strong>Costo a scatti</strong><p>Costante a tratti: cloud a 100 € fino a una soglia, 180 € oltre.</p></div>
+    <div class="card"><strong>Costo misto (semivariabile)</strong><p>Quota fissa + quota a consumo: 50 € al mese + 0,02 € per richiesta.</p></div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Diretto ≠ variabile</span><strong>Diretto/indiretto</strong> = si può attribuire al prodotto senza ripartirlo? <strong>Fisso/variabile</strong> = cambia con la quantità? Un canone riservato a un progetto è <em>diretto ma fisso</em>; l'energia condivisa è <em>indiretta ma variabile</em>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Costi evitabili e non evitabili</h2>
+  <p class="ref">Paragrafo 7</p>
+  <p>Un costo è <strong>evitabile</strong> se una scelta permette di non sostenerlo; <strong>non evitabile</strong> se resta qualunque cosa decida. Dipende dalla decisione e dal tempo: un affitto non si evita questo mese, ma sì alla scadenza del contratto. Fisso non vuol dire automaticamente non evitabile.</p>
+  <p>In una decisione si considerano <strong>solo i costi evitabili</strong>. Più è lungo l'<strong>orizzonte temporale</strong>, più costi diventano evitabili: il lavoro diretto può non esserlo nel breve periodo (rigidità del lavoro), ma lo diventa nel lungo, per esempio quando i dipendenti vanno in pensione.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo di costo</th><th>Grado di evitabilità</th></tr></thead>
+      <tbody>
+        <tr><td>Materiali diretti</td><td>Normalmente <strong>evitabili</strong></td></tr>
+        <tr><td>Lavoro diretto</td><td>Evitabile se non c'è rigidità salariale o ci sono impieghi alternativi; altrimenti non evitabile</td></tr>
+        <tr><td>Indiretti variabili</td><td>Alcuni evitabili (energia), altri si comportano come il lavoro diretto (lavoro indiretto, manutenzione)</td></tr>
+        <tr><td>Indiretti fissi</td><td>Normalmente <strong>non evitabili</strong> (affitti, ammortamenti)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Produrre dentro o comprare fuori (make or buy)</h3>
+  <p>Produrre internamente costa 3.000 € di risorse <strong>evitabili</strong> + 1.000 € di affitto che resta comunque. Un fornitore chiede 3.500 €.</p>
+<pre data-lang="testo"><code>Confronto giusto:   3.000 (evitabili)  vs  3.500 (fornitore)  →  dentro conviene di 500 €
+Con i totali:       3.000 + 1.000 = 4.000  vs  3.500 + 1.000 = 4.500  →  stessa differenza</code></pre>
+  <div class="callout tip"><span class="callout-title">Regola</span>Tra alternative contano solo le <strong>differenze</strong> di costi e ricavi. I costi che restano uguali in tutte le alternative non cambiano la scelta. Mettere l'affitto solo da una parte (4.000 vs 3.500) farebbe sembrare conveniente il fornitore: sbagliato.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il grafico costi-ricavi e l'analisi marginale</h2>
+  <p class="ref">Paragrafo 8</p>
+  <p>Nel grafico la quantità q va sull'asse orizzontale, gli euro su quello verticale.</p>
+  <ul>
+    <li>Dove ricavi e costi si <strong>incontrano</strong> il profitto è zero: <strong>punti di pareggio</strong>.</li>
+    <li>Dove i ricavi stanno sopra, la distanza verticale tra le curve è il <strong>profitto</strong>; dove stanno sotto, è la <strong>perdita</strong>.</li>
+    <li>Nel grafico del libro ci sono due pareggi, A e B (quantità qA e qB): sotto qA e sopra qB non conviene produrre, si guadagna tra i due e il massimo profitto è in q*. Due pareggi però non sono una regola: dipende dalla forma delle curve.</li>
+  </ul>
+<pre data-lang="testo"><code>Costo marginale   Cm = C(q+1) − C(q)
+Ricavo marginale  Rm = R(q+1) − R(q) = p·(q+1) − p·q = p   (prezzo costante)
+
+Rm &gt; Cm  →  l'unità in più AUMENTA il profitto
+Rm &lt; Cm  →  lo RIDUCE
+Rm = Cm  →  non lo cambia</code></pre>
+  <p>Esempio: un'unità in più porta 90 € di ricavo. Con Cm = 65 € il profitto sale di <strong>25 €</strong>; con Cm = 105 € scende di <strong>15 €</strong>.</p>
+  <p>Il <strong>massimo profitto</strong> si trova dove Rm = Cm e subito dopo Cm supera Rm: conviene produrre finché Rm &gt; Cm.</p>
+
+  <!-- ============================================================= -->
+  <h2>Come si calcola il costo di un prodotto</h2>
+  <p class="ref">Paragrafo 9</p>
+  <p>Servono tre scelte: <strong>quali voci</strong> includere, <strong>quali dati</strong> usare (preventivi o consuntivi), <strong>come attribuire</strong> i costi ai prodotti.</p>
+  <div class="compare">
+    <div>
+      <h4>Direct costing</h4>
+      <p>Al prodotto vanno solo i costi di cui è <strong>direttamente responsabile</strong> (lavoro e materiali diretti).</p>
+    </div>
+    <div>
+      <h4>Full costing</h4>
+      <p>Aggiunge una <strong>quota dei costi indiretti</strong> con criteri di ripartizione. Più completo, ma dipende dal criterio.</p>
+    </div>
+  </div>
+  <p class="hand">Commessa: 4.000 € di lavoro diretto (direct) + 1.000 € di risorse condivise = 5.000 € (full).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Sistema</th><th>Dati</th><th>A cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Costi storici</strong></td><td>Effettivi, a consuntivo</td><td>Sapere quanto si è speso davvero</td></tr>
+        <tr><td><strong>Costi standard</strong></td><td>Obiettivo, fissati prima</td><td>Pianificare e confrontare con il reale</td></tr>
+        <tr><td><strong>Costi normalizzati</strong></td><td>Diretti effettivi + indiretti a standard</td><td>Unire dati reali e preventivi</td></tr>
+      </tbody>
+    </table>
+  </div>
+<pre data-lang="testo"><code>Scostamento = Costo effettivo − Costo standard
+
+Standard:   40 h × 30 € = 1.200 €
+Effettivo:  50 h × 30 € = 1.500 €
+Scostamento = 300 € SFAVOREVOLE</code></pre>
+  <p>Lo scostamento da solo non prova un'inefficienza: bisogna controllare se sono cambiati i requisiti o ci sono stati problemi tecnici.</p>
+
+  <!-- ============================================================= -->
+  <h2>Attribuzione causale e proporzionale</h2>
+  <p class="ref">Paragrafo 10</p>
+  <div class="compare">
+    <div>
+      <h4>Criterio causale</h4>
+      <p>Cerca quanto ogni prodotto ha <strong>davvero consumato</strong>. Preferito nelle aziende su commessa.</p>
+    </div>
+    <div>
+      <h4>Criterio proporzionale</h4>
+      <p>Divide un costo comune secondo una <strong>base di allocazione</strong> (ore lavoro, ore macchina, quantità). Frequente nei processi continui.</p>
+    </div>
+  </div>
+<pre data-lang="testo"><code>Quota = Costo comune × (base del prodotto / base totale)
+
+Costi condivisi 1.200 €, A usa 30 h, B usa 70 h:
+A = 1.200 × 30/100 = 360 €      B = 1.200 × 70/100 = 840 €</code></pre>
+  <p>La base deve rispecchiare il consumo reale: un criterio incoerente fa sembrare un prodotto più o meno redditizio di quanto sia.</p>
+
+  <!-- ============================================================= -->
+  <h2>Portafoglio applicativo ed ERP</h2>
+  <p class="ref">Paragrafo 11</p>
+  <p>Il <strong>portafoglio applicativo</strong> è l'insieme delle applicazioni informatiche di un'azienda.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Segmento</th><th>Finalità</th><th>Esempio</th><th>Tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Direzionale</strong></td><td>Pianificazione, controllo, decisioni</td><td>Budget, indicatori, previsto vs effettivo</td><td rowspan="2">Orizzontale (uguale in tutti i settori)</td></tr>
+        <tr><td><strong>Istituzionale</strong></td><td>Processi di supporto</td><td>Contabilità, personale</td></tr>
+        <tr><td><strong>Operativo</strong></td><td>Processi primari del settore</td><td>Commesse, produzione, assistenza</td><td>Verticale (specifico del settore)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout def"><span class="callout-title">ERP (Enterprise Resource Planning)</span>Sistema informativo <strong>integrato</strong> fatto di <strong>moduli</strong> che condividono <strong>una base dati</strong>. Meno duplicazioni e meno passaggi a mano. Esempio: <strong>SAP</strong>. Ma i risultati sono buoni solo se dati e criteri sono corretti.</div>
+  <p>Costi di una commessa con l'ERP:</p>
+  <ol>
+    <li>Il reparto operativo registra materiali e ore.</li>
+    <li>Il modulo amministrativo registra fatture e costi.</li>
+    <li>Il sistema collega le risorse alla commessa e ripartisce gli indiretti.</li>
+    <li>Il modulo direzionale (controlling) confronta consuntivo, budget e margini.</li>
+  </ol>
+
+  <!-- ============================================================= -->
+  <h2>Il costo del ciclo di vita</h2>
+  <p class="ref">Paragrafo 12</p>
+  <p>Il <strong>Life Cycle Cost (LCC)</strong> considera i costi di <strong>tutta la vita</strong> di un prodotto, processo o servizio, non solo della produzione. Fasi:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Concept</strong><span>L'idea e le esigenze.</span></li>
+    <li><b>2</b><strong>Progettazione</strong><span>Caratteristiche e soluzioni.</span></li>
+    <li><b>3</b><strong>Ingegnerizzazione</strong><span>Come realizzarlo concretamente.</span></li>
+    <li><b>4</b><strong>Produzione</strong><span>Realizzazione.</span></li>
+    <li><b>5</b><strong>Logistica</strong><span>Flussi e distribuzione.</span></li>
+  </ol>
+  <div class="callout tip"><span class="callout-title">Idea chiave</span>Molti costi si pagano alla fine, ma si <strong>decidono all'inizio</strong>. Un'architettura software complicata fa costare di più sviluppo, server e assistenza per anni.</div>
+  <p>Si stimano <strong>per analogia</strong> (prodotti simili), con <strong>modelli parametrici</strong> (costi legati a parametri di progetto) o con <strong>analisi dettagliata</strong> (risorse e costi standard).</p>
+  <p>Il <strong>Whole Life Cycle Cost</strong> aggiunge i costi dell'utilizzatore (installazione, esercizio, manutenzione, smaltimento) e i costi esterni per la collettività (es. danni ambientali). Il server che costa meno all'acquisto non è per forza il più economico nel tempo.</p>
+
+  <!-- ============================================================= -->
+  <h2>Schema per il ripasso</h2>
+  <p class="ref">Paragrafo 13</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Domanda</th><th>Concetto</th></tr></thead>
+      <tbody>
+        <tr><td>Ho raggiunto il risultato?</td><td>Efficacia</td></tr>
+        <tr><td>Quante risorse ho usato?</td><td>Efficienza</td></tr>
+        <tr><td>Quali voci includo?</td><td>Configurazione di costo</td></tr>
+        <tr><td>Riguarda la realizzazione del prodotto?</td><td>Prodotto o periodo</td></tr>
+        <tr><td>Lo attribuisco direttamente?</td><td>Diretto o indiretto</td></tr>
+        <tr><td>Cambia con l'attività?</td><td>Fisso, variabile o intermedio</td></tr>
+        <tr><td>Cambia scegliendo un'altra alternativa?</td><td>Evitabile o non evitabile</td></tr>
+        <tr><td>Dati previsti o effettivi?</td><td>Standard, storici o normalizzati</td></tr>
+        <tr><td>Quanto cambia il profitto con un'unità in più?</td><td>Rm − Cm</td></tr>
+        <tr><td>Considero uso e fine vita?</td><td>Ciclo di vita esteso</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Efficacia = raggiungere l'obiettivo, efficienza = usare bene le risorse; profitto = p × q − costi.</li>
+    <li>I costi si classificano per prodotto/periodo, diretto/indiretto, fisso/variabile, evitabile/non evitabile; le configurazioni vanno da conversione a pieno aziendale.</li>
+    <li>Il costo di un prodotto dipende da voci, dati (storici, standard) e criteri di ripartizione; ERP e Life Cycle Cost aiutano a misurarlo e controllarlo.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">calcolo</span></div>
+    <div class="esercizio-body">
+      <p>Una software house ha CF = 1.500 € al mese e un costo variabile di 8 € per installazione. Vende ogni installazione a 20 €.</p>
+      <ol>
+        <li>Calcola costo totale, ricavi e profitto per 200 installazioni.</li>
+        <li>Una commessa ha materiali 900 €, lavoro diretto 600 €, indiretti 300 €, costi di periodo 200 €. Calcola le tre configurazioni.</li>
+        <li>2.000 € di costi comuni vanno ripartiti tra due progetti che usano 20 e 80 ore. Quanto va a ciascuno?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>CV = 8 × 200 = 1.600 €; <strong>CT = 3.100 €</strong>; R = 20 × 200 = <strong>4.000 €</strong>; profitto = <strong>900 €</strong>.</li>
+          <li>Conversione = 600 + 300 = <strong>900 €</strong>; pieno industriale = 900 + 900 = <strong>1.800 €</strong>; pieno aziendale = 1.800 + 200 = <strong>2.000 €</strong>.</li>
+          <li>Base totale 100 ore: il primo prende il 20% = <strong>400 €</strong>, il secondo l'80% = <strong>1.600 €</strong>.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Appunti del corso di GPOI <em>I costi aziendali</em> (quinta Informatica), con immagine riassuntiva e 36 domande aperte con soluzioni; estratto del libro, Lezione 2 <em>I costi aziendali</em> (pagine 12-16).</p>
+</main>
+</body>
+</html>

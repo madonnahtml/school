@@ -50,7 +50,7 @@ tools/pagine.py                  rigenera home, cerca, riassunti, esercizi, clas
 
 `componenti.html` contiene tutti i blocchi (box, esercizi, codice, flashcard, quiz, schemi di rete, linee del tempo…) con l'HTML da copiare.
 
-Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni*, *Java: Collections, ArrayList, Vector e LinkedList*, *Java: HashMap*; Esercizi di Informatica → una pagina per ognuno dei sei capitoli di Java più *Esercizi completi: tutto Java insieme* (107 esercizi, ogni programma compilato ed eseguito con Java 21); TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio XML*, *Lo schema DTD*, *Il linguaggio JSON*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
+Pagine di appunti: Informatica → *Java: array, wrapper, metodi e overload*, *Java: programmazione a oggetti*, *Java: gestione dei file*, *Java: eccezioni*, *Java: Collections, ArrayList, Vector e LinkedList*, *Java: HashMap*; Esercizi di Informatica → una pagina per ognuno dei sei capitoli di Java più *Esercizi completi: tutto Java insieme* (107 esercizi, ogni programma compilato ed eseguito con Java 21); TPSIT → *Sistemi distribuiti*, *Il protocollo HTTP*, *Il linguaggio XML*, *Lo schema DTD*, *Il linguaggio JSON*. GPOI → *Azienda e funzioni aziendali*, *Il modello microeconomico*, *I costi aziendali*, *Il punto di pareggio (BEP)*. Le pagine *Il modello ISO/OSI*, *L'Unità d'Italia* e *Irregular verbs* sono esempi: si possono tenere, modificare o eliminare (togliendo anche la riga in `site.js`).
 
 ## Vederlo in locale
 
