@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HTTP: i metodi (verbi) · Scuola</title>
+  <meta name="description" content="I metodi HTTP spiegati in modo semplice: com'è fatto un messaggio, il body e JSON, GET, la codifica URL, PUT, POST, DELETE, HEAD, OPTIONS, TRACE, CONNECT, altri metodi e HTTP/2.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>HTTP: i metodi (verbi)</h1>
+  <p class="lead">Il <strong>metodo</strong> è la prima parola di ogni richiesta HTTP: dice al server <em>che cosa</em> vogliamo fare con una risorsa. Leggere, inviare, creare, cancellare, controllare.</p>
+
+  <div class="callout info"><span class="callout-title">Prima di iniziare</span>Le basi di HTTP (client e server, URL, request e response, HTTP/1.0 e 1.1) sono nel capitolo di TPSIT <a href="../tpsit/protocollo-http.html">Il protocollo HTTP</a>. Qui si parte da lì.</div>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Un messaggio HTTP ha tre parti: <strong>prima riga</strong>, <strong>header</strong> e <strong>body</strong>.</li>
+      <li><strong>GET</strong> chiede una risorsa e mette i dati nell'URL; <strong>POST</strong> invia dati nel body.</li>
+      <li>La <strong>codifica URL</strong> trasforma i caratteri "pericolosi" in <code>%xx</code>.</li>
+      <li><strong>PUT</strong> crea o sostituisce una risorsa a un indirizzo preciso; <strong>DELETE</strong> la cancella.</li>
+      <li><strong>HEAD</strong>, <strong>OPTIONS</strong> e <strong>TRACE</strong> servono a controllare: la risorsa, il server, il percorso.</li>
+    </ol>
+  </div>
+
+  <div class="callout tip"><span class="callout-title">Il paragone di tutto il capitolo</span>Il server è una <strong>biblioteca</strong> e le risorse sono i <strong>libri</strong>, ognuno con il suo scaffale (l'URL). Il metodo è quello che chiedi al bibliotecario: «dammi questo libro» (GET), «tieni questo modulo da compilare» (POST), «metti questo libro su quello scaffale» (PUT), «butta via questo libro» (DELETE), «dimmi solo se il libro c'è» (HEAD).</div>
+
+  <!-- ============================================================= -->
+  <h2>Com'è fatto un messaggio HTTP</h2>
+  <p class="ref">Pagine 55 e 60</p>
+  <p>Richiesta (request) e risposta (response) hanno la stessa struttura, come una lettera:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Prima riga</strong><span>Nella request è la <em>request line</em>: metodo, risorsa, versione. Nella response è la <em>status line</em>: versione, codice di stato, frase di stato.</span></li>
+    <li><b>2</b><strong>Header lines</strong><span>Righe <code>Nome: valore</code> con informazioni sul messaggio: chi è il browser, che formato si accetta, quanto è lungo il body…</span></li>
+    <li><b>3</b><strong>Body</strong><span>Il contenuto vero: la pagina HTML, un'immagine, dei dati JSON. Nella GET è vuoto; nella response c'è quasi sempre.</span></li>
+  </ol>
+
+  <h3>Un esempio con GET</h3>
+<pre data-lang="testo"><code>GET /home/pagina1.html HTTP/1.1      ← request line: metodo, risorsa, versione
+Host: www.apollo.it                  ← header lines
+Connection: close                    ← chiudi la connessione dopo la risposta
+User-agent: Chrome/37.0
+Accept: text/html, image/gif
+Accept-language: it
+                                     ← riga vuota: il body è vuoto</code></pre>
+<pre data-lang="testo"><code>HTTP/1.1 200 OK                      ← status line: versione, codice, frase
+Connection: close
+Date: Thu, 02 Aug 2020 11:19:25 GMT
+Server: Apache/3.5.0 (Unix)
+Last-Modified: Mon, 22 Jun 2020 ...
+Content-Length: 2871                 ← quanti byte è lungo il body
+Content-Type: text/html              ← che cosa c'è nel body
+
+&lt;!DOCTYPE html&gt; &lt;html&gt;...&lt;/html&gt;   ← body: la pagina richiesta</code></pre>
+  <p class="hand">Con HTTP/1.1 il server tiene aperta la connessione per altre richieste, a meno che non trovi l'header <code>Connection: close</code>.</p>
+
+  <h3>Il body della risposta e JSON</h3>
+  <p>Il <strong>body della risposta</strong> (entity body) contiene di solito la pagina HTML richiesta, ma può contenere anche dati. Se il client vuole i dati in <strong>JSON</strong>, lo dice con l'header <code>Accept</code>:</p>
+<pre data-lang="testo"><code>POST pagina.jsp HTTP/1.1
+Host: corsouniversitario.it
+Accept: application/json, text/plain, */*
+Connection: keep-alive
+
+user=denny&amp;citta=genova</code></pre>
+<pre data-lang="testo"><code>HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 102
+
+{ "ID": 215, "Username": "denny", "Cognome": "Botta", "Citta": "Genova" }</code></pre>
+  <p><code>Accept</code> dice che cosa il client <em>vorrebbe</em> ricevere; <code>Content-Type</code> dice che cosa il server <em>ha mandato</em>. Il formato JSON è spiegato in TPSIT: <a href="../tpsit/json.html">Il linguaggio JSON</a>.</p>
+
+  <!-- ============================================================= -->
+  <h2>La codifica URL</h2>
+  <p class="ref">Pagine 60-61</p>
+  <p>Quando invii un modulo (<code>&lt;form&gt;</code>) o clicchi un link con dei parametri, i dati vanno scritti in una forma che il protocollo capisce senza confondersi. Questa trasformazione si chiama <strong>codifica URL</strong> o <strong>URL encode</strong>.</p>
+  <div class="callout tip"><span class="callout-title">Perché serve</span>In un URL alcuni caratteri hanno già un significato: <code>&amp;</code> separa i campi, <code>=</code> separa nome e valore, lo spazio non è ammesso. Se il tuo dato contiene una <code>&amp;</code> ("Rossi &amp; Martini"), il server penserebbe che inizia un nuovo campo. È come scrivere un indirizzo su una busta: certe parole vanno scritte in un modo preciso, sennò il postino si confonde.</div>
+  <h3>Le tre regole</h3>
+  <ol>
+    <li>I dati sono sempre coppie <strong>nome=valore</strong>.</li>
+    <li>Ogni carattere "non sicuro" (spazio, <code>= &amp; % @ +</code>, caratteri non stampabili…) diventa <strong><code>%</code> + il suo codice ASCII in esadecimale</strong>. Lo spazio diventa <code>%20</code>.</li>
+    <li>Le coppie si uniscono con <code>&amp;</code>: <code>nome1=valore1&amp;nome2=valore2&amp;nome3=valore3</code>.</li>
+  </ol>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Carattere</th><th>Codifica</th><th>Carattere</th><th>Codifica</th><th>Carattere</th><th>Codifica</th></tr></thead>
+      <tbody>
+        <tr><td>spazio</td><td>%20</td><td>#</td><td>%23</td><td>%</td><td>%25</td></tr>
+        <tr><td>"</td><td>%22</td><td>$</td><td>%24</td><td>&amp;</td><td>%26</td></tr>
+        <tr><td>*</td><td>%2A</td><td>/</td><td>%2F</td><td>\</td><td>%5C</td></tr>
+        <tr><td>+</td><td>%2B</td><td>=</td><td>%3D</td><td>@</td><td>%40</td></tr>
+        <tr><td>&lt;</td><td>%3C</td><td>&gt;</td><td>%3E</td><td>[ ]</td><td>%5B %5D</td></tr>
+        <tr><td>0 … 9</td><td>%30 … %39</td><td colspan="4">(le cifre e le lettere di solito si lasciano come sono)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Due esempi</h3>
+<pre data-lang="testo"><code>Testo:      A scuola ho imparato che 1+1=2
+Codificato: A%20scuola%20ho%20imparato%20che%201%2B1%3D2
+Nell'URL:   pagina.php?stringa=A%20scuola%20ho%20imparato%20che%201%2B1%3D2
+
+Form:       utente = Luca,  societa = Rossi &amp; Martini
+Codificato: utente=Luca&amp;societa=Rossi%20%26%20Martini</code></pre>
+  <p class="hand">Il libro scrive <code>Rossi%26Martini</code>, togliendo gli spazi: con gli spazi codificati il risultato completo è quello qui sopra. Nei form HTML lo spazio a volte diventa <code>+</code> invece di <code>%20</code>.</p>
+  <p>La pagina che riceve la stringa fa il lavoro inverso (decodifica) e ritrova il testo originale.</p>
+
+  <!-- ============================================================= -->
+  <h2>GET e POST</h2>
+  <p class="ref">Pagine 62-63</p>
+  <div class="compare">
+    <div>
+      <h4>GET</h4>
+      <p>Chiede una risorsa. Gli eventuali dati vanno <strong>nell'URL</strong>, dopo il <code>?</code> (query string). Il body è vuoto.</p>
+      <p class="hand">Come chiedere un libro dicendo il titolo ad alta voce: tutti lo sentono, e la frase non può essere lunghissima.</p>
+    </div>
+    <div>
+      <h4>POST</h4>
+      <p>Invia dati al server, per esempio un form, a un <strong>programma</strong> (script CGI, PHP…) che li elabora. I dati vanno <strong>nel body</strong>, quindi non hanno limiti di lunghezza.</p>
+      <p class="hand">Come consegnare un modulo compilato in una busta: il contenuto non si vede nell'indirizzo.</p>
+    </div>
+  </div>
+  <p>Rispetto a GET, nella POST:</p>
+  <ul>
+    <li>c'è un <strong>blocco di dati nel body</strong>, descritto dagli header <code>Content-Type</code> e <code>Content-Length</code>;</li>
+    <li>l'URI non è una risorsa da prelevare ma un <strong>programma</strong> che gestisce i dati;</li>
+    <li>la risposta viene <strong>generata al momento</strong> dal programma.</li>
+  </ul>
+<pre data-lang="testo"><code>POST /cgi-bin/rates.cgi HTTP/1.1                  ← metodo, programma sul server, protocollo
+Host: nes:8192
+Content-type: application/x-www-form-urlencoded    ← i dati sono in URL encode
+Content-length: 93                                 ← lunghezza in byte dei campi
+
+Account=cs111fall&amp;First=richard&amp;Last=martin&amp;...   ← il body con i campi del form</code></pre>
+  <p>Risposte possibili a una POST:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><strong>200 OK</strong></td><td>Dati ricevuti ed elaborati, e il server manda una risposta.</td></tr>
+        <tr><td><strong>201 Created</strong></td><td>Dati ricevuti e una nuova risorsa è stata creata.</td></tr>
+        <tr><td><strong>204 No Content</strong></td><td>Dati ricevuti ed elaborati, ma nessun contenuto di risposta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>POST <strong>non è sicura di per sé</strong>: i dati non si vedono nell'URL, ma viaggiano comunque in chiaro. Per proteggerli serve HTTPS (vedi <a href="http-codici-stato-https.html">il capitolo successivo</a>).</div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo PUT</h2>
+  <p class="ref">Pagine 61-62</p>
+  <p>Con <strong>PUT</strong> il client manda al server una risorsa e chiede di <strong>salvarla a un indirizzo preciso</strong>. Se a quell'indirizzo non c'è niente, il server la <strong>crea</strong>; se c'è già, la <strong>sostituisce</strong> con la nuova versione. Si usa anche per fare l'<strong>upload di un file</strong>.</p>
+<pre data-lang="testo"><code>PUT /avviso.txt HTTP/1.1
+Host: scuolaonline.it
+Content-Type: text/plain
+Content-Length: 34
+
+Il 12/3/2020 non ci sarà lezione.</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Risposta</th><th>Quando</th></tr></thead>
+      <tbody>
+        <tr><td><strong>201 Created</strong></td><td>La risorsa non c'era ed è stata creata.</td></tr>
+        <tr><td><strong>200 OK</strong> o <strong>204 No Content</strong></td><td>La risorsa c'era ed è stata modificata.</td></tr>
+        <tr><td>un codice di errore</td><td>La risorsa non si può creare né modificare.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>PUT o POST?</h3>
+  <p>La differenza sta in <strong>che cosa indica l'URI</strong>:</p>
+  <div class="compare">
+    <div>
+      <h4>URI di POST</h4>
+      <p>È il <strong>programma</strong> che riceverà ed elaborerà i dati (es. <code>/cgi-bin/iscrivi.cgi</code>).</p>
+      <p class="hand">«Consegna questo modulo all'ufficio iscrizioni.»</p>
+    </div>
+    <div>
+      <h4>URI di PUT</h4>
+      <p>È il <strong>nome della risorsa</strong> stessa, di solito un file (es. <code>/avviso.txt</code>). È proprio quello che otterrai dopo con una GET allo stesso URI.</p>
+      <p class="hand">«Metti questo libro sullo scaffale 12.»</p>
+    </div>
+  </div>
+  <div class="callout def"><span class="callout-title">Idempotente</span>PUT <strong>non è sicuro</strong> (modifica il server) ma è <strong>idempotente</strong>: ripetere la stessa PUT due, tre, dieci volte lascia il server nello stesso stato della prima volta (c'è sempre lo stesso file). Ripetere una POST invece può creare dieci iscrizioni. PUT inoltre non offre garanzie di controllo degli accessi né di blocco (locking) se due utenti modificano insieme.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo DELETE</h2>
+  <p class="ref">Pagina 64</p>
+  <p><strong>DELETE</strong> fa l'opposto di PUT: chiede al server di <strong>eliminare</strong> la risorsa indicata dall'URL.</p>
+<pre data-lang="testo"><code>DELETE /file.txt HTTP/1.1
+Host: www.scuolaonline.it</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Risposta positiva</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><strong>200 OK</strong></td><td>Accettato, e la risposta descrive lo stato.</td></tr>
+        <tr><td><strong>202 Accepted</strong></td><td>Accettato, ma la cancellazione non è ancora avvenuta.</td></tr>
+        <tr><td><strong>204 No Content</strong></td><td>Cancellazione fatta, risposta senza contenuto.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Un 200 OK vuol dire solo che il server <strong>ha accettato</strong> di cancellare, non che l'abbia già fatto. E quasi nessun server lascia cancellare file al primo che passa: di solito risponde con un errore.</div>
+<pre data-lang="testo"><code>HTTP/1.1 405 Method Not Allowed
+Server: Apache/3.0.32 (UNIX) DAV 2
+Allow: GET, HEAD, OPTIONS, TRACE      ← i metodi che invece sono permessi</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>HEAD, OPTIONS e TRACE: i metodi per controllare</h2>
+  <p class="ref">Pagine 64-66</p>
+  <div class="cards">
+    <div class="card"><strong>HEAD</strong><p>Come una GET, ma il server risponde con <strong>codice di stato e header, senza body</strong>. Serve per test e debugging.</p></div>
+    <div class="card"><strong>OPTIONS</strong><p>Chiede al server <strong>che cosa sa fare</strong>: quali metodi supporta, quale versione di HTTP.</p></div>
+    <div class="card"><strong>TRACE</strong><p>Diagnostica: il server <strong>rimanda indietro</strong> il messaggio che ha ricevuto, così vedi che percorso ha fatto.</p></div>
+  </div>
+
+  <h3>HEAD</h3>
+  <p class="hand">Telefoni in biblioteca e chiedi «avete quel libro?» senza fartelo portare.</p>
+  <p>Con HEAD si controlla, senza scaricare niente:</p>
+  <ul>
+    <li><strong>validità</strong>: la risorsa esiste e non è vuota (0 byte);</li>
+    <li><strong>accessibilità</strong>: si può avere senza autenticarsi;</li>
+    <li><strong>coerenza della cache</strong>: non è cambiata da quando l'ho salvata (guardo <code>Last-Modified</code>).</li>
+  </ul>
+  <p>I <strong>web crawler</strong> (programmi che controllano i link delle pagine, come quelli dei motori di ricerca) usano HEAD per non sprecare banda.</p>
+
+  <h3>OPTIONS</h3>
+<pre data-lang="testo"><code>OPTIONS /file.txt HTTP/1.1     ← le opzioni valide per quella risorsa
+OPTIONS * HTTP/1.1             ← l'asterisco chiede le opzioni generali del server</code></pre>
+
+  <h3>TRACE</h3>
+  <p>Tra client e server ci possono essere dei <strong>server intermedi</strong> (proxy, cache). Ognuno, quando inoltra il messaggio, aggiunge l'header <code>Via</code>. Il server finale copia tutto nel body della risposta: leggendo i <code>Via</code> il client scopre da dove è passato il messaggio.</p>
+  <p class="hand">Come una cartolina che si fa timbrare da ogni ufficio postale e poi torna a casa.</p>
+
+  <!-- ============================================================= -->
+  <h2>CONNECT e gli altri metodi</h2>
+  <p class="ref">Pagina 66</p>
+  <ul>
+    <li><strong>CONNECT</strong> è riservato ai <strong>proxy</strong>: chiede di aprire un <strong>tunnel</strong> sicuro verso un altro server, per esempio per una comunicazione cifrata SSL/TLS. Il proxy poi passa i dati senza leggerli.</li>
+    <li><strong>WebDAV</strong> (RFC 4918) è l'estensione più diffusa: aggiunge metodi per gestire file e versioni sul server, come una cartella condivisa.</li>
+    <li>Con <strong>XMLHttpRequest</strong> (e oggi <code>fetch</code>) JavaScript può fare richieste al server senza ricaricare la pagina: è la tecnica <strong>Ajax</strong>.</li>
+  </ul>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Che cosa fa</th><th>Body nella richiesta?</th><th>Modifica il server?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>GET</strong></td><td>Chiede una risorsa</td><td>No</td><td>No</td></tr>
+        <tr><td><strong>HEAD</strong></td><td>Come GET, ma solo header</td><td>No</td><td>No</td></tr>
+        <tr><td><strong>POST</strong></td><td>Invia dati a un programma</td><td>Sì</td><td>Sì, può</td></tr>
+        <tr><td><strong>PUT</strong></td><td>Crea o sostituisce una risorsa all'URI</td><td>Sì</td><td>Sì (idempotente)</td></tr>
+        <tr><td><strong>DELETE</strong></td><td>Cancella una risorsa</td><td>No</td><td>Sì</td></tr>
+        <tr><td><strong>OPTIONS</strong></td><td>Chiede le capacità del server</td><td>No</td><td>No</td></tr>
+        <tr><td><strong>TRACE</strong></td><td>Rimanda indietro la richiesta</td><td>No</td><td>No</td></tr>
+        <tr><td><strong>CONNECT</strong></td><td>Apre un tunnel tramite proxy</td><td>No</td><td>No</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>HTTP/2</h2>
+  <p class="ref">Pagina 66</p>
+  <p>La versione <strong>2.0</strong> di HTTP nasce dal protocollo <strong>SPDY</strong> ("speedy", veloce) di Google, poi abbandonato. Gli obiettivi erano cinque:</p>
+  <ol>
+    <li>dimezzare (−50%) il <strong>tempo di caricamento</strong> delle pagine;</li>
+    <li>non costringere a cambiare le pagine web esistenti;</li>
+    <li>cambiare il meno possibile le infrastrutture di rete;</li>
+    <li>sviluppare il protocollo insieme alle comunità open source;</li>
+    <li>misurare le prestazioni prima di approvare le parti sperimentali.</li>
+  </ol>
+  <div class="cards">
+    <div class="card"><strong>Minore latenza</strong><p>Le pagine arrivano prima.</p></div>
+    <div class="card"><strong>Header compressi</strong><p>Gli header, che si ripetono uguali in ogni richiesta, vengono compressi: si usa meno banda.</p></div>
+    <div class="card"><strong>Multiplexing</strong><p>Tante richieste e risposte viaggiano <strong>insieme sulla stessa connessione</strong>, invece che una alla volta in fila.</p></div>
+  </div>
+  <p class="hand">HTTP/1.1 è una cassa del supermercato con una fila sola; HTTP/2 è la stessa cassa che serve più clienti insieme. In più il server può mandare in anticipo le risorse che sa che serviranno (server push).</p>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Un messaggio HTTP è fatto di prima riga, header e body; <code>Accept</code> dice cosa vuole il client, <code>Content-Type</code> cosa manda il server.</li>
+    <li>GET chiede (dati nell'URL, in URL encode), POST invia dati a un programma nel body, PUT crea o sostituisce una risorsa all'URI, DELETE la cancella.</li>
+    <li>HEAD, OPTIONS e TRACE servono a controllare risorsa, server e percorso; CONNECT apre un tunnel; HTTP/2 è più veloce grazie a compressione e multiplexing.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Quale metodo usi per: a) aprire una pagina; b) inviare il form di iscrizione; c) caricare <code>/foto/gita.jpg</code> sul server; d) sapere se una pagina è cambiata senza scaricarla?</li>
+        <li>Codifica in URL encode i campi <code>nome = Anna Maria</code> ed <code>email = anna@scuola.it</code>.</li>
+        <li>Perché ripetere 5 volte la stessa PUT non crea 5 file?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>a) <strong>GET</strong>; b) <strong>POST</strong>; c) <strong>PUT</strong> (l'URI è il nome del file da creare); d) <strong>HEAD</strong> (guardi <code>Last-Modified</code>).</li>
+          <li><code>nome=Anna%20Maria&amp;email=anna%40scuola.it</code>: lo spazio diventa <code>%20</code> e la chiocciola <code>%40</code>.</li>
+          <li>Perché PUT è <strong>idempotente</strong>: ogni volta mette la stessa risorsa allo stesso indirizzo, sostituendo quella di prima. Alla fine c'è un solo file.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 2 <em>Il protocollo HTTP</em>, Lezione 1 (pagina 55) e Lezione 2 <em>I metodi o verbi HTTP</em> (pagine 60-66).</p>
+</main>
+</body>
+</html>

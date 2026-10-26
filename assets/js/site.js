@@ -78,6 +78,9 @@
         pages: [
           { title: "Panoramica", path: "materie/sistemi-e-reti/index.html", type: "panoramica" },
           { title: "Il modello ISO/OSI", path: "materie/sistemi-e-reti/modello-iso-osi.html", type: "teoria" },
+          { title: "HTTP: i metodi (verbi)", path: "materie/sistemi-e-reti/http-metodi.html", type: "teoria" },
+          { title: "HTTP: codici di stato e HTTPS", path: "materie/sistemi-e-reti/http-codici-stato-https.html", type: "teoria" },
+          { title: "L'autenticazione con HTTP", path: "materie/sistemi-e-reti/http-autenticazione.html", type: "teoria" },
         ],
       },
       {

@@ -1219,6 +1219,169 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/sistemi-e-reti/http-metodi.html": {
+    breve: "Il metodo è la prima parola di una richiesta HTTP: dice al server che cosa fare con la risorsa.",
+    sezioni: [
+      {
+        titolo: "Com'è fatto un messaggio HTTP",
+        punti: [
+          "Tre parti: <strong>prima riga</strong> (request line o status line), <strong>header</strong> e <strong>body</strong>.",
+          "Nella GET il body è vuoto; nella response c'è quasi sempre (la pagina HTML o i dati).",
+          "<code>Accept</code> dice che formato vuole il client (es. <code>application/json</code>), <code>Content-Type</code> che cosa manda il server.",
+        ],
+      },
+      {
+        titolo: "La codifica URL",
+        punti: [
+          "I dati sono coppie <code>nome=valore</code> unite da <code>&amp;</code>.",
+          "I caratteri non sicuri diventano <code>%</code> + codice ASCII esadecimale: spazio <code>%20</code>, <code>&amp;</code> <code>%26</code>, <code>@</code> <code>%40</code>.",
+        ],
+      },
+      {
+        titolo: "GET e POST",
+        punti: [
+          "<strong>GET</strong>: chiede una risorsa, dati nell'URL.",
+          "<strong>POST</strong>: invia dati nel body a un programma (CGI), senza limiti di lunghezza; risposte 200, 201, 204.",
+          "POST non è sicura di per sé: per proteggere i dati serve HTTPS.",
+        ],
+      },
+      {
+        titolo: "Il metodo PUT",
+        punti: [
+          "Salva una risorsa a un URI preciso: la crea (<strong>201</strong>) o la sostituisce (<strong>200</strong>/<strong>204</strong>).",
+          "URI di POST = il programma che elabora; URI di PUT = la risorsa stessa (quella che avrai con una GET).",
+          "PUT non è sicura ma è <strong>idempotente</strong>: ripeterla non cambia il risultato.",
+        ],
+      },
+      {
+        titolo: "Il metodo DELETE",
+        punti: [
+          "Chiede di cancellare la risorsa: 200, 202 (non ancora fatto) o 204.",
+          "Spesso il server risponde <strong>405 Method Not Allowed</strong> con l'header <code>Allow</code>.",
+        ],
+      },
+      {
+        titolo: "HEAD, OPTIONS e TRACE: i metodi per controllare",
+        punti: [
+          "<strong>HEAD</strong>: come GET ma senza body; controlla validità, accessibilità e cache (web crawler).",
+          "<strong>OPTIONS</strong>: chiede che cosa sa fare il server (<code>*</code> = opzioni generali).",
+          "<strong>TRACE</strong>: il server rimanda indietro la richiesta; gli header <code>Via</code> mostrano i proxy attraversati.",
+        ],
+      },
+      {
+        titolo: "CONNECT e gli altri metodi",
+        punti: [
+          "<strong>CONNECT</strong>: un proxy apre un tunnel sicuro (SSL/TLS).",
+          "WebDAV (RFC 4918) aggiunge metodi per gestire file; XMLHttpRequest permette Ajax.",
+        ],
+      },
+      {
+        titolo: "HTTP/2",
+        punti: [
+          "Nasce da <strong>SPDY</strong>; obiettivo: dimezzare il tempo di caricamento.",
+          "Minore latenza, <strong>header compressi</strong> e <strong>multiplexing</strong> di più richieste sulla stessa connessione.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-codici-stato-https.html": {
+    breve: "I codici con cui il server dice com'è andata una richiesta, e come HTTPS cifra la comunicazione.",
+    sezioni: [
+      {
+        titolo: "Le rappresentazioni HTTP",
+        punti: [
+          "Viaggia una <strong>rappresentazione</strong> della risorsa: header con i <strong>metadati</strong> (dimensione, tipo MIME, data) e body con i dati.",
+        ],
+      },
+      {
+        titolo: "I codici di stato",
+        punti: [
+          "Tre cifre, la prima è la classe. Definiti dall'<strong>IETF</strong>.",
+          "1xx info · 2xx successo · 3xx reindirizzamento · 4xx errore del client · 5xx errore del server.",
+        ],
+      },
+      {
+        titolo: "I codici più importanti",
+        punti: [
+          "100 Continue, <strong>200 OK</strong>, <strong>201 Created</strong>, 204 No Content, 206 Partial Content.",
+          "<strong>301</strong> spostato per sempre, 302/303 temporaneamente: il nuovo indirizzo è in <code>Location</code>.",
+          "400 Bad Request, <strong>401</strong> non autenticato, <strong>403</strong> vietato, <strong>404</strong> non trovato, 405, 409; <strong>500</strong> errore interno.",
+        ],
+      },
+      {
+        titolo: "HTTPS: HTTP sicuro",
+        punti: [
+          "Protegge da <strong>eavesdropping</strong> (ascolto) e <strong>tampering</strong> (manomissione) con <strong>SSL/TLS</strong>; oggi si usa solo TLS.",
+          "Chiave <strong>asimmetrica</strong> (RSA) per scambiarsi una chiave <strong>simmetrica</strong> (AES), veloce, per i dati.",
+          "Di solito l'autenticazione è <strong>unilaterale</strong>: si autentica solo il server.",
+        ],
+      },
+      {
+        titolo: "L'handshake TLS e i certificati",
+        punti: [
+          "Client Hello, Server Hello, Key Exchange, Change Cipher Spec, poi i dati cifrati.",
+          "I certificati validi li rilasciano le <strong>CA</strong>: DV (dominio), OV (azienda), EV (massimo). Esiste anche la Mutual Authentication.",
+          "HTTPS usa la porta <strong>443</strong>, HTTP la <strong>80</strong>.",
+        ],
+      },
+      {
+        titolo: "I limiti di HTTPS e HSTS",
+        punti: [
+          "Il lucchetto non protegge da <strong>phishing</strong> né da <strong>man-in-the-middle</strong> con certificati non verificati.",
+          "<strong>HSTS</strong>: il browser usa solo HTTPS con quel sito per <code>max-age</code> secondi.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-autenticazione.html": {
+    breve: "Come il server riconosce chi può accedere a una risorsa: filtro IP, Basic e Digest Authentication.",
+    sezioni: [
+      {
+        titolo: "Il meccanismo dell'autenticazione",
+        punti: [
+          "Il browser chiede le credenziali e le rimanda in un header a ogni richiesta, come i cookie.",
+          "Tre tecniche: filtro IP, Basic Authentication, Digest Authentication.",
+        ],
+      },
+      {
+        titolo: "Il filtro sugli indirizzi IP",
+        punti: [
+          "<strong>IAAF</strong>: debole con NAT (IP condiviso) e DHCP (IP che cambia).",
+          "<strong>IP spoofing</strong>: si falsifica il Source Address; non cieco, cieco, DoS.",
+        ],
+      },
+      {
+        titolo: "Il paradigma challenge/response",
+        punti: [
+          "Il client si identifica, il server lancia una sfida casuale R, il client risponde con R trasformato (cifrato o con un hash).",
+        ],
+      },
+      {
+        titolo: "La Basic Authentication",
+        punti: [
+          "401 + <code>WWW-Authenticate: Basic realm</code>, poi <code>Authorization: Basic BASE64(user:password)</code>.",
+          "Base64 è invertibile: le credenziali sono solo offuscate. Va usata con <strong>HTTPS</strong>.",
+        ],
+      },
+      {
+        titolo: "La Digest Authentication",
+        punti: [
+          "La password non viaggia: si manda un <strong>digest</strong> (hash) calcolato da user, nonce e password.",
+          "Hash: lunghezza fissa, stesso input stesso hash, a senso unico. <strong>Nonce</strong>: numero usato una volta sola.",
+        ],
+      },
+      {
+        titolo: "Perché la Digest è più sicura: il replay attack",
+        punti: [
+          "<strong>Replay attack</strong>: si ruba e si rimanda una richiesta valida.",
+          "Il nonce sempre nuovo rende inutile un digest vecchio; la DA però non verifica l'identità del server.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Storia ---------------- */
   "materie/storia/unita-d-italia.html": {
     breve: "Come la penisola, divisa in più Stati, diventò un solo regno tra il 1848 e il 1871.",
