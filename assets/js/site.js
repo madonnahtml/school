@@ -77,7 +77,6 @@
         icon: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
         pages: [
           { title: "Panoramica", path: "materie/sistemi-e-reti/index.html", type: "panoramica" },
-          { title: "Il modello ISO/OSI", path: "materie/sistemi-e-reti/modello-iso-osi.html", type: "teoria" },
           { title: "Il livello delle applicazioni", path: "materie/sistemi-e-reti/livello-applicazioni.html", type: "teoria" },
           { title: "Posta elettronica, DNS e Telnet", path: "materie/sistemi-e-reti/email-dns-telnet.html", type: "teoria" },
           { title: "HTTP: la comunicazione nel Web", path: "materie/sistemi-e-reti/http-comunicazione-web.html", type: "teoria" },

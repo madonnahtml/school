@@ -834,36 +834,6 @@ SITE.riassunti = {
     ],
   },
 
-  /* ---------------- Sistemi e Reti ---------------- */
-  "materie/sistemi-e-reti/modello-iso-osi.html": {
-    breve: "Il modello di riferimento che divide la comunicazione in rete in sette livelli.",
-    sezioni: [
-      {
-        titolo: "I sette livelli",
-        punti: [
-          "Dal basso: <strong>F</strong>isico, <strong>C</strong>ollegamento, <strong>R</strong>ete, <strong>T</strong>rasporto, <strong>S</strong>essione, <strong>P</strong>resentazione, <strong>A</strong>pplicazione.",
-          "Ogni livello offre servizi a quello sopra e usa quelli del livello sotto.",
-          "Esempi: HTTP e DNS (7), TCP e UDP (4), IP (3), Ethernet e MAC (2), cavi e onde radio (1).",
-        ],
-      },
-      {
-        titolo: "Incapsulamento",
-        punti: [
-          "Scendendo, ogni livello aggiunge la sua <strong>intestazione</strong>. Chi riceve fa il percorso inverso e la toglie.",
-          "L'unità di dati di ogni livello è la <strong>PDU</strong>: segmento (4), pacchetto (3), frame (2), bit (1).",
-          "Indirizzi: <strong>porta</strong> (4), <strong>IP</strong> (3), <strong>MAC</strong> (2).",
-        ],
-      },
-      {
-        titolo: "Dispositivi e livelli",
-        punti: [
-          "<strong>Hub</strong> = livello 1, ripete i segnali. <strong>Switch</strong> = livello 2, usa il MAC. <strong>Router</strong> = livello 3, usa l'IP.",
-          "Internet usa <strong>TCP/IP</strong>, che riunisce i livelli 5, 6 e 7 nel solo livello di applicazione.",
-        ],
-      },
-    ],
-  },
-
   /* ---------------- GPOI ---------------- */
   "materie/gpoi/azienda-funzioni-aziendali.html": {
     breve: "Che cos'è un'azienda, come è organizzata, come si classifica e quali operazioni di gestione compie.",
@@ -1219,6 +1189,7 @@ SITE.riassunti = {
     ],
   },
 
+  /* ---------------- Sistemi e Reti ---------------- */
   "materie/sistemi-e-reti/livello-applicazioni.html": {
     breve: "Il livello dei programmi che usiamo: applicazioni di rete, architetture, servizi del trasporto, Web e FTP.",
     sezioni: [
