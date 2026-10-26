@@ -1219,9 +1219,80 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/sistemi-e-reti/livello-applicazioni.html": {
+    breve: "Il livello dei programmi che usiamo: applicazioni di rete, architetture, servizi del trasporto, Web e FTP.",
+    sezioni: [
+      {
+        titolo: "Le applicazioni di rete",
+        punti: [
+          "Protocolli del livello applicazione: HTTP, SMTP, FTP, DNS, Telnet, SNMP; se ne aggiungono sempre di nuovi.",
+          "Un'applicazione di rete è fatta da programmi su due o più host che lavorano insieme.",
+          "Servizio = IP + porta (SMTP TCP 25, HTTP TCP 80, DNS UDP 53): è il meccanismo dei <strong>socket</strong>.",
+        ],
+      },
+      {
+        titolo: "Client/server e server farm",
+        punti: [
+          "Server sempre attivo con <strong>IP fisso</strong>, client con IP dinamico; i client parlano solo con il server.",
+          "Contro la congestione: <strong>server farm</strong>, un hostname con più indirizzi IP.",
+        ],
+      },
+      {
+        titolo: "Le architetture peer-to-peer",
+        punti: [
+          "<strong>Decentralizzato</strong>: ogni peer è servent, il sistema si adatta al churn senza server.",
+          "<strong>Centralizzato</strong>: un directory server con l'indice (Napster). <strong>Ibrido</strong>: supernodi eletti e leaf peer.",
+        ],
+      },
+      {
+        titolo: "Che cosa chiedono le applicazioni al trasporto",
+        punti: [
+          "Quattro esigenze: <strong>affidabilità</strong>, <strong>banda</strong>, <strong>temporizzazione</strong>, <strong>sicurezza</strong>.",
+          "<strong>TCP</strong>: con connessione e affidabile (file, posta, web). <strong>UDP</strong>: senza connessione, più veloce (audio, video, giochi). Nessuno dei due garantisce i tempi.",
+        ],
+      },
+      {
+        titolo: "L'architettura del WWW",
+        punti: [
+          "Ipertesto multimediale distribuito: il browser chiede un URL, il server web risponde con il contenuto (la home page).",
+          "Tre concetti: <strong>identificazione</strong> (URI), <strong>interazione</strong> (protocolli), <strong>formato</strong> (meta-informazioni).",
+        ],
+      },
+      {
+        titolo: "Il protocollo FTP",
+        punti: [
+          "<strong>FTP</strong> (RFC 959) su TCP con due connessioni: <strong>controllo</strong> (porta 21) e <strong>dati</strong> (porta 20).",
+          "Comandi USER, PASS, RETR, QUIT con risposte a 3 cifre; nei client get, put, dir, cd, bye. Accesso anonimo in sola lettura.",
+          "FTP è in chiaro: <strong>FTPS</strong> (RFC 4217) aggiunge la cifratura SSL/TLS.",
+        ],
+      },
+    ],
+  },
+
   "materie/sistemi-e-reti/email-dns-telnet.html": {
     breve: "Come viaggia un'email, come un nome diventa un indirizzo IP e come si comanda un computer remoto.",
     sezioni: [
+      {
+        titolo: "Il servizio email",
+        punti: [
+          "Indirizzo <code>nomeutente@dominio</code>; <code>@</code> vuol dire «presso». L'indirizzo è di una casella, non di una persona; più nomi = alias.",
+          "<strong>POP mail</strong> (client di posta sul PC) o <strong>web mail</strong> (dal browser, da qualunque computer).",
+        ],
+      },
+      {
+        titolo: "MUA e MTA",
+        punti: [
+          "<strong>MUA</strong>: il programma di posta, scrive e legge. <strong>MTA</strong>: il mail server, riceve e consegna (fermo posta e coda in uscita).",
+          "L'MTA offre server SMTP (25), POP3 (110) e IMAP4 (143). Si spedisce con SMTP, si riceve con POP3 o IMAP.",
+        ],
+      },
+      {
+        titolo: "Il formato del messaggio: RFC 822 e MIME",
+        punti: [
+          "RFC 822 (1982): header (To, From, Cc, Bcc, Date, Reply-to, Subject) + riga vuota + body in ASCII a 7 bit.",
+          "<strong>MIME</strong> permette di allegare immagini, audio, video e file.",
+        ],
+      },
       {
         titolo: "Inviare la posta: SMTP",
         punti: [

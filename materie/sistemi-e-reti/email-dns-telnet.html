@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Posta elettronica, DNS e Telnet · Scuola</title>
-  <meta name="description" content="Il livello delle applicazioni spiegato in modo semplice: SMTP, POP3, webmail e IMAP con le loro porte, nome simbolico e indirizzo IP, file hosts e alias, DNS e server radice, Telnet con opzioni DO, DON'T, WILL, WON'T e NVT, SSH.">
+  <meta name="description" content="La posta elettronica spiegata in modo semplice: indirizzi email, POP mail e web mail, MUA e MTA, formato RFC 822 e MIME, SMTP, POP3, webmail e IMAP con le loro porte, nome simbolico e indirizzo IP, file hosts e alias, DNS e server radice, Telnet con opzioni DO, DON'T, WILL, WON'T e NVT, SSH.">
   <link rel="manifest" href="../../manifest.webmanifest">
   <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
@@ -19,7 +19,7 @@
   <div class="callout def">
     <span class="callout-title">Le 5 cose che contano</span>
     <ol>
-      <li><strong>SMTP</strong> (porta 25) <strong>spedisce</strong> la posta; <strong>POP3</strong> (110) e <strong>IMAP</strong> (143) servono a <strong>leggerla</strong>.</li>
+      <li>Il <strong>MUA</strong> (il programma di posta) scrive e legge, l'<strong>MTA</strong> (il mail server) trasporta. <strong>SMTP</strong> (porta 25) <strong>spedisce</strong> la posta; <strong>POP3</strong> (110) e <strong>IMAP</strong> (143) servono a <strong>leggerla</strong>.</li>
       <li>POP3 <strong>scarica e cancella</strong> dal server; IMAP lascia la posta <strong>sul server</strong> e la gestisce lì.</li>
       <li>Il <strong>DNS</strong> traduce i nomi in indirizzi IP con un database <strong>distribuito ad albero</strong> (13 server radice).</li>
       <li><strong>Telnet</strong> (porta 23) apre una sessione remota a riga di comando, ma <strong>non cifrata</strong>.</li>
@@ -40,7 +40,105 @@
       </tbody>
     </table>
   </div>
-  <p class="hand">Le porte di DNS (53) e SSH (22) non sono in queste pagine del libro, ma è utile conoscerle.</p>
+  <p class="hand">La porta del DNS (UDP 53) è a pagina 2 del libro; quella di SSH (22) non c'è, ma è utile conoscerla.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il servizio email</h2>
+  <p class="ref">Pagina 11</p>
+  <p>La <strong>posta elettronica</strong> (<em>electronic mail</em>, email) è forse l'applicazione più usata in rete, da privati e aziende: costa praticamente niente. Il rovescio della medaglia è lo <strong>spam</strong>, cioè i messaggi indesiderati, soprattutto pubblicitari, mandati in quantità enormi.</p>
+  <p class="hand">"Spam" era il nome di una carne in scatola americana (<em>spiced ham</em>), famosa per essere dappertutto.</p>
+  <h3>Gli indirizzi</h3>
+<pre data-lang="testo"><code>nomeutente@dominio          es.  mario.rossi@gmail.com</code></pre>
+  <ul>
+    <li><strong>nomeutente</strong> identifica chi scrive o riceve; lo sceglie l'utente o l'amministratore ed è <strong>unico dentro quel dominio</strong>;</li>
+    <li><strong>dominio</strong> è il nome del provider (con la nazionalità) oppure un indirizzo IP.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">La chiocciola</span><code>@</code> (in inglese <em>at</em>) vuol dire "<strong>presso</strong>": <em>mario presso gmail</em>. Il simbolo esisteva già nel VI-VII secolo; in Inghilterra si usava nei commerci per dire "al prezzo di". Nel 1972, nella rete <strong>ARPANET</strong> (l'antenata di Internet), fu scelto per separare il nome utente dal server.</div>
+  <p>Un indirizzo email non appartiene a una <strong>persona</strong> ma a una <strong>casella di posta</strong>: una persona può avere più caselle, e la stessa casella può avere più nomi (<strong>alias</strong>).</p>
+
+  <h3>POP mail o web mail</h3>
+  <p>Ci sono due modi di usare la posta:</p>
+  <ul>
+    <li><strong>POP mail</strong>: si legge e si scrive dal proprio computer con un programma di posta, il <strong>client di posta</strong> (Outlook, eM Client, Mail, Thunderbird…);</li>
+    <li><strong>web mail</strong>: si usa la casella da un <strong>sito web</strong> con il browser (Outlook.com, Gmail…).</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Web mail</th><th>POP mail</th></tr></thead>
+      <tbody>
+        <tr><td>Gratuita</td><td>Spesso a pagamento</td></tr>
+        <tr><td>Accesso da <strong>qualunque computer</strong> collegato a Internet</td><td>Accesso solo dal computer dove c'è il programma di posta</td></tr>
+        <tr><td>Password da scrivere a ogni accesso</td><td>Password scritta una volta, quando si crea l'account</td></tr>
+        <tr><td>Meno sicura: la password può essere intercettata</td><td>Più sicura: la password è memorizzata nel client</td></tr>
+        <tr><td>Allegati di dimensione limitata</td><td>Allegati anche molto grandi</td></tr>
+        <tr><td>Rischio alto di spam</td><td>Rischio di spam ridotto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">È il confronto del libro: oggi molte web mail sono sicure e permettono allegati grandi, ma in verifica vale questa tabella.</p>
+
+  <!-- ============================================================= -->
+  <h2>MUA e MTA</h2>
+  <p class="ref">Pagine 11-13</p>
+  <p>Come per la posta di carta, il destinatario <strong>non deve essere collegato</strong> quando gli scrivi: il messaggio viene messo in una memoria, la casella "<strong>fermo posta</strong>", e aspetta che qualcuno passi a ritirarlo. La posta elettronica (definita nell'<strong>RFC 822</strong>, con il protocollo SMTP) è fatta da due parti:</p>
+  <div class="compare">
+    <div>
+      <h4>MUA (Mail User Agent)</h4>
+      <p>Il <strong>programma di posta</strong> sul computer dell'utente: con un'interfaccia grafica facile permette di <strong>scrivere, ricevere e leggere</strong> i messaggi. Per spedire usa <strong>SMTP</strong> e consegna il messaggio a un MTA.</p>
+      <p class="hand">Tu che scrivi la lettera e la imbuchi.</p>
+    </div>
+    <div>
+      <h4>MTA (Mail Transport Agent)</h4>
+      <p>Il <strong>mail server</strong>: riceve tutti i messaggi e li consegna. Fa da <strong>ponte</strong> tra due MUA, come una centralina telefonica che smista le chiamate in entrata e in uscita (es. <em>sendmail</em>).</p>
+      <p class="hand">L'ufficio postale.</p>
+    </div>
+  </div>
+  <p>L'MTA offre tre servizi:</p>
+  <ul>
+    <li><strong>server SMTP</strong> (porta 25): spedisce e riceve i messaggi tra server;</li>
+    <li><strong>server POP3</strong> (porta 110): manda i messaggi al client;</li>
+    <li><strong>server IMAP4</strong> (porta 143): permette di gestire i messaggi sul server dal client.</li>
+  </ul>
+<pre data-lang="testo"><code>MUA mittente ──SMTP (porta 25)──► mail server dell'ISP mittente
+                                      │
+                                   Internet (SMTP)
+                                      ▼
+MUA destinatario ◄──POP3 (110) o IMAP── mail server dell'ISP destinatario</code></pre>
+  <p>I mail server tengono:</p>
+  <ul>
+    <li>la <strong>mailbox</strong> "fermo posta" di ogni utente, con i messaggi arrivati e non ancora scaricati (con la POP mail); con la web mail l'MTA fa anche il lavoro del MUA, perché l'utente lavora direttamente sul server;</li>
+    <li>la <strong>coda</strong> dei messaggi in uscita non ancora consegnati.</li>
+  </ul>
+  <p>In breve: si <strong>spedisce con SMTP</strong>, si <strong>riceve con POP3 o IMAP</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il formato del messaggio: RFC 822 e MIME</h2>
+  <p class="ref">Pagina 13</p>
+  <p>Il primo documento sul formato dei messaggi di posta è l'<strong>RFC 822</strong> (1982). Prevede solo <strong>messaggi di testo</strong>, scritti con caratteri <strong>ASCII a 7 bit</strong>: niente immagini.</p>
+  <p>Un messaggio è una stringa di testo fatta di un <strong>header</strong> e di un <strong>body</strong>, separati da una <strong>riga vuota</strong> (come in HTTP).</p>
+<pre data-lang="testo"><code>From: luca@scuola.it
+To: sara@gmail.com
+Cc: prof@scuola.it
+Date: Mon, 26 Oct 2026 10:00:00
+Subject: Compiti di Sistemi
+                                       ← riga vuota
+Ciao Sara, mi mandi gli esercizi?      ← body</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Campo</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><code>To:</code></td><td>I destinatari</td></tr>
+        <tr><td><code>From:</code></td><td>Il mittente</td></tr>
+        <tr><td><code>Cc:</code></td><td>Destinatari <strong>per conoscenza</strong> (tutti vedono che l'hanno ricevuta)</td></tr>
+        <tr><td><code>Bcc:</code></td><td>Destinatari per conoscenza <strong>nascosta</strong> (gli altri non li vedono)</td></tr>
+        <tr><td><code>Date:</code></td><td>La data di spedizione</td></tr>
+        <tr><td><code>Reply-to:</code></td><td>Un indirizzo a cui rispondere, diverso dal mittente</td></tr>
+        <tr><td><code>Subject:</code></td><td>L'oggetto (il titolo) del messaggio</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Il <strong>body</strong> è il messaggio vero e proprio, solo in caratteri ASCII. SMTP trasporta caratteri a <strong>7 bit</strong>, cioè solo i primi <strong>128</strong> caratteri; un file binario (un'immagine, un PDF) invece usa tutti i <strong>256</strong> valori possibili di un byte. Per mandarlo bisogna prima <strong>convertirlo</strong> in testo.</p>
+  <div class="callout def"><span class="callout-title">MIME</span>Lo standard <strong>MIME</strong> permette di mettere in un'email, oltre al testo, <strong>immagini, audio, video e file</strong> allegati. Il programma di posta si limita a "trasportare" il file senza guardarne il contenuto: sarà il destinatario a decodificarlo e usarlo, seguendo il <strong>tipo</strong> scritto nel messaggio (gli stessi tipi MIME di HTTP, come <code>image/png</code>).</div>
 
   <!-- ============================================================= -->
   <h2>Inviare la posta: SMTP</h2>
@@ -229,6 +327,7 @@ ssh mario@192.168.1.6 ls           ← esegue solo il comando ls</code></pre>
   <!-- ============================================================= -->
   <h2>Riassunto in 3 righe</h2>
   <ol>
+    <li>Il MUA (programma di posta) scrive e legge, l'MTA (mail server) trasporta; il messaggio è header (To, From, Cc, Bcc, Subject…) + riga vuota + body in ASCII a 7 bit, e MIME aggiunge gli allegati.</li>
     <li>La posta parte con SMTP (porta 25) dal PC al server del mittente e poi al server del destinatario; si legge con POP3 (110, scarica e cancella) o IMAP (143, resta sul server), oppure in webmail via HTTP.</li>
     <li>Il DNS traduce i nomi in indirizzi IP con un database distribuito ad albero: server locale, 13 server radice (A-M), TLD e server autorizzati; nelle reti piccole basta il file hosts.</li>
     <li>Telnet (porta 23) apre un terminale remoto in chiaro, con opzioni negoziate con WILL/WON'T/DO/DON'T sull'NVT; SSH fa lo stesso ma cifrato e con mutua autenticazione.</li>
@@ -260,7 +359,7 @@ ssh mario@192.168.1.6 ls           ← esegue solo il comando ls</code></pre>
   </div>
 
   <h2>Fonti</h2>
-  <p>Libro di testo, Unità 1 <em>Il livello delle applicazioni</em>, Lezione 2 <em>Email, DNS e Telnet</em> (pagine 14-19).</p>
+  <p>Libro di testo, Unità 1 <em>Il livello delle applicazioni</em>, Lezione 2 <em>Email, DNS e Telnet</em> (pagine 11-19).</p>
 </main>
 </body>
 </html>

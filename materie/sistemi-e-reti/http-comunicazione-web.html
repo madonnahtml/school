@@ -26,11 +26,11 @@
       <li>Ogni messaggio è: <strong>riga iniziale</strong> + <strong>header</strong> + <strong>riga vuota</strong> + <strong>body</strong>.</li>
     </ol>
   </div>
-  <div class="callout info"><span class="callout-title">Lo stesso argomento in TPSIT</span>Molte di queste cose ci sono anche in <a href="../tpsit/protocollo-http.html">TPSIT: Il protocollo HTTP</a>. Qui le trovi con gli esempi del libro di Sistemi e Reti e con gli header spiegati uno per uno.</div>
 
   <!-- ============================================================= -->
   <h2>Client e server</h2>
   <p class="ref">Pagine 44 e 46</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#client-attivo-server-passivo">Il protocollo HTTP → Client attivo, server passivo</a>.</div>
   <p>Il Web si basa sul modello <strong>client/server</strong>.</p>
   <div class="compare">
     <div>
@@ -51,6 +51,7 @@
   <!-- ============================================================= -->
   <h2>URI, URL e URN</h2>
   <p class="ref">Pagine 44-45</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#uri-url-e-urn">Il protocollo HTTP → URI, URL e URN</a>.</div>
   <p>HTTP trasporta <strong>risorse</strong>, non solo file: una risorsa può essere un documento, un'immagine, un servizio, il risultato di uno script… Ogni risorsa ha un indirizzo, l'<strong>URI</strong>.</p>
   <div class="cards">
     <div class="card"><strong>URI</strong><p><em>Uniform Resource Identifier</em>: il nome generico per tutti gli identificatori di risorse.</p></div>
@@ -91,6 +92,7 @@ fragment  = area_tutor</code></pre>
   <!-- ============================================================= -->
   <h2>HTTP nella pila TCP/IP</h2>
   <p class="ref">Pagine 45-46</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#dove-sta-http-nella-pila-tcp-ip">Il protocollo HTTP → Dove sta HTTP nella pila TCP/IP</a>.</div>
   <ol class="stack">
     <li><b>4</b><strong>Applicazione</strong><span><strong>HTTP</strong>, DNS: qui lavora HTTP</span></li>
     <li><b>3</b><strong>Trasporto</strong><span><strong>TCP</strong>: consegna affidabile dei dati</span></li>
@@ -114,6 +116,7 @@ fragment  = area_tutor</code></pre>
   <!-- ============================================================= -->
   <h2>Le connessioni: HTTP/1.0, HTTP/1.1 e pipelining</h2>
   <p class="ref">Pagine 47-49</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#http-1-0-e-http-1-1-le-connessioni">Il protocollo HTTP → HTTP/1.0 e HTTP/1.1: le connessioni</a>.</div>
   <p>Prima di parlare, client e server aprono una <strong>connessione TCP</strong> con tre messaggi (SYN, SYN-ACK, ACK: la "stretta di mano a tre"). Alla fine la chiudono con altri messaggi (FIN). Aprire e chiudere costa tempo.</p>
 
   <h3>Esempio: una pagina con 2 immagini</h3>
@@ -151,6 +154,7 @@ fragment  = area_tutor</code></pre>
   <!-- ============================================================= -->
   <h2>Com'è fatto un messaggio HTTP</h2>
   <p class="ref">Pagina 49</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#i-messaggi-http">Il protocollo HTTP → I messaggi HTTP</a>.</div>
   <p>Richiesta e risposta hanno la stessa forma:</p>
 <pre data-lang="testo"><code>&lt;riga iniziale, diversa tra richiesta e risposta&gt;
 Intestazione1: valore1
@@ -169,6 +173,7 @@ Intestazione3: valore3
   <!-- ============================================================= -->
   <h2>La richiesta (request)</h2>
   <p class="ref">Pagine 50-51</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#la-richiesta-request">Il protocollo HTTP → La richiesta</a>.</div>
 <pre data-lang="testo"><code>&lt;Method&gt; &lt;URI&gt; &lt;Version&gt;      // riga di richiesta
 [Header]                       // intestazione
 CRLF                           // riga vuota
@@ -212,6 +217,7 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)
   <!-- ============================================================= -->
   <h2>Gli header HTTP</h2>
   <p class="ref">Pagine 53-54</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#la-richiesta-request">Il protocollo HTTP → La richiesta</a> e <a href="../tpsit/protocollo-http.html#la-risposta-response">La risposta</a> (le intestazioni più comuni).</div>
   <p>Gli header sono coppie <code>Nome: valore</code> in formato ASCII. Si dividono in quattro gruppi:</p>
   <div class="cards">
     <div class="card"><strong>Generali</strong><p>Valgono sia per la richiesta sia per la risposta.</p></div>

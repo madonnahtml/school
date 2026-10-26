@@ -78,6 +78,7 @@
         pages: [
           { title: "Panoramica", path: "materie/sistemi-e-reti/index.html", type: "panoramica" },
           { title: "Il modello ISO/OSI", path: "materie/sistemi-e-reti/modello-iso-osi.html", type: "teoria" },
+          { title: "Il livello delle applicazioni", path: "materie/sistemi-e-reti/livello-applicazioni.html", type: "teoria" },
           { title: "Posta elettronica, DNS e Telnet", path: "materie/sistemi-e-reti/email-dns-telnet.html", type: "teoria" },
           { title: "HTTP: la comunicazione nel Web", path: "materie/sistemi-e-reti/http-comunicazione-web.html", type: "teoria" },
           { title: "HTTP: i metodi (verbi)", path: "materie/sistemi-e-reti/http-metodi.html", type: "teoria" },

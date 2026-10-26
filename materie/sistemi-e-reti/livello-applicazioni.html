@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il livello delle applicazioni · Scuola</title>
+  <meta name="description" content="Il livello applicazione spiegato in modo semplice: applicazioni di rete, porte e socket, architetture client/server e P2P, server farm, servizi del trasporto (affidabilità, banda, tempo, sicurezza), architettura del WWW e il protocollo FTP con FTPS.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il livello delle applicazioni</h1>
+  <p class="lead">Il livello più vicino a noi: quello dei programmi che usiamo ogni giorno (web, posta, trasferimento di file). Come sono organizzati, che cosa chiedono alla rete e come funziona FTP.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Un servizio si raggiunge con <strong>indirizzo IP + numero di porta</strong>: è il meccanismo dei <strong>socket</strong>.</li>
+      <li><strong>Client/server</strong>: un server sempre acceso con IP fisso; <strong>P2P</strong>: tutti pari, ognuno client e server.</li>
+      <li>Un'applicazione sceglie il trasporto in base a <strong>affidabilità, banda, tempo e sicurezza</strong>: TCP se non può perdere dati, UDP se può.</li>
+      <li>Il <strong>WWW</strong> è un ipertesto multimediale distribuito: il browser chiede un URL, il server risponde con il contenuto.</li>
+      <li><strong>FTP</strong> trasferisce file con <strong>due connessioni TCP</strong>: controllo (porta 21) e dati (porta 20). È in chiaro; <strong>FTPS</strong> lo cifra.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le applicazioni di rete</h2>
+  <p class="ref">Pagina 2</p>
+  <p>Nei modelli ISO/OSI e TCP/IP il <strong>livello applicazione</strong> realizza le applicazioni di rete usate dall'utente finale. È molto flessibile: si possono aggiungere sempre nuovi protocolli, quindi non esiste un numero preciso di protocolli. Tra i più noti:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Protocollo</th><th>Nome completo</th><th>A che cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><strong>HTTP</strong></td><td>HyperText Transfer Protocol</td><td>Le pagine web</td></tr>
+        <tr><td><strong>SMTP</strong></td><td>Simple Mail Transfer Protocol</td><td>L'invio della posta</td></tr>
+        <tr><td><strong>FTP</strong></td><td>File Transfer Protocol</td><td>Il trasferimento di file</td></tr>
+        <tr><td><strong>DNS</strong></td><td>Domain Name System</td><td>Tradurre nomi in indirizzi IP</td></tr>
+        <tr><td><strong>Telnet</strong></td><td>–</td><td>Usare un computer remoto</td></tr>
+        <tr><td><strong>SNMP</strong></td><td>Simple Network Management Protocol</td><td>Gestire e controllare i dispositivi di rete</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Un'<strong>applicazione di rete</strong> è un insieme di programmi che girano <strong>contemporaneamente</strong> su due o più <strong>host</strong> (i computer collegati alla rete) e lavorano insieme usando risorse comuni, come gli archivi (database), attraverso la rete.</p>
+
+  <h3>Porte e socket</h3>
+  <p>Su un server possono girare tanti servizi insieme. Per scegliere quello giusto, oltre all'indirizzo dell'host serve il <strong>numero di porta</strong>:</p>
+  <ul>
+    <li>per mandare un'<strong>email</strong> si usa SMTP sulla porta <strong>TCP 25</strong>;</li>
+    <li>per chiedere una <strong>pagina web</strong> si usa HTTP sulla porta <strong>TCP 80</strong>;</li>
+    <li>per tradurre un nome in indirizzo IP si chiede al <strong>DNS</strong> sulla porta <strong>UDP 53</strong>.</li>
+  </ul>
+  <div class="callout def"><span class="callout-title">Socket</span>Il processo in esecuzione su un host si identifica in modo univoco con la coppia <strong>indirizzo IP + numero di porta</strong>. Questo meccanismo si chiama <strong>socket</strong>.
+    <p class="hand">L'indirizzo IP è l'indirizzo del condominio, la porta è il numero dell'appartamento: servono tutti e due per consegnare il pacco alla persona giusta.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Client/server e server farm</h2>
+  <p class="ref">Pagine 2-3</p>
+  <p>Per progettare un'applicazione di rete, il primo passo è scegliere l'<strong>architettura</strong>: <strong>client/server</strong>, <strong>peer-to-peer</strong> (P2P) o <strong>ibrida</strong> (un misto).</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/sistemi-distribuiti.html#il-modello-client-server">Sistemi distribuiti → Il modello client-server</a>, con i livelli (tier) e altri esempi.</div>
+  <p>Nell'architettura <strong>client/server</strong> c'è sempre un <strong>server attivo</strong> che offre un servizio e aspetta che i client si colleghino per rispondere alle loro richieste. L'esempio tipico è il <strong>WWW</strong>: tanti server (al limite uno per ogni sito) hanno le pagine, statiche o dinamiche, e le mandano ai browser che le chiedono.</p>
+  <ul>
+    <li>Il server deve essere <strong>sempre acceso</strong> e avere un <strong>indirizzo IP fisso (statico)</strong>, così i client sanno dove trovarlo. I client di solito hanno un IP <strong>dinamico</strong>.</li>
+    <li>Un client <strong>non parla con gli altri client</strong>, solo con il server. Più client possono parlare con lo stesso server <strong>contemporaneamente</strong>.</li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">Server farm</span>Se troppi client chiedono insieme, il server va in <strong>congestione</strong>. Allora si crea una <strong>server farm</strong>: tanti server con un <strong>unico nome</strong> (hostname) ma <strong>più indirizzi IP</strong>, e le richieste vengono smistate tra loro senza che il client se ne accorga. Lo fanno Google, Amazon, Facebook e tutti i siti molto visitati.
+    <p class="hand">Come un supermercato che apre più casse quando c'è la fila: l'insegna è una sola.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le architetture peer-to-peer</h2>
+  <p class="ref">Pagine 3-4</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/sistemi-distribuiti.html#l-architettura-p2p">Sistemi distribuiti → L'architettura P2P</a>.</div>
+  <p>Nel <strong>P2P</strong> gli host sono coppie di <strong>peer</strong> (pari grado) che dialogano <strong>direttamente</strong> tra loro. Funziona come una comunità basata sul "dare e ricevere": ogni peer offre una risorsa e in cambio ne riceve altre. Esempi: <strong>eMule</strong>, <strong>Gnutella</strong>. Un sistema P2P è fatto di entità autonome che si <strong>auto-organizzano</strong> e condividono risorse distribuite; può essere completamente o parzialmente decentralizzato.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Come funziona</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Decentralizzato</strong></td><td>Ogni peer è sia client sia server (<strong>servent</strong>). Non si può trovare una risorsa con un IP fisso: servono meccanismi di indirizzamento sopra il livello IP. Si condividono dati, memoria e banda, e il sistema si adatta da solo ai peer che entrano ed escono di continuo (<strong>churn</strong>), senza nessun server centrale.</td><td>Gnutella</td></tr>
+        <tr><td><strong>Centralizzato</strong></td><td>Un compromesso: c'è un <strong>directory server</strong> che conserva l'<strong>indice</strong> (chi ha quali risorse) e risponde alle ricerche. I file però restano sui peer, che li scambiano direttamente tra loro.</td><td>Napster</td></tr>
+        <tr><td><strong>Ibrido</strong></td><td>Alcuni peer, i <strong>supernodi</strong> (super-peer o ultra-peer), vengono scelti con un <strong>algoritmo di elezione</strong> e fanno da indice per un gruppo; gli altri sono <strong>leaf peer</strong>.</td><td>–</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Decentralizzato: chiedi a voce in cortile chi ha la figurina. Centralizzato: c'è una bacheca con scritto chi ha cosa. Ibrido: ogni classe ha un rappresentante che sa cosa hanno i compagni.</p>
+
+  <!-- ============================================================= -->
+  <h2>Che cosa chiedono le applicazioni al trasporto</h2>
+  <p class="ref">Pagine 4-5</p>
+  <p>Tutti i protocolli applicativi devono <strong>trasferire messaggi</strong> da un punto all'altro della rete, e per farlo usano il livello di <strong>trasporto</strong>. Ogni applicazione sceglie il protocollo di trasporto in base a quattro esigenze:</p>
+  <div class="cards">
+    <div class="card"><strong>Affidabilità</strong><p>I dati arrivano tutti e giusti? Un file deve arrivare al 100%; una videochiamata può perdere qualche pezzo.</p></div>
+    <div class="card"><strong>Banda (throughput)</strong><p>Quanti bit al secondo servono. Una Web-TV in diretta ha bisogno di una banda minima garantita; posta e FTP si adattano a quella che c'è (sono "elastiche").</p></div>
+    <div class="card"><strong>Temporizzazione</strong><p>Quanto ritardo si può accettare. VoIP e giochi online vogliono ritardi piccolissimi.</p></div>
+    <div class="card"><strong>Sicurezza</strong><p>Cifratura per la riservatezza, e servizi di integrità e autenticazione da un capo all'altro (end-to-end).</p></div>
+  </div>
+  <div class="compare">
+    <div>
+      <h4>TCP</h4>
+      <p>Orientato alla <strong>connessione</strong> e <strong>affidabile</strong>: si usa quando perdere dati è inaccettabile (file, posta, web).</p>
+      <p class="hand">La raccomandata con ricevuta di ritorno.</p>
+    </div>
+    <div>
+      <h4>UDP</h4>
+      <p><strong>Senza connessione</strong>, più veloce: si usa quando qualche perdita va bene (audio, video, giochi).</p>
+      <p class="hand">La cartolina: veloce, ma se si perde nessuno lo sa.</p>
+    </div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Né TCP né UDP garantiscono il <strong>tempo</strong> di consegna: TCP garantisce che il pacchetto arrivi, ma non quanto ci mette; UDP è più veloce, ma non promette niente. Il libro chiama TCP "Transfer Control Protocol": il nome esatto è <em>Transmission Control Protocol</em>.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Applicazione</th><th>Perdita di dati tollerata?</th><th>Banda</th><th>Sensibile al tempo?</th></tr></thead>
+      <tbody>
+        <tr><td>Trasferimento file</td><td>No</td><td>Variabile</td><td>No</td></tr>
+        <tr><td>Posta elettronica</td><td>No</td><td>Variabile</td><td>No</td></tr>
+        <tr><td>Documenti web</td><td>No</td><td>Variabile</td><td>No</td></tr>
+        <tr><td>Audio/video in tempo reale</td><td>Sì</td><td>Audio 5 Kbps – 1 Mbps, video 10 Kbps – 5 Mbps</td><td>Sì, centinaia di ms</td></tr>
+        <tr><td>Audio/video memorizzati</td><td>Sì</td><td>Come sopra</td><td>Sì, pochi secondi</td></tr>
+        <tr><td>Giochi interattivi</td><td>Sì</td><td>Fino a pochi Kbps</td><td>Sì, centinaia di ms</td></tr>
+        <tr><td>Messaggistica istantanea</td><td>No</td><td>Variabile</td><td>Sì e no</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>L'architettura del WWW</h2>
+  <p class="ref">Pagine 5-6</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/sistemi-distribuiti.html#applicazioni-web-client-side-e-server-side">Sistemi distribuiti → Applicazioni web</a>.</div>
+  <p><strong>WWW</strong> (<em>World Wide Web</em>) vuol dire "ragnatela grande come il mondo": un insieme di pagine multimediali (testo, audio, video) collegate tra loro, in cui ci si sposta in tanti modi. È un <strong>ipertesto multimediale distribuito</strong>.</p>
+  <ul>
+    <li>Il <strong>client</strong> è il <strong>browser</strong> (Edge, Chrome, Firefox, Opera…): manda una <strong>richiesta URL</strong> e mostra le pagine.</li>
+    <li>Il <strong>server web</strong> ha le pagine del sito e manda la <strong>risposta</strong> con il contenuto. La prima pagina che arriva quando ti colleghi è la <strong>home page</strong>.</li>
+    <li>Le pagine sono scritte in <strong>HTML</strong> (un linguaggio di "contrassegno", a tag), con dentro anche script <strong>JavaScript</strong> (ECMAScript).</li>
+  </ul>
+  <h3>Che cosa succede quando scrivi <code>http://www.mim.gov</code></h3>
+  <ol>
+    <li>Il browser chiede la risorsa al server seguendo lo schema dell'URI, cioè con HTTP (prima il <strong>DNS</strong> trova l'indirizzo IP del nome).</li>
+    <li>Il server del sito risponde con le informazioni richieste.</li>
+    <li>Il browser legge la risposta, capisce che tipo di documento è (<code>Content-Type</code>) e manda <strong>altre richieste</strong> per le risorse collegate, come le immagini delle notizie.</li>
+    <li>Il browser mostra la pagina, che contiene a sua volta dei link.</li>
+  </ol>
+  <div class="cards">
+    <div class="card"><strong>Identificazione</strong><p>Ogni risorsa ha un indirizzo unico, l'URI o URL.</p></div>
+    <div class="card"><strong>Interazione</strong><p>Browser e server parlano con protocolli standard, con sintassi e significato precisi: clicchi un link e il browser va a prendere quella risorsa.</p></div>
+    <div class="card"><strong>Formato</strong><p>Nel messaggio ci sono <strong>meta-informazioni</strong> che dicono che tipo di documento è e come interpretarlo.</p></div>
+  </div>
+  <div class="callout info"><span class="callout-title">Approfondimento</span>URL, HTTP e i suoi messaggi sono spiegati nei capitoli <a href="http-comunicazione-web.html">HTTP: la comunicazione nel Web</a> e seguenti.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il protocollo FTP</h2>
+  <p class="ref">Pagine 6-7</p>
+  <p><strong>FTP</strong> (<em>File Transfer Protocol</em>) è il protocollo del livello applicazione per <strong>trasferire file</strong>. Si basa su <strong>TCP</strong> ed è stato definito nel 1984 nell'<strong>RFC 959</strong>. È client/server: sul client gira un <strong>FTP client</strong>, sul server un <strong>FTP server</strong>.</p>
+  <p>A differenza degli altri protocolli, FTP usa <strong>due connessioni TCP separate</strong>, che lavorano in parallelo:</p>
+  <div class="compare">
+    <div>
+      <h4>Connessione di controllo</h4>
+      <p><em>Control connection</em> o <em>command channel</em>, porta <strong>21</strong>. Porta le informazioni di controllo: username, password, comandi (cambia cartella, scarica questo file…).</p>
+      <p class="hand">La telefonata con cui ordini.</p>
+    </div>
+    <div>
+      <h4>Connessione dati</h4>
+      <p><em>Data connection</em> o <em>data channel</em>, porta <strong>20</strong>. Serve solo a trasferire davvero i file.</p>
+      <p class="hand">Il furgone che porta il pacco.</p>
+    </div>
+  </div>
+  <h3>Una sessione FTP</h3>
+  <p>Sul canale di controllo il client manda <strong>comandi</strong> e il server risponde con <strong>codici di 3 cifre</strong> (come in HTTP):</p>
+<pre data-lang="testo"><code>←  220 Service ready                      il server è pronto
+→  USER gda                               chi sono
+←  331 User name OK, Password?
+→  PASS xxxxx                             la password
+←  230 User login OK
+→  PORT 1267                              usa questa porta per i dati
+←  150 Data connection open shortly
+→  RETR /home/gda/libri/foundation.pdf    scarica questo file
+   ════ trasferimento del file sulla connessione dati ════
+←  226 Closing data connection
+→  QUIT                                   ho finito
+←  221 Service closing</code></pre>
+
+  <h3>FTP server e FTP client</h3>
+  <p>Un <strong>FTP server</strong> (per esempio <strong>FileZilla Server</strong>) permette ai client di: scaricare e caricare file (download/upload), riprendere trasferimenti interrotti (<strong>resume</strong>), eliminare e rinominare file, creare cartelle e navigare tra le cartelle.</p>
+  <p>Per entrare serve l'<strong>autenticazione</strong>, e in base alle credenziali l'utente ha certi <strong>privilegi</strong> sul file system. Spesso c'è anche l'accesso <strong>anonimo</strong>, senza password, di solito in <strong>sola lettura</strong>.</p>
+  <p>Un <strong>FTP client</strong> (per esempio <strong>FileZilla</strong>, spesso gratuito) ha due parti: la <strong>parte di comunicazione</strong>, che realizza il protocollo FTP, e l'<strong>interfaccia utente</strong>, di solito grafica. I comandi di base sono:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Comando</th><th>Che cosa fa</th></tr></thead>
+      <tbody>
+        <tr><td><code>open</code></td><td>Si collega al server remoto</td></tr>
+        <tr><td><code>get</code></td><td>Trasferisce un file dal server al client (download)</td></tr>
+        <tr><td><code>put</code></td><td>Trasferisce un file dal client al server (upload)</td></tr>
+        <tr><td><code>dir</code></td><td>Elenca i file nella cartella corrente del server</td></tr>
+        <tr><td><code>cd</code></td><td>Cambia cartella sul server</td></tr>
+        <tr><td><code>bye</code></td><td>Si disconnette</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>FTPS: FTP sicuro</h3>
+  <p>FTP <strong>non cifra niente</strong>: username, password, comandi, codici di risposta e file viaggiano in chiaro e possono essere "sniffati". Per questo l'<strong>RFC 4217</strong> ha aggiunto a FTP uno strato di <strong>cifratura SSL/TLS</strong> e nuovi comandi: è il protocollo <strong>FTPS</strong>. Nei programmi un <strong>lucchetto</strong> indica che il trasferimento è sicuro.</p>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Il livello applicazione contiene i protocolli dei servizi (HTTP, SMTP, FTP, DNS, Telnet, SNMP); un servizio si raggiunge con IP + porta, il socket.</li>
+    <li>Client/server: server sempre acceso con IP fisso (e server farm se c'è troppo traffico); P2P decentralizzato, centralizzato (directory server) o ibrido (supernodi). Le applicazioni scelgono TCP o UDP in base ad affidabilità, banda, tempo e sicurezza.</li>
+    <li>Il WWW è un ipertesto distribuito tra browser e server web; FTP trasferisce file con una connessione di controllo (21) e una dati (20), in chiaro: FTPS aggiunge la cifratura.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Perché il server di un sito deve avere un IP fisso e il tuo PC no?</li>
+        <li>Per ognuna di queste applicazioni sceglieresti TCP o UDP? a) scaricare un PDF; b) una videochiamata; c) mandare un'email; d) un gioco online sparatutto.</li>
+        <li>In una sessione FTP, su quale connessione passa la password? E il file?</li>
+        <li>Perché si usa FTPS invece di FTP?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>Perché i client devono sapere <strong>dove trovarlo</strong> ogni volta. Il tuo PC non viene cercato da nessuno: è lui a chiedere, quindi può cambiare IP.</li>
+          <li>a) <strong>TCP</strong> (il file deve arrivare intero); b) <strong>UDP</strong> (meglio perdere un pezzetto che arrivare in ritardo); c) <strong>TCP</strong>; d) <strong>UDP</strong> (conta il tempo).</li>
+          <li>La password passa sulla <strong>connessione di controllo</strong> (porta 21), il file sulla <strong>connessione dati</strong> (porta 20).</li>
+          <li>Perché FTP manda tutto in chiaro, password comprese; FTPS aggiunge la cifratura SSL/TLS.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 1 <em>Il livello delle applicazioni</em>, Lezione 1 <em>Il livello delle applicazioni</em> (pagine 2-8).</p>
+</main>
+</body>
+</html>
