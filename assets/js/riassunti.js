@@ -1219,6 +1219,123 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/sistemi-e-reti/email-dns-telnet.html": {
+    breve: "Come viaggia un'email, come un nome diventa un indirizzo IP e come si comanda un computer remoto.",
+    sezioni: [
+      {
+        titolo: "Inviare la posta: SMTP",
+        punti: [
+          "<strong>SMTP</strong>, TCP porta <strong>25</strong>: dal PC al server del mittente e da server a server.",
+          "Tre fasi: PC → server A (SMTP), server A → server B (SMTP), server B → destinatario (POP3 o IMAP).",
+        ],
+      },
+      {
+        titolo: "Leggere la posta: POP3",
+        punti: [
+          "<strong>POP3</strong>, porta <strong>110</strong>: scarica tutti i messaggi sul PC.",
+          "Fasi: <strong>autorizzazione</strong>, <strong>transazione</strong> (fino a <code>QUIT</code>), <strong>aggiornamento</strong> (cancella i messaggi scaricati).",
+        ],
+      },
+      {
+        titolo: "Webmail e IMAP",
+        punti: [
+          "<strong>Webmail</strong>: la posta si legge sul server con il browser (HTTP).",
+          "<strong>IMAP</strong>, porta <strong>143</strong>: la posta resta sul server; si leggono le intestazioni, si cancella senza scaricare, più dispositivi insieme. IMAP4: cartelle sul server.",
+        ],
+      },
+      {
+        titolo: "Nome simbolico e indirizzo IP",
+        punti: [
+          "I nomi sono più facili da ricordare degli IP (<code>www.hoepli.it</code> = <code>194.113.89.93</code>).",
+          "In una LAN piccola basta il <strong>file hosts</strong>; più nomi per lo stesso host sono <strong>alias</strong>.",
+        ],
+      },
+      {
+        titolo: "Il DNS",
+        punti: [
+          "<strong>DNS</strong>: database distribuito di coppie nome – IP sui name server, e protocollo per interrogarli.",
+          "Server locale → server <strong>radice</strong> (13, da A a M) → server <strong>autorizzato</strong>; sotto la radice i <strong>TLD</strong> (.com, .org, .it…), ad albero.",
+        ],
+      },
+      {
+        titolo: "Telnet",
+        punti: [
+          "Sessione remota bidirezionale <strong>non cifrata</strong> su TCP, porta <strong>23</strong>, solo riga di comando.",
+          "Half-duplex a 8 bit, una riga alla volta; il byte 255 annuncia un comando. L'<strong>NVT</strong> è il terminale virtuale comune.",
+        ],
+      },
+      {
+        titolo: "Le opzioni di Telnet",
+        punti: [
+          "<code>WILL</code>/<code>WON'T</code> = io userò / non userò; <code>DO</code>/<code>DON'T</code> = usala tu / non usarla.",
+          "Regole anti ciclo infinito: solo richieste di cambio, niente richieste di stato, ignorare opzioni già attive, un ACK per ogni richiesta.",
+        ],
+      },
+      {
+        titolo: "SSH: Telnet in sicurezza",
+        punti: [
+          "<strong>SSH</strong>: come Telnet ma con canale <strong>cifrato</strong>, chiave pubblica e <strong>mutua autenticazione</strong>. Sintassi <code>ssh nomeutente@host</code>.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-comunicazione-web.html": {
+    breve: "Come parlano browser e server: URL, connessioni TCP e struttura dei messaggi HTTP con i loro header.",
+    sezioni: [
+      {
+        titolo: "Client e server",
+        punti: [
+          "Il <strong>client</strong> (browser) è attivo e chiede; il <strong>server</strong> è passivo e ascolta su una porta TCP.",
+          "WWW = HTML + URL + HTTP. Versioni: HTTP/1.0 (1996) e HTTP/1.1 (1999).",
+        ],
+      },
+      {
+        titolo: "URI, URL e URN",
+        punti: [
+          "URI = URL (dove si trova) + URN (nome persistente).",
+          "<code>schema://host:porta/path?query#fragment</code>; porta 80 per HTTP, 443 per HTTPS.",
+        ],
+      },
+      {
+        titolo: "HTTP nella pila TCP/IP",
+        punti: [
+          "HTTP è un protocollo di testo del livello <strong>applicazione</strong>, sopra <strong>TCP</strong>.",
+          "Sessione: connessione TCP alla porta 80, richiesta, risposta. HTTP è <strong>stateless</strong>.",
+        ],
+      },
+      {
+        titolo: "Le connessioni: HTTP/1.0, HTTP/1.1 e pipelining",
+        punti: [
+          "HTTP/1.0: una connessione TCP per ogni oggetto. HTTP/1.1: connessione <strong>persistente</strong>.",
+          "Non incanalata: una richiesta dopo l'altra. Incanalata (<strong>pipelining</strong>): richieste in coda, risposte nello stesso ordine. Chiusura per <strong>timeout</strong>.",
+        ],
+      },
+      {
+        titolo: "Com'è fatto un messaggio HTTP",
+        punti: [
+          "Riga iniziale + header (facoltativi) + riga vuota + body (facoltativo).",
+          "Il tipo <strong>MIME</strong> indica classe e formato: <code>text/html</code>, <code>image/png</code>.",
+        ],
+      },
+      {
+        titolo: "La richiesta (request)",
+        punti: [
+          "<code>&lt;Method&gt; &lt;URI&gt; &lt;Version&gt;</code>, metodo sempre in maiuscolo; i metodi dipendono dalla versione (0.9, 1.0, 1.1).",
+          "Ogni riga finisce con <strong>CRLF</strong>; con GET il body non c'è. Il server può eseguire script lato server (CGI, PHP, ASP, JSP).",
+        ],
+      },
+      {
+        titolo: "Gli header HTTP",
+        punti: [
+          "Generali (<code>Date</code>, <code>Transfer-Encoding</code> con <strong>chunked</strong>, <code>Cache-Control</code>, <code>Connection</code>).",
+          "Di richiesta (<code>User-Agent</code>, <code>Referer</code>, <code>Host</code>, <code>Accept</code>, <code>If-Modified-Since</code>, <code>Authorization</code>) e di risposta (<code>Server</code>, <code>Accept-Ranges</code>, <code>WWW-Authenticate</code>).",
+          "Dell'entità: <code>Content-Type</code> (obbligatorio con il body), <code>Content-Length</code>, <code>Content-Encoding</code>, <code>Expires</code>, <code>Last-Modified</code>.",
+        ],
+      },
+    ],
+  },
+
   "materie/sistemi-e-reti/http-metodi.html": {
     breve: "Il metodo è la prima parola di una richiesta HTTP: dice al server che cosa fare con la risorsa.",
     sezioni: [

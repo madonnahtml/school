@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HTTP: la comunicazione nel Web · Scuola</title>
+  <meta name="description" content="HTTP spiegato in modo semplice: client e server, URI, URL e URN, la sintassi di un URL, HTTP nella pila TCP/IP, sessioni e stateless, connessioni HTTP/1.0, 1.1 e pipelining, struttura di request e response, riga di richiesta, header generali, di richiesta, di risposta e dell'entità, MIME e chunked.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>HTTP: la comunicazione nel Web</h1>
+  <p class="lead">Come parlano il browser e il server: chi fa cosa, come si scrive un indirizzo, come si apre una connessione e com'è fatto, riga per riga, un messaggio HTTP.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Il <strong>client</strong> (browser) è attivo e chiede; il <strong>server</strong> è passivo, ascolta sulla <strong>porta 80</strong> e risponde.</li>
+      <li>Un URL si scrive <code>schema://host:porta/path?query#fragment</code>.</li>
+      <li>HTTP sta nel livello <strong>applicazione</strong> e usa <strong>TCP</strong>; è <strong>stateless</strong> (non ricorda le richieste precedenti).</li>
+      <li>HTTP/1.0 apre una connessione per ogni oggetto; HTTP/1.1 la tiene aperta (<strong>persistente</strong>) e può usare il <strong>pipelining</strong>.</li>
+      <li>Ogni messaggio è: <strong>riga iniziale</strong> + <strong>header</strong> + <strong>riga vuota</strong> + <strong>body</strong>.</li>
+    </ol>
+  </div>
+  <div class="callout info"><span class="callout-title">Lo stesso argomento in TPSIT</span>Molte di queste cose ci sono anche in <a href="../tpsit/protocollo-http.html">TPSIT: Il protocollo HTTP</a>. Qui le trovi con gli esempi del libro di Sistemi e Reti e con gli header spiegati uno per uno.</div>
+
+  <!-- ============================================================= -->
+  <h2>Client e server</h2>
+  <p class="ref">Pagine 44 e 46</p>
+  <p>Il Web si basa sul modello <strong>client/server</strong>.</p>
+  <div class="compare">
+    <div>
+      <h4>Client: elemento attivo</h4>
+      <p>È il <strong>browser</strong>. Prende l'iniziativa: usa un URL per indicare la risorsa, la chiede al server con HTTP e poi la mostra.</p>
+      <p class="hand">Il cliente che entra in pizzeria e ordina.</p>
+    </div>
+    <div>
+      <h4>Server: elemento passivo</h4>
+      <p>È il <strong>web server</strong> (HTTP server). Resta <strong>in ascolto</strong> su una porta TCP aspettando i client, e fornisce le pagine e le risorse richieste.</p>
+      <p class="hand">Il pizzaiolo che aspetta gli ordini.</p>
+    </div>
+  </div>
+  <p>Più precisamente, per HTTP il "client" è il <strong>programma</strong> che apre una connessione per mandare richieste, e il "server" è il <strong>programma</strong> che accetta connessioni e manda risposte.</p>
+  <div class="callout def"><span class="callout-title">Protocollo</span>Un insieme di <strong>regole</strong> che stabilisce quali messaggi si possono scambiare e quali sono le risposte giuste. <strong>HTTP</strong> (<em>HyperText Transfer Protocol</em>) è il protocollo per inviare e ricevere le risorse del Web.</div>
+  <p>Il Web è nato unendo tre tecnologie: <strong>WWW = HTML + URL + HTTP</strong>. HTML descrive le pagine, URL dice dove sono, HTTP le trasporta. Le versioni principali sono <strong>HTTP/1.0</strong> (1996) e <strong>HTTP/1.1</strong> (1999).</p>
+
+  <!-- ============================================================= -->
+  <h2>URI, URL e URN</h2>
+  <p class="ref">Pagine 44-45</p>
+  <p>HTTP trasporta <strong>risorse</strong>, non solo file: una risorsa può essere un documento, un'immagine, un servizio, il risultato di uno script… Ogni risorsa ha un indirizzo, l'<strong>URI</strong>.</p>
+  <div class="cards">
+    <div class="card"><strong>URI</strong><p><em>Uniform Resource Identifier</em>: il nome generico per tutti gli identificatori di risorse.</p></div>
+    <div class="card"><strong>URL</strong><p><em>Uniform Resource Locator</em>: dice <strong>dove</strong> si trova la risorsa e con che protocollo prenderla (<code>https://miosito.it/home.htm</code>).</p></div>
+    <div class="card"><strong>URN</strong><p><em>Uniform Resource Name</em>: dà alla risorsa un <strong>nome</strong> che resta valido anche se la risorsa non è più disponibile.</p></div>
+  </div>
+  <p><strong>URI = URL + URN</strong>: URL e URN sono due sottoinsiemi degli URI.</p>
+  <p class="hand">L'URN è come il codice fiscale (ti identifica per sempre), l'URL è come l'indirizzo di casa (dice dove trovarti oggi).</p>
+
+  <h3>Le parti di un URL</h3>
+<pre data-lang="testo"><code>schema://host:porta/path?query#fragment
+
+https://ospite:pippo@www.istruzione.it:443/uploads/esercitiamoci.html?pagina=3#area_tutor
+
+schema    = https
+username  = ospite        password = pippo
+host      = www.istruzione.it
+porta     = 443
+path/file = /uploads/esercitiamoci.html
+query     = pagina=3
+fragment  = area_tutor</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parte</th><th>Che cos'è</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Schema</strong></td><td>Il protocollo da usare</td><td><code>http</code>, <code>https</code>, <code>ftp</code>, <code>mailto</code>, <code>file</code></td></tr>
+        <tr><td>Username e password</td><td>Le credenziali, se il protocollo le prevede (facoltative)</td><td><code>ospite:pippo</code></td></tr>
+        <tr><td><strong>Host</strong></td><td>Il server: nome simbolico o indirizzo IP</td><td><code>www.istruzione.it</code> o <code>80.123.34.56</code></td></tr>
+        <tr><td>Porta</td><td>La porta TCP; se manca si usa quella di default</td><td><strong>80</strong> per HTTP, <strong>443</strong> per HTTPS</td></tr>
+        <tr><td><strong>Path</strong> e <strong>file</strong></td><td>Il percorso nelle cartelle del server e la risorsa</td><td><code>info/docenti/index.php</code></td></tr>
+        <tr><td>Query</td><td>Dati in più dal client al server (es. campi di un form)</td><td><code>?pagina=3</code></td></tr>
+        <tr><td>Fragment</td><td>Un punto preciso dentro la pagina</td><td><code>#finepagina</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Sono obbligatori <strong>protocollo, host, percorso e file</strong>; gli altri sono facoltativi. Se non scrivi il protocollo, il browser aggiunge da solo <code>http://</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>HTTP nella pila TCP/IP</h2>
+  <p class="ref">Pagine 45-46</p>
+  <ol class="stack">
+    <li><b>4</b><strong>Applicazione</strong><span><strong>HTTP</strong>, DNS: qui lavora HTTP</span></li>
+    <li><b>3</b><strong>Trasporto</strong><span><strong>TCP</strong>: consegna affidabile dei dati</span></li>
+    <li><b>2</b><strong>Internet</strong><span>IP: trova la strada tra le reti</span></li>
+    <li><b>1</b><strong>Interfaccia di rete</strong><span>Ethernet, Wi-Fi (IEEE 802.11), LTE</span></li>
+  </ol>
+  <p>HTTP è un protocollo <strong>di testo</strong> del livello applicazione: i messaggi sono righe di caratteri ASCII che si possono leggere. Sotto, TCP si occupa di farli arrivare interi e in ordine.</p>
+
+  <h3>Sessioni e stateless</h3>
+  <p>Per comunicare HTTP usa le <strong>sessioni</strong>:</p>
+  <ol>
+    <li>il server è in ascolto sulla <strong>porta 80</strong>;</li>
+    <li>il client apre una <strong>connessione TCP</strong> verso quella porta e il server la accetta;</li>
+    <li>il client manda la <strong>richiesta</strong> (request) con l'URL;</li>
+    <li>il server manda la <strong>risposta</strong> (response) con il file e, con HTTP/1.0, chiude subito la connessione.</li>
+  </ol>
+  <div class="callout def"><span class="callout-title">Stateless (senza memoria di stato)</span>Né il client né il server ricordano, a livello di protocollo, i messaggi scambiati prima: ogni richiesta è <strong>nuova</strong>. Per questo, per ricordarsi di te (login, carrello), i siti usano i <strong>cookie</strong>.
+    <p class="hand">Come un distributore automatico: non sa che sei lo stesso di cinque minuti fa.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le connessioni: HTTP/1.0, HTTP/1.1 e pipelining</h2>
+  <p class="ref">Pagine 47-49</p>
+  <p>Prima di parlare, client e server aprono una <strong>connessione TCP</strong> con tre messaggi (SYN, SYN-ACK, ACK: la "stretta di mano a tre"). Alla fine la chiudono con altri messaggi (FIN). Aprire e chiudere costa tempo.</p>
+
+  <h3>Esempio: una pagina con 2 immagini</h3>
+  <p>Chiediamo <code>www.istitutovolta.edu/informatica/home.index</code>, una pagina HTML con alcune immagini PNG. Con HTTP/1.0:</p>
+  <ol>
+    <li>il client apre una connessione TCP con il server sulla porta 80; il server, in attesa, la accetta;</li>
+    <li>il client manda la richiesta con l'URL;</li>
+    <li>il server manda la risposta con la pagina;</li>
+    <li>il server chiude la connessione;</li>
+    <li>il client legge l'HTML (<strong>parsing</strong>) e scopre che servono le immagini;</li>
+    <li>ripete i passi 1-5 <strong>per ogni immagine</strong>.</li>
+  </ol>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Versione</th><th>Come funziona</th><th>Paragone</th></tr></thead>
+      <tbody>
+        <tr><td><strong>HTTP/1.0</strong> (non persistente)</td><td>Una connessione TCP <strong>per ogni oggetto</strong>, uno dopo l'altro: apri, chiedi, ricevi, chiudi.</td><td>Telefoni in pizzeria, ordini una pizza, riattacchi; richiami per la seconda.</td></tr>
+        <tr><td><strong>HTTP/1.1</strong> (persistente)</td><td>Il server <strong>lascia aperta</strong> la connessione: tutti gli oggetti della pagina passano sulla stessa.</td><td>Una sola telefonata per tutte le pizze, ma una alla volta: aspetti la conferma prima di dire la prossima.</td></tr>
+        <tr><td><strong>HTTP/1.1 con pipelining</strong></td><td>Il client manda <strong>più richieste di fila</strong> senza aspettare le risposte.</td><td>Detti tutto l'ordine di fila e poi ascolti le conferme.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="compare">
+    <div>
+      <h4>Persistente non incanalata</h4>
+      <p>Il client manda una nuova richiesta <strong>solo dopo</strong> aver ricevuto la risposta precedente.</p>
+    </div>
+    <div>
+      <h4>Persistente incanalata (pipeline)</h4>
+      <p>Le richieste si mettono in <strong>coda</strong> una dopo l'altra (<em>back-to-back</em>); il server risponde <strong>nello stesso ordine</strong>. È il default di HTTP/1.1.</p>
+    </div>
+  </div>
+  <div class="callout warn"><span class="callout-title">Perché lo stesso ordine?</span>Nel pipelining le risposte devono tornare <strong>nell'ordine delle richieste</strong>, perché non c'è un modo per dire "questa risposta è per quella richiesta". La connessione persistente si chiude da sola se resta inutilizzata per un certo tempo: l'intervallo di <strong>timeout</strong>.</div>
+
+  <!-- ============================================================= -->
+  <h2>Com'è fatto un messaggio HTTP</h2>
+  <p class="ref">Pagina 49</p>
+  <p>Richiesta e risposta hanno la stessa forma:</p>
+<pre data-lang="testo"><code>&lt;riga iniziale, diversa tra richiesta e risposta&gt;
+Intestazione1: valore1
+Intestazione2: valore2
+Intestazione3: valore3
+                                  ← riga vuota
+&lt;corpo del messaggio, facoltativo&gt;</code></pre>
+  <ol class="stack">
+    <li><b>1</b><strong>Riga iniziale</strong><span>Obbligatoria. Nella richiesta: metodo, risorsa, versione. Nella risposta: versione, codice di stato, frase.</span></li>
+    <li><b>2</b><strong>Intestazione (header)</strong><span>Facoltativa: righe <code>nome: valore</code>.</span></li>
+    <li><b>3</b><strong>Riga vuota</strong><span>Obbligatoria: dice "gli header sono finiti".</span></li>
+    <li><b>4</b><strong>Corpo (body)</strong><span>Facoltativo: i dati. La sua lunghezza è scritta in <code>Content-Length</code>.</span></li>
+  </ol>
+  <div class="callout def"><span class="callout-title">MIME</span>Il <strong>tipo MIME</strong> (<em>Internet media type</em>) dice che tipo di file è, con due parti <code>classe/formato</code>: <code>text/html</code>, <code>text/plain</code>, <code>image/png</code>, <code>audio/mpeg</code>, <code>application/json</code>.</div>
+
+  <!-- ============================================================= -->
+  <h2>La richiesta (request)</h2>
+  <p class="ref">Pagine 50-51</p>
+<pre data-lang="testo"><code>&lt;Method&gt; &lt;URI&gt; &lt;Version&gt;      // riga di richiesta
+[Header]                       // intestazione
+CRLF                           // riga vuota
+[Body]                         // corpo del messaggio</code></pre>
+  <h3>La riga di richiesta</h3>
+  <ul>
+    <li>Il <strong>metodo</strong>, sempre in <strong>MAIUSCOLO</strong> (è case sensitive). Quali esistono dipende dalla versione:
+      <div class="table-wrap"><table>
+        <thead><tr><th>Versione</th><th>Metodi</th></tr></thead>
+        <tbody>
+          <tr><td>HTTP/0.9</td><td>solo GET</td></tr>
+          <tr><td>HTTP/1.0</td><td>GET, HEAD, POST, PUT, DELETE, LINK, UNLINK</td></tr>
+          <tr><td>HTTP/1.1</td><td>GET, HEAD, POST, PUT, DELETE, OPTIONS, TRACE, CONNECT</td></tr>
+        </tbody>
+      </table></div>
+    </li>
+    <li>L'<strong>URI</strong> della risorsa. Per TRACE e OPTIONS si può non indicare una risorsa e scrivere un asterisco <code>*</code>.</li>
+    <li>La <strong>versione</strong>, scritta tutta maiuscola: <code>HTTP/1.0</code> o <code>HTTP/1.1</code>.</li>
+  </ul>
+<pre data-lang="testo"><code>GET /percorso/file.html HTTP/1.1
+│   │                   └─ versione
+│   └─ URI: il file file.html nella cartella /percorso della radice del server
+└─ metodo</code></pre>
+  <div class="callout def"><span class="callout-title">CRLF</span>È l'"a capo" dei messaggi HTTP: due caratteri ASCII, <strong>CR</strong> (<em>Carriage Return</em>, torna a inizio riga) e <strong>LF</strong> (<em>Line Feed</em>, scendi di una riga). Ogni riga finisce con CRLF; una riga fatta solo di CRLF è la riga vuota che chiude gli header.</div>
+
+  <h3>Header e body della richiesta</h3>
+  <p>Ogni header è una riga <code>nome_header: valore</code> + CRLF. Gli header più comuni nelle richieste sono <code>User-Agent</code> (il browser), <code>Host</code> (il server) e <code>Accept</code> (i tipi MIME accettati).</p>
+<pre data-lang="testo"><code>GET / HTTP/1.1
+Accept: image/gif, image/jpeg, image/png, */*
+Accept-Language: it
+Accept-Encoding: gzip, deflate
+Host: www.istitutovolta.gov.edu
+If-Modified-Since: Fri, 14 Mar 2021 10:54:03 GMT
+User-Agent: Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)
+                                   ← riga vuota (CRLF): fine del messaggio</code></pre>
+  <p>Il <strong>body della richiesta</strong> (entity body) contiene i dati da mandare: l'input di un programma o informazioni da salvare sul server, per esempio i campi di un form con POST. Con <strong>GET</strong> il body <strong>non c'è</strong>.</p>
+
+  <h3>Che cosa fa il server</h3>
+  <p>Ricevuta la richiesta, il server fa quello che serve per preparare la risorsa: a volte basta leggere un file, a volte deve eseguire uno <strong>script lato server</strong> (server side) con tecnologie come <strong>CGI</strong>, <strong>PHP</strong>, <strong>ASP</strong>, <strong>JSP</strong> o <strong>Perl</strong>. Poi manda la risposta. Com'è fatta la risposta e quali metodi esistono è spiegato in <a href="http-metodi.html">HTTP: i metodi (verbi)</a>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Gli header HTTP</h2>
+  <p class="ref">Pagine 53-54</p>
+  <p>Gli header sono coppie <code>Nome: valore</code> in formato ASCII. Si dividono in quattro gruppi:</p>
+  <div class="cards">
+    <div class="card"><strong>Generali</strong><p>Valgono sia per la richiesta sia per la risposta.</p></div>
+    <div class="card"><strong>Di richiesta</strong><p>Li mette il client: informazioni sulla richiesta.</p></div>
+    <div class="card"><strong>Di risposta</strong><p>Li mette il server: informazioni su di sé e sulla risposta.</p></div>
+    <div class="card"><strong>Dell'entità</strong><p>Descrivono il body (o la risorsa richiesta).</p></div>
+  </div>
+
+  <h3>Header generali</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Header</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><code>Date</code></td><td>Data e ora della trasmissione.</td></tr>
+        <tr><td><code>MIME-Version</code></td><td>La versione MIME usata (di solito 1.0).</td></tr>
+        <tr><td><code>Transfer-Encoding</code></td><td>Come è codificato o compresso tutto il messaggio: <code>chunked</code>, <code>compress</code>, <code>deflate</code>, <code>gzip</code>, <code>identity</code>.</td></tr>
+        <tr><td><code>Cache-Control</code></td><td>Come la risorsa può essere salvata nella cache.</td></tr>
+        <tr><td><code>Connection</code></td><td><code>Keep-Alive</code> (la connessione resta aperta dopo la risposta) o <code>Close</code> (si chiude).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Chunked: a pezzetti</span>Serve quando il server <strong>non sa prima</strong> quanto sarà lunga la risposta, per esempio l'output di uno script PHP o JSP. La risposta parte a pezzetti (<em>chunk</em>), ognuno preceduto dalla sua lunghezza in esadecimale; un pezzetto di lunghezza <strong>0</strong> vuol dire "ho finito".
+    <p class="hand">Come una lettera scritta e spedita un foglio alla volta, con l'ultimo foglio bianco per dire "fine".</p>
+  </div>
+
+  <h3>Header di richiesta</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Header</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>User-Agent</code></td><td>Tipo e versione del browser e sistema operativo</td><td><code>Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)</code></td></tr>
+        <tr><td><code>Referer</code></td><td>La pagina da cui si è cliccato il link (manca se non si arriva da un link). Serve al server per tracciare la navigazione.</td><td><code>http://www.scuolaonline.it/index.html</code></td></tr>
+        <tr><td><code>Host</code></td><td>Il nome del server e la porta</td><td><code>developer.cdn.mozilla.net</code></td></tr>
+        <tr><td><code>Accept</code>, <code>Accept-Charset</code>, <code>Accept-Encoding</code>, <code>Accept-Language</code></td><td>Negoziazione: che formato, set di caratteri, compressione e lingua il client accetta; il server "tenta" di accontentarlo</td><td><code>Accept: text/html</code>, <code>Accept: image/*</code>, <code>Accept: */*</code> (default)</td></tr>
+        <tr><td><code>If-Modified-Since</code>, <code>If-Match</code>, <code>If-None-Match</code>, <code>If-Range</code>, <code>If-Unmodified-Since</code></td><td>Richieste <strong>condizionali</strong>: il server risponde solo se la condizione è vera</td><td><code>If-Modified-Since: Thu, 01 Apr 2021 10:00:00 GMT</code></td></tr>
+        <tr><td><code>Authorization</code>, <code>Proxy-Authorization</code></td><td>Le credenziali per accedere a una risorsa protetta</td><td><code>Authorization: Basic …</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand"><code>If-Modified-Since</code> è come dire al giornalaio: «dammi il giornale solo se è uscito un numero nuovo da giovedì».</p>
+
+  <h3>Header di risposta</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Header</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>Server</code></td><td>Che server è (tipo, sistema operativo, versione)</td><td><code>Apache/2.4.1 (Unix)</code></td></tr>
+        <tr><td><code>Accept-Ranges</code></td><td>Se il server accetta richieste di pezzi della risorsa: <code>bytes</code> o <code>none</code></td><td><code>Accept-Ranges: bytes</code></td></tr>
+        <tr><td><code>WWW-Authenticate</code></td><td>Il <strong>tipo di autenticazione</strong> richiesto, di solito insieme al codice <strong>401</strong></td><td><code>WWW-Authenticate: Basic realm="sito"</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Il tipo più comune è <strong>Basic</strong>: username e password uniti dai due punti e codificati in Base64. Ce ne sono altri, registrati dall'<strong>IANA</strong> (es. <code>AWS4-HMAC-SHA256</code> per i server Amazon). Tutto spiegato in <a href="http-autenticazione.html">L'autenticazione con HTTP</a>.</p>
+
+  <h3>Header dell'entità</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Header</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><code>Content-Type</code></td><td>Il tipo MIME del body: testo, immagine PNG, suono WAV, filmato MPG… <strong>Obbligatorio</strong> se c'è un body. Es. <code>Content-Type: text/html</code>.</td></tr>
+        <tr><td><code>Content-Length</code></td><td>La lunghezza del body in byte. Obbligatorio con le connessioni persistenti: è così che il client sa dove finisce una risposta e inizia la successiva.</td></tr>
+        <tr><td><code>Content-Encoding</code></td><td>La compressione del body, es. <code>gzip</code>: HTML, CSS e JavaScript pesano meno.</td></tr>
+        <tr><td><code>Content-Language</code>, <code>Content-Location</code>, <code>Content-Base</code>, <code>Content-MD5</code>, <code>Content-Range</code></td><td>Lingua, URL della risorsa, URL di base, digest MD5 per controllare i dati, parte della risorsa inviata.</td></tr>
+        <tr><td><code>Expires</code></td><td>La data di scadenza: dopo, la risorsa non è più valida e va richiesta di nuovo o tolta dalla cache.</td></tr>
+        <tr><td><code>Last-Modified</code></td><td>Data e ora dell'ultima modifica: serve a capire se la copia nella cache è ancora buona.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Il browser (client attivo) chiede risorse identificate da URL (<code>schema://host:porta/path?query#fragment</code>) a un server passivo in ascolto sulla porta 80; URI = URL + URN.</li>
+    <li>HTTP sta nel livello applicazione sopra TCP, è stateless; HTTP/1.0 apre una connessione per oggetto, HTTP/1.1 usa connessioni persistenti e pipelining (risposte nello stesso ordine).</li>
+    <li>Un messaggio è riga iniziale + header <code>nome: valore</code> + riga vuota (CRLF) + body; gli header sono generali, di richiesta, di risposta e dell'entità (<code>Content-Type</code>, <code>Content-Length</code>…).</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Dividi nelle sue parti l'URL <code>https://www.scuola.it:8443/orari/classe5.php?giorno=lun#pomeriggio</code>.</li>
+        <li>Una pagina ha 1 file HTML e 4 immagini. Quante connessioni TCP apre HTTP/1.0? E HTTP/1.1 persistente?</li>
+        <li>Nella richiesta qui sotto trova l'errore: <code>get /index.html http/1.1</code>.</li>
+        <li>A che cosa servono <code>Content-Type</code> e <code>Last-Modified</code>?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>Schema <code>https</code>; host <code>www.scuola.it</code>; porta <code>8443</code> (diversa dal default 443); path e file <code>/orari/classe5.php</code>; query <code>giorno=lun</code>; fragment <code>pomeriggio</code>.</li>
+          <li>HTTP/1.0: <strong>5</strong> connessioni, una per oggetto. HTTP/1.1 persistente: <strong>1</strong> sola connessione per tutti e 5.</li>
+          <li>Metodo e versione vanno in maiuscolo: <code>GET /index.html HTTP/1.1</code>.</li>
+          <li><code>Content-Type</code> dice il tipo MIME del body (per esempio <code>text/html</code>), così il browser sa come mostrarlo. <code>Last-Modified</code> dice quando la risorsa è cambiata l'ultima volta, così si capisce se la copia nella cache è ancora valida.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 2 <em>Il protocollo HTTP</em>, Lezione 1 <em>Comunicazione nel Web con HTTP</em> (pagine 44-54), con le note a mano sulle pagine.</p>
+</main>
+</body>
+</html>
