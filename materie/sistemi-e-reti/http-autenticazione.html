@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>L'autenticazione con HTTP · Scuola</title>
+  <meta name="description" content="Autenticazione HTTP spiegata in modo semplice: filtro sugli indirizzi IP e IP spoofing, paradigma challenge/response, Basic Authentication con Base64, Digest Authentication con funzioni di hash e nonce, replay attack.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>L'autenticazione con HTTP</h1>
+  <p class="lead">Come fa un server a sapere chi sei prima di darti una risorsa protetta? Tre tecniche: il filtro sugli indirizzi IP, la Basic Authentication e la Digest Authentication.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li><strong>Autenticazione</strong> = capire se un client può accedere a una risorsa protetta.</li>
+      <li>Il <strong>filtro IP</strong> è debole: NAT, DHCP e <strong>IP spoofing</strong> lo ingannano.</li>
+      <li><strong>Basic (BA)</strong>: username e password in <strong>Base64</strong>, cioè quasi in chiaro. Va usata con HTTPS.</li>
+      <li><strong>Digest (DA)</strong>: la password non viaggia mai, si manda solo un <strong>hash</strong> calcolato con un <strong>nonce</strong>.</li>
+      <li>Il nonce, diverso ogni volta, blocca i <strong>replay attack</strong>.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il meccanismo dell'autenticazione</h2>
+  <p class="ref">Pagina 76</p>
+  <div class="callout def"><span class="callout-title">Autenticazione</span>Il processo che stabilisce se un client è <strong>idoneo ad accedere</strong> a una risorsa. HTTP la usa per "negoziare" l'accesso alle risorse protette.</div>
+  <p>Funziona così: il browser chiede all'utente le credenziali (di solito <strong>username e password</strong>), crea un <strong>header</strong> che le contiene e lo rimanda in <strong>tutte le richieste successive</strong>. Le informazioni viaggiano negli header HTTP, proprio come succede con i <strong>cookie</strong>.</p>
+  <p class="hand">Come il braccialetto di un concerto: lo prendi una volta all'ingresso e poi lo mostri a ogni varco.</p>
+  <p>Per far entrare solo gli utenti abilitati ci sono tre tecniche:</p>
+  <div class="cards">
+    <div class="card"><strong>Filtro sugli indirizzi IP</strong><p>Entra solo chi ha un certo indirizzo IP.</p></div>
+    <div class="card"><strong>Basic Authentication (BA)</strong><p>Username e password, codificati in Base64.</p></div>
+    <div class="card"><strong>Digest Authentication (DA)</strong><p>Solo un "riassunto" (hash) della password.</p></div>
+  </div>
+  <p>BA e DA usano entrambe il paradigma <strong>challenge/response</strong> (sfida e risposta); cambia il modo in cui le credenziali sono codificate e scambiate.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il filtro sugli indirizzi IP</h2>
+  <p class="ref">Pagina 76</p>
+  <p>Il filtro <strong>IAAF</strong> (<em>IP Address Authentication Filter</em>) fa entrare un client in base al suo <strong>indirizzo IP</strong>. È semplice, ma non è sicuro:</p>
+  <ul>
+    <li>se il client è dietro un <strong>NAT</strong> il suo IP non è pubblico: tanti computer di una scuola escono su Internet con <strong>lo stesso</strong> IP, quindi il server non li distingue;</li>
+    <li>se l'IP è assegnato dal <strong>DHCP</strong> cambia nel tempo: oggi è il tuo, domani può essere di un altro;</li>
+    <li>un malintenzionato può presentarsi con un IP <strong>falso</strong>: è l'<strong>IP spoofing</strong>.</li>
+  </ul>
+  <div class="callout warn"><span class="callout-title">IP spoofing</span>Quasi tutti i router controllano solo l'indirizzo IP di <strong>destinazione</strong>, non quello di provenienza. Chi attacca cambia il campo <strong>Source Address</strong> del pacchetto IP con un indirizzo falso, così il server crede che la richiesta arrivi da un altro client.
+    <p class="hand">È come scrivere sulla busta un mittente finto: il postino guarda solo il destinatario.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo di attacco</th><th>Come funziona</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Spoofing non cieco</strong></td><td>Nella stessa <strong>LAN</strong>: l'attaccante si finge un host della sua stessa sottorete (e può vedere le risposte).</td></tr>
+        <tr><td><strong>Spoofing cieco</strong></td><td>Si finge un host di una sottorete <strong>qualsiasi</strong>: non vede le risposte, va "alla cieca".</td></tr>
+        <tr><td><strong>Attacco DoS</strong></td><td>Usa lo spoofing per <strong>bloccare</strong> un host (Denial of Service) o per prenderne il controllo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il paradigma challenge/response</h2>
+  <p class="ref">Pagina 77</p>
+  <p>Il client si autentica in almeno <strong>tre passi</strong>:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Chi sono</strong><span>Il client manda al server l'identificativo dell'utente.</span></li>
+    <li><b>2</b><strong>La sfida (challenge)</strong><span>Il server genera un numero casuale R e lo manda al client.</span></li>
+    <li><b>3</b><strong>La risposta (response)</strong><span>Il client risponde con R "trasformato": cifrato con una chiave, oppure unito alla password e passato in una funzione di digest (hash).</span></li>
+  </ol>
+  <p class="hand">Come la parola d'ordine dei pirati, ma più furba: la sentinella dice un numero diverso ogni volta e tu devi rispondere con un calcolo che sa fare solo chi conosce il segreto.</p>
+
+  <!-- ============================================================= -->
+  <h2>La Basic Authentication</h2>
+  <p class="ref">Pagine 77-78</p>
+  <p>La <strong>Basic Authentication (BA)</strong>, supportata da tutti i browser, funziona in cinque passi:</p>
+  <ol>
+    <li>Il client chiede una risorsa (GET, POST, HEAD…).</li>
+    <li>La risorsa è protetta: il server risponde <strong>401 Unauthorized</strong> con l'header <code>WWW-Authenticate: Basic realm="sito"</code>. Il <strong>realm</strong> è il nome dell'area protetta.</li>
+    <li>Il browser mostra la finestra di login e crea la stringa <code>&lt;crd&gt; = BASE64(username:password)</code>.</li>
+    <li>In ogni richiesta successiva manda l'header <code>Authorization: Basic &lt;crd&gt;</code>.</li>
+    <li>Il server decodifica il Base64, ritrova <code>username:password</code> e controlla. Se sono giusti risponde <strong>200 OK</strong> con la risorsa; altrimenti si ripete la sfida.</li>
+  </ol>
+<pre data-lang="testo"><code>→  GET /index.html HTTP/1.1
+
+←  HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Basic realm="Site"
+
+   (l'utente scrive mario / pizza)
+
+→  GET /index.html HTTP/1.1
+   Authorization: Basic bWFyaW86cGl6emE=      ← BASE64("mario:pizza")
+
+←  HTTP/1.1 200 OK</code></pre>
+  <div class="callout warn"><span class="callout-title">Base64 non è una cifratura</span>Base64 trasforma qualsiasi sequenza di byte in lettere e numeri, ma è <strong>invertibile</strong>: chiunque può decodificare <code>bWFyaW86cGl6emE=</code> e leggere <code>mario:pizza</code> in un secondo. Le credenziali sono solo <strong>offuscate</strong>, non protette.</div>
+  <p>Con HTTP normale il canale non è cifrato: chi <strong>sniffa</strong> la rete vede l'header e ruba le credenziali. La soluzione è usare la BA <strong>sopra HTTPS</strong>: così tutto il messaggio, header compreso, è cifrato. Senza HTTPS la BA ferma solo i "curiosi", non chi vuole davvero attaccare.</p>
+
+  <!-- ============================================================= -->
+  <h2>La Digest Authentication</h2>
+  <p class="ref">Pagine 78-79</p>
+  <p>Nella <strong>Digest Authentication (DA)</strong> il server non ha bisogno di ricevere la password (il <strong>segreto condiviso</strong>): gli basta un <strong>digest</strong>, cioè un "riassunto" della password, per controllare che corrisponda a quella che conosce.</p>
+  <div class="callout def"><span class="callout-title">Funzione di hash</span>Trasforma un messaggio di lunghezza qualsiasi in una sequenza di <strong>lunghezza fissa</strong> (per esempio 128 bit).
+    <ul>
+      <li>Stesso messaggio → <strong>stesso hash</strong>, sempre.</li>
+      <li>Basta cambiare una lettera e l'hash cambia completamente: <code>ciao</code> → <code>6e6bc4e4…</code>, <code>Ciao</code> → <code>16272a5d…</code> (MD5).</li>
+      <li>È <strong>a senso unico</strong> (one way): dall'hash è impossibile risalire al messaggio.</li>
+    </ul>
+    <p class="hand">Come un frullato: dalla frutta ottieni sempre lo stesso frullato, ma dal frullato non ricostruisci la mela.</p>
+  </div>
+  <div class="callout def"><span class="callout-title">Nonce</span>Un numero casuale (o pseudocasuale) che si usa <strong>una volta sola</strong> in una comunicazione. Il nome viene da <em>number used once</em>.</div>
+
+  <h3>Come funziona, passo per passo</h3>
+  <ol class="stack">
+    <li><b>1</b><strong>La sfida</strong><span>Il server risponde <strong>401</strong> con <code>WWW-Authenticate: Digest</code>, il <strong>realm</strong>, un <strong>nonce</strong> e gli algoritmi di hash che supporta.</span></li>
+    <li><b>2</b><strong>Il calcolo</strong><span>Il browser chiede username e password e calcola il digest a partire da <strong>user, nonce e password</strong>.</span></li>
+    <li><b>3</b><strong>La risposta</strong><span>Manda nell'header <code>Authorization</code> lo username e il digest (campo <code>response</code>). La password <strong>non viaggia</strong>.</span></li>
+    <li><b>4</b><strong>Il controllo</strong><span>Il server, che conosce la password, rifà lo stesso calcolo e confronta i due digest.</span></li>
+    <li><b>5</b><strong>Il verdetto</strong><span>Digest uguali → autenticato (<strong>200 OK</strong>). Diversi → richiesta rifiutata e nuova sfida.</span></li>
+    <li><b>6</b><strong>(Facoltativo) Il server si fa riconoscere</strong><span>Se anche il client aveva mandato un suo nonce (<code>cnonce</code>), il server calcola un digest per lui e lo restituisce nell'header <code>Authentication-Info</code> (il libro lo chiama <em>Authorization-info</em>).</span></li>
+  </ol>
+<pre data-lang="testo"><code>←  HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Digest realm="realm", nonce="IVjZgc3Yg==", qop="auth"
+
+→  GET /index.html HTTP/1.1
+   Authorization: Digest username="DummyUser",
+       realm="DataWebService",
+       nonce="IVjZgc3Yg==",              ← il nonce ricevuto dal server
+       uri="/index.html",
+       response="b0d6cd4061a63a5e91...", ← il digest calcolato
+       qop=auth, nc=00000001,
+       cnonce="85647382dF832c9d"         ← il nonce del client
+
+←  HTTP/1.1 200 OK</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Perché la Digest è più sicura: il replay attack</h2>
+  <p class="ref">Pagina 79</p>
+  <div class="callout warn"><span class="callout-title">Replay attack</span>Un attaccante si mette in mezzo tra client e server, <strong>copia</strong> le credenziali che il client ha mandato e poi le <strong>rimanda</strong> lui al server, fingendo di essere quel client.
+    <p class="hand">Come registrare qualcuno che dice la parola d'ordine e poi far ripartire la registrazione davanti alla porta.</p>
+  </div>
+  <p>Con la Basic Authentication funziona benissimo: l'header <code>Authorization: Basic …</code> è sempre uguale. Con la Digest no: il server manda un <strong>nonce diverso ogni volta</strong>, quindi anche il digest cambia ogni volta. Un digest "registrato" vale solo per il vecchio nonce e il server lo rifiuta.</p>
+  <div class="compare">
+    <div>
+      <h4>Basic Authentication</h4>
+      <ul>
+        <li>Password in Base64: si decodifica subito.</li>
+        <li>Header sempre uguale: replay possibile.</li>
+        <li>Sicura solo con HTTPS.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Digest Authentication</h4>
+      <ul>
+        <li>La password <strong>non viaggia</strong>: solo l'hash.</li>
+        <li>Nonce sempre nuovo: niente replay.</li>
+        <li>Il client può verificare che il server sia lo stesso che ha lanciato la sfida.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout info"><span class="callout-title">Il limite della Digest</span>Il client può controllare che il server sia <strong>lo stesso</strong> che ha generato la sfida, ma <strong>non chi sia davvero</strong>: non può verificarne l'identità. Per quello servono i certificati di HTTPS (vedi <a href="http-codici-stato-https.html#l-handshake-tls-e-i-certificati">L'handshake TLS e i certificati</a>).</div>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>L'autenticazione HTTP manda le credenziali negli header; il filtro sugli IP è debole per colpa di NAT, DHCP e IP spoofing.</li>
+    <li>La Basic Authentication (401 + <code>WWW-Authenticate</code>, poi <code>Authorization: Basic</code>) usa Base64, che si decodifica subito: va usata solo con HTTPS.</li>
+    <li>La Digest Authentication manda solo un hash calcolato da user, password e nonce: la password non viaggia e il nonce sempre nuovo blocca i replay attack.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Intercetti l'header <code>Authorization: Basic bWFyaW86cGl6emE=</code>. Che cosa scopri? Che cosa avrebbe cambiato HTTPS?</li>
+        <li>Perché in una scuola il filtro sugli indirizzi IP non permette di distinguere due studenti?</li>
+        <li>Intercetti un header Digest e lo rimandi al server dieci minuti dopo. Perché non funziona?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>Decodificando il Base64 leggi <code>mario:pizza</code>: username e password. Con HTTPS l'intero messaggio sarebbe stato cifrato e non avresti visto l'header.</li>
+          <li>Perché i computer della scuola sono dietro un <strong>NAT</strong>: su Internet escono tutti con lo stesso IP pubblico.</li>
+          <li>Il digest è stato calcolato con un <strong>nonce</strong> che valeva una volta sola: il server ora si aspetta un digest con un nonce nuovo e rifiuta quello vecchio. Hai tentato un <strong>replay attack</strong>.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 2 <em>Il protocollo HTTP</em>, Lezione 4 <em>L'autenticazione con HTTP</em> (pagine 76-79), con le note a mano sulle pagine.</p>
+</main>
+</body>
+</html>

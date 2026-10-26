@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HTTP: codici di stato e HTTPS · Scuola</title>
+  <meta name="description" content="Rappresentazioni HTTP e metadati, le cinque classi dei codici di stato con i codici più importanti, HTTPS con SSL/TLS, chiave simmetrica e asimmetrica, handshake TLS, certificati DV, OV, EV, porta 443, limiti di HTTPS e HSTS.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>HTTP: codici di stato e HTTPS</h1>
+  <p class="lead">Come il server dice al client "è andata bene", "è da un'altra parte" o "c'è un errore", e come HTTPS protegge i dati che viaggiano in rete.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Una risorsa viaggia come <strong>rappresentazione</strong>: header (metadati) + body (i dati).</li>
+      <li>Il <strong>codice di stato</strong> ha 3 cifre: la prima dice la classe (1xx … 5xx).</li>
+      <li>4xx = <strong>errore del client</strong>, 5xx = <strong>errore del server</strong>.</li>
+      <li><strong>HTTPS</strong> = HTTP + <strong>TLS</strong> (una volta SSL): dati cifrati e server autenticato, porta <strong>443</strong>.</li>
+      <li>HTTPS non basta contro <strong>phishing</strong> e certificati non verificati: si aggiunge <strong>HSTS</strong>.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le rappresentazioni HTTP</h2>
+  <p class="ref">Pagina 70</p>
+  <p>Client e server si scambiano informazioni su <strong>risorse</strong> identificate da un indirizzo (URL o URI). Quello che viaggia non è la risorsa "in sé", ma una sua <strong>rappresentazione</strong>: com'è fatta adesso, in un certo formato.</p>
+  <p class="hand">Non ti spediscono il museo, ti spediscono la foto del quadro. E la foto può essere in JPG o in PNG.</p>
+  <div class="compare">
+    <div>
+      <h4>Header: i metadati</h4>
+      <p>Informazioni <strong>sulla</strong> risorsa, non la risorsa: dimensione, tipo (tipo MIME, es. <code>text/html</code>), data dell'ultima modifica. Sono testo, con regole precise delle specifiche HTTP.</p>
+    </div>
+    <div>
+      <h4>Body: i dati</h4>
+      <p>Il contenuto vero, in <strong>qualunque formato</strong>: testo, immagini, HTML, XML, JSON.</p>
+    </div>
+  </div>
+  <p>Il tipo di contenuto del body si indica con l'header <code>Content-Type</code>, per esempio <code>Content-Type: application/json</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>I codici di stato</h2>
+  <p class="ref">Pagine 70-71</p>
+  <div class="callout info"><span class="callout-title">Anche in TPSIT</span>Questo argomento è spiegato anche in TPSIT: <a href="../tpsit/protocollo-http.html#la-risposta-response">Il protocollo HTTP → La risposta</a> (i codici di stato).</div>
+  <p>Il <strong>codice di stato</strong> (status code) è il numero che il server mette nella prima riga della risposta per dire al client <strong>com'è andata</strong>. Sono definiti dall'<strong>IETF</strong> (l'ente che scrive gli standard di Internet, in collaborazione con il W3C); l'RFC 2616 ne elenca una cinquantina.</p>
+  <div class="callout def"><span class="callout-title">Come si leggono</span>Sono numeri di <strong>tre cifre</strong>. La <strong>prima cifra</strong> dice la <strong>classe</strong> (il tipo di risposta), le altre due la risposta specifica. Basta la prima cifra per capire subito se è andata bene o male.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Classe</th><th>Nome</th><th>Significato</th><th>Come ricordarla</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1xx</strong></td><td>Information</td><td>Informazioni temporanee mentre la richiesta è in corso</td><td>«Aspetta, ci sto lavorando»</td></tr>
+        <tr><td><strong>2xx</strong></td><td>Successful</td><td>La richiesta è andata a buon fine</td><td>«Fatto!»</td></tr>
+        <tr><td><strong>3xx</strong></td><td>Redirection</td><td>Non è un errore, ma il browser deve fare qualcosa (andare altrove)</td><td>«Non è qui, vai di là»</td></tr>
+        <tr><td><strong>4xx</strong></td><td>Client error</td><td>Errore causato dal client</td><td>«Hai sbagliato tu»</td></tr>
+        <tr><td><strong>5xx</strong></td><td>Server error</td><td>Problema sul server</td><td>«Ho sbagliato io»</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Il libro ricorda che i codici 1xx sono sconsigliati con HTTP/1.0: i vecchi client non li capiscono.</p>
+
+  <!-- ============================================================= -->
+  <h2>I codici più importanti</h2>
+  <p class="ref">Pagine 71-72</p>
+  <h3>1xx e 2xx: tutto bene</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Che cosa vuol dire</th></tr></thead>
+      <tbody>
+        <tr><td><strong>100 Continue</strong></td><td>Il client, prima di mandare un body grande, chiede «posso?» con l'header <code>Expect: 100-Continue</code>. Il server risponde 100 e il client manda il resto.</td></tr>
+        <tr><td><strong>200 OK</strong></td><td>La risposta normale a una GET o POST andata bene.</td></tr>
+        <tr><td><strong>201 Created</strong></td><td>Richiesta valida e <strong>risorsa creata</strong>: conferma il successo di una PUT o POST.</td></tr>
+        <tr><td><strong>204 No Content</strong></td><td>Tutto bene ma <strong>nessun contenuto</strong> da mandare: il browser resta sulla pagina dov'era.</td></tr>
+        <tr><td><strong>206 Partial Content</strong></td><td>Il server manda solo un <strong>pezzo</strong> (chunk) della risorsa; il client li ricompone usando l'header <code>Content-Range</code>. Succede, per esempio, quando riprendi un download interrotto.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3xx: vai da un'altra parte</h3>
+  <p><strong>301 Moved Permanently</strong>, <strong>302 Found</strong> e <strong>303 See Other</strong> dicono al client di ripetere la richiesta a un altro indirizzo, scritto nell'header <code>Location</code> della risposta.</p>
+  <div class="compare">
+    <div>
+      <h4>301 Moved Permanently</h4>
+      <p>La risorsa si è spostata <strong>per sempre</strong>: il browser (e i motori di ricerca) possono ricordarsi il nuovo indirizzo.</p>
+      <p class="hand">Un negozio che ha cambiato sede definitivamente.</p>
+    </div>
+    <div>
+      <h4>302 Found / 303 See Other</h4>
+      <p>Spostamento <strong>temporaneo</strong>: per ora vai lì, ma la prossima volta riprova all'indirizzo vecchio.</p>
+      <p class="hand">«Chiuso per lavori, ci trovi temporaneamente in piazza.»</p>
+    </div>
+  </div>
+  <p>Dopo il reindirizzamento il client rifà la richiesta con <strong>GET</strong> (anche se era una POST), senza il <strong>payload</strong> (il contenuto del body).</p>
+
+  <h3>4xx: errore del client</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Che cosa vuol dire</th></tr></thead>
+      <tbody>
+        <tr><td><strong>400 Bad Request</strong></td><td>Il server non riesce a capire la richiesta (scritta male). Varianti più precise: <strong>411</strong> Length Required (manca <code>Content-Length</code>), <strong>414</strong> Request-URI Too Long (URL troppo lungo).</td></tr>
+        <tr><td><strong>401 Unauthorized</strong></td><td><strong>Non sei autenticato</strong>: devi dare le credenziali (username e password). Il browser di solito mostra la finestra di login.</td></tr>
+        <tr><td><strong>403 Forbidden</strong></td><td>La risorsa esiste ma <strong>non hai il permesso</strong>, per motivi diversi dal login: permessi sui file, regola del server, cookie o indirizzo IP non validi.</td></tr>
+        <tr><td><strong>404 Not Found</strong></td><td>Il più famoso: l'URL <strong>non esiste</strong>.</td></tr>
+        <tr><td><strong>405 Method Not Allowed</strong></td><td>Il metodo non è permesso per quella risorsa (es. una DELETE non consentita).</td></tr>
+        <tr><td><strong>409 Conflict</strong></td><td>Conflitto con lo stato della risorsa, per esempio una PUT per creare una risorsa che esiste già.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">401 o 403?</span><strong>401</strong> = «non so chi sei: fai il login». <strong>403</strong> = «so chi sei (o non importa), ma qui non puoi entrare». Come a scuola: 401 è il bidello che ti chiede il tesserino, 403 è la sala professori dove non entri neanche con il tesserino.</div>
+
+  <h3>5xx: errore del server</h3>
+  <p><strong>500 Internal Server Error</strong>: il server ha avuto un problema imprevisto e non riesce a rispondere. È il codice "generico" quando tutto il resto fallisce. Qui il client non ha colpe.</p>
+
+  <!-- ============================================================= -->
+  <h2>HTTPS: HTTP sicuro</h2>
+  <p class="ref">Pagina 72</p>
+  <p><strong>HTTPS</strong> (<em>HyperText Transfer Protocol over SSL</em>) è HTTP con l'aggiunta della <strong>cifratura</strong>: i dati scambiati tra client e server diventano illeggibili per chi li intercetta.</p>
+  <div class="compare">
+    <div>
+      <h4>Eavesdropping</h4>
+      <p><strong>Ascoltare di nascosto</strong> i dati che passano (sniffing passivo): qualcuno legge, ma non tocca.</p>
+      <p class="hand">Leggere la cartolina di un altro.</p>
+    </div>
+    <div>
+      <h4>Tampering</h4>
+      <p><strong>Manomettere</strong> i dati, cambiandone il contenuto (modifica attiva). L'utente non si accorge di parlare con un altro server.</p>
+      <p class="hand">Cambiare quello che c'è scritto sulla cartolina.</p>
+    </div>
+  </div>
+  <p>HTTPS protegge da entrambi. Oltre a TCP/IP usa i protocolli <strong>SSL</strong> (<em>Secure Sockets Layer</em>) e <strong>TLS</strong> (<em>Transport Layer Security</em>), che si occupano di <strong>cifratura</strong> e <strong>autenticazione</strong>.</p>
+  <div class="callout info"><span class="callout-title">SSL o TLS?</span>SSL è il nome vecchio. Oggi si usa <strong>solo TLS</strong> (SSL è insicuro e abbandonato), ma per abitudine si continua a dire "certificato SSL".</div>
+
+  <h3>Due tipi di chiave, insieme</h3>
+  <div class="compare">
+    <div>
+      <h4>Chiave simmetrica (es. AES)</h4>
+      <p>La <strong>stessa chiave</strong> cifra e decifra. È <strong>veloce</strong>, ma c'è un problema: come la mando all'altro senza che qualcuno la rubi?</p>
+      <p class="hand">Un lucchetto con due copie della stessa chiave.</p>
+    </div>
+    <div>
+      <h4>Chiave asimmetrica (es. RSA)</h4>
+      <p>Due chiavi: una <strong>pubblica</strong> (la conoscono tutti, serve a chiudere) e una <strong>privata</strong> (solo il server, serve ad aprire). Sicura ma <strong>lenta</strong>.</p>
+      <p class="hand">Una cassetta delle lettere: tutti possono imbucare, solo il postino ha la chiave per aprirla.</p>
+    </div>
+  </div>
+  <p>TLS usa il meglio di entrambe: con la cifratura <strong>asimmetrica</strong> le due parti si scambiano in modo sicuro una chiave <strong>simmetrica</strong>, e poi usano quella, che è veloce, per tutta la comunicazione. Così solo client e server conoscono il contenuto e nessun altro può leggerlo o modificarlo.</p>
+
+  <h3>Chi viene autenticato?</h3>
+  <p>Nell'uso normale con un browser l'autenticazione TLS è <strong>unilaterale</strong>: è il <strong>server</strong> a dimostrare chi è, il client resta anonimo. Il browser controlla il <strong>certificato</strong> del server verificando la firma digitale di una <strong>Certificate Authority</strong> conosciuta.</p>
+
+  <!-- ============================================================= -->
+  <h2>L'handshake TLS e i certificati</h2>
+  <p class="ref">Pagina 73</p>
+  <p>Prima di parlare, client e server fanno una "stretta di mano" (handshake):</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Client Hello</strong><span>Il browser saluta e dice quali algoritmi di cifratura conosce.</span></li>
+    <li><b>2</b><strong>Server Hello</strong><span>Il server sceglie l'algoritmo e manda il suo certificato.</span></li>
+    <li><b>3</b><strong>Key Exchange</strong><span>Si scambiano, in modo sicuro, il materiale per creare la chiave simmetrica.</span></li>
+    <li><b>4</b><strong>Change Cipher Spec</strong><span>«Da adesso parliamo cifrato.»</span></li>
+    <li><b>5</b><strong>HTTP GET e Data Transfer</strong><span>Ora parte la normale comunicazione HTTP, tutta cifrata.</span></li>
+  </ol>
+  <p>Alla fine il browser mostra il <strong>lucchetto</strong>. Attenzione: il lucchetto dice che la connessione è cifrata, <strong>non</strong> che il sito sia quello giusto. Per esserne sicuri bisogna guardare il contenuto del certificato e la sua <strong>catena di certificazione</strong>.</p>
+  <ul>
+    <li>Solo le <strong>Certificate Authority (CA)</strong> possono generare certificati validi, con dentro l'URL del sito, che il browser confronta con quello richiesto.</li>
+    <li>TLS permette anche l'autenticazione <strong>bilaterale</strong> (<em>Mutual Authentication</em>, MA): anche il client ha un suo certificato digitale.</li>
+    <li>HTTPS usa la <strong>porta TCP 443</strong>, HTTP la <strong>porta 80</strong>: così i firewall distinguono subito il traffico cifrato da quello in chiaro.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Certificato</th><th>Che cosa verifica la CA</th><th>Livello</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DV</strong> – Domain Validation</td><td>Solo che il richiedente controlla il <strong>dominio</strong></td><td>Base</td></tr>
+        <tr><td><strong>OV</strong> – Organization Validation</td><td>Anche i dati dell'<strong>azienda</strong> proprietaria del dominio</td><td>Medio</td></tr>
+        <tr><td><strong>EV</strong> – Extended Validation</td><td>Verifica completa; il browser può mostrare il <strong>nome dell'azienda</strong></td><td>Massimo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Oggi HTTPS è indispensabile: i motori di ricerca penalizzano i siti senza HTTPS e i browser li segnalano come "non sicuri".</p>
+
+  <!-- ============================================================= -->
+  <h2>I limiti di HTTPS e HSTS</h2>
+  <p class="ref">Pagina 73</p>
+  <p>HTTPS cifra la strada, ma <strong>non controlla dove porta</strong>:</p>
+  <ul>
+    <li><strong>Phishing</strong>: un truffatore può ottenere un certificato valido per un sito falso (es. <code>banca-sicura-login.com</code>). La connessione è cifrata… ma con il truffatore.</li>
+    <li><strong>Man-in-the-middle</strong>: se il certificato non viene verificato bene, qualcuno può mettersi in mezzo tra client e server e leggere tutto.</li>
+  </ul>
+  <div class="callout def"><span class="callout-title">HSTS (HTTP Strict Transport Security)</span>Il sito dice al browser: «per i prossimi <code>max-age</code> secondi, con me parla <strong>solo in HTTPS</strong>». Da quel momento, anche se l'utente scrive <code>http://</code>, il browser passa subito a <code>https://</code>. Senza HSTS, la prima richiesta in chiaro potrebbe essere intercettata e dirottata su un sito falso (man-in-the-middle).</div>
+  <p>Altre difese: certificati con <strong>firme digitali robuste</strong> e protocolli di crittografia sempre <strong>aggiornati</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Una risorsa viaggia come rappresentazione: header con i metadati e body con i dati, il cui formato è in <code>Content-Type</code>.</li>
+    <li>I codici di stato hanno 3 cifre: 1xx info, 2xx successo, 3xx reindirizzamento, 4xx errore del client (401, 403, 404…), 5xx errore del server (500).</li>
+    <li>HTTPS = HTTP + TLS sulla porta 443: chiave asimmetrica per scambiarsi una chiave simmetrica, server autenticato con un certificato di una CA; contro phishing e MITM servono anche verifica dei certificati e HSTS.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <p>Quale codice di stato ti aspetti?</p>
+      <ol>
+        <li>Scrivi male l'indirizzo di una pagina del sito della scuola.</li>
+        <li>Provi ad aprire il registro elettronico senza aver fatto il login.</li>
+        <li>Hai fatto il login come studente e provi ad aprire la pagina riservata ai professori.</li>
+        <li>Carichi con PUT un file nuovo che prima non esisteva.</li>
+        <li>Il sito si è trasferito per sempre su un nuovo dominio.</li>
+        <li>Il server va in crash mentre elabora la tua richiesta.</li>
+      </ol>
+      <p>Poi spiega perché un sito di phishing può avere il lucchetto.</p>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li><strong>404</strong> Not Found.</li>
+          <li><strong>401</strong> Unauthorized: non sei autenticato.</li>
+          <li><strong>403</strong> Forbidden: sei autenticato ma non hai il permesso.</li>
+          <li><strong>201</strong> Created.</li>
+          <li><strong>301</strong> Moved Permanently, con il nuovo indirizzo in <code>Location</code>.</li>
+          <li><strong>500</strong> Internal Server Error.</li>
+        </ol>
+        <p>Il lucchetto vuol dire solo che la connessione è <strong>cifrata</strong>: un truffatore può avere un certificato valido (anche DV) per il <em>suo</em> dominio falso. Bisogna controllare l'indirizzo e il certificato.</p>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 2 <em>Il protocollo HTTP</em>, Lezione 3 <em>I codici di stato e la sicurezza con HTTPS</em> (pagine 70-73), con le note a mano sulle pagine.</p>
+</main>
+</body>
+</html>

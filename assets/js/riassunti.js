@@ -1219,6 +1219,357 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/sistemi-e-reti/livello-applicazioni.html": {
+    breve: "Il livello dei programmi che usiamo: applicazioni di rete, architetture, servizi del trasporto, Web e FTP.",
+    sezioni: [
+      {
+        titolo: "Le applicazioni di rete",
+        punti: [
+          "Protocolli del livello applicazione: HTTP, SMTP, FTP, DNS, Telnet, SNMP; se ne aggiungono sempre di nuovi.",
+          "Un'applicazione di rete è fatta da programmi su due o più host che lavorano insieme.",
+          "Servizio = IP + porta (SMTP TCP 25, HTTP TCP 80, DNS UDP 53): è il meccanismo dei <strong>socket</strong>.",
+        ],
+      },
+      {
+        titolo: "Client/server e server farm",
+        punti: [
+          "Server sempre attivo con <strong>IP fisso</strong>, client con IP dinamico; i client parlano solo con il server.",
+          "Contro la congestione: <strong>server farm</strong>, un hostname con più indirizzi IP.",
+        ],
+      },
+      {
+        titolo: "Le architetture peer-to-peer",
+        punti: [
+          "<strong>Decentralizzato</strong>: ogni peer è servent, il sistema si adatta al churn senza server.",
+          "<strong>Centralizzato</strong>: un directory server con l'indice (Napster). <strong>Ibrido</strong>: supernodi eletti e leaf peer.",
+        ],
+      },
+      {
+        titolo: "Che cosa chiedono le applicazioni al trasporto",
+        punti: [
+          "Quattro esigenze: <strong>affidabilità</strong>, <strong>banda</strong>, <strong>temporizzazione</strong>, <strong>sicurezza</strong>.",
+          "<strong>TCP</strong>: con connessione e affidabile (file, posta, web). <strong>UDP</strong>: senza connessione, più veloce (audio, video, giochi). Nessuno dei due garantisce i tempi.",
+        ],
+      },
+      {
+        titolo: "L'architettura del WWW",
+        punti: [
+          "Ipertesto multimediale distribuito: il browser chiede un URL, il server web risponde con il contenuto (la home page).",
+          "Tre concetti: <strong>identificazione</strong> (URI), <strong>interazione</strong> (protocolli), <strong>formato</strong> (meta-informazioni).",
+        ],
+      },
+      {
+        titolo: "Il protocollo FTP",
+        punti: [
+          "<strong>FTP</strong> (RFC 959) su TCP con due connessioni: <strong>controllo</strong> (porta 21) e <strong>dati</strong> (porta 20).",
+          "Comandi USER, PASS, RETR, QUIT con risposte a 3 cifre; nei client get, put, dir, cd, bye. Accesso anonimo in sola lettura.",
+          "FTP è in chiaro: <strong>FTPS</strong> (RFC 4217) aggiunge la cifratura SSL/TLS.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/email-dns-telnet.html": {
+    breve: "Come viaggia un'email, come un nome diventa un indirizzo IP e come si comanda un computer remoto.",
+    sezioni: [
+      {
+        titolo: "Il servizio email",
+        punti: [
+          "Indirizzo <code>nomeutente@dominio</code>; <code>@</code> vuol dire «presso». L'indirizzo è di una casella, non di una persona; più nomi = alias.",
+          "<strong>POP mail</strong> (client di posta sul PC) o <strong>web mail</strong> (dal browser, da qualunque computer).",
+        ],
+      },
+      {
+        titolo: "MUA e MTA",
+        punti: [
+          "<strong>MUA</strong>: il programma di posta, scrive e legge. <strong>MTA</strong>: il mail server, riceve e consegna (fermo posta e coda in uscita).",
+          "L'MTA offre server SMTP (25), POP3 (110) e IMAP4 (143). Si spedisce con SMTP, si riceve con POP3 o IMAP.",
+        ],
+      },
+      {
+        titolo: "Il formato del messaggio: RFC 822 e MIME",
+        punti: [
+          "RFC 822 (1982): header (To, From, Cc, Bcc, Date, Reply-to, Subject) + riga vuota + body in ASCII a 7 bit.",
+          "<strong>MIME</strong> permette di allegare immagini, audio, video e file.",
+        ],
+      },
+      {
+        titolo: "Inviare la posta: SMTP",
+        punti: [
+          "<strong>SMTP</strong>, TCP porta <strong>25</strong>: dal PC al server del mittente e da server a server.",
+          "Tre fasi: PC → server A (SMTP), server A → server B (SMTP), server B → destinatario (POP3 o IMAP).",
+        ],
+      },
+      {
+        titolo: "Leggere la posta: POP3",
+        punti: [
+          "<strong>POP3</strong>, porta <strong>110</strong>: scarica tutti i messaggi sul PC.",
+          "Fasi: <strong>autorizzazione</strong>, <strong>transazione</strong> (fino a <code>QUIT</code>), <strong>aggiornamento</strong> (cancella i messaggi scaricati).",
+        ],
+      },
+      {
+        titolo: "Webmail e IMAP",
+        punti: [
+          "<strong>Webmail</strong>: la posta si legge sul server con il browser (HTTP).",
+          "<strong>IMAP</strong>, porta <strong>143</strong>: la posta resta sul server; si leggono le intestazioni, si cancella senza scaricare, più dispositivi insieme. IMAP4: cartelle sul server.",
+        ],
+      },
+      {
+        titolo: "Nome simbolico e indirizzo IP",
+        punti: [
+          "I nomi sono più facili da ricordare degli IP (<code>www.hoepli.it</code> = <code>194.113.89.93</code>).",
+          "In una LAN piccola basta il <strong>file hosts</strong>; più nomi per lo stesso host sono <strong>alias</strong>.",
+        ],
+      },
+      {
+        titolo: "Il DNS",
+        punti: [
+          "<strong>DNS</strong>: database distribuito di coppie nome – IP sui name server, e protocollo per interrogarli.",
+          "Server locale → server <strong>radice</strong> (13, da A a M) → server <strong>autorizzato</strong>; sotto la radice i <strong>TLD</strong> (.com, .org, .it…), ad albero.",
+        ],
+      },
+      {
+        titolo: "Telnet",
+        punti: [
+          "Sessione remota bidirezionale <strong>non cifrata</strong> su TCP, porta <strong>23</strong>, solo riga di comando.",
+          "Half-duplex a 8 bit, una riga alla volta; il byte 255 annuncia un comando. L'<strong>NVT</strong> è il terminale virtuale comune.",
+        ],
+      },
+      {
+        titolo: "Le opzioni di Telnet",
+        punti: [
+          "<code>WILL</code>/<code>WON'T</code> = io userò / non userò; <code>DO</code>/<code>DON'T</code> = usala tu / non usarla.",
+          "Regole anti ciclo infinito: solo richieste di cambio, niente richieste di stato, ignorare opzioni già attive, un ACK per ogni richiesta.",
+        ],
+      },
+      {
+        titolo: "SSH: Telnet in sicurezza",
+        punti: [
+          "<strong>SSH</strong>: come Telnet ma con canale <strong>cifrato</strong>, chiave pubblica e <strong>mutua autenticazione</strong>. Sintassi <code>ssh nomeutente@host</code>.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-comunicazione-web.html": {
+    breve: "Come parlano browser e server: URL, connessioni TCP e struttura dei messaggi HTTP con i loro header.",
+    sezioni: [
+      {
+        titolo: "Client e server",
+        punti: [
+          "Il <strong>client</strong> (browser) è attivo e chiede; il <strong>server</strong> è passivo e ascolta su una porta TCP.",
+          "WWW = HTML + URL + HTTP. Versioni: HTTP/1.0 (1996) e HTTP/1.1 (1999).",
+        ],
+      },
+      {
+        titolo: "URI, URL e URN",
+        punti: [
+          "URI = URL (dove si trova) + URN (nome persistente).",
+          "<code>schema://host:porta/path?query#fragment</code>; porta 80 per HTTP, 443 per HTTPS.",
+        ],
+      },
+      {
+        titolo: "HTTP nella pila TCP/IP",
+        punti: [
+          "HTTP è un protocollo di testo del livello <strong>applicazione</strong>, sopra <strong>TCP</strong>.",
+          "Sessione: connessione TCP alla porta 80, richiesta, risposta. HTTP è <strong>stateless</strong>.",
+        ],
+      },
+      {
+        titolo: "Le connessioni: HTTP/1.0, HTTP/1.1 e pipelining",
+        punti: [
+          "HTTP/1.0: una connessione TCP per ogni oggetto. HTTP/1.1: connessione <strong>persistente</strong>.",
+          "Non incanalata: una richiesta dopo l'altra. Incanalata (<strong>pipelining</strong>): richieste in coda, risposte nello stesso ordine. Chiusura per <strong>timeout</strong>.",
+        ],
+      },
+      {
+        titolo: "Com'è fatto un messaggio HTTP",
+        punti: [
+          "Riga iniziale + header (facoltativi) + riga vuota + body (facoltativo).",
+          "Il tipo <strong>MIME</strong> indica classe e formato: <code>text/html</code>, <code>image/png</code>.",
+        ],
+      },
+      {
+        titolo: "La richiesta (request)",
+        punti: [
+          "<code>&lt;Method&gt; &lt;URI&gt; &lt;Version&gt;</code>, metodo sempre in maiuscolo; i metodi dipendono dalla versione (0.9, 1.0, 1.1).",
+          "Ogni riga finisce con <strong>CRLF</strong>; con GET il body non c'è. Il server può eseguire script lato server (CGI, PHP, ASP, JSP).",
+        ],
+      },
+      {
+        titolo: "Gli header HTTP",
+        punti: [
+          "Generali (<code>Date</code>, <code>Transfer-Encoding</code> con <strong>chunked</strong>, <code>Cache-Control</code>, <code>Connection</code>).",
+          "Di richiesta (<code>User-Agent</code>, <code>Referer</code>, <code>Host</code>, <code>Accept</code>, <code>If-Modified-Since</code>, <code>Authorization</code>) e di risposta (<code>Server</code>, <code>Accept-Ranges</code>, <code>WWW-Authenticate</code>).",
+          "Dell'entità: <code>Content-Type</code> (obbligatorio con il body), <code>Content-Length</code>, <code>Content-Encoding</code>, <code>Expires</code>, <code>Last-Modified</code>.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-metodi.html": {
+    breve: "Il metodo è la prima parola di una richiesta HTTP: dice al server che cosa fare con la risorsa.",
+    sezioni: [
+      {
+        titolo: "Com'è fatto un messaggio HTTP",
+        punti: [
+          "Tre parti: <strong>prima riga</strong> (request line o status line), <strong>header</strong> e <strong>body</strong>.",
+          "Nella GET il body è vuoto; nella response c'è quasi sempre (la pagina HTML o i dati).",
+          "<code>Accept</code> dice che formato vuole il client (es. <code>application/json</code>), <code>Content-Type</code> che cosa manda il server.",
+        ],
+      },
+      {
+        titolo: "La codifica URL",
+        punti: [
+          "I dati sono coppie <code>nome=valore</code> unite da <code>&amp;</code>.",
+          "I caratteri non sicuri diventano <code>%</code> + codice ASCII esadecimale: spazio <code>%20</code>, <code>&amp;</code> <code>%26</code>, <code>@</code> <code>%40</code>.",
+        ],
+      },
+      {
+        titolo: "GET e POST",
+        punti: [
+          "<strong>GET</strong>: chiede una risorsa, dati nell'URL.",
+          "<strong>POST</strong>: invia dati nel body a un programma (CGI), senza limiti di lunghezza; risposte 200, 201, 204.",
+          "POST non è sicura di per sé: per proteggere i dati serve HTTPS.",
+        ],
+      },
+      {
+        titolo: "Il metodo PUT",
+        punti: [
+          "Salva una risorsa a un URI preciso: la crea (<strong>201</strong>) o la sostituisce (<strong>200</strong>/<strong>204</strong>).",
+          "URI di POST = il programma che elabora; URI di PUT = la risorsa stessa (quella che avrai con una GET).",
+          "PUT non è sicura ma è <strong>idempotente</strong>: ripeterla non cambia il risultato.",
+        ],
+      },
+      {
+        titolo: "Il metodo DELETE",
+        punti: [
+          "Chiede di cancellare la risorsa: 200, 202 (non ancora fatto) o 204.",
+          "Spesso il server risponde <strong>405 Method Not Allowed</strong> con l'header <code>Allow</code>.",
+        ],
+      },
+      {
+        titolo: "HEAD, OPTIONS e TRACE: i metodi per controllare",
+        punti: [
+          "<strong>HEAD</strong>: come GET ma senza body; controlla validità, accessibilità e cache (web crawler).",
+          "<strong>OPTIONS</strong>: chiede che cosa sa fare il server (<code>*</code> = opzioni generali).",
+          "<strong>TRACE</strong>: il server rimanda indietro la richiesta; gli header <code>Via</code> mostrano i proxy attraversati.",
+        ],
+      },
+      {
+        titolo: "CONNECT e gli altri metodi",
+        punti: [
+          "<strong>CONNECT</strong>: un proxy apre un tunnel sicuro (SSL/TLS).",
+          "WebDAV (RFC 4918) aggiunge metodi per gestire file; XMLHttpRequest permette Ajax.",
+        ],
+      },
+      {
+        titolo: "HTTP/2",
+        punti: [
+          "Nasce da <strong>SPDY</strong>; obiettivo: dimezzare il tempo di caricamento.",
+          "Minore latenza, <strong>header compressi</strong> e <strong>multiplexing</strong> di più richieste sulla stessa connessione.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-codici-stato-https.html": {
+    breve: "I codici con cui il server dice com'è andata una richiesta, e come HTTPS cifra la comunicazione.",
+    sezioni: [
+      {
+        titolo: "Le rappresentazioni HTTP",
+        punti: [
+          "Viaggia una <strong>rappresentazione</strong> della risorsa: header con i <strong>metadati</strong> (dimensione, tipo MIME, data) e body con i dati.",
+        ],
+      },
+      {
+        titolo: "I codici di stato",
+        punti: [
+          "Tre cifre, la prima è la classe. Definiti dall'<strong>IETF</strong>.",
+          "1xx info · 2xx successo · 3xx reindirizzamento · 4xx errore del client · 5xx errore del server.",
+        ],
+      },
+      {
+        titolo: "I codici più importanti",
+        punti: [
+          "100 Continue, <strong>200 OK</strong>, <strong>201 Created</strong>, 204 No Content, 206 Partial Content.",
+          "<strong>301</strong> spostato per sempre, 302/303 temporaneamente: il nuovo indirizzo è in <code>Location</code>.",
+          "400 Bad Request, <strong>401</strong> non autenticato, <strong>403</strong> vietato, <strong>404</strong> non trovato, 405, 409; <strong>500</strong> errore interno.",
+        ],
+      },
+      {
+        titolo: "HTTPS: HTTP sicuro",
+        punti: [
+          "Protegge da <strong>eavesdropping</strong> (ascolto) e <strong>tampering</strong> (manomissione) con <strong>SSL/TLS</strong>; oggi si usa solo TLS.",
+          "Chiave <strong>asimmetrica</strong> (RSA) per scambiarsi una chiave <strong>simmetrica</strong> (AES), veloce, per i dati.",
+          "Di solito l'autenticazione è <strong>unilaterale</strong>: si autentica solo il server.",
+        ],
+      },
+      {
+        titolo: "L'handshake TLS e i certificati",
+        punti: [
+          "Client Hello, Server Hello, Key Exchange, Change Cipher Spec, poi i dati cifrati.",
+          "I certificati validi li rilasciano le <strong>CA</strong>: DV (dominio), OV (azienda), EV (massimo). Esiste anche la Mutual Authentication.",
+          "HTTPS usa la porta <strong>443</strong>, HTTP la <strong>80</strong>.",
+        ],
+      },
+      {
+        titolo: "I limiti di HTTPS e HSTS",
+        punti: [
+          "Il lucchetto non protegge da <strong>phishing</strong> né da <strong>man-in-the-middle</strong> con certificati non verificati.",
+          "<strong>HSTS</strong>: il browser usa solo HTTPS con quel sito per <code>max-age</code> secondi.",
+        ],
+      },
+    ],
+  },
+
+  "materie/sistemi-e-reti/http-autenticazione.html": {
+    breve: "Come il server riconosce chi può accedere a una risorsa: filtro IP, Basic e Digest Authentication.",
+    sezioni: [
+      {
+        titolo: "Il meccanismo dell'autenticazione",
+        punti: [
+          "Il browser chiede le credenziali e le rimanda in un header a ogni richiesta, come i cookie.",
+          "Tre tecniche: filtro IP, Basic Authentication, Digest Authentication.",
+        ],
+      },
+      {
+        titolo: "Il filtro sugli indirizzi IP",
+        punti: [
+          "<strong>IAAF</strong>: debole con NAT (IP condiviso) e DHCP (IP che cambia).",
+          "<strong>IP spoofing</strong>: si falsifica il Source Address; non cieco, cieco, DoS.",
+        ],
+      },
+      {
+        titolo: "Il paradigma challenge/response",
+        punti: [
+          "Il client si identifica, il server lancia una sfida casuale R, il client risponde con R trasformato (cifrato o con un hash).",
+        ],
+      },
+      {
+        titolo: "La Basic Authentication",
+        punti: [
+          "401 + <code>WWW-Authenticate: Basic realm</code>, poi <code>Authorization: Basic BASE64(user:password)</code>.",
+          "Base64 è invertibile: le credenziali sono solo offuscate. Va usata con <strong>HTTPS</strong>.",
+        ],
+      },
+      {
+        titolo: "La Digest Authentication",
+        punti: [
+          "La password non viaggia: si manda un <strong>digest</strong> (hash) calcolato da user, nonce e password.",
+          "Hash: lunghezza fissa, stesso input stesso hash, a senso unico. <strong>Nonce</strong>: numero usato una volta sola.",
+        ],
+      },
+      {
+        titolo: "Perché la Digest è più sicura: il replay attack",
+        punti: [
+          "<strong>Replay attack</strong>: si ruba e si rimanda una richiesta valida.",
+          "Il nonce sempre nuovo rende inutile un digest vecchio; la DA però non verifica l'identità del server.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Storia ---------------- */
   "materie/storia/unita-d-italia.html": {
     breve: "Come la penisola, divisa in più Stati, diventò un solo regno tra il 1848 e il 1871.",

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="it" data-subject="sistemi-e-reti">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Posta elettronica, DNS e Telnet · Scuola</title>
+  <meta name="description" content="La posta elettronica spiegata in modo semplice: indirizzi email, POP mail e web mail, MUA e MTA, formato RFC 822 e MIME, SMTP, POP3, webmail e IMAP con le loro porte, nome simbolico e indirizzo IP, file hosts e alias, DNS e server radice, Telnet con opzioni DO, DON'T, WILL, WON'T e NVT, SSH.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Posta elettronica, DNS e Telnet</h1>
+  <p class="lead">Tre servizi del livello delle applicazioni: come viaggia un'email, come un nome come <code>www.hoepli.it</code> diventa un indirizzo IP e come si comanda un computer lontano con Telnet e SSH.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Il <strong>MUA</strong> (il programma di posta) scrive e legge, l'<strong>MTA</strong> (il mail server) trasporta. <strong>SMTP</strong> (porta 25) <strong>spedisce</strong> la posta; <strong>POP3</strong> (110) e <strong>IMAP</strong> (143) servono a <strong>leggerla</strong>.</li>
+      <li>POP3 <strong>scarica e cancella</strong> dal server; IMAP lascia la posta <strong>sul server</strong> e la gestisce lì.</li>
+      <li>Il <strong>DNS</strong> traduce i nomi in indirizzi IP con un database <strong>distribuito ad albero</strong> (13 server radice).</li>
+      <li><strong>Telnet</strong> (porta 23) apre una sessione remota a riga di comando, ma <strong>non cifrata</strong>.</li>
+      <li><strong>SSH</strong> fa le stesse cose di Telnet ma con un canale <strong>cifrato</strong> e mutua autenticazione.</li>
+    </ol>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Protocollo</th><th>A che cosa serve</th><th>Porta</th><th>Trasporto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SMTP</strong></td><td>Inviare la posta</td><td>25</td><td>TCP</td></tr>
+        <tr><td><strong>POP3</strong></td><td>Scaricare la posta sul PC</td><td>110</td><td>TCP</td></tr>
+        <tr><td><strong>IMAP</strong></td><td>Leggere e gestire la posta sul server</td><td>143</td><td>TCP</td></tr>
+        <tr><td><strong>DNS</strong></td><td>Tradurre nomi in indirizzi IP</td><td>53</td><td>di solito UDP</td></tr>
+        <tr><td><strong>Telnet</strong></td><td>Terminale remoto in chiaro</td><td>23</td><td>TCP</td></tr>
+        <tr><td><strong>SSH</strong></td><td>Terminale remoto cifrato</td><td>22</td><td>TCP</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">La porta del DNS (UDP 53) è a pagina 2 del libro; quella di SSH (22) non c'è, ma è utile conoscerla.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il servizio email</h2>
+  <p class="ref">Pagina 11</p>
+  <p>La <strong>posta elettronica</strong> (<em>electronic mail</em>, email) è forse l'applicazione più usata in rete, da privati e aziende: costa praticamente niente. Il rovescio della medaglia è lo <strong>spam</strong>, cioè i messaggi indesiderati, soprattutto pubblicitari, mandati in quantità enormi.</p>
+  <p class="hand">"Spam" era il nome di una carne in scatola americana (<em>spiced ham</em>), famosa per essere dappertutto.</p>
+  <h3>Gli indirizzi</h3>
+<pre data-lang="testo"><code>nomeutente@dominio          es.  mario.rossi@gmail.com</code></pre>
+  <ul>
+    <li><strong>nomeutente</strong> identifica chi scrive o riceve; lo sceglie l'utente o l'amministratore ed è <strong>unico dentro quel dominio</strong>;</li>
+    <li><strong>dominio</strong> è il nome del provider (con la nazionalità) oppure un indirizzo IP.</li>
+  </ul>
+  <div class="callout tip"><span class="callout-title">La chiocciola</span><code>@</code> (in inglese <em>at</em>) vuol dire "<strong>presso</strong>": <em>mario presso gmail</em>. Il simbolo esisteva già nel VI-VII secolo; in Inghilterra si usava nei commerci per dire "al prezzo di". Nel 1972, nella rete <strong>ARPANET</strong> (l'antenata di Internet), fu scelto per separare il nome utente dal server.</div>
+  <p>Un indirizzo email non appartiene a una <strong>persona</strong> ma a una <strong>casella di posta</strong>: una persona può avere più caselle, e la stessa casella può avere più nomi (<strong>alias</strong>).</p>
+
+  <h3>POP mail o web mail</h3>
+  <p>Ci sono due modi di usare la posta:</p>
+  <ul>
+    <li><strong>POP mail</strong>: si legge e si scrive dal proprio computer con un programma di posta, il <strong>client di posta</strong> (Outlook, eM Client, Mail, Thunderbird…);</li>
+    <li><strong>web mail</strong>: si usa la casella da un <strong>sito web</strong> con il browser (Outlook.com, Gmail…).</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Web mail</th><th>POP mail</th></tr></thead>
+      <tbody>
+        <tr><td>Gratuita</td><td>Spesso a pagamento</td></tr>
+        <tr><td>Accesso da <strong>qualunque computer</strong> collegato a Internet</td><td>Accesso solo dal computer dove c'è il programma di posta</td></tr>
+        <tr><td>Password da scrivere a ogni accesso</td><td>Password scritta una volta, quando si crea l'account</td></tr>
+        <tr><td>Meno sicura: la password può essere intercettata</td><td>Più sicura: la password è memorizzata nel client</td></tr>
+        <tr><td>Allegati di dimensione limitata</td><td>Allegati anche molto grandi</td></tr>
+        <tr><td>Rischio alto di spam</td><td>Rischio di spam ridotto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">È il confronto del libro: oggi molte web mail sono sicure e permettono allegati grandi, ma in verifica vale questa tabella.</p>
+
+  <!-- ============================================================= -->
+  <h2>MUA e MTA</h2>
+  <p class="ref">Pagine 11-13</p>
+  <p>Come per la posta di carta, il destinatario <strong>non deve essere collegato</strong> quando gli scrivi: il messaggio viene messo in una memoria, la casella "<strong>fermo posta</strong>", e aspetta che qualcuno passi a ritirarlo. La posta elettronica (definita nell'<strong>RFC 822</strong>, con il protocollo SMTP) è fatta da due parti:</p>
+  <div class="compare">
+    <div>
+      <h4>MUA (Mail User Agent)</h4>
+      <p>Il <strong>programma di posta</strong> sul computer dell'utente: con un'interfaccia grafica facile permette di <strong>scrivere, ricevere e leggere</strong> i messaggi. Per spedire usa <strong>SMTP</strong> e consegna il messaggio a un MTA.</p>
+      <p class="hand">Tu che scrivi la lettera e la imbuchi.</p>
+    </div>
+    <div>
+      <h4>MTA (Mail Transport Agent)</h4>
+      <p>Il <strong>mail server</strong>: riceve tutti i messaggi e li consegna. Fa da <strong>ponte</strong> tra due MUA, come una centralina telefonica che smista le chiamate in entrata e in uscita (es. <em>sendmail</em>).</p>
+      <p class="hand">L'ufficio postale.</p>
+    </div>
+  </div>
+  <p>L'MTA offre tre servizi:</p>
+  <ul>
+    <li><strong>server SMTP</strong> (porta 25): spedisce e riceve i messaggi tra server;</li>
+    <li><strong>server POP3</strong> (porta 110): manda i messaggi al client;</li>
+    <li><strong>server IMAP4</strong> (porta 143): permette di gestire i messaggi sul server dal client.</li>
+  </ul>
+<pre data-lang="testo"><code>MUA mittente ──SMTP (porta 25)──► mail server dell'ISP mittente
+                                      │
+                                   Internet (SMTP)
+                                      ▼
+MUA destinatario ◄──POP3 (110) o IMAP── mail server dell'ISP destinatario</code></pre>
+  <p>I mail server tengono:</p>
+  <ul>
+    <li>la <strong>mailbox</strong> "fermo posta" di ogni utente, con i messaggi arrivati e non ancora scaricati (con la POP mail); con la web mail l'MTA fa anche il lavoro del MUA, perché l'utente lavora direttamente sul server;</li>
+    <li>la <strong>coda</strong> dei messaggi in uscita non ancora consegnati.</li>
+  </ul>
+  <p>In breve: si <strong>spedisce con SMTP</strong>, si <strong>riceve con POP3 o IMAP</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il formato del messaggio: RFC 822 e MIME</h2>
+  <p class="ref">Pagina 13</p>
+  <p>Il primo documento sul formato dei messaggi di posta è l'<strong>RFC 822</strong> (1982). Prevede solo <strong>messaggi di testo</strong>, scritti con caratteri <strong>ASCII a 7 bit</strong>: niente immagini.</p>
+  <p>Un messaggio è una stringa di testo fatta di un <strong>header</strong> e di un <strong>body</strong>, separati da una <strong>riga vuota</strong> (come in HTTP).</p>
+<pre data-lang="testo"><code>From: luca@scuola.it
+To: sara@gmail.com
+Cc: prof@scuola.it
+Date: Mon, 26 Oct 2026 10:00:00
+Subject: Compiti di Sistemi
+                                       ← riga vuota
+Ciao Sara, mi mandi gli esercizi?      ← body</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Campo</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><code>To:</code></td><td>I destinatari</td></tr>
+        <tr><td><code>From:</code></td><td>Il mittente</td></tr>
+        <tr><td><code>Cc:</code></td><td>Destinatari <strong>per conoscenza</strong> (tutti vedono che l'hanno ricevuta)</td></tr>
+        <tr><td><code>Bcc:</code></td><td>Destinatari per conoscenza <strong>nascosta</strong> (gli altri non li vedono)</td></tr>
+        <tr><td><code>Date:</code></td><td>La data di spedizione</td></tr>
+        <tr><td><code>Reply-to:</code></td><td>Un indirizzo a cui rispondere, diverso dal mittente</td></tr>
+        <tr><td><code>Subject:</code></td><td>L'oggetto (il titolo) del messaggio</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Il <strong>body</strong> è il messaggio vero e proprio, solo in caratteri ASCII. SMTP trasporta caratteri a <strong>7 bit</strong>, cioè solo i primi <strong>128</strong> caratteri; un file binario (un'immagine, un PDF) invece usa tutti i <strong>256</strong> valori possibili di un byte. Per mandarlo bisogna prima <strong>convertirlo</strong> in testo.</p>
+  <div class="callout def"><span class="callout-title">MIME</span>Lo standard <strong>MIME</strong> permette di mettere in un'email, oltre al testo, <strong>immagini, audio, video e file</strong> allegati. Il programma di posta si limita a "trasportare" il file senza guardarne il contenuto: sarà il destinatario a decodificarlo e usarlo, seguendo il <strong>tipo</strong> scritto nel messaggio (gli stessi tipi MIME di HTTP, come <code>image/png</code>).</div>
+
+  <!-- ============================================================= -->
+  <h2>Inviare la posta: SMTP</h2>
+  <p class="ref">Pagina 14</p>
+  <p><strong>SMTP</strong> (<em>Simple Mail Transfer Protocol</em>) usa <strong>TCP sulla porta 25</strong> per consegnare in modo affidabile i messaggi dal client al server, e da un server all'altro.</p>
+  <p class="hand">È il postino che porta la lettera dall'ufficio postale del mittente a quello del destinatario. Non te la consegna a casa: la lascia nella tua casella all'ufficio postale.</p>
+  <p>Un'email da A (mittente) a B (destinatario) viaggia in <strong>tre fasi</strong>:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Dal PC al server del mittente</strong><span>Il programma di posta manda il messaggio al proprio mail server (A) con SMTP.</span></li>
+    <li><b>2</b><strong>Da server a server</strong><span>Il server A manda il messaggio al server del destinatario (B), sempre con SMTP.</span></li>
+    <li><b>3</b><strong>Dal server al PC del destinatario</strong><span>Il destinatario preleva il messaggio dal proprio server con POP3 o IMAP.</span></li>
+  </ol>
+  <h3>Il dialogo tra i due server (fase 2)</h3>
+  <ol>
+    <li><strong>A</strong>, guardando l'indirizzo email del destinatario, trova il server <strong>B</strong> e apre una connessione;</li>
+    <li><strong>B</strong> identifica da dove arriva la connessione (l'indirizzo IP), la accetta e se lo annota all'inizio del messaggio;</li>
+    <li><strong>A</strong> comunica lo username del destinatario;</li>
+    <li><strong>B</strong> controlla che l'indirizzo esista e autorizza l'invio;</li>
+    <li><strong>A</strong> invia il messaggio e chiude la connessione;</li>
+    <li><strong>B</strong> conserva il messaggio finché il destinatario non lo ritira con POP3 o IMAP.</li>
+  </ol>
+
+  <!-- ============================================================= -->
+  <h2>Leggere la posta: POP3</h2>
+  <p class="ref">Pagina 14</p>
+  <p><strong>POP3</strong> (<em>Post Office Protocol</em>) permette al programma di posta (lo <strong>user agent</strong>, il <em>client POP</em>) di collegarsi al mail server (il <em>server POP</em>) e <strong>scaricare</strong> sul PC i messaggi della propria casella, il "fermoposta". Usa la <strong>porta 110</strong>.</p>
+  <p>È semplicissimo: all'avvio il client fa il login e scarica <strong>tutti</strong> i messaggi arrivati dall'ultima volta, allegati (attachment) compresi.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fase</th><th>Che cosa succede</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Autorizzazione</strong> (AUTHORIZATION)</td><td>Il client si identifica e il server controlla che possa accedere alla casella.</td></tr>
+        <tr><td><strong>2. Transazione</strong> (TRANSACTION)</td><td>La posta viene scaricata; alla fine il client manda il comando <code>QUIT</code>.</td></tr>
+        <tr><td><strong>3. Aggiornamento</strong> (UPDATE)</td><td>Il server <strong>cancella</strong> dalla casella i messaggi scaricati e chiude la connessione.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Con POP3 vai all'ufficio postale, ti porti a casa tutte le lettere e la casella resta vuota.</p>
+
+  <!-- ============================================================= -->
+  <h2>Webmail e IMAP</h2>
+  <p class="ref">Pagina 15</p>
+  <h3>La webmail</h3>
+  <p>Con la <strong>webmail</strong> (Gmail, Outlook.com, Libero, Yahoo…) apri la posta da un <strong>sito web con il browser</strong>. La posta non viene scaricata sul PC: la leggi e la scrivi direttamente sul server. Il browser parla con il web server in <strong>HTTP</strong>; il web server parla con il mail server con <strong>SMTP</strong> e <strong>POP3/IMAP</strong>.</p>
+
+  <h3>IMAP</h3>
+  <p><strong>IMAP</strong> (<em>Internet Message Access Protocol</em>, <strong>porta 143</strong>) è l'alternativa a POP3, molto più evoluta: perfetta per chi usa la posta da più dispositivi o in mobilità. Il vantaggio principale è che la posta <strong>resta sul server</strong> e si può gestire online e offline, anche <strong>prima</strong> di scaricarla. Con IMAP si può:</p>
+  <ul>
+    <li>rinominare la propria casella;</li>
+    <li>cancellare singoli messaggi senza scaricarli;</li>
+    <li>leggere solo le <strong>intestazioni</strong> (mittente, oggetto) senza scaricare tutto;</li>
+    <li>scaricare solo <strong>pezzi</strong> dei messaggi;</li>
+    <li>accedere alla stessa casella da più dispositivi <strong>contemporaneamente</strong>.</li>
+  </ul>
+  <p>La versione attuale, <strong>IMAP4</strong>, è lo standard: permette anche di organizzare i messaggi in <strong>cartelle sul server</strong>, collegarsi a più mail server insieme, condividere caselle con altri e gestire meglio gli allegati (MIME).</p>
+  <div class="compare">
+    <div>
+      <h4>POP3</h4>
+      <p>Scarica tutto sul PC e cancella dal server. Se apri la posta dal telefono, non trovi i messaggi già scaricati dal computer.</p>
+    </div>
+    <div>
+      <h4>IMAP</h4>
+      <p>Lascia tutto sul server e ti fa lavorare lì. Telefono, PC e tablet vedono sempre la stessa casella, con le stesse cartelle.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Nome simbolico e indirizzo IP</h2>
+  <p class="ref">Pagina 15</p>
+  <p>Per trovare un host o un router su Internet serve il suo <strong>indirizzo IP</strong>, unico sulla rete pubblica. Ma gli esseri umani preferiscono i <strong>nomi</strong>: è molto più facile ricordare <code>www.hoepli.it</code> che <code>194.113.89.93</code>.</p>
+  <p>Anche nei PC di una LAN si possono usare dei nomi. In una rete piccola basta un <strong>file hosts</strong>, un elenco di coppie <em>indirizzo – nome</em>:</p>
+<pre data-lang="testo"><code>192.168.1.1   Contabilita_1
+192.168.1.2   Contabilita_2
+192.168.1.3   Magazzino_1
+192.168.1.4   Magazzino_2
+192.168.1.5   Vendite_1
+192.168.1.6   Server</code></pre>
+  <p>Se allo stesso host si danno <strong>più nomi</strong>, si parla di <strong>alias</strong>. Il file hosts va bene per pochi computer, ma con una rete grande (figuriamoci Internet) diventa impossibile da tenere aggiornato: per questo esiste il DNS.</p>
+  <p class="hand">Il file hosts è la rubrica del tuo telefono; il DNS è l'elenco telefonico di tutto il mondo, diviso tra tantissimi uffici.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il DNS</h2>
+  <p class="ref">Pagina 16</p>
+  <p>La <strong>risoluzione dei nomi</strong> (da nome a indirizzo IP) è il lavoro del <strong>DNS</strong> (<em>Domain Name System</em>). Il DNS è due cose insieme:</p>
+  <ul>
+    <li>un <strong>database distribuito</strong> che memorizza le coppie <em>nome simbolico – indirizzo IP</em> su tanti nodi della rete, i <strong>name server</strong>;</li>
+    <li>un <strong>protocollo</strong> del livello applicazione con cui host e name server si parlano, usato da tutti gli altri protocolli che hanno bisogno di tradurre un nome.</li>
+  </ul>
+  <h3>Come si trova un indirizzo</h3>
+  <ol class="stack">
+    <li><b>1</b><strong>Server DNS locale</strong><span>Il tuo computer chiede al DNS locale (di solito quello del provider). Se conosce la risposta, ha finito.</span></li>
+    <li><b>2</b><strong>Server radice</strong><span>Se non la conosce, chiede a un server DNS <strong>radice</strong>.</span></li>
+    <li><b>3</b><strong>Server autorizzato</strong><span>Se neanche la radice conosce la coppia, si arriva al server DNS <strong>autorizzato</strong> per quel dominio, che ha la risposta.</span></li>
+    <li><b>4</b><strong>Ritorno</strong><span>La coppia nome – IP torna al server locale, che la passa al tuo computer.</span></li>
+  </ol>
+  <p>Nel mondo ci sono <strong>13 server radice</strong>, chiamati con le lettere da <strong>A</strong> a <strong>M</strong> (<code>a.root-servers.net</code> … <code>m.root-servers.net</code>). Ognuno in realtà è un <strong>gruppo</strong> (cluster) di server replicati sparsi per il pianeta.</p>
+  <p>Sotto la radice ci sono i server <strong>TLD</strong> (<em>Top-Level Domain</em>), quelli dei domini di primo livello: generici come <code>.com</code>, <code>.org</code>, <code>.net</code>, <code>.edu</code> e nazionali come <code>.it</code>, <code>.uk</code>, <code>.fr</code>, <code>.ca</code>, <code>.jp</code>. Insieme formano una struttura <strong>ad albero</strong>.</p>
+<pre data-lang="testo"><code>                    . (radice)
+          ┌─────────┼──────────┐
+        .com       .it        .org     ← TLD
+                ┌───┴────┐
+             hoepli    scuola          ← domini di secondo livello
+                │
+               www                     ← host: www.hoepli.it</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Telnet</h2>
+  <p class="ref">Pagine 16-17</p>
+  <p><strong>Telnet</strong> è un protocollo client/server basato su <strong>TCP</strong> che apre una sessione di comunicazione <strong>bidirezionale</strong> e <strong>non cifrata</strong> tra due host. Una volta collegato, il client lavora sul computer remoto <strong>come se ci fosse seduto davanti</strong>, ma solo con comandi a riga di comando (niente interfaccia grafica).</p>
+  <p>Il client si collega alla <strong>porta 23</strong>, dove sul server è in ascolto un programma Telnet.</p>
+<pre data-lang="testo"><code>telnet [&lt;opzioni&gt;] [&lt;host-remoto&gt; [&lt;porta&gt;]]
+
+telnet nomehost        ← porta 23 di default
+telnet nomehost 35     ← un'altra porta</code></pre>
+  <h3>Attivarlo su Windows 11</h3>
+  <ol>
+    <li>Cerca <code>cmd.exe</code> e scegli <strong>Esegui come amministratore</strong>.</li>
+    <li>Scrivi <code>dism /online /Enable-Feature /FeatureName:TelnetClient</code> e premi Invio.</li>
+    <li>Scrivi <code>telnet</code>: compare il prompt <code>Microsoft Telnet&gt;</code>. Per uscire dalla sessione il carattere di escape è <code>CTRL+]</code>.</li>
+  </ol>
+  <h3>Come comunica</h3>
+  <p>La comunicazione è <strong>half-duplex</strong> (si parla uno alla volta, come con un walkie-talkie), a <strong>8 bit</strong>, e i dati partono <strong>una riga alla volta</strong>. Un byte di valore <strong>255</strong> vuol dire "attenzione: quello che segue è un <strong>comando</strong>, non un dato".</p>
+  <div class="callout def"><span class="callout-title">NVT (Network Virtual Terminal)</span>Client e server possono essere computer diversi, con sistemi operativi diversi. Per capirsi, ai due estremi si crea un <strong>terminale virtuale</strong> uguale per tutti: ognuno traduce dal proprio formato a quello dell'NVT e viceversa.
+    <p class="hand">Come due persone di lingue diverse che si parlano in inglese.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le opzioni di Telnet</h2>
+  <p class="ref">Pagine 17-18</p>
+  <p>Le due parti si mettono d'accordo sulle <strong>opzioni</strong> (per esempio se fare l'eco dei caratteri) con quattro parole, seguite dal numero dell'opzione:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Comando</th><th>Significato</th><th>Risposte possibili</th></tr></thead>
+      <tbody>
+        <tr><td><code>WILL xxx</code></td><td>«<strong>Io</strong> vorrei usare l'opzione xxx»</td><td><code>DO</code> (sì) o <code>DON'T</code> (no)</td></tr>
+        <tr><td><code>WON'T xxx</code></td><td>«<strong>Io</strong> non voglio (più) usare l'opzione»</td><td><code>DON'T</code> (conferma)</td></tr>
+        <tr><td><code>DO xxx</code></td><td>«Vorrei che <strong>tu</strong> usassi l'opzione xxx»</td><td><code>WILL</code> (sì) o <code>WON'T</code> (no)</td></tr>
+        <tr><td><code>DON'T xxx</code></td><td>«Vorrei che <strong>tu</strong> smettessi di usare l'opzione»</td><td><code>WON'T</code> (conferma)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Trucco: <strong>WILL/WON'T parlano di me</strong> («io lo farò / non lo farò»), <strong>DO/DON'T parlano di te</strong> («fallo / non farlo»).</p>
+  <p>Telnet è <strong>simmetrico</strong>: tutti e due possono proporre opzioni. Questo è comodo, ma rischia un "ciclo infinito" di richieste e risposte. Per evitarlo l'NVT segue cinque regole:</p>
+  <ol>
+    <li>si può chiedere solo un <strong>cambio</strong> delle opzioni;</li>
+    <li>non si può chiedere lo <strong>stato</strong> di un'opzione;</li>
+    <li>una richiesta per un'opzione <strong>già attiva</strong> viene ignorata;</li>
+    <li>a ogni richiesta di cambio si risponde con un <strong>ACK</strong> (una conferma);</li>
+    <li>se l'opzione cambia il modo di trattare i dati, la richiesta va inserita nel flusso <strong>nel punto esatto</strong> da cui i dati vanno interpretati in modo nuovo.</li>
+  </ol>
+  <h3>Un esempio</h3>
+  <p>A deve mandare a B i caratteri <code>X, Y, Z, CR, LF, 1, 2</code> e vuole che <code>1</code> e <code>2</code> partano <strong>subito</strong>, senza aspettare la fine della riga:</p>
+  <ol>
+    <li>A manda <code>X Y Z CR LF</code> e tiene <code>1</code> e <code>2</code> in un buffer;</li>
+    <li>A manda <code>DO ECHO</code> e <code>DO SUPPRESS-GO-AHEAD</code> per passare alla modalità "un carattere alla volta";</li>
+    <li>B risponde <code>WILL ECHO</code> e <code>WILL SUPPRESS-GO-AHEAD</code>: sono le due conferme;</li>
+    <li>ricevute le conferme, A spedisce <code>1</code> e <code>2</code>, e da qui in poi ogni carattere parte appena viene scritto.</li>
+  </ol>
+  <p>Oggi Telnet si usa soprattutto per il <strong>debug</strong> di servizi di rete come SMTP e HTTP: è un modo semplice per mandare comandi a mano a un server e vedere che cosa risponde (e in alcuni vecchi giochi in rete).</p>
+
+  <!-- ============================================================= -->
+  <h2>SSH: Telnet in sicurezza</h2>
+  <p class="ref">Pagina 19</p>
+  <p>Telnet manda tutto <strong>in chiaro</strong>, password comprese: chi intercetta la rete legge tutto. Per questo è stato sostituito da <strong>SSH</strong> (<em>Secure Shell</em>), che fa tutto quello che fa Telnet più la <strong>cifratura</strong> e l'<strong>autenticazione a chiave pubblica</strong>. È lo standard per amministrare i server da remoto.</p>
+<pre data-lang="testo"><code>ssh [opzioni] nomeutente@host [comando]
+
+ssh mario@192.168.1.6              ← apre una sessione sul server
+ssh mario@192.168.1.6 ls           ← esegue solo il comando ls</code></pre>
+  <ul>
+    <li>Crea un <strong>canale cifrato</strong>: i dati non si possono leggere né intercettare.</li>
+    <li>Fa la <strong>mutua autenticazione</strong>: si riconoscono sia il client sia il server.</li>
+    <li>Protegge la comunicazione per <strong>tutta la sessione</strong>.</li>
+  </ul>
+  <p>Ci sono programmi che rendono comodo collegarsi in SSH, per esempio <strong>MobaXterm</strong> (o PuTTY), che tengono in memoria le sessioni salvate.</p>
+  <div class="compare">
+    <div>
+      <h4>Telnet</h4>
+      <p>Porta 23, tutto in chiaro. Oggi solo per test e debug.</p>
+    </div>
+    <div>
+      <h4>SSH</h4>
+      <p>Porta 22, tutto cifrato, autenticazione di client e server. Si usa sempre questo.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Riassunto in 3 righe</h2>
+  <ol>
+    <li>Il MUA (programma di posta) scrive e legge, l'MTA (mail server) trasporta; il messaggio è header (To, From, Cc, Bcc, Subject…) + riga vuota + body in ASCII a 7 bit, e MIME aggiunge gli allegati.</li>
+    <li>La posta parte con SMTP (porta 25) dal PC al server del mittente e poi al server del destinatario; si legge con POP3 (110, scarica e cancella) o IMAP (143, resta sul server), oppure in webmail via HTTP.</li>
+    <li>Il DNS traduce i nomi in indirizzi IP con un database distribuito ad albero: server locale, 13 server radice (A-M), TLD e server autorizzati; nelle reti piccole basta il file hosts.</li>
+    <li>Telnet (porta 23) apre un terminale remoto in chiaro, con opzioni negoziate con WILL/WON'T/DO/DON'T sull'NVT; SSH fa lo stesso ma cifrato e con mutua autenticazione.</li>
+  </ol>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Mini-sfida <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Luca manda un'email a Sara. Indica quali protocolli si usano in ogni tratto, sapendo che Sara legge la posta dal telefono e dal PC.</li>
+        <li>Perché a Sara conviene IMAP invece di POP3?</li>
+        <li>Il tuo DNS locale non conosce l'indirizzo di <code>www.esempio.org</code>. Chi interroga?</li>
+        <li>Il server A manda <code>DO ECHO</code> a B. Che cosa sta chiedendo? Come risponde B se è d'accordo?</li>
+        <li>Perché un amministratore di rete usa SSH e non Telnet?</li>
+      </ol>
+    </div>
+    <details class="soluzione">
+      <summary>Soluzione</summary>
+      <div class="soluzione-body">
+        <ol>
+          <li>PC di Luca → server di Luca: <strong>SMTP</strong>. Server di Luca → server di Sara: <strong>SMTP</strong>. Server di Sara → telefono e PC di Sara: <strong>IMAP</strong> (o POP3).</li>
+          <li>Con IMAP i messaggi restano sul server: telefono e PC vedono la stessa casella. Con POP3 i messaggi scaricati sul PC sparirebbero dal server e non li vedrebbe dal telefono.</li>
+          <li>Un server <strong>radice</strong>, che la indirizza verso il server TLD di <code>.org</code> e infine al server <strong>autorizzato</strong> per <code>esempio.org</code>, che ha la risposta.</li>
+          <li>Chiede a <strong>B</strong> di attivare l'opzione ECHO (DO = «fallo tu»). Se è d'accordo B risponde <code>WILL ECHO</code>.</li>
+          <li>Perché Telnet manda tutto in chiaro, password comprese; SSH cifra la comunicazione e autentica sia il client sia il server.</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Libro di testo, Unità 1 <em>Il livello delle applicazioni</em>, Lezione 2 <em>Email, DNS e Telnet</em> (pagine 11-19).</p>
+</main>
+</body>
+</html>
