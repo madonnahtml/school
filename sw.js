@@ -3,11 +3,11 @@
  * Pagine, stili e script: prima la rete (contenuti sempre aggiornati), se manca la connessione la copia salvata.
  * Font: prima la copia salvata.
  */
-var CACHE = "scuola-v10";
+var CACHE = "scuola-v11";
 var CORE = [
   "./", "index.html", "cerca.html", "riassunti.html", "esercizi.html", "classroom.html", "ripasso.html", "componenti.html",
-  "assets/css/style.css?v=10", "assets/js/site.js?v=10", "assets/js/riassunti.js?v=10", "assets/js/layout.js?v=10",
-  "assets/js/components.js?v=10", "assets/js/search.js?v=10", "assets/js/ripasso.js?v=10",
+  "assets/css/style.css?v=11", "assets/js/site.js?v=11", "assets/js/riassunti.js?v=11", "assets/js/layout.js?v=11",
+  "assets/js/components.js?v=11", "assets/js/search.js?v=11", "assets/js/ripasso.js?v=11",
   "assets/img/icon.svg", "manifest.webmanifest",
 ];
 
@@ -49,8 +49,9 @@ self.addEventListener("fetch", function (e) {
   }
   if (url.origin !== location.origin) return;
 
+  // "no-cache": chiede sempre al server se il file è cambiato, invece di usare la copia del browser
   e.respondWith(
-    fetch(req).then(function (res) {
+    fetch(req, { cache: "no-cache" }).then(function (res) {
       if (res.ok) {
         var copy = res.clone();
         caches.open(CACHE).then(function (c) { c.put(req, copy); });

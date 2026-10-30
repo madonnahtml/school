@@ -60,6 +60,6 @@ python3 -m http.server 8000   # poi apri http://localhost:8000
 
 ## Pubblicarlo con GitHub Pages
 
-Il repository è pubblico e GitHub Pages è attivo: Settings → Pages → *Deploy from a branch* → branch del sito / `(root)`.
+Il repository è pubblico e GitHub Pages è attivo: Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
 Il sito è su `https://madonnahtml.github.io/school/` e si aggiorna da solo a ogni modifica caricata su quel branch
 (dopo una modifica il nuovo sito arriva in 1-2 minuti; se non cambia, ricarica la pagina).
