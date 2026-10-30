@@ -443,6 +443,140 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/tpsit/http-metodi.html": {
+    breve: "I metodi (verbi) HTTP dicono al server che cosa fare con una risorsa; le API RESTful li usano per creare, leggere, modificare e cancellare dati.",
+    sezioni: [
+      {
+        titolo: "Che cos'è un metodo HTTP",
+        punti: [
+          "Il <strong>metodo</strong> (o verbo) esprime l'<strong>intenzione</strong> del client.",
+          "È la prima parola della request line, in <strong>maiuscolo</strong>: <code>GET / HTTP/1.1</code>, <code>DELETE /prove/risorsa HTTP/1.1</code>.",
+        ],
+      },
+      {
+        titolo: "I metodi delle request",
+        punti: [
+          "<strong>GET</strong> chiede un file, <strong>HEAD</strong> solo gli header, <strong>POST</strong> invia informazioni da elaborare (HTTP 1.0 e 1.1).",
+          "<strong>PUT</strong> carica un file creandolo o riscrivendolo, <strong>DELETE</strong> lo cancella: standard solo da HTTP 1.1.",
+          "<strong>OPTIONS</strong> chiede i metodi concessi, <strong>TRACE</strong> traccia la richiesta (nati con HTTP 1.1).",
+        ],
+      },
+      {
+        titolo: "Le API e le applicazioni RESTful",
+        punti: [
+          "Un'<strong>API</strong> permette ad altri programmi di comunicare con un sistema; le API HTTP si raggiungono con URL precisi e rispondono con dati (di solito JSON).",
+          "<strong>REST</strong> = <em>REpresentational State Transfer</em>: le applicazioni RESTful operano da remoto sui dati del server usando i metodi HTTP.",
+          "Regole: tutto è una <strong>risorsa</strong> con il suo URL (nomi, mai verbi), il <strong>metodo</strong> dice cosa fare, il server è <strong>stateless</strong>.",
+        ],
+      },
+      {
+        titolo: "Le operazioni CRUD",
+        punti: [
+          "<strong>C</strong>reate → <code>POST</code>, <strong>R</strong>etrieve → <code>GET</code>, <strong>U</strong>pdate → <code>PUT</code>, <strong>D</strong>elete → <code>DELETE</code>.",
+          "Come in SQL: INSERT, SELECT, UPDATE, DELETE. Per modificare solo alcuni campi si usa anche <code>PATCH</code>.",
+        ],
+      },
+      {
+        titolo: "Il metodo GET",
+        punti: [
+          "Chiede una risorsa (<strong>sola lettura</strong>): <code>GET /pathname HTTP/1.1</code>; il server risponde <code>200 OK</code> + i dati nel body.",
+          "I parametri vanno nella <strong>query string</strong>: dopo il <code>?</code>, coppie <code>chiave=valore</code> separate da <code>&amp;</code>.",
+          "La lunghezza dell'URL è <strong>limitata</strong> e i parametri si vedono.",
+        ],
+      },
+      {
+        titolo: "La codifica URL (URL encode)",
+        punti: [
+          "Ogni carattere <strong>non sicuro</strong> (<code>= &amp; % @ +</code>, spazio, accenti…) diventa <code>%xx</code>, con <code>xx</code> = codice ASCII in esadecimale.",
+          "Spazio → <code>%20</code>; le coppie si scrivono <code>nome1=valore1&amp;nome2=valore2</code>.",
+          "Esempio: <code>1+1=2</code> → <code>1%2B1%3D2</code>.",
+        ],
+      },
+      {
+        titolo: "Il metodo PUT",
+        punti: [
+          "Chiede di <strong>memorizzare</strong> sul server una risorsa all'URI indicato: la crea se non c'è, la <strong>sostituisce</strong> se c'è.",
+          "L'URI è la risorsa che si otterrà poi con una GET allo stesso indirizzo.",
+          "Risposte: <code>201 Created</code>, <code>200 OK</code>, <code>204 No Content</code>.",
+        ],
+      },
+      {
+        titolo: "Il metodo POST",
+        punti: [
+          "I dati vanno nel <strong>body</strong>, descritti da <code>Content-Type</code> e <code>Content-Length</code>; si usa per inviare i <strong>form</strong>.",
+          "L'URI è un <strong>programma</strong> (un'API) che gestisce i dati; nessun limite di lunghezza.",
+          "Non è sicuro di per sé (serve HTTPS). Risposte: <code>200</code>, <code>201</code>, <code>204</code>.",
+        ],
+      },
+      {
+        titolo: "POST e PUT a confronto",
+        punti: [
+          "POST <strong>crea</strong> dati (decide il server dove); PUT <strong>modifica o sostituisce</strong> la risorsa a un URI preciso.",
+          "PUT è <strong>idempotente</strong>: ripeterla dà lo stesso risultato. POST no: tre POST uguali creano tre risorse.",
+        ],
+      },
+      {
+        titolo: "Il metodo DELETE",
+        punti: [
+          "Chiede di <strong>eliminare</strong> la risorsa all'URI: funziona al rovescio rispetto a PUT.",
+          "Anche con <code>200 OK</code> non c'è garanzia che la cancellazione avvenga davvero.",
+          "Se non è permesso: <code>405 Method Not Allowed</code>, con l'header <code>Allow</code> che elenca i metodi ammessi.",
+        ],
+      },
+      {
+        titolo: "Riepilogo: GET, POST, PUT, DELETE",
+        punti: [
+          "GET legge (dati nell'URL), POST crea (body), PUT sostituisce (body), DELETE cancella (solo URL).",
+          "Idempotenti: GET, PUT, DELETE. Non idempotente: POST.",
+        ],
+      },
+    ],
+  },
+  "materie/tpsit/http-codici-stato-https.html": {
+    breve: "Header e body rappresentano la risorsa, il codice di stato dice com'è andata la richiesta, HTTPS cifra la comunicazione con SSL/TLS.",
+    sezioni: [
+      {
+        titolo: "Le rappresentazioni HTTP",
+        punti: [
+          "La <strong>rappresentazione</strong> riguarda la risorsa (dove si trova), il suo <strong>formato</strong> e il suo <strong>stato</strong>.",
+          "Elementi cardine: <strong>header</strong> (con <code>Content-Type</code> che dice il formato) e <strong>body</strong> (i dati: testo, immagini, JSON, HTML, XML).",
+          "Request e response contengono entrambe una rappresentazione.",
+        ],
+      },
+      {
+        titolo: "I codici di stato",
+        punti: [
+          "Numeri di tre cifre con cui il server indica l'<strong>esito</strong> della richiesta; definiti dall'<strong>IETF</strong>.",
+          "<strong>1xx</strong> informazione, <strong>2xx</strong> successo, <strong>3xx</strong> redirezione (non errore), <strong>4xx</strong> errore del client, <strong>5xx</strong> errore del server.",
+        ],
+      },
+      {
+        titolo: "I codici da sapere",
+        punti: [
+          "<code>200 OK</code> esito positivo; <code>201 Created</code> risorsa creata (dopo PUT o POST).",
+          "<code>400</code> richiesta non elaborabile, <code>401</code> servono le credenziali, <code>403</code> vietato anche se esiste, <code>404</code> non esiste, <code>405</code> metodo non permesso.",
+          "<code>500</code> errore imprevisto lato server.",
+        ],
+      },
+      {
+        titolo: "La sicurezza con HTTPS",
+        punti: [
+          "<strong>HTTPS</strong> = HTTP + SSL/TLS, sulla porta TCP <strong>443</strong> (HTTP usa la 80).",
+          "Protegge da <strong>eavesdropping</strong> (ascolto senza consenso) e <strong>tampering</strong> (manomissione dei contenuti).",
+          "I dati sono cifrati con una chiave <strong>simmetrica</strong> (es. AES), scambiata con una chiave <strong>asimmetrica</strong> (es. RSA).",
+        ],
+      },
+      {
+        titolo: "L'autenticazione TLS",
+        punti: [
+          "<strong>Unilaterale</strong>: si autentica solo il server, il browser ne verifica il certificato digitale; il client resta anonimo.",
+          "Fasi: Client Hello, Server Hello, Key Exchange, Cipher Suite Negotiation, poi HTTP GET e Data Transfer.",
+          "Il <strong>lucchetto</strong> non garantisce che il sito sia quello giusto: va controllato il certificato.",
+          "<strong>Mutua autenticazione (MA)</strong>: si autenticano entrambi, anche il client con un proprio certificato.",
+        ],
+      },
+    ],
+  },
 
   /* ---------------- Informatica ---------------- */
   "materie/informatica/java-array-wrapper-metodi-overload.html": {

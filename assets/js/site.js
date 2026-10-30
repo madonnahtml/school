@@ -99,6 +99,9 @@
           { title: "Il linguaggio XML", path: "materie/tpsit/xml.html", type: "teoria" },
           { title: "Lo schema DTD", path: "materie/tpsit/dtd.html", type: "teoria" },
           { title: "Il linguaggio JSON", path: "materie/tpsit/json.html", type: "teoria" },
+          { title: "I metodi HTTP e le API REST", path: "materie/tpsit/http-metodi.html", type: "teoria" },
+          { title: "I codici di stato e HTTPS", path: "materie/tpsit/http-codici-stato-https.html", type: "teoria" },
+          { title: "Classroom: HTTP e Postman (Parte 1)", path: "materie/tpsit/classroom-http-postman.html", type: "classroom", of: "materie/tpsit/http-metodi.html", n: 9, desc: "Richieste vere con Postman su JSONPlaceholder e httpbin: GET e risorse annidate, 404 e classi di status code, query string, header della richiesta, POST con body JSON, PUT e PATCH, DELETE e idempotenza, progettare le richieste." },
         ],
       },
       {

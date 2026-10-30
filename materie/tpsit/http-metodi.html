@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>I metodi HTTP e le API REST · Scuola</title>
+  <meta name="description" content="UD2 di TPSIT, lezione 2: i metodi (verbi) HTTP, le API RESTful e le operazioni CRUD, GET e la query string, la codifica URL, PUT, POST, DELETE e le differenze tra GET, POST e PUT.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>I metodi HTTP e le API REST</h1>
+  <p class="lead">UD2, lezione 2: le caratteristiche dei metodi HTTP, le differenze tra GET e POST e come i metodi vengono usati dalle applicazioni (API RESTful) per creare, leggere, modificare e cancellare dati su un server.</p>
+
+  <div class="callout info"><span class="callout-title">Prima di iniziare</span>Com'è fatta una richiesta (request line, header, body) è spiegato nel capitolo <a href="protocollo-http.html">Il protocollo HTTP</a>. Lo stesso argomento, visto dal libro di Sistemi e Reti, è in <a href="../sistemi-e-reti/http-metodi.html">HTTP: i metodi (verbi)</a>.</div>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Il <strong>metodo</strong> (o verbo) è la prima parola della richiesta: dice al server <em>che cosa vuole fare</em> il client.</li>
+      <li>Le <strong>API RESTful</strong> usano quattro metodi per le operazioni <strong>CRUD</strong>: POST crea, GET legge, PUT modifica, DELETE cancella.</li>
+      <li><strong>GET</strong> mette i parametri nell'URL (query string, dopo il <code>?</code>); <strong>POST</strong> li mette nel body.</li>
+      <li>La <strong>codifica URL</strong> trasforma i caratteri "non sicuri" in <code>%xx</code> (spazio → <code>%20</code>).</li>
+      <li><strong>PUT</strong> è <strong>idempotente</strong>: ripeterla più volte lascia il server come dopo la prima volta. POST no.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Che cos'è un metodo HTTP</h2>
+  <p>I <strong>metodi</strong> (chiamati anche <strong>verbi</strong>) sono attributi di una richiesta HTTP: esprimono l'<strong>intenzione</strong> del client. Alcuni si usano raramente, ma ognuno ha il suo scopo.</p>
+  <p>Il metodo è sempre la <strong>prima parola</strong> della prima riga di una request, ed è scritto in <strong>maiuscolo</strong>:</p>
+  <div class="anatomy" aria-label="Riga di richiesta scomposta">
+    <span class="k3" data-l="metodo">DELETE</span> <span class="k6" data-l="risorsa">/prove/risorsa</span> <span class="k1" data-l="versione">HTTP/1.1</span>
+  </div>
+<pre data-lang="http"><code>GET / HTTP/1.1                    ← chiede la pagina principale del sito
+DELETE /prove/risorsa HTTP/1.1    ← chiede di cancellare /prove/risorsa</code></pre>
+  <div class="callout tip"><span class="callout-title">Il paragone</span>Il server è un <strong>magazzino</strong> e ogni risorsa è una scatola con la sua etichetta (l'URL). Il metodo è il verbo dell'ordine che dai al magazziniere: «<strong>prendi</strong> la scatola 3» (GET), «<strong>metti</strong> questa scatola al posto 3» (PUT), «<strong>ricevi</strong> questo pacco e sistemalo tu» (POST), «<strong>butta</strong> la scatola 3» (DELETE).</div>
+
+  <!-- ============================================================= -->
+  <h2>I metodi delle request</h2>
+  <p>La tabella delle slide: per ogni metodo, in quale versione di HTTP esiste e che cosa fa.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>Versione HTTP</th><th>Novità in HTTP 1.1</th><th>Descrizione</th></tr></thead>
+      <tbody>
+        <tr><td><strong>GET</strong></td><td>1.0 e 1.1</td><td>Richiesta di parti di entità</td><td>Chiede un file al server. La risposta contiene il protocollo usato (HTTP/1.1), lo <strong>status code</strong> con l'esito, gli header e poi la risorsa (di solito la pagina HTML). Si possono passare parametri nella forma <code>attributo=valore&amp;attributo=valore</code>.</td></tr>
+        <tr><td><strong>HEAD</strong></td><td>1.0 e 1.1</td><td>Header di richiesta condizionali</td><td>Chiede <strong>solo gli header</strong>, senza la risorsa. Si usa soprattutto per fare test sulle pagine web dinamiche.</td></tr>
+        <tr><td><strong>POST</strong></td><td>1.0 e 1.1</td><td>Gestione della connessione e trasmissione del messaggio</td><td><strong>Invia informazioni</strong> all'URL indicato, in coppie <code>attributo=valore&amp;…</code>, che vengono elaborate dal server.</td></tr>
+        <tr><td><strong>PUT</strong></td><td>1.1 (in 1.0 non standard)</td><td>–</td><td>Fa l'<strong>upload</strong> di un file sul server, <strong>creandolo o riscrivendolo</strong>, con il nome indicato e il contenuto che segue gli header.</td></tr>
+        <tr><td><strong>DELETE</strong></td><td>1.1 (in 1.0 non standard)</td><td>–</td><td><strong>Cancella</strong> una risorsa (di solito un file) sul server. Il web server deve avere il permesso di scrittura su quel file ed essere configurato per permetterlo.</td></tr>
+        <tr><td><strong>OPTIONS</strong></td><td>1.1</td><td>Estensibilità</td><td>Chiede l'<strong>elenco dei metodi</strong> concessi dal server: <code>OPTIONS * HTTP/1.0</code>.</td></tr>
+        <tr><td><strong>TRACE</strong></td><td>1.1</td><td>Estensibilità</td><td><strong>Traccia</strong> una richiesta, mostrando come viene trattata dal server: <code>TRACE * HTTP/1.0</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Da ricordare</span>PUT e DELETE esistono "ufficialmente" solo da <strong>HTTP/1.1</strong>; in HTTP/1.0 alcuni server li supportavano, ma non erano standard. OPTIONS e TRACE sono nati con la 1.1.</div>
+
+  <!-- ============================================================= -->
+  <h2>Le API e le applicazioni RESTful</h2>
+  <p>Un'<strong>API</strong> (<em>Application Programming Interface</em>) è un insieme di regole, protocolli e strumenti che permette a utenti o ad <strong>altri programmi</strong> di comunicare e interagire con un sistema software.</p>
+  <p>Le <strong>API HTTP</strong> si raggiungono tramite <strong>URL</strong> precisi e usano i metodi <strong>GET, POST, PUT e DELETE</strong> per lavorare sulle risorse messe a disposizione dal server: si possono ottenere informazioni, modificarle, crearle o cancellarle.</p>
+  <div class="callout def"><span class="callout-title">REST e RESTful</span><strong>REST</strong> significa <em>REpresentational State Transfer</em>. Le applicazioni <strong>RESTful</strong> permettono di fare operazioni <strong>da remoto</strong> sui dati presenti nei server (che lo consentono) usando proprio i <strong>metodi del protocollo HTTP</strong>.</div>
+  <div class="compare">
+    <div>
+      <h4>Un sito web</h4>
+      <p>Risponde con <strong>pagine HTML</strong>, pensate per essere lette da una persona nel browser.</p>
+      <p class="hand">Il menu illustrato appeso fuori dal ristorante.</p>
+    </div>
+    <div>
+      <h4>Un'API</h4>
+      <p>Risponde con <strong>dati puri</strong>, di solito in <a href="json.html">JSON</a>, pensati per essere usati da un altro programma (per esempio l'app meteo del telefono).</p>
+      <p class="hand">Il cameriere: tu ordini con un formato preciso e ricevi il piatto, senza entrare in cucina.</p>
+    </div>
+  </div>
+  <h3>Le regole di REST</h3>
+  <ul>
+    <li><strong>Tutto è una risorsa</strong>, identificata da un URL: <code>/users/3</code>, <code>/posts/1</code>. L'URL contiene <strong>nomi</strong>, mai verbi: <code>/posts/1</code> e non <code>/cancellaPost?id=1</code>.</li>
+    <li><strong>Il metodo HTTP dice cosa fare</strong> sulla risorsa.</li>
+    <li><strong>Il server non ricorda nulla</strong> tra una richiesta e l'altra (<em>stateless</em>): ogni richiesta porta con sé tutto ciò che serve.</li>
+    <li><strong>Le risorse viaggiano in una rappresentazione</strong>, oggi quasi sempre JSON (vedi <a href="http-codici-stato-https.html#le-rappresentazioni-http">Le rappresentazioni HTTP</a>).</li>
+  </ul>
+  <p class="hand">Queste regole sono riprese dalla consegna dell'esercitazione Classroom <a href="classroom-http-postman.html">Esercizi HTTP e Postman</a>, dove si provano su un'API vera.</p>
+
+  <!-- ============================================================= -->
+  <h2>Le operazioni CRUD</h2>
+  <p>Le operazioni di base sui dati si chiamano <strong>CRUD</strong>, dalle iniziali di <strong>C</strong>reate, <strong>R</strong>etrieve, <strong>U</strong>pdate, <strong>D</strong>elete: crea, recupera, aggiorna e cancella. Ognuna corrisponde a un metodo HTTP.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione CRUD</th><th>Che cosa fa</th><th>Metodo HTTP</th><th>Come in SQL</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Create</strong> (crea)</td><td>creare dati sul server</td><td><code>POST</code></td><td><code>INSERT</code></td><td><code>POST /posts</code></td></tr>
+        <tr><td><strong>Retrieve</strong> (recupera)</td><td>chiedere dati al server</td><td><code>GET</code></td><td><code>SELECT</code></td><td><code>GET /posts/1</code></td></tr>
+        <tr><td><strong>Update</strong> (aggiorna)</td><td>modificare o sostituire dati sul server</td><td><code>PUT</code></td><td><code>UPDATE</code></td><td><code>PUT /posts/1</code></td></tr>
+        <tr><td><strong>Delete</strong> (cancella)</td><td>cancellare un oggetto sul server</td><td><code>DELETE</code></td><td><code>DELETE</code></td><td><code>DELETE /posts/1</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">La colonna SQL e gli esempi sono un'aggiunta: aiutano a collegare HTTP con i database. Oltre a PUT, per modificare <em>solo alcuni campi</em> si usa spesso <strong>PATCH</strong> (lo trovi negli esercizi su Postman).</p>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo GET</h2>
+  <p>Il metodo <strong>GET</strong> chiede una risorsa al server, ordinandogli di trasmettere al client le informazioni identificate dall'URL. È una richiesta di <strong>sola lettura</strong>: una volta ricevuti i dati, il client è libero di farci quello che vuole (per esempio formattarli per mostrarli).</p>
+<pre data-lang="http"><code>GET /pathname HTTP/1.1</code></pre>
+  <p>Il server manda l'oggetto richiesto nel <strong>body</strong> della risposta e indica il successo con il codice <strong>200</strong> nella status line. Se non può (o non vuole) mandarlo, risponde con un altro <a href="http-codici-stato-https.html#i-codici-di-stato">codice di stato</a>.</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Client → server</strong><span><code>GET URI</code>: «mandami questa risorsa».</span></li>
+    <li><b>2</b><strong>Server → client</strong><span><code>200 OK</code> + i dati nel body.</span></li>
+  </ol>
+
+  <h3>Esempio: request e response</h3>
+<pre data-lang="http"><code>GET /home/pallaDiPelle.html HTTP/1.1   ← request line: comando, oggetto, versione
+Host: www.apollo.it                    ← header lines
+Connection: close                      ← chiudi la connessione al termine della richiesta
+User-agent: Chrome/37.0
+Accept: text/html, image/gif
+Accept-language: it
+                                       ← il body è vuoto</code></pre>
+<pre data-lang="http"><code>HTTP/1.1 200 OK                        ← status line: protocollo, codice, frase
+Connection: close
+Date: Thu, 02 Aug 2020 11:10:25 GMT
+Server: Apache/3.5.0 (Unix)
+Last-Modified: Mon, 22 Jun 2020 ...
+Content-Length: 2821
+Content-Type: text/html
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;...&lt;/html&gt;                       ← i dati: la pagina HTML richiesta</code></pre>
+
+  <h3>I parametri nella query string</h3>
+  <p>GET permette di passare dei <strong>parametri</strong> nella sezione <strong>query</strong> dell'URL. La <strong>query string</strong>:</p>
+  <ul>
+    <li>si trova <strong>dopo il punto interrogativo</strong> <code>?</code>;</li>
+    <li>contiene una o più coppie <strong>chiave=valore</strong>;</li>
+    <li>le coppie sono separate dal carattere <strong><code>&amp;</code></strong>.</li>
+  </ul>
+  <div class="anatomy" aria-label="URL con query string scomposto">
+    <span class="k1" data-l="risorsa">https://www.dominio.com/prodotti</span><span class="k3" data-l="inizio query">?</span><span class="k6" data-l="1° parametro">categoria=scarpe</span><span class="k3" data-l="separatore">&amp;</span><span class="k4" data-l="2° parametro">prezzo=basso</span>
+  </div>
+<pre data-lang="testo"><code>https://www.dominio.com/prodotti?categoria=scarpe&amp;prezzo=basso
+https://www.esempio.com/smartphone?brand=samsung&amp;color=nero</code></pre>
+  <div class="callout warn"><span class="callout-title">Il limite di GET</span>La lunghezza massima di un URL è <strong>limitata</strong> (browser e server tagliano gli URL troppo lunghi), quindi con GET non si possono mandare grandi quantità di dati. E i parametri si vedono nella barra degli indirizzi e nella cronologia: mai metterci una password.</div>
+
+  <!-- ============================================================= -->
+  <h2>La codifica URL (URL encode)</h2>
+  <p>L'<strong>URL encode</strong> è la procedura che prepara una stringa di dati, codificandola in modo che venga riconosciuta durante la trasmissione HTTP con <strong>GET</strong> o <strong>POST</strong>. Si usa nelle <strong>query string</strong> per mettere negli URL testi conformi allo standard degli URL, e per inviare i campi di un <strong>form HTML</strong>.</p>
+  <p>La stringa da inviare è una serie di coppie <strong>nome campo</strong> e <strong>valore</strong>: il nome campo è come una variabile, il valore è il dato che contiene.</p>
+  <div class="callout tip"><span class="callout-title">Perché serve</span>In un URL alcuni caratteri hanno già un compito: <code>?</code> apre la query, <code>&amp;</code> separa i parametri, <code>=</code> separa nome e valore, <code>#</code> indica un punto della pagina. Se uno di questi caratteri fa parte del <em>dato</em> (per esempio "1+1=2"), il server si confonderebbe. La codifica li "traveste" in modo che non vengano scambiati per separatori.</div>
+
+  <h3>I passaggi</h3>
+  <ol class="stack">
+    <li><b>1</b><strong>Convertire</strong><span>Ogni carattere <strong>non sicuro</strong> diventa <code>%xx</code>, dove <code>xx</code> è il suo codice <strong>ASCII in esadecimale</strong>. Sono non sicuri <code>=</code>, <code>&amp;</code>, <code>%</code>, <code>@</code>, lo spazio, <code>+</code>, le lettere accentate, <code>?</code>, <code>#</code> e i caratteri non stampabili.</span></li>
+    <li><b>2</b><strong>Eliminare gli spazi</strong><span>Ogni spazio diventa <code>%20</code>.</span></li>
+    <li><b>3</b><strong>Unire</strong><span>Nome e valore si uniscono con <code>=</code>; le coppie si separano con <code>&amp;</code>: <code>nome1=valore1&amp;nome2=valore2&amp;nome3=valore3</code>.</span></li>
+  </ol>
+
+  <h3>Riepilogo dei caratteri principali</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Carattere</th><th>Codifica</th><th>Carattere</th><th>Codifica</th><th>Carattere</th><th>Codifica</th></tr></thead>
+      <tbody>
+        <tr><td>spazio</td><td>%20</td><td>#</td><td>%23</td><td>%</td><td>%25</td></tr>
+        <tr><td>"</td><td>%22</td><td>$</td><td>%24</td><td>&amp;</td><td>%26</td></tr>
+        <tr><td>*</td><td>%2A</td><td>/</td><td>%2F</td><td>\</td><td>%5C</td></tr>
+        <tr><td>0</td><td>%30</td><td>1</td><td>%31</td><td>2</td><td>%32</td></tr>
+        <tr><td>3</td><td>%33</td><td>4</td><td>%34</td><td>5</td><td>%35</td></tr>
+        <tr><td>6</td><td>%36</td><td>7</td><td>%37</td><td>8</td><td>%38</td></tr>
+        <tr><td>9</td><td>%39</td><td>&lt;</td><td>%3C</td><td>&gt;</td><td>%3E</td></tr>
+        <tr><td>@</td><td>%40</td><td>[</td><td>%5B</td><td>]</td><td>%5D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hand">Servono spesso anche <code>+</code> = <code>%2B</code>, <code>=</code> = <code>%3D</code> e <code>?</code> = <code>%3F</code>. Le cifre hanno un codice, ma di solito si lasciano come sono.</p>
+
+  <h3>Esempio</h3>
+  <p>Vogliamo inviare con la query string la frase <code>A scuola ho imparato che 1+1=2</code>:</p>
+<pre data-lang="testo"><code>Testo:       A scuola ho imparato che 1+1=2
+Codificato:  A%20scuola%20ho%20imparato%20che%201%2B1%3D2
+Nell'URL:    pagina.php?stringa=A%20scuola%20ho%20imparato%20che%201%2B1%3D2</code></pre>
+  <p>Gli spazi sono diventati <code>%20</code>, il <code>+</code> è diventato <code>%2B</code> e l'<code>=</code> è diventato <code>%3D</code>. L'unico <code>=</code> rimasto "vero" è quello tra il nome del parametro (<code>stringa</code>) e il suo valore. Questa codifica garantisce che l'URL sia <strong>valido</strong> e che il server lo interpreti correttamente.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo PUT</h2>
+  <p>Il metodo <strong>PUT</strong> chiede di <strong>memorizzare sul server</strong> una risorsa all'URL indicato. Serve quindi a trasmettere informazioni dal <strong>client al server</strong>, come POST, ma con PUT si ha la <strong>creazione di una risorsa</strong>: l'argomento di PUT è proprio la risorsa che ci si aspetta di ottenere facendo, in seguito, una GET con lo stesso nome.</p>
+<pre data-lang="http"><code>PUT /pathname HTTP/1.1</code></pre>
+  <p>Il <strong>request body</strong> è:</p>
+  <ul>
+    <li>una <strong>nuova risorsa</strong> da memorizzare sul server all'URI indicato (<code>pathname</code>), se lì non c'è ancora niente;</li>
+    <li>una <strong>nuova versione</strong> da sostituire a quella che c'è già a quell'URI.</li>
+  </ul>
+  <ol class="stack">
+    <li><b>1</b><strong>Client → server</strong><span><code>PUT URI</code> + i dati: «salva questo a questo indirizzo».</span></li>
+    <li><b>2</b><strong>Server → client</strong><span>un <strong>codice di stato</strong> e, se vuole, dei dati (<code>200 OK</code> + data).</span></li>
+  </ol>
+
+  <h3>Esempio</h3>
+<pre data-lang="http"><code>PUT /avviso.txt HTTP/1.1
+Host: scuolaonline.it
+Content-Type: text/plain
+Content-Length: 34
+
+Il 12/3/2020 non ci sarà lezione.</code></pre>
+  <p class="hand">Nelle slide la riga dell'host è scritta <code>Host: scuolaonline.it 80</code> e la lunghezza è 80 byte: la forma corretta dell'header è <code>Host: scuolaonline.it</code> (oppure <code>scuolaonline.it:80</code>), e <code>Content-Length</code> deve contare i byte veri del body.</p>
+
+  <h3>Le risposte possibili</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Quando</th></tr></thead>
+      <tbody>
+        <tr><td><strong>201 Created</strong></td><td>La risorsa non esisteva ed è stata creata.</td></tr>
+        <tr><td><strong>200 OK</strong></td><td>La risorsa esisteva ed è stata sostituita; la risposta contiene dei dati.</td></tr>
+        <tr><td><strong>204 No Content</strong></td><td>La risorsa esisteva ed è stata sostituita; la risposta non ha body.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo POST</h2>
+  <p>A differenza di GET, con <strong>POST</strong> i dettagli per identificare ed elaborare la risorsa <strong>non sono nell'URL</strong>, ma nel <strong>body</strong> del messaggio. POST si usa spesso per inviare i dati di un <strong>form HTML</strong> a un'applicazione sul server.</p>
+  <p>La trasmissione avviene come per PUT: il client manda un messaggio POST con l'informazione da inviare, il server risponde con un codice di stato (ed eventualmente dei dati).</p>
+
+  <h3>POST si differenzia da GET perché</h3>
+  <ul>
+    <li>il client invia un <strong>blocco di dati</strong> nel <strong>corpo</strong> della request;</li>
+    <li>di solito ci sono degli <strong>header che descrivono il corpo</strong>, come <code>Content-Type</code> e <code>Content-Length</code>;</li>
+    <li>l'URI richiesto non è una risorsa da prelevare, ma un <strong>programma</strong> (un'API) che gestisce i dati ricevuti.</li>
+  </ul>
+
+  <h3>Considerazioni</h3>
+  <ul>
+    <li>Con POST <strong>non ci sono limiti di lunghezza</strong> dei parametri: i campi del form vanno nel body, non nell'URL.</li>
+    <li>POST <strong>non è sicuro di per sé</strong>: i dati non si vedono nell'URL, ma viaggiano comunque in chiaro. Per proteggerli serve <a href="http-codici-stato-https.html#la-sicurezza-con-https">HTTPS</a>.</li>
+  </ul>
+
+  <h3>Esempio</h3>
+<pre data-lang="http"><code>POST /cgi-bin/rates.cgi HTTP/1.1                    ← metodo, programma (CGI) sul server, protocollo
+Referer: http://nes:8192/cgi-bin/rats.cgi
+Connection: Keep-Alive
+User-Agent: Mozilla/4.73 [en] (X11; U; Linux 2.2.12-20 i686)
+Host: nes:8192
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, image/png, */*
+Accept-Encoding: gzip
+Accept-Language: en
+Accept-Charset: iso-8859-1,*,utf-8
+Content-type: application/x-www-form-urlencoded      ← i dati sono in URL encode
+Content-length: 93                                   ← lunghezza in byte dei campi
+
+Account=cs111fall&amp;First=richard&amp;Last=martin&amp;SSN=123456789&amp;Bday=01011980&amp;.State=CreateAccount</code></pre>
+  <p>Il body contiene le stesse coppie <code>nome=valore&amp;…</code> della query string, codificate in URL encode: è questo che dice <code>application/x-www-form-urlencoded</code>.</p>
+
+  <h3>Le risposte del server a una POST</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><strong>200 OK</strong></td><td>I dati sono stati ricevuti e inviati alla risorsa, e il server restituisce una risposta al client.</td></tr>
+        <tr><td><strong>201 Created</strong></td><td>I dati sono stati ricevuti, la risorsa non esisteva ed è stata creata.</td></tr>
+        <tr><td><strong>204 No Content</strong></td><td>I dati sono stati ricevuti e inviati alla risorsa, ma non viene restituita una risposta al client.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>POST e PUT a confronto</h2>
+  <div class="compare">
+    <div>
+      <h4>POST</h4>
+      <p>Serve a <strong>creare</strong> dati sul server. L'URI è il <strong>programma</strong> che li riceve: è il server a decidere dove metterli (e che <code>id</code> dargli).</p>
+      <p>Ripetere 3 volte la stessa POST può creare <strong>3 risorse</strong>.</p>
+      <p class="hand">«Ecco una lettera, mettila tu nella casella giusta.»</p>
+    </div>
+    <div>
+      <h4>PUT</h4>
+      <p>Serve a <strong>modificare o sostituire</strong> dati sul server. L'URI è il <strong>nome della risorsa</strong> stessa: decide il client dove va.</p>
+      <p>Ripetere 3 volte la stessa PUT lascia <strong>una sola risorsa</strong>, sempre uguale.</p>
+      <p class="hand">«Metti questa lettera nella casella 12.»</p>
+    </div>
+  </div>
+  <div class="callout def"><span class="callout-title">Idempotente</span>Un metodo è <strong>idempotente</strong> se ripetere più volte la stessa richiesta produce sul server lo <strong>stesso effetto</strong> di farla una volta sola. <strong>PUT è idempotente</strong>; POST no. Anche GET (non cambia niente) e DELETE (dopo la prima volta la risorsa non c'è più) sono idempotenti.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il metodo DELETE</h2>
+  <p>Con <strong>DELETE</strong> si chiede l'<strong>eliminazione</strong> della risorsa all'URI indicato. Permette al client di rimuovere oggetti dal server da remoto: funziona <strong>al rovescio rispetto a PUT</strong>, perché la risorsa non viene salvata ma eliminata.</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Client → server</strong><span><code>DELETE URI</code>: il messaggio con l'URL della risorsa da rimuovere.</span></li>
+    <li><b>2</b><strong>Server → client</strong><span>un <strong>codice di stato</strong> (<code>200 OK</code> + eventuali dati, oppure un errore).</span></li>
+  </ol>
+  <div class="callout warn"><span class="callout-title">Attenzione</span>Non c'è <strong>nessuna garanzia</strong> che la risorsa venga davvero cancellata, anche se il server risponde <code>200 OK</code>: la risposta dice solo che il server ha accettato la richiesta.</div>
+
+  <h3>Esempio: richiesta e risposte</h3>
+  <p>Richiesta di cancellare il file <code>file.txt</code> nella root del server:</p>
+<pre data-lang="http"><code>DELETE /file.txt HTTP/1.1
+Host: www.scuolaonline.it</code></pre>
+  <p>Il server può anche rispondere con un <strong>codice di errore</strong>, come in questo caso:</p>
+<pre data-lang="http"><code>HTTP/1.1 405 Method Not Allowed
+Date: Mon, 12 Nov 2024 17:45:11 GMT
+Server: Apache/3.0.32 (UNIX) DAV 2
+Allow: GET, HEAD, OPTIONS, TRACE         ← i metodi che invece sono permessi
+Content-Type: text/html;
+
+&lt;HTML&gt;
+...
+&lt;/HTML&gt;</code></pre>
+  <p><code>405 Method Not Allowed</code> significa che su quella risorsa il metodo DELETE <strong>non è permesso</strong> (le slide dicono "richiesta non autorizzata"). L'header <code>Allow</code> elenca i metodi che si possono usare.</p>
+
+  <!-- ============================================================= -->
+  <h2>Riepilogo: GET, POST, PUT, DELETE</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metodo</th><th>CRUD</th><th>Dove vanno i dati</th><th>Modifica il server?</th><th>Idempotente?</th><th>Risposte tipiche</th></tr></thead>
+      <tbody>
+        <tr><td><strong>GET</strong></td><td>Retrieve</td><td>nell'URL (query string)</td><td>No</td><td>Sì</td><td>200</td></tr>
+        <tr><td><strong>POST</strong></td><td>Create</td><td>nel body</td><td>Sì</td><td><strong>No</strong></td><td>200, 201, 204</td></tr>
+        <tr><td><strong>PUT</strong></td><td>Update</td><td>nel body</td><td>Sì</td><td>Sì</td><td>200, 201, 204</td></tr>
+        <tr><td><strong>DELETE</strong></td><td>Delete</td><td>solo l'URL</td><td>Sì</td><td>Sì</td><td>200 (o un errore come 405)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>I <strong>metodi HTTP</strong> sono presenti nelle <strong>request HTTP</strong>: GET, POST, PUT, HEAD, DELETE, OPTIONS, TRACE.</li>
+    <li>Le request inviano la <strong>query string</strong>, codificata mediante <strong>URL encode</strong>.</li>
+    <li>I metodi sono ammessi dalle <strong>API</strong>, che servono alle applicazioni <strong>RESTful</strong> (REpresentational State Transfer) per le operazioni <strong>CRUD</strong>: Create → POST, Retrieve → GET, Update → PUT, Delete → DELETE.</li>
+    <li>La richiesta GET può essere <strong>assoluta</strong>, <strong>parziale</strong> o <strong>condizionale</strong>; quella condizionale usa gli header <code>If-Match</code>, <code>If-Modified-Since</code> e <code>If-Range</code> («mandamela solo se…»).</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Quale metodo? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ogni operazione su un'API di una scuola scrivi metodo e URL: a) leggere lo studente 7; b) iscrivere un nuovo studente; c) sostituire i dati dello studente 7; d) cancellare lo studente 7; e) leggere tutti gli studenti della 5A.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <code>GET /studenti/7</code><br>b) <code>POST /studenti</code> (con i dati nel body; l'<code>id</code> lo sceglie il server)<br>c) <code>PUT /studenti/7</code> (con i dati completi nel body)<br>d) <code>DELETE /studenti/7</code><br>e) <code>GET /studenti?classe=5A</code> (il filtro va nella query string)</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Codifica URL <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Codifica in URL encode la query string con <code>citta = Reggio Emilia</code>, <code>email = anna@scuola.it</code> e <code>voto = 7+</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>?citta=Reggio%20Emilia&amp;email=anna%40scuola.it&amp;voto=7%2B</code></p>
+      <p>Spazio → <code>%20</code>, <code>@</code> → <code>%40</code>, <code>+</code> → <code>%2B</code>. Il <code>?</code> iniziale, gli <code>=</code> tra nome e valore e le <code>&amp;</code> tra le coppie restano come sono, perché fanno da separatori.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Decodifica <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Che testo arriva al server con <code>cerca.php?q=50%25%20di%20sconto%20%26%20spedizione</code>? Perché il <code>%</code> e la <code>&amp;</code> del testo sono stati codificati?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Il parametro <code>q</code> vale <strong>50% di sconto &amp; spedizione</strong>.</p>
+      <p>La <code>&amp;</code> scritta così com'è avrebbe chiuso il parametro <code>q</code> e iniziato un nuovo parametro chiamato " spedizione". Il <code>%</code> scritto così com'è sarebbe stato letto come inizio di un codice <code>%xx</code>: per questo anche il <code>%</code> stesso va codificato, in <code>%25</code>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Scrivi la POST <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Un form di iscrizione su <code>www.palestra.it</code> invia i campi <code>nome = Luca Bianchi</code> e <code>corso = yoga</code> al programma <code>/iscrivi.php</code>. Scrivi la request completa.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+<pre data-lang="http"><code>POST /iscrivi.php HTTP/1.1
+Host: www.palestra.it
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 30
+
+nome=Luca%20Bianchi&amp;corso=yoga</code></pre>
+      <p>L'URI è il <strong>programma</strong> che riceve i dati; i campi vanno nel <strong>body</strong> in URL encode. <code>Content-Length</code> conta i caratteri del body: <code>nome=Luca%20Bianchi</code> (19) + <code>&amp;</code> (1) + <code>corso=yoga</code> (10) = <strong>30</strong>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Leggi la risposta <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="http"><code>HTTP/1.1 405 Method Not Allowed
+Allow: GET, HEAD, OPTIONS</code></pre>
+      <p>Il client aveva mandato <code>PUT /listino.pdf</code>. Che cosa è successo? Che metodo potrebbe usare per scaricare il file?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>Il server <strong>non permette PUT</strong> su quella risorsa, quindi il file non è stato caricato né sostituito. L'header <code>Allow</code> dice che sono ammessi solo GET, HEAD e OPTIONS: per scaricare il file si usa <strong>GET</strong>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Idempotenza <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Per un errore di rete il browser rimanda 3 volte la stessa richiesta. Che cosa succede sul server se la richiesta era a) <code>POST /ordini</code>; b) <code>PUT /profilo/12</code>; c) <code>DELETE /carrello/5</code>?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) POST <strong>non è idempotente</strong>: possono nascere <strong>3 ordini</strong> uguali (per questo i siti dicono «non premere due volte il tasto Paga»).<br>
+      b) PUT è idempotente: il profilo 12 viene sostituito 3 volte con gli <strong>stessi dati</strong>, il risultato finale è identico.<br>
+      c) DELETE è idempotente: la prima volta il prodotto 5 sparisce dal carrello, le altre due non c'è più niente da cancellare. Lo <strong>stato</strong> del server è lo stesso, anche se le risposte successive potrebbero essere diverse (per esempio 404).</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide della UD2, lezione 2: "I metodi o verbi HTTP". Le regole di REST e la colonna SQL della tabella CRUD vengono dalla consegna dell'esercitazione <a href="classroom-http-postman.html">Esercizi HTTP e Postman – Parte 1</a>; le note sugli errori delle slide, i paragoni, gli esercizi e le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>

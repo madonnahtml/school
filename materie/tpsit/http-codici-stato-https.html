@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>I codici di stato e HTTPS · Scuola</title>
+  <meta name="description" content="UD2 di TPSIT, lezione 3: le rappresentazioni HTTP (header, body, Content-Type), le cinque classi dei codici di stato, 200, 201, 400, 401, 403, 404, 405, 500, e la sicurezza con HTTPS: SSL, TLS, chiavi simmetriche e asimmetriche, autenticazione TLS unilaterale e mutua.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>I codici di stato e HTTPS</h1>
+  <p class="lead">UD2, lezione 3: come una risorsa viene "rappresentata" in un messaggio HTTP, come il server comunica l'esito di una richiesta con i codici di stato e come HTTPS protegge i dati che viaggiano tra client e server.</p>
+
+  <div class="callout info"><span class="callout-title">Collegamenti</span>I metodi che generano queste risposte sono nel capitolo precedente, <a href="http-metodi.html">I metodi HTTP e le API REST</a>. Lo stesso argomento, visto dal libro di Sistemi e Reti, è in <a href="../sistemi-e-reti/http-codici-stato-https.html">HTTP: codici di stato e HTTPS</a>.</div>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>La <strong>rappresentazione</strong> di una risorsa è fatta di <strong>header</strong> (che descrivono, per esempio con <code>Content-Type</code>) e <strong>body</strong> (i dati).</li>
+      <li>Il <strong>codice di stato</strong> è un numero di tre cifre: la <strong>prima cifra</strong> dice la classe (1xx informazione, 2xx successo, 3xx redirezione, 4xx errore del client, 5xx errore del server).</li>
+      <li>I codici da sapere: <strong>200, 201, 400, 401, 403, 404, 405, 500</strong>.</li>
+      <li><strong>HTTPS</strong> = HTTP + <strong>SSL/TLS</strong>, sulla porta TCP <strong>443</strong>: protegge da <strong>eavesdropping</strong> (ascolto) e <strong>tampering</strong> (manomissione).</li>
+      <li>TLS usa una chiave <strong>asimmetrica</strong> (es. RSA) per scambiarsi una chiave <strong>simmetrica</strong> (es. AES) con cui cifrare i dati; di solito si autentica solo il server, con la <strong>mutua autenticazione</strong> anche il client.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le rappresentazioni HTTP</h2>
+  <p>La <strong>rappresentazione</strong> di una risorsa HTTP è l'informazione che riguarda:</p>
+  <div class="cards">
+    <div class="card"><strong>La risorsa</strong><p>L'indirizzo dove si trova (la sua localizzazione, l'URL).</p></div>
+    <div class="card"><strong>Il formato</strong><p>Com'è scritta: HTML, JSON, XML, un'immagine, testo…</p></div>
+    <div class="card"><strong>Lo stato</strong><p>Com'è la risorsa adesso, e come cambierà in futuro.</p></div>
+  </div>
+  <p>I due elementi cardine di una rappresentazione sono l'<strong>intestazione</strong> (<em>header</em>) e il <strong>corpo</strong> (<em>body</em>) del messaggio. Sia la <strong>request</strong> sia la <strong>response</strong> contengono una rappresentazione della risorsa.</p>
+  <div class="compare">
+    <div>
+      <h4>Header</h4>
+      <p><strong>Descrive</strong> il contenuto. Il campo <code>Content-Type</code> specifica il <strong>formato</strong> del body.</p>
+      <p class="hand">L'etichetta sulla scatola: «contiene libri, 2 kg».</p>
+    </div>
+    <div>
+      <h4>Body</h4>
+      <p>Contiene i <strong>dati</strong>, in un formato come testo, immagini, JSON, HTML o XML.</p>
+      <p class="hand">Quello che c'è dentro la scatola.</p>
+    </div>
+  </div>
+  <p>Per esempio, se viene richiesta una risorsa JSON, la response lo dice così:</p>
+<pre data-lang="http"><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{ "id": 1, "nome": "Anna" }</code></pre>
+  <p class="hand">Nelle slide l'header è scritto <code>Content/Type</code>: il nome giusto è <strong><code>Content-Type</code></strong>, con il trattino.</p>
+
+  <!-- ============================================================= -->
+  <h2>I codici di stato</h2>
+  <p>I <strong>codici di stato</strong> (<em>status code</em>) sono numeri restituiti dai server HTTP per indicare al client l'<strong>esito di una richiesta</strong>. Sono stati definiti dall'<strong>IETF</strong> (<em>Internet Engineering Task Force</em>), l'organizzazione che scrive gli standard di Internet. Il codice si trova nella <strong>status line</strong>, la prima riga della risposta:</p>
+  <div class="anatomy" aria-label="Status line scomposta">
+    <span class="k1" data-l="versione">HTTP/1.1</span> <span class="k6" data-l="codice di stato">404</span> <span class="k4" data-l="frase di stato">Not Found</span>
+  </div>
+
+  <h3>Le cinque classi</h3>
+  <p>La <strong>prima cifra</strong> dice a quale classe appartiene il codice:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codici</th><th>Classe</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><strong>100-199</strong></td><td>Information</td><td>Informazioni temporanee mentre la richiesta è in corso. Secondo le slide, a partire da HTTP 1.0 il loro uso è sconsigliato.</td></tr>
+        <tr><td><strong>200-299</strong></td><td>Successful</td><td>La richiesta è stata completata <strong>con successo</strong>.</td></tr>
+        <tr><td><strong>300-399</strong></td><td>Redirection</td><td>Stati <strong>non di errore</strong> che chiedono al browser un trattamento particolare (di solito: la risorsa è a un altro indirizzo).</td></tr>
+        <tr><td><strong>400-499</strong></td><td>Client error</td><td>Errori provocati dal comportamento del <strong>client</strong>.</td></tr>
+        <tr><td><strong>500-599</strong></td><td>Server error</td><td>Errori avvenuti sul <strong>server</strong>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Per ricordarle</span>Pensa a un ordine al ristorante. <strong>1xx</strong>: «ho preso nota, un attimo». <strong>2xx</strong>: «ecco il piatto». <strong>3xx</strong>: «questo piatto lo servono al tavolo accanto». <strong>4xx</strong>: «hai ordinato qualcosa che non c'è nel menu» (colpa <em>tua</em>). <strong>5xx</strong>: «la cucina ha preso fuoco» (colpa <em>loro</em>).</div>
+
+  <!-- ============================================================= -->
+  <h2>I codici da sapere</h2>
+  <h3>Successo (2xx)</h3>
+  <div class="cards">
+    <div class="card"><strong>200 OK</strong><p>La risposta di default a una richiesta (ad esempio GET o POST) con <strong>esito positivo</strong>. Il browser mostra subito i dati ricevuti, oppure li elabora.</p></div>
+    <div class="card"><strong>201 Created</strong><p>La richiesta era valida e una <strong>risorsa è stata creata</strong>. Conferma il successo di una richiesta <strong>PUT</strong> o <strong>POST</strong>.</p></div>
+  </div>
+  <h3>Errori del client (4xx)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>400 Bad Request</strong></td><td>Il server non riesce a elaborare la richiesta, per un motivo non specificato. Il <strong>payload</strong> (il body) della risposta di solito spiega il problema e viene gestito dal client.</td><td>JSON scritto male nel body di una POST</td></tr>
+        <tr><td><strong>401 Unauthorized</strong></td><td>L'utente deve fornire le <strong>credenziali</strong> di autenticazione HTTP per accedere alla risorsa. Il browser chiede all'utente i dati per il login.</td><td>Pagina riservata senza aver fatto il login</td></tr>
+        <tr><td><strong>403 Forbidden</strong></td><td>L'URL <strong>esiste</strong> ma non può essere scaricato (ad esempio i permessi sul filesystem non bastano). Di solito viene mostrata all'utente.</td><td>Cartella del server protetta</td></tr>
+        <tr><td><strong>404 Not Found</strong></td><td>Il codice di errore più noto: l'indirizzo (URL) richiesto <strong>non esiste</strong>. Di solito viene mostrata all'utente.</td><td>Link sbagliato o pagina cancellata</td></tr>
+        <tr><td><strong>405 Method Not Allowed</strong></td><td>Il <strong>metodo</strong> usato non è supportato per quella risorsa (ad esempio un GET non implementato sul server).</td><td>DELETE su un file che non si può cancellare</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Errori del server (5xx)</h3>
+  <div class="cards">
+    <div class="card"><strong>500 Internal Server Error</strong><p>Il processo fallisce <strong>lato server</strong>, per circostanze impreviste. La richiesta poteva essere giusta: il problema è nel programma sul server.</p></div>
+  </div>
+
+  <div class="callout warn"><span class="callout-title">401 o 403?</span>Si confondono spesso. <strong>401</strong>: «non so chi sei, fai il login» (mancano le credenziali). <strong>403</strong>: «so chi sei, ma qui non puoi entrare» (le credenziali non bastano). E <strong>404</strong> è diverso da tutti e due: lì la risorsa proprio non c'è.</div>
+
+  <h3>Altri codici utili</h3>
+  <p class="hand">Non sono nelle slide, ma si incontrano spesso (anche negli esercizi con Postman).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Codice</th><th>Significato</th></tr></thead>
+      <tbody>
+        <tr><td><strong>204 No Content</strong></td><td>Tutto ok, ma la risposta non ha body (tipico dopo PUT o DELETE).</td></tr>
+        <tr><td><strong>301 Moved Permanently</strong></td><td>La risorsa si è spostata per sempre: il nuovo indirizzo è nell'header <code>Location</code> e il browser ci va da solo.</td></tr>
+        <tr><td><strong>304 Not Modified</strong></td><td>La risorsa non è cambiata: il browser usa la copia che ha in cache.</td></tr>
+        <tr><td><strong>503 Service Unavailable</strong></td><td>Il server è sovraccarico o in manutenzione.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>La sicurezza con HTTPS</h2>
+  <p><strong>HTTPS</strong> (<em>HyperText Transfer Protocol over SSL</em>, oggi anche detto <em>HTTP Secure</em>) è HTTP con l'aggiunta della crittografia. Usa la <strong>porta TCP 443</strong>, mentre HTTP usa la <strong>80</strong>.</p>
+  <p class="hand">Nelle slide c'è scritto «HTTP usa la porta TCP 443»: è un errore di battitura, la 443 è la porta di <strong>HTTPS</strong>.</p>
+  <p>Con HTTPS i dati scambiati tra client e server sono protetti da due tipi di attacco:</p>
+  <div class="compare">
+    <div>
+      <h4>Eavesdropping</h4>
+      <p><strong>Ascolto senza consenso</strong>: qualcuno in mezzo legge i dati che passano (password, numeri di carta…).</p>
+      <p class="hand">Qualcuno che legge le cartoline prima che arrivino.</p>
+    </div>
+    <div>
+      <h4>Tampering</h4>
+      <p><strong>Manomissione</strong> della comunicazione, falsandone i contenuti. Gli utenti non si accorgono di parlare con altri server, che possono rubare i loro dati.</p>
+      <p class="hand">Qualcuno che cambia il testo della cartolina, o ti dà un indirizzo falso.</p>
+    </div>
+  </div>
+
+  <h3>SSL e TLS</h3>
+  <p>Oltre a TCP/IP, HTTPS usa i protocolli <strong>SSL</strong> (<em>Secure Sockets Layer</em>) e <strong>TLS</strong> (<em>Transport Layer Security</em>), che si occupano di <strong>crittografia</strong> e <strong>autenticazione</strong>. TLS è il successore di SSL: oggi si usa TLS.</p>
+  <p>Per trasmettere i dati usano due tipi di cifratura insieme:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Chiave asimmetrica (es. RSA)</strong><span>Ci sono due chiavi: una <strong>pubblica</strong>, che tutti possono usare per cifrare, e una <strong>privata</strong>, che solo il proprietario ha e che serve a decifrare. Si usa all'inizio per <strong>generare e scambiarsi in segreto</strong> la chiave simmetrica.</span></li>
+    <li><b>2</b><strong>Chiave simmetrica (es. AES)</strong><span>Un'unica chiave, uguale per entrambi, che cifra e decifra. È molto più veloce, quindi si usa per <strong>tutti i dati</strong> della comunicazione.</span></li>
+  </ol>
+  <div class="callout tip"><span class="callout-title">Il paragone</span>La chiave asimmetrica è un <strong>lucchetto aperto</strong> che il server regala a tutti: chiunque può chiuderci dentro qualcosa, ma solo il server ha la chiave per riaprirlo. Il client ci chiude dentro una <strong>chiave di casa</strong> nuova (la simmetrica) e la spedisce. Da quel momento client e server hanno la stessa chiave di casa e la usano per tutto il resto, perché è più comoda.</div>
+  <p>Così <strong>solo il client e il server</strong> possono conoscere il contenuto della comunicazione: nessuna terza parte può <strong>leggere, inserire o modificare</strong> i messaggi scambiati.</p>
+
+  <!-- ============================================================= -->
+  <h2>L'autenticazione TLS</h2>
+  <p>Oltre a cifrare, TLS serve a sapere <strong>con chi si sta parlando</strong>.</p>
+  <h3>Autenticazione unilaterale</h3>
+  <ul>
+    <li>Il client conosce l'identità del server e <strong>solo il server viene autenticato</strong>.</li>
+    <li>Il client rimane <strong>anonimo</strong>, quindi non autenticato.</li>
+    <li>L'autenticazione del server è utile al browser e all'utente: il browser <strong>valida il certificato</strong> del server verificandone la <strong>firma digitale</strong> (con i certificati che già conosce), usando la cifratura a <strong>chiave pubblica</strong>.</li>
+  </ul>
+  <h3>Le fasi</h3>
+  <ol class="stack">
+    <li><b>1</b><strong>Client Hello</strong><span>Il browser saluta il server e dice quali algoritmi di cifratura conosce.</span></li>
+    <li><b>2</b><strong>Server Hello</strong><span>Il server risponde e manda il suo <strong>certificato digitale</strong> (con la chiave pubblica).</span></li>
+    <li><b>3</b><strong>Key Exchange</strong><span>I due si scambiano in modo sicuro la chiave simmetrica di sessione.</span></li>
+    <li><b>4</b><strong>Cipher Suite Negotiation</strong><span>Si accordano sull'insieme di algoritmi (la <em>cipher suite</em>) da usare.</span></li>
+    <li><b>5</b><strong>HTTP GET</strong><span>Solo adesso parte la normale richiesta HTTP, già cifrata.</span></li>
+    <li><b>6</b><strong>Data Transfer</strong><span>Il server manda i dati, cifrati con la chiave simmetrica.</span></li>
+  </ol>
+  <p>Al termine dell'autenticazione il browser mostra un'icona a forma di <strong>lucchetto</strong> accanto a <code>https://</code>.</p>
+  <div class="callout warn"><span class="callout-title">Il lucchetto non basta</span>Il lucchetto <strong>non garantisce</strong> che il sito sia proprio quello che volevi: dice solo che la comunicazione è cifrata. Anche un sito truffa può avere il lucchetto. Per esserne sicuri bisogna controllare il contenuto del <strong>certificato digitale</strong> (a chi è stato rilasciato e da chi).</div>
+
+  <h3>La mutua autenticazione (MA)</h3>
+  <p>TLS permette anche un'autenticazione <strong>bilaterale</strong>, in cui <strong>entrambe le parti</strong> (server e client browser) si autenticano in modo sicuro scambiandosi i rispettivi certificati. Questa autenticazione si chiama <strong>MA</strong> (<em>Mutual Authentication</em>) e richiede che anche il client abbia un proprio <strong>certificato digitale</strong>.</p>
+  <div class="compare">
+    <div>
+      <h4>Unilaterale</h4>
+      <p>Si autentica <strong>solo il server</strong>. Il client resta anonimo (poi magari fa il login con nome utente e password).</p>
+      <p class="hand">Il caso di quasi tutti i siti web.</p>
+    </div>
+    <div>
+      <h4>Mutua (MA)</h4>
+      <p>Si autenticano <strong>server e client</strong>, ognuno con il suo certificato.</p>
+      <p class="hand">Servizi molto protetti: banche tra loro, aziende, alcuni servizi della pubblica amministrazione.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>La <strong>rappresentazione HTTP</strong> delle risorse è presente nella <strong>request</strong> e nella <strong>response</strong>.</li>
+    <li>I suoi elementi cardine sono l'<strong>header</strong>, che con <code>Content-Type</code> specifica il formato, e il <strong>body</strong>, che contiene i dati (testo, immagini, JSON, HTML, XML).</li>
+    <li>L'esito della richiesta è restituito dal <strong>server</strong> al <strong>client</strong> con i codici di stato: <strong>200-299</strong> Successful, <strong>300-399</strong> Redirection, <strong>400-499</strong> Client error, <strong>500-599</strong> Server error.</li>
+    <li>La sicurezza è garantita da <strong>HTTPS</strong>, basato su <strong>SSL</strong> e <strong>TLS</strong>, che utilizzano la <strong>porta TCP 443</strong>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Che codice? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Che codice di stato ti aspetti in questi casi? a) apri una pagina che esiste; b) scrivi male l'indirizzo di una pagina; c) crei un nuovo post con POST; d) il programma sul server va in crash; e) apri l'area riservata senza aver fatto il login.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>200 OK</strong>; b) <strong>404 Not Found</strong>; c) <strong>201 Created</strong>; d) <strong>500 Internal Server Error</strong>; e) <strong>401 Unauthorized</strong>.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Di chi è la colpa? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per ognuno di questi codici di' la classe e se il problema è del client, del server o se non c'è nessun problema: <code>201</code>, <code>301</code>, <code>403</code>, <code>405</code>, <code>503</code>.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><code>201</code>: 2xx Successful, nessun problema (risorsa creata).</li>
+        <li><code>301</code>: 3xx Redirection, nessun errore: la risorsa è a un altro indirizzo.</li>
+        <li><code>403</code>: 4xx Client error, colpa del client (chiede qualcosa a cui non ha accesso).</li>
+        <li><code>405</code>: 4xx Client error, colpa del client (ha usato un metodo non permesso).</li>
+        <li><code>503</code>: 5xx Server error, colpa del server (sovraccarico o in manutenzione).</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Leggi la rappresentazione <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="http"><code>HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Location: /studenti/42
+
+{ "id": 42, "nome": "Sara", "classe": "5A" }</code></pre>
+      <p>a) Che metodo aveva probabilmente usato il client? b) In che formato è il body e da cosa lo capisci? c) Dove si trova adesso la nuova risorsa?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>POST</strong> (oppure PUT): <code>201 Created</code> conferma che una risorsa è stata creata.<br>
+      b) In <strong>JSON</strong>: lo dice l'header <code>Content-Type: application/json</code>.<br>
+      c) All'indirizzo <code>/studenti/42</code>, indicato dall'header <code>Location</code> (e il server le ha dato <code>id</code> 42).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Vero o falso su HTTPS <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>HTTPS usa la porta TCP 80.</li>
+        <li>Se un sito ha il lucchetto, sono sicuro che non è un sito truffa.</li>
+        <li>I dati veri e propri vengono cifrati con una chiave simmetrica.</li>
+        <li>Nell'autenticazione unilaterale si autentica solo il client.</li>
+        <li>Per la mutua autenticazione anche il client deve avere un certificato digitale.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Falso</strong>: HTTPS usa la <strong>443</strong>; la 80 è di HTTP.</li>
+        <li><strong>Falso</strong>: il lucchetto dice solo che la comunicazione è cifrata; bisogna controllare il certificato.</li>
+        <li><strong>Vero</strong>: la simmetrica (es. AES) è più veloce; l'asimmetrica serve solo a scambiarla.</li>
+        <li><strong>Falso</strong>: si autentica solo il <strong>server</strong>, il client resta anonimo.</li>
+        <li><strong>Vero</strong>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Eavesdropping o tampering? <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Sei connesso al Wi-Fi libero di un bar e il sito della tua scuola usa solo HTTP. Un'altra persona collegata alla stessa rete a) legge la password che invii con il form di login; b) cambia il voto scritto nella pagina che ti arriva. Che attacchi sono? Come li avrebbe impediti HTTPS?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) È <strong>eavesdropping</strong> (ascolto): con HTTP la POST del login viaggia in chiaro. Con HTTPS i dati sono cifrati con la chiave simmetrica di sessione, e chi ascolta vede solo byte senza senso.<br>
+      b) È <strong>tampering</strong> (manomissione). Con HTTPS ogni modifica ai messaggi cifrati viene scoperta, e il certificato del server garantisce che stai parlando proprio con il server della scuola e non con chi sta in mezzo.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide della UD2, lezione 3: "I codici di stato e la sicurezza con HTTPS". La tabella "Altri codici utili", le spiegazioni delle fasi dell'handshake, le note sugli errori delle slide, i paragoni, gli esercizi e le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>
