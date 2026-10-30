@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: HTTP e Postman (Parte 1) · Scuola</title>
+  <meta name="description" content="TPSIT, esercitazione Classroom Esercizi HTTP e Postman – Parte 1 con risposte spiegate: API REST, GET su JSONPlaceholder, risorse annidate, 404, status code con httpbin, query string, header della richiesta, POST con body JSON, PUT e PATCH, DELETE e idempotenza, progettare le richieste. Risposte verificate sulle API vere.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=10">
+  <script src="../../assets/js/site.js?v=10"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: HTTP e Postman (Parte 1)</h1>
+  <p class="lead">L'esercitazione "Esercizi HTTP e Postman – Parte 1" assegnata su Google Classroom: nove esercizi in cui si mandano richieste HTTP vere con Postman e si leggono le risposte del server. Qui trovi la consegna riportata fedelmente, la risposta e la spiegazione di ogni punto. La teoria è nei capitoli <a href="http-metodi.html">I metodi HTTP e le API REST</a> e <a href="http-codici-stato-https.html">I codici di stato e HTTPS</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong> (è quella del PDF del professore), fai la richiesta in Postman e annota tu il risultato; solo dopo apri la <strong>risposta spiegata</strong> e confronta. Le risposte (status code, header e JSON) sono state ottenute mandando le stesse richieste al codice ufficiale di JSONPlaceholder e di httpbin, con gli stessi dati dei siti: sono quelle che ricevi anche tu.</div>
+  <div class="callout warn"><span class="callout-title">Cosa può cambiare da te</span>Il <strong>tempo</strong> di risposta, la <strong>dimensione</strong> mostrata da Postman, la <strong>versione</strong> di Postman nello <code>User-Agent</code> e alcuni header (data, <code>Postman-Token</code>…) dipendono dal tuo computer e dalla rete: i tuoi numeri saranno diversi. Status code e JSON invece devono essere uguali.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>La consegna e il setup</h2>
+  <p><strong>Consegna.</strong> Usare Postman per inviare richieste HTTP reali e leggere le risposte del server. Per ogni esercizio annota in un file di testo la richiesta inviata, lo status code ricevuto e la risposta alla richiesta.</p>
+  <p><strong>Obiettivi</strong></p>
+  <ul>
+    <li>Leggere e costruire una richiesta HTTP: metodo, URL, header, body.</li>
+    <li>Interpretare una risposta: status code, header, corpo JSON.</li>
+    <li>Usare i metodi CRUD (GET, POST, PUT, DELETE) su una API REST.</li>
+  </ul>
+  <p><strong>Prerequisiti:</strong> modello client-server, modello TCP/IP, formato JSON, concetto di URL.</p>
+  <p><strong>Strumenti e API di prova</strong> (pubbliche, gratuite, senza registrazione):</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>API</th><th>URL base</th><th>A cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td>JSONPlaceholder</td><td><code>https://jsonplaceholder.typicode.com</code></td><td>API REST finta con post, commenti, utenti, todo. Le scritture vengono simulate: il server risponde come se salvasse, ma i dati non cambiano.</td></tr>
+        <tr><td>httpbin</td><td><code>https://httpbin.org</code></td><td>Restituisce in eco ciò che invii; utile per header, status code, autenticazione.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Setup:</strong> installa Postman (o usa la versione web), crea un Workspace personale e una Collection chiamata <code>Esercizi HTTP – &lt;tuo cognome&gt;</code>. Salva ogni richiesta nella collection con il numero dell'esercizio: ti servirà anche nella Parte 2.</p>
+
+  <div class="callout tip"><span class="callout-title">Dove si trova cosa in Postman</span>
+    <ul>
+      <li>In alto: il menu a tendina del <strong>metodo</strong> (GET, POST…), la barra dell'<strong>URL</strong> e il tasto <strong>Send</strong>.</li>
+      <li>Sotto l'URL, le schede della <strong>richiesta</strong>: <strong>Params</strong> (query string), <strong>Headers</strong>, <strong>Body</strong>.</li>
+      <li>In basso, la <strong>risposta</strong>: a destra <strong>Status</strong>, <strong>Time</strong> e <strong>Size</strong>; le schede <strong>Body</strong> (il JSON) e <strong>Headers</strong>.</li>
+      <li>Per salvare: <strong>Save</strong> (o <code>Ctrl S</code>), scegli la collection e chiama la richiesta per esempio <code>Es1 - GET post 1</code>.</li>
+    </ul>
+  </div>
+
+  <h3>Un esempio di file di testo</h3>
+  <p>Per ogni esercizio basta annotare tre cose. Per esempio:</p>
+<pre data-lang="testo"><code>ESERCIZIO 1
+Richiesta:  GET https://jsonplaceholder.typicode.com/posts/1
+Status:     200 OK
+Risposta:   { "userId": 1, "id": 1, "title": "sunt aut facere ...", "body": "quia et suscipit ..." }
+Note:       Content-Type = application/json; charset=utf-8</code></pre>
+
+  <!-- ============================================================= -->
+  <h2>Cos'è una API REST</h2>
+  <p><strong>Dalla consegna.</strong> Una <strong>API</strong> (Application Programming Interface) è un servizio pensato per essere usato da altri programmi, non da persone: risponde con dati puri, di solito in JSON, invece che con pagine HTML. L'app meteo del telefono, per esempio, non legge il sito web ma interroga un'API.</p>
+  <p>Pensa a un <strong>cameriere al ristorante</strong>: il cliente (client) non entra in cucina (server e database), ordina dal menu (la documentazione dell'API) con un formato preciso e riceve il piatto (la risposta). La cucina può riorganizzarsi senza che il cliente se ne accorga.</p>
+  <p><strong>REST</strong> è un insieme di regole per costruire API sopra HTTP:</p>
+  <ul>
+    <li><strong>Tutto è una risorsa</strong>, identificata da un URL: <code>/users/3</code>, <code>/posts/1</code>. L'URL contiene nomi, mai verbi: <code>/posts/1</code> e non <code>/cancellaPost?id=1</code>.</li>
+    <li><strong>Il metodo HTTP dice cosa fare</strong> sulla risorsa.</li>
+    <li><strong>Il server non ricorda nulla</strong> tra una richiesta e l'altra (stateless): ogni richiesta porta con sé tutto ciò che serve, compresa l'autenticazione.</li>
+    <li><strong>Le risorse viaggiano in una rappresentazione</strong>, oggi quasi sempre JSON.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Operazione (CRUD)</th><th>Metodo HTTP</th><th>Equivalente SQL</th><th>Esempio</th><th>Risposta tipica</th></tr></thead>
+      <tbody>
+        <tr><td>Create</td><td>POST</td><td>INSERT</td><td><code>POST /posts</code></td><td>201 Created</td></tr>
+        <tr><td>Read</td><td>GET</td><td>SELECT</td><td><code>GET /posts/1</code></td><td>200 OK</td></tr>
+        <tr><td>Update</td><td>PUT / PATCH</td><td>UPDATE</td><td><code>PATCH /posts/1</code></td><td>200 OK</td></tr>
+        <tr><td>Delete</td><td>DELETE</td><td>DELETE</td><td><code>DELETE /posts/1</code></td><td>200 o 204</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Prova subito:</strong> apri nel browser <code>https://jsonplaceholder.typicode.com/users/1</code>, poi <code>/users/1/posts</code>. Un'API è solo un URL che restituisce JSON. Il browser però sa inviare solo GET: per usare tutti i metodi serve Postman.</p>
+  <p><strong>Attenzione a tre errori comuni:</strong></p>
+  <ul>
+    <li>API e REST non sono sinonimi: REST è uno stile, ed esistono API non REST (SOAP, GraphQL, gRPC).</li>
+    <li>REST non obbliga a usare JSON: è solo la rappresentazione più diffusa.</li>
+    <li>Un URL come <code>/getUsers</code> è progettato male: il verbo lo dà il metodo HTTP.</li>
+  </ul>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">★</span>Per riflettere: l'API della biblioteca <span class="badge badge-medio">ragionamento</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Progetta URL e metodi per l'API di una biblioteca che permetta di elencare i libri, vederne uno, prestarlo e restituirlo. Suggerimento: anche il prestito può essere una risorsa.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Ragionamento</h4>
+      <p>Le prime due operazioni sono letture sulla risorsa <em>libri</em>. Per "prestare" non invento un URL con un verbo come <code>/prestaLibro</code>: seguo il suggerimento e tratto il <strong>prestito</strong> come una risorsa a sé, che si crea, si legge e si modifica.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Operazione</th><th>Metodo</th><th>URL</th><th>Body</th><th>Risposta</th></tr></thead>
+          <tbody>
+            <tr><td>Elencare i libri</td><td>GET</td><td><code>/libri</code></td><td>–</td><td>200 + array di libri</td></tr>
+            <tr><td>Vedere un libro</td><td>GET</td><td><code>/libri/12</code></td><td>–</td><td>200 (o 404 se non esiste)</td></tr>
+            <tr><td>Prestare un libro</td><td>POST</td><td><code>/prestiti</code></td><td><code>{ "libroId": 12, "utenteId": 5 }</code></td><td>201 + il prestito con il suo <code>id</code></td></tr>
+            <tr><td>Restituirlo</td><td>PATCH</td><td><code>/prestiti/7</code></td><td><code>{ "restituito": true }</code></td><td>200</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Per la restituzione si poteva usare anche <code>DELETE /prestiti/7</code>: però così il prestito sparisce e la biblioteca perde lo storico. Con PATCH il prestito resta, segnato come chiuso. Con lo stesso schema si aggiungono <code>GET /prestiti?utenteId=5</code> (i prestiti di un utente) o <code>GET /libri?autore=Manzoni</code> (filtri nella query string).</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Livello base – Richieste GET e lettura della risposta</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>La prima richiesta <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: riconoscere le parti di una risposta HTTP · Difficoltà: bassa · Tempo: 10 min</em></p>
+      <p><strong>Consegna.</strong> Invia una richiesta <code>GET https://jsonplaceholder.typicode.com/posts/1</code>.</p>
+      <ol>
+        <li>Qual è lo status code? Cosa significa?</li>
+        <li>Nella scheda <strong>Headers</strong> della risposta, qual è il valore di <code>Content-Type</code>?</li>
+        <li>Quali campi contiene l'oggetto JSON restituito?</li>
+        <li>Quanto tempo ha impiegato la risposta e quanto pesa (in byte)?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>La risposta del server</h4>
+<pre data-lang="http"><code>HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 292</code></pre>
+<pre data-lang="json"><code>{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</code></pre>
+      <ol>
+        <li><strong>200 OK</strong>: la richiesta è andata a buon fine e il server ha mandato la risorsa nel body. È della classe 2xx (successo).</li>
+        <li><code>Content-Type: application/json; charset=utf-8</code>: il body è in formato <strong>JSON</strong>, con i caratteri codificati in UTF-8.</li>
+        <li>Quattro campi: <code>userId</code> (numero, l'autore del post), <code>id</code> (numero, l'identificativo del post), <code>title</code> (stringa) e <code>body</code> (stringa). Il testo è in finto latino ("lorem ipsum"): sono dati di prova.</li>
+        <li>Si legge in alto a destra nella risposta: <strong>Time</strong> (per esempio un centinaio di millisecondi) e <strong>Size</strong>. Il <strong>body</strong> pesa <strong>292 byte</strong> (lo dice anche l'header <code>Content-Length</code>); la Size di Postman è più grande (circa 1 KB o più) perché conta anche gli <strong>header</strong> della risposta. Il tempo cambia a ogni invio, perché dipende dalla rete.</li>
+      </ol>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Confondere la scheda <strong>Headers della richiesta</strong> (sotto l'URL) con quella <strong>della risposta</strong> (in basso): <code>Content-Type</code> va letto in basso.</li>
+        <li>Scrivere "il body è un oggetto" senza dire quali sono i campi: la domanda li chiede tutti e quattro.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Collezioni e risorse annidate <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: capire la struttura degli URL REST · Difficoltà: bassa · Tempo: 10 min</em></p>
+      <ol>
+        <li>Invia <code>GET /posts</code>. Quanti post vengono restituiti? Che tipo di dato JSON è la risposta (oggetto o array)?</li>
+        <li>Invia <code>GET /posts/1/comments</code>. Quanti commenti ha il post 1?</li>
+        <li>Invia <code>GET /users/3</code>. Qual è il nome dell'utente e in che città abita?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p class="hand">Gli URL brevi come <code>/posts</code> vanno scritti completi in Postman: <code>https://jsonplaceholder.typicode.com/posts</code>.</p>
+      <ol>
+        <li><strong>100 post</strong> (dall'<code>id</code> 1 all'<code>id</code> 100). La risposta è un <strong>array</strong>: comincia con <code>[</code> e contiene 100 oggetti <code>{ … }</code>. <code>/posts</code> è una <strong>collezione</strong>, <code>/posts/1</code> è un <strong>singolo elemento</strong> (un oggetto).</li>
+        <li><strong>5 commenti</strong>. <code>/posts/1/comments</code> è una risorsa <strong>annidata</strong>: "i commenti <em>del</em> post 1". Ogni commento ha <code>postId</code>, <code>id</code>, <code>name</code>, <code>email</code> e <code>body</code>.</li>
+        <li>L'utente 3 si chiama <strong>Clementine Bauch</strong> (username <code>Samantha</code>) e abita a <strong>McKenziehaven</strong>. La città non è un campo "in superficie": si trova dentro l'oggetto annidato <code>address</code>, cioè in <code>address.city</code>.</li>
+      </ol>
+<pre data-lang="json"><code>{
+  "id": 3,
+  "name": "Clementine Bauch",
+  "username": "Samantha",
+  "email": "Nathan@yesenia.net",
+  "address": {
+    "street": "Douglas Extension",
+    "suite": "Suite 847",
+    "city": "McKenziehaven",
+    "zipcode": "59590-4157",
+    …
+  },
+  …
+}</code></pre>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Quando la risorsa non esiste <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: distinguere le classi di status code · Difficoltà: bassa · Tempo: 10 min</em></p>
+      <ol>
+        <li>Invia <code>GET /posts/999</code>. Che status code ottieni? Che cosa contiene il body?</li>
+        <li>Usando httpbin, invia <code>GET https://httpbin.org/status/200</code>, poi <code>/status/404</code>, <code>/status/500</code>, <code>/status/301</code>.</li>
+        <li>Completa la tabella:</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Codice</th><th>Classe (1xx–5xx)</th><th>Significato</th><th>Di chi è la "colpa": client o server?</th></tr></thead>
+          <tbody>
+            <tr><td>200</td><td></td><td></td><td></td></tr>
+            <tr><td>301</td><td></td><td></td><td></td></tr>
+            <tr><td>404</td><td></td><td></td><td></td></tr>
+            <tr><td>500</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>404 Not Found</strong>: i post sono solo 100, il 999 non esiste. Il body è un <strong>oggetto JSON vuoto</strong>: <code>{}</code>.</li>
+        <li>httpbin risponde con il codice che gli chiedi e con il <strong>body vuoto</strong>: <code>/status/200</code> → <code>200 OK</code>, <code>/status/404</code> → <code>404 Not Found</code>, <code>/status/500</code> → <code>500 Internal Server Error</code>.<br>
+        Con <code>/status/301</code> c'è una sorpresa: Postman mostra <strong>200 OK</strong> e un JSON. Il server ha risposto <code>301 Moved Permanently</code> con l'header <code>Location: /redirect/1</code>, e Postman <strong>ha seguito il reindirizzamento da solo</strong> (prima <code>/redirect/1</code>, poi <code>/get</code>), come fa un browser. Per vedere il 301 vero, nella scheda <strong>Settings</strong> della richiesta disattiva <em>Automatically follow redirects</em> e reinvia.</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Codice</th><th>Classe</th><th>Significato</th><th>Di chi è la "colpa"?</th></tr></thead>
+          <tbody>
+            <tr><td><strong>200</strong></td><td>2xx – Successo</td><td>OK: richiesta riuscita, la risorsa è nel body</td><td>Di nessuno: è andato tutto bene</td></tr>
+            <tr><td><strong>301</strong></td><td>3xx – Redirezione</td><td>Moved Permanently: la risorsa si è spostata per sempre all'indirizzo nell'header <code>Location</code></td><td>Di nessuno: non è un errore, il client deve solo andare al nuovo indirizzo</td></tr>
+            <tr><td><strong>404</strong></td><td>4xx – Errore del client</td><td>Not Found: la risorsa richiesta non esiste</td><td>Del <strong>client</strong>: ha chiesto un URL sbagliato</td></tr>
+            <tr><td><strong>500</strong></td><td>5xx – Errore del server</td><td>Internal Server Error: il server ha avuto un problema imprevisto</td><td>Del <strong>server</strong>: la richiesta poteva anche essere giusta</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Query string e filtri <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: usare i parametri nell'URL · Difficoltà: media · Tempo: 15 min</em></p>
+      <ol>
+        <li>Usando la scheda <strong>Params</strong> di Postman (non scrivendo a mano nell'URL), recupera tutti i todo dell'utente 1: <code>GET /todos</code> con parametro <code>userId = 1</code>. Copia l'URL completo che Postman ha generato.</li>
+        <li>Aggiungi un secondo parametro per ottenere solo i todo <strong>completati</strong> dell'utente 1. Quanti sono?</li>
+        <li>Spiega a cosa servono i caratteri <code>?</code> e <code>&amp;</code> nell'URL.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li>Nella scheda Params scrivo <strong>Key</strong> <code>userId</code> e <strong>Value</strong> <code>1</code>; Postman aggiorna l'URL da solo:
+<pre data-lang="testo"><code>https://jsonplaceholder.typicode.com/todos?userId=1</code></pre>
+        Risposta <strong>200 OK</strong> con un array di <strong>20 todo</strong> (id da 1 a 20).</li>
+        <li>Aggiungo una seconda riga: Key <code>completed</code>, Value <code>true</code>.
+<pre data-lang="testo"><code>https://jsonplaceholder.typicode.com/todos?userId=1&amp;completed=true</code></pre>
+        I todo completati dell'utente 1 sono <strong>11</strong> (quelli con id 4, 8, 10, 11, 12, 14, 15, 16, 17, 19, 20).</li>
+        <li><code>?</code> separa il <strong>percorso</strong> della risorsa (<code>/todos</code>) dalla <strong>query string</strong>, cioè i parametri. <code>&amp;</code> separa un parametro <code>nome=valore</code> dal successivo. Qui servono come <strong>filtri</strong>: chiedo sempre la collezione <code>/todos</code>, ma solo gli elementi che rispettano le condizioni (come un <code>WHERE</code> in SQL).</li>
+      </ol>
+      <h4>Errori da evitare</h4>
+      <ul>
+        <li>Scrivere <code>userid</code> con la <code>i</code> minuscola: il nome del campo è <code>userId</code>, e con il nome sbagliato il filtro viene ignorato o non trova niente.</li>
+        <li>Mettere un secondo <code>?</code> al posto della <code>&amp;</code>: il <code>?</code> va scritto una volta sola.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Gli header della richiesta <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: capire che anche il client invia header · Difficoltà: media · Tempo: 10 min</em></p>
+      <ol>
+        <li>Invia <code>GET https://httpbin.org/headers</code>. httpbin ti restituisce gli header che <strong>tu</strong> hai inviato. Quale <code>User-Agent</code> usa Postman?</li>
+        <li>Aggiungi nella scheda <strong>Headers</strong> un header personalizzato <code>X-Classe</code> con valore <code>5A</code> (o la tua classe) e reinvia. Verifica che compaia nella risposta.</li>
+        <li>Aggiungi l'header <code>Accept-Language: it-IT</code>. A cosa serve questo header in un sito reale?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p>Dopo aver aggiunto i due header, la risposta (200 OK) è simile a questa:</p>
+<pre data-lang="json"><code>{
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "it-IT",
+    "Cache-Control": "no-cache",
+    "Host": "httpbin.org",
+    "Postman-Token": "1b2c3d4e-…",
+    "User-Agent": "PostmanRuntime/7.43.0",
+    "X-Amzn-Trace-Id": "Root=1-…",
+    "X-Classe": "5A"
+  }
+}</code></pre>
+      <ol>
+        <li>Postman si presenta come <strong><code>PostmanRuntime/7.x.x</code></strong> (il numero dipende dalla versione installata). Un browser invece manderebbe qualcosa come <code>Mozilla/5.0 (Windows NT 10.0; …) Chrome/…</code>. Lo <code>User-Agent</code> dice al server <strong>che programma</strong> sta facendo la richiesta.</li>
+        <li>Nella risposta compare <code>"X-Classe": "5A"</code>: il server ha ricevuto davvero l'header che ho aggiunto. Gli header che iniziano con <code>X-</code> sono per tradizione quelli <strong>personalizzati</strong>, non standard. <code>X-Amzn-Trace-Id</code> invece non l'ho mandato io: lo aggiunge il sistema (di Amazon) che sta davanti a httpbin.</li>
+        <li><code>Accept-Language</code> dice al server <strong>in che lingua</strong> l'utente preferisce i contenuti. Un sito multilingua lo legge e risponde con la versione italiana della pagina (il browser lo imposta da solo in base alla lingua del sistema). httpbin non ha pagine in più lingue, quindi si limita a restituirlo.</li>
+      </ol>
+      <p class="hand">Gli header che non hai scritto tu (<code>Accept</code>, <code>Accept-Encoding</code>, <code>Cache-Control</code>, <code>Postman-Token</code>…) li aggiunge Postman in automatico: li vedi nella scheda Headers cliccando su <em>hidden</em>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Livello intermedio – CRUD con POST, PUT, PATCH, DELETE</h2>
+  <div class="callout warn"><span class="callout-title">Ricorda</span>JSONPlaceholder <strong>simula</strong> le scritture. Il server risponde come se avesse salvato, ma se rileggi la risorsa i dati non sono cambiati.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Creare una risorsa con POST <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: inviare un body JSON · Difficoltà: media · Tempo: 15 min</em></p>
+      <p><strong>Consegna.</strong> Invia <code>POST https://jsonplaceholder.typicode.com/posts</code> con questo body (scheda <strong>Body → raw → JSON</strong>):</p>
+<pre data-lang="json"><code>{
+  "title": "Il mio primo post",
+  "body": "Scritto con Postman in laboratorio",
+  "userId": 1
+}</code></pre>
+      <ol>
+        <li>Qual è lo status code? Perché è diverso da quello di una GET riuscita?</li>
+        <li>Che <code>id</code> ha assegnato il server alla nuova risorsa?</li>
+        <li>Controlla la scheda <strong>Headers</strong> della richiesta: che valore ha impostato Postman per <code>Content-Type</code>?</li>
+        <li>Ripeti la richiesta scegliendo <strong>Body → raw → Text</strong> invece di JSON. Cosa cambia nella risposta? Perché?</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>La risposta</h4>
+<pre data-lang="http"><code>HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8</code></pre>
+<pre data-lang="json"><code>{
+  "title": "Il mio primo post",
+  "body": "Scritto con Postman in laboratorio",
+  "userId": 1,
+  "id": 101
+}</code></pre>
+      <ol>
+        <li><strong>201 Created</strong>. Una GET riuscita risponde <code>200 OK</code> perché <strong>legge</strong> una risorsa che esiste già; la POST invece ha <strong>creato</strong> una risorsa nuova, e il codice più preciso per dirlo è 201.</li>
+        <li><code>"id": 101</code>. Con POST è il <strong>server</strong> a scegliere l'<code>id</code>: i post sono 100, quindi il prossimo è 101. Se rileggi <code>GET /posts/101</code> ottieni <strong>404</strong>: il salvataggio era solo simulato.</li>
+        <li><code>Content-Type: application/json</code>. Scegliendo "JSON" nel menu del body, Postman aggiunge da solo questo header, così il server sa che il body è JSON.</li>
+        <li>Con <strong>Text</strong> Postman manda <code>Content-Type: text/plain</code>. Lo status resta <strong>201</strong>, ma la risposta diventa solo:
+<pre data-lang="json"><code>{
+  "id": 101
+}</code></pre>
+        Il testo inviato è identico, ma il server guarda il <code>Content-Type</code> per capire <strong>come leggere</strong> il body: con <code>text/plain</code> non lo interpreta come JSON, quindi non trova i campi <code>title</code>, <code>body</code> e <code>userId</code> e crea una risorsa che ha solo l'<code>id</code>. È la prova che l'header <code>Content-Type</code> fa parte della <strong>rappresentazione</strong> della risorsa.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>PUT e PATCH a confronto <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: distinguere sostituzione completa e modifica parziale · Difficoltà: media · Tempo: 15 min</em></p>
+      <ol>
+        <li>Invia <code>PUT /posts/1</code> con body <code>{ "title": "Titolo nuovo" }</code>. Quali campi contiene la risposta?</li>
+        <li>Invia <code>PATCH /posts/1</code> con lo stesso body. Quali campi contiene ora la risposta?</li>
+        <li>Spiega con parole tue la differenza tra PUT e PATCH, usando le due risposte come prova.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li>Risposta <strong>200 OK</strong> con <strong>solo due campi</strong>, <code>title</code> e <code>id</code>:
+<pre data-lang="json"><code>{
+  "title": "Titolo nuovo",
+  "id": 1
+}</code></pre></li>
+        <li>Risposta <strong>200 OK</strong> con <strong>tutti e quattro i campi</strong>; è cambiato solo <code>title</code>:
+<pre data-lang="json"><code>{
+  "userId": 1,
+  "id": 1,
+  "title": "Titolo nuovo",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</code></pre></li>
+        <li><strong>PUT sostituisce tutta la risorsa</strong> con quello che mando: avendo mandato solo il titolo, il post "nuovo" ha solo il titolo (più l'<code>id</code>, che viene dall'URL), e <code>userId</code> e <code>body</code> sono spariti. <strong>PATCH modifica solo i campi che mando</strong> e lascia gli altri come erano. Quindi: con PUT devo mandare la risorsa <strong>completa</strong>; con PATCH basta la <strong>parte</strong> da cambiare.</li>
+      </ol>
+      <p class="hand">Paragone: PUT è ristampare tutta la scheda dello studente partendo da un foglio bianco; PATCH è correggere una sola riga con il bianchetto.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Cancellare una risorsa <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: usare DELETE e verificare l'idempotenza · Difficoltà: media · Tempo: 10 min</em></p>
+      <ol>
+        <li>Invia <code>DELETE /posts/1</code>. Che status code e che body ricevi?</li>
+        <li>Invia di nuovo la stessa richiesta. Il risultato cambia?</li>
+        <li>Un metodo si dice <strong>idempotente</strong> se ripeterlo più volte produce lo stesso effetto sul server di una volta sola. Quali tra GET, POST, PUT, PATCH, DELETE sono idempotenti? Motiva.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>200 OK</strong> con body <code>{}</code> (oggetto vuoto): la cancellazione è riuscita e non c'è più niente da mostrare.</li>
+        <li><strong>No</strong>: di nuovo <code>200 OK</code> e <code>{}</code>. Su JSONPlaceholder la cancellazione è finta (con <code>GET /posts/1</code> il post c'è ancora), quindi ogni volta "cancella" con successo. Su un server vero la seconda DELETE risponderebbe probabilmente <strong>404</strong>, perché il post non c'è più: la <em>risposta</em> cambia, ma lo <em>stato del server</em> no (il post è cancellato in entrambi i casi).</li>
+        <li>
+          <ul>
+            <li><strong>GET: sì.</strong> Legge e basta, non cambia niente, quante volte la ripeti.</li>
+            <li><strong>POST: no.</strong> Ogni POST crea una risorsa nuova: tre POST uguali = tre post (con id diversi).</li>
+            <li><strong>PUT: sì.</strong> Mette la stessa risorsa allo stesso URL: dopo la prima volta, le altre la sostituiscono con una copia identica.</li>
+            <li><strong>DELETE: sì.</strong> Dopo la prima volta la risorsa non c'è più, e le altre non cambiano niente.</li>
+            <li><strong>PATCH: non è garantito.</strong> <code>{ "title": "Titolo nuovo" }</code> ripetuto dà sempre lo stesso risultato, ma una PATCH come «aumenta i like di 1» cambierebbe il risultato a ogni invio. Per questo PATCH, in generale, <strong>non</strong> è considerato idempotente.</li>
+          </ul>
+        </li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">09</span>Progettare le richieste <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><em>Obiettivo: tradurre un requisito in una richiesta REST · Difficoltà: media · Tempo: 15 min</em></p>
+      <p><strong>Consegna.</strong> Completa la tabella scrivendo metodo, URL e (se serve) body. Poi prova ogni richiesta in Postman e annota lo status code.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Operazione richiesta</th><th>Metodo</th><th>URL</th><th>Body</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Leggere tutti gli album dell'utente 2</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Creare un nuovo todo "Studiare HTTP" per l'utente 5, non completato</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Segnare come completato il todo 7, senza toccare gli altri campi</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Eliminare il commento 12</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Leggere le foto dell'album 3</td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p>Tutti gli URL iniziano con <code>https://jsonplaceholder.typicode.com</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Operazione</th><th>Metodo</th><th>URL</th><th>Body</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Album dell'utente 2</td><td><strong>GET</strong></td><td><code>/users/2/albums</code><br>(oppure <code>/albums?userId=2</code>)</td><td>–</td><td><strong>200</strong> (10 album)</td></tr>
+            <tr><td>Nuovo todo per l'utente 5</td><td><strong>POST</strong></td><td><code>/todos</code></td><td><code>{ "title": "Studiare HTTP", "completed": false, "userId": 5 }</code></td><td><strong>201</strong> (con <code>"id": 201</code>)</td></tr>
+            <tr><td>Completare il todo 7</td><td><strong>PATCH</strong></td><td><code>/todos/7</code></td><td><code>{ "completed": true }</code></td><td><strong>200</strong></td></tr>
+            <tr><td>Eliminare il commento 12</td><td><strong>DELETE</strong></td><td><code>/comments/12</code></td><td>–</td><td><strong>200</strong> (body <code>{}</code>)</td></tr>
+            <tr><td>Foto dell'album 3</td><td><strong>GET</strong></td><td><code>/albums/3/photos</code><br>(oppure <code>/photos?albumId=3</code>)</td><td>–</td><td><strong>200</strong> (50 foto)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Perché queste scelte</h4>
+      <ul>
+        <li><strong>Leggere</strong> = GET, senza body. "Gli album dell'utente 2" si scrive come risorsa annidata (<code>/users/2/albums</code>) o come filtro nella query string (<code>?userId=2</code>): JSONPlaceholder accetta entrambe le forme e dà lo stesso risultato.</li>
+        <li><strong>Creare</strong> = POST sulla collezione <code>/todos</code>, senza <code>id</code> (lo assegna il server: i todo sono 200, quindi 201). <code>completed</code> è un booleano: si scrive <code>false</code> senza virgolette.</li>
+        <li>"<strong>Senza toccare gli altri campi</strong>" è l'indizio per <strong>PATCH</strong>: con PUT e solo <code>completed</code>, il todo perderebbe titolo e utente (come nell'esercizio 7). La risposta è il todo intero con <code>"completed": true</code>:
+<pre data-lang="json"><code>{
+  "userId": 1,
+  "id": 7,
+  "title": "illo expedita consequatur quia in",
+  "completed": true
+}</code></pre></li>
+        <li><strong>Eliminare</strong> = DELETE sull'URL del singolo commento, senza body.</li>
+      </ul>
+      <p class="hand">Ricorda di selezionare <strong>Body → raw → JSON</strong> per POST e PATCH, altrimenti succede come nell'esercizio 6 con il Text.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>PDF "Esercizi HTTP e Postman – Parte 1" assegnato su Google Classroom (consegna riportata fedelmente). Le risposte sono state verificate mandando le richieste al codice di JSONPlaceholder e di httpbin; la soluzione del "Per riflettere", l'esempio di file di testo, la guida a Postman, le spiegazioni e gli "Errori da evitare" sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>
