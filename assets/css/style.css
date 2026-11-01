@@ -25,6 +25,7 @@
   --highlight: #fff27a;
   --highlight-ink: #1f2430;
   --postit: #fff6c4;
+  --label: #fffdf7;
   --good: #22864c;
   --bad: #c43a3a;
   --code-bg: #f7f5ef;
@@ -55,6 +56,44 @@
   --accent-subject: var(--pen);
   color-scheme: light;
 }
+
+/* tema scuro (tasto luna/sole nella barra in alto): un quaderno a luce spenta */
+html[data-theme="dark"] {
+  --paper: #16181d;
+  --paper-2: #1f2229;
+  --surface: #1c1f26;
+  --label: #23262e;
+  --line: rgb(150 175 230 / 0.06);
+  --margin-line: rgb(230 110 120 / 0.38);
+  --ink: #e6e8ee;
+  --ink-soft: #b3b8c4;
+  --ink-faint: #858b98;
+  --rule: #2c3039;
+  --rule-strong: #3a3f4a;
+  --pen: #7d9cf5;
+  --pen-soft: rgb(125 156 245 / 0.14);
+  --on-pen: #10131a;
+  --highlight: #8a7a1c;
+  --highlight-ink: #fdf9e0;
+  --postit: #3a3420;
+  --good: #4cc27c;
+  --bad: #ef6b6b;
+  --code-bg: #12141a;
+  --tok-keyword: #e08ad8;
+  --tok-string: #7fcf8f;
+  --tok-number: #f0a35a;
+  --tok-comment: #7d8494;
+  --tok-function: #8fb0ff;
+  --tok-pre: #ef85b4;
+  --c-mix: 62%;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 3px 10px -4px rgb(0 0 0 / 0.45);
+  --shadow-up: 0 2px 4px rgb(0 0 0 / 0.3), 0 14px 28px -12px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 18px 50px rgb(0 0 0 / 0.55);
+  --scrim: rgb(0 0 0 / 0.55);
+  color-scheme: dark;
+}
+html[data-theme="dark"] .callout.tip { --cl: #e2c45a; }
+html[data-theme="dark"] .callout.warn { --cl: #e8994f; }
 
 /* colore materia leggibile sul bianco */
 [style*="--c:"] { --c-ink: color-mix(in srgb, var(--c) var(--c-mix), var(--ink)); }
@@ -160,6 +199,10 @@ html[data-subject][data-toc="off"] #content { max-width: 48rem; }
 }
 .icon-btn:hover { background: var(--paper-2); color: var(--ink); }
 .search-icon { display: none; margin-left: auto; }
+.theme-btn { flex: none; }
+.theme-btn .icon { width: 20px; height: 20px; }
+.theme-btn .t-sun, html[data-theme="dark"] .theme-btn .t-moon { display: none; }
+html[data-theme="dark"] .theme-btn .t-sun { display: inline; }
 
 .search-trigger {
   margin-left: auto;
@@ -274,7 +317,7 @@ html[data-subject][data-toc="off"] #content { max-width: 48rem; }
   display: grid; gap: 3px;
   padding: 12px 14px 13px;
   border-radius: 6px;
-  background: #fffdf7;
+  background: var(--label);
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.18);
 }
 .cover-name { font-weight: 800; font-size: 1.22rem; line-height: 1.2; padding-bottom: 5px; border-bottom: 1.5px solid var(--margin-line); }
@@ -358,7 +401,7 @@ html[data-subject][data-toc="off"] #content { max-width: 48rem; }
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 10px 20px -12px color-mix(in srgb, var(--accent-subject) 70%, #000);
 }
 .subject-header::after { content: ""; position: absolute; top: 0; bottom: 0; right: 18px; width: 8px; background: rgb(0 0 0 / 0.22); }
-.subject-label { position: relative; z-index: 1; max-width: 32rem; padding: 14px 18px 16px; border-radius: 8px; background: #fffdf7; box-shadow: 0 1px 2px rgb(0 0 0 / 0.18); }
+.subject-label { position: relative; z-index: 1; max-width: 32rem; padding: 14px 18px 16px; border-radius: 8px; background: var(--label); box-shadow: 0 1px 2px rgb(0 0 0 / 0.18); }
 #content .subject-label h1 { margin: 0; padding-bottom: 6px; border-bottom: 1.5px solid var(--margin-line); }
 #content .subject-label .lead { margin: 8px 0 10px; font-size: 1.02rem; }
 
@@ -638,7 +681,7 @@ mark.hit.is-current { outline: 2px solid var(--pen); outline-offset: 1px; }
 #content .sum-cards { list-style: none; margin: 14px 0 16px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 12px; }
 #content .sum-cards > li { margin: 0; }
 /* ogni paragrafo è una scheda */
-.sum-card { display: flex; flex-direction: column; padding: 12px 16px 10px; border: 1px solid var(--rule); border-radius: 4px; background: #fffdf7; box-shadow: 0 1px 2px rgb(60 50 30 / 0.08); }
+.sum-card { display: flex; flex-direction: column; padding: 12px 16px 10px; border: 1px solid var(--rule); border-radius: 4px; background: var(--label); box-shadow: 0 1px 2px rgb(60 50 30 / 0.08); }
 #content .sum-card-title { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1.5px solid var(--margin-line); font-weight: 800; line-height: 1.3; }
 .sum-card-title span { flex: none; min-width: 1.1em; color: var(--c-ink); }
 #content .sum-card ul { flex: 1; margin: 0 0 8px; padding-left: 1.15em; font-size: 15.5px; line-height: 1.5; }
@@ -1003,6 +1046,7 @@ details[open] > :not(summary) { animation: drop 0.25s var(--ease); }
 }
 @media print {
   .topbar, .sidebar, .toc, .toc-mobile, .site-footer, .hit-bar, .breadcrumb, .copy-btn, .tabbar, .page-end { display: none !important; }
+  html[data-theme="dark"] { --paper: #fff; --surface: #fff; --label: #fff; --ink: #1f2430; --ink-soft: #4b5262; --code-bg: #f7f5ef; color-scheme: light; }
   body { background: #fff; padding: 0; }
   .page { padding: 0; }
   .page::before { display: none; }

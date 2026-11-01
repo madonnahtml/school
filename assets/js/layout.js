@@ -30,6 +30,8 @@ SITE.ready(function () {
     copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
     list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
     pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
     school: '<path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/><path d="M22 10v6"/>',
   };
   var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
@@ -67,7 +69,18 @@ SITE.ready(function () {
     "</nav>" +
     '<button class="search-trigger" type="button" data-search-open>' + SITE.icon(I.search) +
       '<span class="search-trigger-label">Cerca negli appunti</span><kbd>' + (isMac ? "⌘" : "Ctrl") + " K</kbd></button>" +
-    '<button class="icon-btn search-icon" type="button" data-search-open aria-label="Cerca">' + SITE.icon(I.search) + "</button>";
+    '<button class="icon-btn search-icon" type="button" data-search-open aria-label="Cerca">' + SITE.icon(I.search) + "</button>" +
+    '<button class="icon-btn theme-btn" type="button" data-theme-toggle>' +
+      '<span class="t-moon">' + SITE.icon(I.moon) + '</span><span class="t-sun">' + SITE.icon(I.sun) + "</span></button>";
+  var themeBtn = topbar.querySelector("[data-theme-toggle]");
+  function themeLabel() {
+    var dark = SITE.theme.get() === "dark";
+    themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
+    themeBtn.setAttribute("aria-label", dark ? "Modalità giorno" : "Modalità notturna");
+    themeBtn.title = dark ? "Modalità giorno" : "Modalità notturna";
+  }
+  themeLabel();
+  themeBtn.addEventListener("click", function () { SITE.theme.toggle(); themeLabel(); });
 
   /* ---------- Menu materie ---------- */
   var sidebar = document.createElement("aside");

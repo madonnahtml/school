@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "11",
+    version: "12",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -309,6 +309,24 @@
   var html = document.documentElement;
   var current = SITE.subject(html.getAttribute("data-subject"));
   if (current) html.style.setProperty("--accent-subject", current.color);
+
+  // Modalità notturna: scelta salvata, altrimenti quella del dispositivo. Applicata subito (niente lampo bianco).
+  SITE.theme = {
+    get: function () { return html.getAttribute("data-theme") === "dark" ? "dark" : "light"; },
+    set: function (t, save) {
+      html.setAttribute("data-theme", t);
+      if (save) SITE.store.set("tema", t);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", t === "dark" ? "#16181d" : "#faf8f3");
+    },
+    toggle: function () { SITE.theme.set(SITE.theme.get() === "dark" ? "light" : "dark", true); },
+  };
+  var savedTheme = SITE.store.get("tema");
+  var darkQuery = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+  SITE.theme.set(savedTheme === "dark" || savedTheme === "light" ? savedTheme : (darkQuery && darkQuery.matches ? "dark" : "light"));
+  if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener("change", function (e) {
+    if (!SITE.store.get("tema")) SITE.theme.set(e.matches ? "dark" : "light");
+  });
 
   // Font
   var fonts = document.createElement("link");
