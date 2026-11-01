@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "11",
+    version: "12",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -35,6 +35,7 @@
       riassunto: "Riassunto",
       verifica: "Verifica",
       vocabolario: "Vocabolario",
+      formulario: "Formulario",
     },
 
     subjects: [
@@ -117,6 +118,7 @@
           { title: "Il modello microeconomico", path: "materie/gpoi/modello-microeconomico.html", type: "teoria" },
           { title: "I costi aziendali", path: "materie/gpoi/costi-aziendali.html", type: "teoria" },
           { title: "Il punto di pareggio (BEP)", path: "materie/gpoi/break-even-point.html", type: "teoria" },
+          { title: "Formulario: tutte le formule", path: "materie/gpoi/formulario.html", type: "formulario" },
           { title: "Esercizi: domanda, ricavo e tassa sul venditore", path: "materie/gpoi/esercizi-domanda-offerta.html", type: "esercizi", of: "materie/gpoi/modello-microeconomico.html", n: 2, desc: "Esercizi 4 e 7 di pagina 29: domanda e ricavo dei panini (dati incoerenti, grafico, ricavo massimo) e tassa di 5 € sul venditore." },
           { title: "Esercizi: costi fissi, variabili e semivariabili", path: "materie/gpoi/esercizi-costi-fissi-variabili.html", type: "esercizi", of: "materie/gpoi/costi-aziendali.html", n: 6, desc: "Classificare i costi del panificio e dell'impresa informatica, vero o falso, contratti diversi, costo totale delle magliette, quota fissa e variabile dai dati." },
           { title: "Esercizi: il BEP con Excel", path: "materie/gpoi/esercizi-bep-excel.html", type: "esercizi", of: "materie/gpoi/break-even-point.html", n: 2, desc: "Azienda Galilei cella per cella: tabella ricavi e costi, funzione SE, formattazione condizionale, grafico a linee, MDC e BEP con il metodo analitico." },
@@ -309,6 +311,24 @@
   var html = document.documentElement;
   var current = SITE.subject(html.getAttribute("data-subject"));
   if (current) html.style.setProperty("--accent-subject", current.color);
+
+  // Modalità notturna: scelta salvata, altrimenti quella del dispositivo. Applicata subito (niente lampo bianco).
+  SITE.theme = {
+    get: function () { return html.getAttribute("data-theme") === "dark" ? "dark" : "light"; },
+    set: function (t, save) {
+      html.setAttribute("data-theme", t);
+      if (save) SITE.store.set("tema", t);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", t === "dark" ? "#16181d" : "#faf8f3");
+    },
+    toggle: function () { SITE.theme.set(SITE.theme.get() === "dark" ? "light" : "dark", true); },
+  };
+  var savedTheme = SITE.store.get("tema");
+  var darkQuery = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+  SITE.theme.set(savedTheme === "dark" || savedTheme === "light" ? savedTheme : (darkQuery && darkQuery.matches ? "dark" : "light"));
+  if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener("change", function (e) {
+    if (!SITE.store.get("tema")) SITE.theme.set(e.matches ? "dark" : "light");
+  });
 
   // Font
   var fonts = document.createElement("link");
