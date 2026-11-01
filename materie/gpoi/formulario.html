@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="it" data-subject="gpoi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Formulario di GPOI · Scuola</title>
+  <meta name="description" content="GPOI: tutte le formule in una pagina. Risultato economico, domanda e offerta, equilibrio e imposta, indici, configurazioni di costo, costi fissi e variabili, ammortamento, ripartizione, scostamenti, analisi marginale, BEP, utile obiettivo ed Excel.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=12">
+  <script src="../../assets/js/site.js?v=12"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Formulario di GPOI</h1>
+  <p class="lead">Tutte le formule dei capitoli in una pagina sola, con il significato di ogni simbolo e un esempio già fatto. Da tenere aperta mentre fai gli esercizi.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 formule da sapere a memoria</span>
+    <ol>
+      <li><strong>Risultato</strong>: U = Ricavi − Costi, con R = p × q.</li>
+      <li><strong>Costo totale</strong>: CT = CF + CVU × Q.</li>
+      <li><strong>Margine di contribuzione</strong>: MDC = PV − CVU.</li>
+      <li><strong>Punto di pareggio</strong>: BEP = CF / MDC, fatturato RBEP = PV × BEP.</li>
+      <li><strong>Equilibrio di mercato</strong>: Qd = Qs.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>I simboli</h2>
+  <p>Il libro e le dispense usano nomi diversi per le stesse cose: qui sono messi uno accanto all'altro.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Simbolo</th><th>Altri nomi</th><th>Significato</th><th>Unità</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Q</strong></td><td>q</td><td>Quantità <strong>venduta</strong> (o domandata/offerta)</td><td>pezzi, servizi</td></tr>
+        <tr><td><strong>P</strong></td><td>PV, p, PVu</td><td>Prezzo di vendita di una unità</td><td>€/unità</td></tr>
+        <tr><td><strong>R</strong></td><td>RT</td><td>Ricavi totali</td><td>€</td></tr>
+        <tr><td><strong>CF</strong></td><td></td><td>Costi fissi del periodo</td><td>€</td></tr>
+        <tr><td><strong>CVU</strong></td><td>v, CVu</td><td>Costo variabile di una unità</td><td>€/unità</td></tr>
+        <tr><td><strong>CV</strong></td><td></td><td>Costi variabili totali</td><td>€</td></tr>
+        <tr><td><strong>CT</strong></td><td>C</td><td>Costi totali</td><td>€</td></tr>
+        <tr><td><strong>U</strong></td><td>P (profitto), risultato economico</td><td>Utile (se negativo è una perdita)</td><td>€</td></tr>
+        <tr><td><strong>MDC</strong></td><td></td><td>Margine di contribuzione unitario</td><td>€/unità</td></tr>
+        <tr><td><strong>Cm, Rm</strong></td><td></td><td>Costo e ricavo marginale (di un'unità in più)</td><td>€</td></tr>
+        <tr><td><strong>Qd, Qs</strong></td><td></td><td>Quantità domandata e offerta</td><td>unità</td></tr>
+        <tr><td><strong>t</strong></td><td></td><td>Imposta per unità pagata dal venditore</td><td>€/unità</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Attenzione alla P</span>Nel capitolo sui costi <strong>P = R − C</strong> è il <strong>profitto</strong>; in microeconomia <strong>P</strong> è il <strong>prezzo</strong>. Guarda sempre in quale capitolo sei.</div>
+
+  <!-- ============================================================= -->
+  <h2>Azienda e risultato economico</h2>
+  <p class="ref">Capitolo <a href="azienda-funzioni-aziendali.html">Azienda e funzioni aziendali</a></p>
+<pre data-lang="testo"><code>Risultato economico = Ricavi − Costi
+
+Ricavi &gt; Costi  →  utile
+Ricavi = Costi  →  pareggio
+Ricavi &lt; Costi  →  perdita</code></pre>
+  <p class="hand">Ricavi 48.000 €, costi 39.500 € → utile di 8.500 €.</p>
+  <div class="callout info"><span class="callout-title">Ricavo ≠ incasso</span>Il ricavo è il valore di ciò che hai venduto; l'incasso è quando arrivano i soldi. Una vendita pagata fra tre mesi è già un ricavo, ma non ancora un incasso.</div>
+
+  <!-- ============================================================= -->
+  <h2>Domanda, offerta ed equilibrio</h2>
+  <p class="ref">Capitolo <a href="modello-microeconomico.html">Il modello microeconomico</a></p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Formula</th><th>Cosa calcola</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>Q = a − b·P</code></td><td>Domanda lineare: a = quantità a prezzo zero, b = quanto cala Q se P sale di 1 €</td><td>Q = 100 − 2P, a P = 20 → Q = 60</td></tr>
+        <tr><td><code>P = a/b − Q/b</code></td><td>Forma inversa (P in funzione di Q)</td><td>Q = 100 − 2P → P = 50 − Q/2</td></tr>
+        <tr><td><code>R = P × Q</code></td><td>Ricavo (spesa dei consumatori)</td><td>20 × 60 = 1.200 €</td></tr>
+        <tr><td><code>Q = Q₁ + Q₂ + …</code></td><td>Domanda di mercato: allo <strong>stesso prezzo</strong> si sommano le <strong>quantità</strong>, ognuna ≥ 0</td><td>Q₁ = 20 − P/2, Q₂ = 40 − P → Q = 60 − 3P/2</td></tr>
+        <tr><td><code>Qd = Qs</code></td><td>Equilibrio: si risolve l'equazione e si trova P, poi Q</td><td>100 − 2P = 10 + P → P = 30, Q = 40</td></tr>
+        <tr><td><code>Qd − Qs</code> o <code>Qs − Qd</code></td><td>Eccesso di domanda (P sotto l'equilibrio) o eccedenza di offerta (P sopra)</td><td>A P = 40: Qs − Qd = 50 − 20 = 30</td></tr>
+        <tr><td><code>Qs con (P − t)</code></td><td>Imposta t per unità sul venditore: nell'offerta al posto di P va il prezzo netto P − t</td><td>Qs = 10 + (P − 5) = 5 + P</td></tr>
+        <tr><td><code>Q* = −b / (2a)</code></td><td>Ricavo massimo: R = aQ² + bQ è una parabola, il massimo è nel vertice</td><td>R = 24Q − 0,3Q² → Q = 40, R = 480 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Domanda "a tratti"</span>Se una formula dà una quantità <strong>negativa</strong>, quel consumatore compra <strong>0</strong>: Q₁ = max(0, 10 − P). Per questo la domanda di mercato può cambiare formula a seconda del prezzo.</div>
+  <div class="callout tip"><span class="callout-title">Verifica sempre</span>Trovato il prezzo di equilibrio, mettilo in <strong>tutte e due</strong> le funzioni: Qd e Qs devono dare lo stesso numero.</div>
+
+  <!-- ============================================================= -->
+  <h2>Indici di efficienza</h2>
+  <p class="ref">Capitolo <a href="costi-aziendali.html#efficacia-ed-efficienza">I costi aziendali</a></p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Formula</th><th>Cosa calcola</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>Efficacia = risultati ottenuti / obiettivi previsti</code></td><td>Ho raggiunto l'obiettivo?</td><td>18 bug corretti su 20 → 90%</td></tr>
+        <tr><td><code>Efficienza = risultati / risorse impiegate</code></td><td>Ho usato bene le risorse?</td><td>20 bug in 40 ore → 0,5 bug all'ora</td></tr>
+        <tr><td><code>Economicità = Costi / Ricavi</code></td><td>Quanto costa ogni euro di ricavo (<strong>più basso = meglio</strong>)</td><td>8.000 / 10.000 = 0,8</td></tr>
+        <tr><td><code>Redditività = Reddito / Capitale investito × 100</code></td><td>Quanto rende il capitale, in %</td><td>2.000 / 20.000 = 10%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Ricavi, costi e configurazioni</h2>
+  <p class="ref">Capitolo <a href="costi-aziendali.html">I costi aziendali</a></p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Formula</th><th>Cosa calcola</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>R = p × q</code></td><td>Ricavi (q = unità <strong>vendute</strong>)</td><td>60 € × 150 = 9.000 €</td></tr>
+        <tr><td><code>P = R − C</code></td><td>Profitto</td><td>9.000 − 7.200 = 1.800 €</td></tr>
+        <tr><td><code>CV = v × q</code></td><td>Costi variabili totali (se v è costante)</td><td>10 € × 100 = 1.000 €</td></tr>
+        <tr><td><code>CT = CF + CV = CF + v × q</code></td><td>Costi totali</td><td>2.000 + 1.000 = 3.000 €</td></tr>
+        <tr><td><code>CF unitario = CF / q</code></td><td>Quota di costo fisso su ogni unità</td><td>2.000 / 100 = 20 €</td></tr>
+        <tr><td><code>Costo medio = CT / q</code></td><td>Costo di una unità in media (scende se q sale)</td><td>3.000 / 100 = 30 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Le tre configurazioni di costo</h3>
+<pre data-lang="testo"><code>Costo di conversione     = Lavoro diretto + Costi indiretti di produzione
+Costo pieno industriale  = Costo di conversione + Materiali diretti
+Costo pieno aziendale    = Costo pieno industriale + Quota costi di periodo</code></pre>
+  <p class="hand">Materiali 1.200, lavoro 800, indiretti 500, periodo 300 → conversione 1.300, industriale 2.500, aziendale 2.800 €.</p>
+  <div class="callout warn"><span class="callout-title">Errore tipico</span>Sono scatole una dentro l'altra: il pieno industriale <strong>contiene già</strong> lavoro diretto e indiretti, non vanno sommati di nuovo.</div>
+
+  <!-- ============================================================= -->
+  <h2>Ammortamento, ripartizione e scostamenti</h2>
+  <p class="ref">Capitolo <a href="costi-aziendali.html#costi-di-prodotto-e-costi-di-periodo">I costi aziendali</a></p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Formula</th><th>Cosa calcola</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><code>Quota annua = Costo del bene / Anni di vita utile</code></td><td>Ammortamento a quote costanti (valore residuo 0). È un costo <strong>fisso</strong></td><td>9.000 / 3 = 3.000 € l'anno = 250 € al mese</td></tr>
+        <tr><td><code>Quota = Costo comune × (base del prodotto / base totale)</code></td><td>Ripartizione proporzionale di un costo comune (base: ore, ore macchina, quantità)</td><td>1.200 × 30/100 = 360 €</td></tr>
+        <tr><td><code>Scostamento = Costo effettivo − Costo standard</code></td><td>Positivo = <strong>sfavorevole</strong> (ho speso più del previsto)</td><td>1.500 − 1.200 = 300 € sfavorevole</td></tr>
+        <tr><td><code>Full = Direct + quota costi indiretti</code></td><td>Direct costing: solo costi diretti; full costing: anche la quota di indiretti</td><td>4.000 + 1.000 = 5.000 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Decisioni: make or buy e analisi marginale</h2>
+  <p class="ref">Capitolo <a href="costi-aziendali.html#costi-evitabili-e-non-evitabili">I costi aziendali</a></p>
+<pre data-lang="testo"><code>Make or buy:  confronta SOLO i costi evitabili (quelli che cambiano)
+              3.000 (evitabili, dentro)  vs  3.500 (fornitore)  →  dentro conviene di 500 €
+
+Costo marginale    Cm = C(q+1) − C(q)
+Ricavo marginale   Rm = R(q+1) − R(q) = p      (con prezzo costante)
+
+Rm &gt; Cm  →  l'unità in più AUMENTA il profitto (di Rm − Cm)
+Rm &lt; Cm  →  lo RIDUCE
+Rm = Cm  →  non lo cambia: qui c'è il massimo profitto</code></pre>
+  <p class="hand">Un'unità in più porta 90 €: con Cm = 65 € il profitto sale di 25 €, con Cm = 105 € scende di 15 €.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il punto di pareggio (BEP)</h2>
+  <p class="ref">Capitolo <a href="break-even-point.html">Il punto di pareggio (BEP)</a></p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Formula</th><th>Cosa calcola</th><th>Esempio (bar: CF 1.200, PV 5, CVU 2)</th></tr></thead>
+      <tbody>
+        <tr><td><code>RT = PV × Q</code></td><td>Ricavi totali</td><td>5 × 400 = 2.000 €</td></tr>
+        <tr><td><code>CT = CF + CVU × Q</code></td><td>Costi totali</td><td>1.200 + 2 × 400 = 2.000 €</td></tr>
+        <tr><td><code>CVU = somma dei costi di 1 unità</code></td><td>Costo variabile unitario (materiali, componenti, imballo…)</td><td>40 + 30 + 10 = 80 €</td></tr>
+        <tr><td><code>MDC = PV − CVU</code></td><td>Margine di contribuzione: quanto ogni unità copre dei costi fissi</td><td>5 − 2 = 3 €</td></tr>
+        <tr><td><code>BEP = CF / MDC = CF / (PV − CVU)</code></td><td>Quantità di pareggio (U = 0). Se è decimale, <strong>per eccesso</strong></td><td>1.200 / 3 = 400 panini</td></tr>
+        <tr><td><code>RBEP = PV × BEP</code></td><td>Fatturato di pareggio (in €)</td><td>5 × 400 = 2.000 €</td></tr>
+        <tr><td><code>U = RT − CT = MDC × Q − CF</code></td><td>Utile a una quantità qualsiasi</td><td>3 × 500 − 1.200 = 300 €</td></tr>
+        <tr><td><code>Q obiettivo = (CF + utile desiderato) / MDC</code></td><td>Quanto vendere per guadagnare una certa cifra</td><td>(1.200 + 600) / 3 = 600 panini</td></tr>
+        <tr><td><code>Q = Fatturato / PV</code></td><td>Unità vendute partendo dal fatturato</td><td>14.000 / 20 = 700 unità</td></tr>
+        <tr><td><code>U = (Q − BEP) × MDC</code></td><td>Controprova: ogni unità oltre il BEP è tutta utile, ogni unità che manca è perdita</td><td>(500 − 400) × 3 = 300 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cards">
+    <div class="card"><strong>Il BEP esiste solo se PV &gt; CVU</strong><p>Con MDC zero o negativo nessuna vendita copre i costi fissi.</p></div>
+    <div class="card"><strong>Come abbassarlo</strong><p>CF ↓, CVU ↓ oppure PV ↑ (il resto uguale).</p></div>
+    <div class="card"><strong>Semivariabili</strong><p>Si dividono: la quota fissa va nei CF, la quota per unità nel CVU.</p></div>
+  </div>
+  <h3>Servizi e capacità</h3>
+<pre data-lang="testo"><code>Media giornaliera = BEP / giorni del periodo           8.168,75 / 365 ≈ 22,38 camere
+Occupazione %     = media giornaliera / capacità × 100 22,38 / 40 × 100 ≈ 55,95%
+Capacità annua    = posti × giorni                     40 × 365 = 14.600 camere-notte
+Lotti necessari   = BEP / pezzi per lotto, per eccesso 51.846,85 / 5.000 → 11 lotti</code></pre>
+  <div class="callout warn"><span class="callout-title">Errori tipici</span>Mescolare costi <strong>mensili e annuali</strong> (500 € al mese = 6.000 € all'anno); confondere il CVU con i costi variabili <strong>totali</strong>; dimenticare le unità di misura (200 g = 0,2 kg).</div>
+
+  <!-- ============================================================= -->
+  <h2>Le formule in Excel</h2>
+  <p class="ref">Capitolo <a href="esercizi-bep-excel.html">Esercizi: il BEP con Excel</a></p>
+  <p>Ogni formula comincia con <code>=</code> e usa i riferimenti di cella. Nel foglio dell'azienda Galilei: CF in E3, CVu in E4, PVu in E5.</p>
+  <div class="table-wrap">
+    <table class="formule">
+      <thead><tr><th>Cosa</th><th>Formula</th><th>Risultato</th></tr></thead>
+      <tbody>
+        <tr><td>Costi fissi</td><td><code>=SOMMA(B3:B5)</code></td><td>2.000</td></tr>
+        <tr><td>CVu (10% del prezzo)</td><td><code>=E5*10%</code></td><td>6</td></tr>
+        <tr><td>MDC</td><td><code>=E5-E4</code></td><td>54</td></tr>
+        <tr><td>BEP</td><td><code>=E3/J3</code></td><td>37,04</td></tr>
+        <tr><td>BEP intero</td><td><code>=ARROTONDA.PER.ECC(E3/J3;0)</code></td><td>38</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Quale formula uso?</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Se l'esercizio chiede…</th><th>Usa</th></tr></thead>
+      <tbody>
+        <tr><td>Quanto ho guadagnato o perso?</td><td>U = Ricavi − Costi</td></tr>
+        <tr><td>Quanto costa produrre q pezzi?</td><td>CT = CF + v × q</td></tr>
+        <tr><td>Quanto costa in media un pezzo?</td><td>CT / q</td></tr>
+        <tr><td>Quanto costa una commessa con tutte le voci?</td><td>Conversione → pieno industriale → pieno aziendale</td></tr>
+        <tr><td>Come divido un costo comune?</td><td>Costo comune × base del prodotto / base totale</td></tr>
+        <tr><td>Ho speso più del previsto?</td><td>Scostamento = effettivo − standard</td></tr>
+        <tr><td>Produco dentro o compro fuori?</td><td>Confronta solo i costi evitabili</td></tr>
+        <tr><td>Conviene un pezzo in più?</td><td>Rm &gt; Cm</td></tr>
+        <tr><td>Quanto devo vendere per non perdere?</td><td>BEP = CF / (PV − CVU)</td></tr>
+        <tr><td>Quanto devo fatturare per non perdere?</td><td>RBEP = PV × BEP</td></tr>
+        <tr><td>Quanto devo vendere per guadagnare X?</td><td>(CF + X) / MDC</td></tr>
+        <tr><td>A che prezzo si incontrano domanda e offerta?</td><td>Qd = Qs</td></tr>
+        <tr><td>Quanto comprano tutti insieme?</td><td>Somma delle quantità allo stesso prezzo</td></tr>
+        <tr><td>Che cosa cambia con una tassa sul venditore?</td><td>Nell'offerta P diventa P − t</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip"><span class="callout-title">Per allenarti</span>Le formule si imparano usandole: prova gli <a href="allenamento-costi.html">esercizi sui costi</a>, quelli sul <a href="allenamento-bep.html">punto di pareggio</a> e quelli su <a href="allenamento-microeconomia.html">domanda, offerta ed equilibrio</a>.</div>
+
+  <h2>Fonti</h2>
+  <p>Raccolta delle formule dei capitoli di GPOI di questo quaderno: <em>Azienda e funzioni aziendali</em>, <em>Il modello microeconomico</em>, <em>I costi aziendali</em>, <em>Il punto di pareggio (BEP)</em> e degli esercizi collegati.</p>
+</main>
+</body>
+</html>

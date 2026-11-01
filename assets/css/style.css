@@ -507,6 +507,7 @@ html[data-theme="dark"] .theme-btn .t-sun { display: inline; }
 .badge-verifica, .badge-difficile { --b: #c43a3a; }
 .badge-vocabolario { --b: #0f8b8d; }
 .badge-classroom { --b: #1a73a8; }
+.badge-formulario { --b: #a3249e; }
 .badge[class*="badge-"] { color: color-mix(in srgb, var(--b, var(--ink-soft)) var(--c-mix), var(--ink)); background: color-mix(in srgb, var(--b, var(--ink-soft)) 11%, transparent); }
 
 /* ---------- 7. Contenuto ---------- */
@@ -592,6 +593,14 @@ th { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacin
 tr:last-child td { border-bottom: 0; }
 tbody tr { transition: background 0.15s; }
 tbody tr:hover { background: color-mix(in srgb, var(--highlight) 22%, transparent); }
+/* tabelle del formulario: su telefono ogni riga diventa una scheda */
+@media (max-width: 600px) {
+  table.formule thead { display: none; }
+  table.formule tr { display: block; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+  table.formule td { display: block; padding: 2px 0; border: 0; }
+  table.formule td:first-child { padding-bottom: 4px; }
+  table.formule td:last-child { color: var(--ink-soft); font-size: 14.5px; }
+}
 
 /* Pila a livelli (es. ISO/OSI): <ol class="stack"><li><b>7</b><strong>Nome</strong><span>…</span></li></ol> */
 .stack { list-style: none; padding: 0 !important; margin: 1.4em 0 !important; display: grid; gap: 4px; }
