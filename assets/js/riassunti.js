@@ -1699,6 +1699,76 @@ SITE.riassunti = {
     ],
   },
 
+  "materie/storia/belle-epoque-giolitti-nazionalismi.html": {
+    breve: "Dalla Belle Époque alla vigilia della Grande guerra: crisi italiana di fine secolo, Giolitti, nazionalismi e origini della questione palestinese.",
+    sezioni: [
+      {
+        titolo: "Linea del tempo",
+        punti: [
+          "<strong>1896</strong>: sconfitta di Adua e caduta di Crispi; Herzl scrive <em>Lo Stato ebraico</em>.",
+          "<strong>1898</strong>: crisi agraria e moti di Milano. <strong>1900</strong>: Bresci uccide Umberto I.",
+          "<strong>1903-1914</strong>: età giolittiana. <strong>1914</strong>: Sarajevo. <strong>1915</strong>: genocidio armeno. <strong>1917</strong>: dichiarazione Balfour.",
+        ],
+      },
+      {
+        titolo: "La Belle Époque",
+        punti: [
+          "Fine Ottocento – 1914: benessere, niente grandi guerre, acciaio, elettricità, medicina, nuovi trasporti.",
+          "Nome <strong>contraddittorio</strong>: riguarda solo Stati Uniti e alcuni paesi europei (e i ricchi), e nelle fabbriche ci sono forti contraddizioni.",
+          "<strong>Taylor</strong> (1911): ogni macchina fa una sola parte, tempi misurati, ritmi e guadagni più alti. Gli operai si <strong>alienano</strong>, i sindacati protestano.",
+        ],
+      },
+      {
+        titolo: "La crisi di fine secolo",
+        punti: [
+          "Nasce il sindacalismo. Nel <strong>1898</strong> crisi agraria e guerra per Cuba: manca il grano, manca il pane, si emigra.",
+          "A <strong>Milano</strong> l'esercito spara sulla folla che chiede pane. Giolitti propone il dialogo, ma non viene ascoltato.",
+        ],
+      },
+      {
+        titolo: "L'Italia da Crispi a Zanardelli",
+        punti: [
+          "<strong>Crispi</strong> (1887-1896): riforme, ma fallimento coloniale ad <strong>Adua</strong> e dimissioni.",
+          "Svolta conservatrice: <strong>Rudinì</strong>, <strong>Sonnino</strong> («tornare allo Statuto Albertino», governo del Re), poi la repressione del generale <strong>Pelloux</strong>.",
+          "<strong>Saracco</strong> non riesce a fare riforme; nel <strong>1900</strong> l'anarchico <strong>Bresci</strong> uccide Umberto I. Vittorio Emanuele III chiama <strong>Zanardelli</strong>.",
+        ],
+      },
+      {
+        titolo: "L'età giolittiana",
+        punti: [
+          "Giolitti: «non dobbiamo temere i sindacati, dobbiamo conoscerli». Tre governi: 1903-1905, 1906-1909, 1911-1914.",
+          "Offre a <strong>Turati</strong> di entrare nel governo (rifiuta). Al Sud prestiti e sgravi fiscali, polo siderurgico di <strong>Bagnoli</strong>.",
+          "Statalizzazione delle ferrovie: paghe più alte ma niente scioperi; i socialisti si oppongono.",
+        ],
+      },
+      {
+        titolo: "I nazionalismi in Europa",
+        punti: [
+          "Il nazionalismo è la <strong>causa principale</strong> della Prima guerra mondiale.",
+          "Germania: <strong>pangermanesimo</strong>. Francia: <strong>revanscismo</strong> (Alsazia e Lorena) e <strong>sciovinismo</strong>. Scontro anche per il Marocco.",
+          "Italia: <strong>nazionalisti</strong> (potenza, alleanza con l'Austria) contro <strong>irredentisti</strong> (terre austriache, nessuna alleanza).",
+          "<strong>Giovani Turchi</strong>: nazione turca e minoranze sottomesse → genocidio armeno. Nazionalismo <strong>slavo</strong> appoggiato da Russia, Francia e Inghilterra → Sarajevo.",
+        ],
+      },
+      {
+        titolo: "I nazionalismi fuori dall'Europa",
+        punti: [
+          "Stati Uniti: imperialismo, <strong>grosso bastone</strong> (Roosevelt) e <strong>diplomazia del dollaro</strong>; Wilson parla di portare la democrazia.",
+          "Giappone: era <strong>Meiji</strong>, Corea e vittoria sulla Russia per la Manciuria → nascono i movimenti anticoloniali.",
+          "Cina: rivolta dei <strong>Boxer</strong> contro gli occidentali; rivoluzione del <strong>1911</strong>, cade l'impero e nasce la repubblica.",
+        ],
+      },
+      {
+        titolo: "Il sionismo e la questione palestinese",
+        punti: [
+          "Dopo la ribellione contro Roma inizia la <strong>diaspora</strong>; gli ebrei subiscono <strong>pogrom</strong> e antisemitismo (religioso e moderno).",
+          "<strong>Herzl</strong>, <em>Lo Stato ebraico</em> (1896): uno Stato per gli ebrei in Palestina, la terra di Sion.",
+          "L'Inghilterra promette la Palestina sia agli <strong>arabi</strong> (Stato arabo indipendente) sia agli <strong>ebrei</strong> (dichiarazione Balfour, 1917): nasce la questione palestinese.",
+        ],
+      },
+    ],
+  },
+
   /* ---------------- Inglese ---------------- */
   "materie/inglese/irregular-verbs.html": {
     breve: "I verbi che non formano il passato con -ed: le tre forme vanno imparate a memoria.",
