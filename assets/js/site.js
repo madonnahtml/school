@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "12",
+    version: "13",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -138,6 +138,7 @@
         pages: [
           { title: "Panoramica", path: "materie/storia/index.html", type: "panoramica" },
           { title: "L'Unità d'Italia", path: "materie/storia/unita-d-italia.html", type: "riassunto" },
+          { title: "Belle Époque, età giolittiana e nazionalismi", path: "materie/storia/belle-epoque-giolitti-nazionalismi.html", type: "teoria" },
         ],
       },
       {
