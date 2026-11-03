@@ -187,7 +187,7 @@ SITE.ready(function () {
     var h1 = main.querySelector("h1");
     var meta = document.createElement("div");
     meta.className = "page-meta";
-    meta.innerHTML = (pos >= 0 && !isEx && page.type !== "formulario" ? '<span class="chapter-tag">Capitolo ' + (pos + 1) + "</span>" : "") +
+    meta.innerHTML = (pos >= 0 && !isEx && page.type !== "formulario" && page.type !== "verifica" ? '<span class="chapter-tag">Capitolo ' + (pos + 1) + "</span>" : "") +
       (page.type ? '<span class="badge badge-' + page.type + '">' + SITE.escape(SITE.pageTypes[page.type] || page.type) + "</span>" : "") +
       '<button type="button" class="status-pill" data-toggle-done></button>' +
       (sum ? '<a class="meta-link" href="' + summaryUrl(page.path) + '">' + SITE.icon(I.notes) + "Riassunto</a>" : "") +

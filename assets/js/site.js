@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "13",
+    version: "14",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -84,6 +84,7 @@
           { title: "HTTP: i metodi (verbi)", path: "materie/sistemi-e-reti/http-metodi.html", type: "teoria" },
           { title: "HTTP: codici di stato e HTTPS", path: "materie/sistemi-e-reti/http-codici-stato-https.html", type: "teoria" },
           { title: "L'autenticazione con HTTP", path: "materie/sistemi-e-reti/http-autenticazione.html", type: "teoria" },
+          { title: "Verifica: tutti gli argomenti spiegati", path: "materie/sistemi-e-reti/verifica-applicazioni-http.html", type: "verifica" },
         ],
       },
       {
