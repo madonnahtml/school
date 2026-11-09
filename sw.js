@@ -3,11 +3,11 @@
  * Pagine, stili e script: prima la rete (contenuti sempre aggiornati), se manca la connessione la copia salvata.
  * Font: prima la copia salvata.
  */
-var CACHE = "scuola-v14";
+var CACHE = "scuola-v15";
 var CORE = [
   "./", "index.html", "cerca.html", "riassunti.html", "esercizi.html", "classroom.html", "ripasso.html", "componenti.html",
-  "assets/css/style.css?v=14", "assets/js/site.js?v=14", "assets/js/riassunti.js?v=14", "assets/js/layout.js?v=14",
-  "assets/js/components.js?v=14", "assets/js/search.js?v=14", "assets/js/ripasso.js?v=14",
+  "assets/css/style.css?v=15", "assets/js/site.js?v=15", "assets/js/riassunti.js?v=15", "assets/js/layout.js?v=15",
+  "assets/js/components.js?v=15", "assets/js/search.js?v=15", "assets/js/ripasso.js?v=15",
   "assets/img/icon.svg", "manifest.webmanifest",
 ];
 

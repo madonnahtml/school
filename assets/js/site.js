@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "14",
+    version: "15",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -127,6 +127,7 @@
           { title: "Allenamento: domanda, offerta ed equilibrio", path: "materie/gpoi/allenamento-microeconomia.html", type: "esercizi", of: "materie/gpoi/modello-microeconomico.html", n: 10, desc: "Esercizi nuovi dal facile al difficile: movimenti e spostamenti, sostituti e complementi, domanda e ricavo, domanda di mercato a tratti, equilibrio, tassa, doppio spostamento." },
           { title: "Allenamento: i costi aziendali", path: "materie/gpoi/allenamento-costi.html", type: "esercizi", of: "materie/gpoi/costi-aziendali.html", n: 11, desc: "Esercizi nuovi dal facile al difficile: efficacia ed efficienza, indici, configurazioni, ammortamento, ripartizione, make or buy, scostamenti, analisi marginale, direct e full costing, ciclo di vita." },
           { title: "Allenamento: il punto di pareggio", path: "materie/gpoi/allenamento-bep.html", type: "esercizi", of: "materie/gpoi/break-even-point.html", n: 11, desc: "Esercizi nuovi dal facile al difficile: BEP e fatturato, CVU da componenti, mensile o annuale, utile obiettivo, cambi di prezzo e costi, prezzo minimo, capacità e lotti, palestra, food truck." },
+          { title: "Classroom: Macroeconomia", path: "materie/gpoi/classroom-macroeconomia.html", type: "classroom", n: 8, desc: "Il foglio Excel in tre moduli: micro o macro, PIL ed esportazioni nette, valore aggiunto della filiera, funzione del consumo, equilibrio e moltiplicatore keynesiano, modello con lo Stato e simulazione di policy, PIL nominale, reale e deflatore." },
         ],
       },
       {
