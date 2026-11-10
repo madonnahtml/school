@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="it" data-subject="tpsit">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Il modello a processi · Scuola</title>
+  <meta name="description" content="UdA 1 di TPSIT, lezione 1: programma e processo, il processo in memoria (codice, dati, stack, heap), stack e heap a confronto, multiprogrammazione e scheduling, processi indipendenti, cooperanti e in competizione, i cinque stati di un processo, interrupt e context switch, il PCB.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=17">
+  <script src="../../assets/js/site.js?v=17"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Il modello a processi</h1>
+  <p class="lead">Unità di apprendimento 1 "Processi sequenziali e paralleli", lezione 1: che cos'è un processo, com'è fatto in memoria, come più processi si dividono una sola CPU e in quali stati passa un processo dalla nascita alla fine.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Il <strong>programma</strong> è un'entità <strong>passiva</strong> (un file); quando va in esecuzione diventa un <strong>processo</strong>, cioè un'entità logica (programma) <strong>in evoluzione</strong>.</li>
+      <li>In memoria un processo ha una <strong>parte statica</strong> (codice e dati globali) e una <strong>parte dinamica</strong> (<strong>stack</strong> e <strong>heap</strong>).</li>
+      <li>Con la <strong>multiprogrammazione</strong> più processi stanno in memoria insieme e si dividono la CPU grazie allo <strong>scheduling</strong>: meno tempi morti, CPU sfruttata meglio.</li>
+      <li>I processi possono essere <strong>indipendenti</strong>, <strong>cooperanti</strong> (si scambiano dati) o <strong>in competizione</strong> (si contendono le stesse risorse).</li>
+      <li>Gli stati sono cinque: <strong>nuovo, pronto, in esecuzione, in attesa, finito</strong>. Al cambio di processo il SO salva il <strong>contesto</strong> (program counter e registri) nel <strong>PCB</strong>: è il <strong>context switching</strong>.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Programma e processo</h2>
+  <p>Un <strong>programma</strong> è un'<strong>entità passiva</strong>: finché non viene caricato in memoria è solo un file sul disco, una lista di istruzioni che non fa niente. Quando viene <strong>mandato in esecuzione</strong> diventa un <strong>processo</strong>.</p>
+  <div class="callout def"><span class="callout-title">Processo</span>Un <strong>processo</strong> è un'<strong>entità logica</strong> (programma) <strong>in evoluzione</strong>.</div>
+  <div class="compare">
+    <div>
+      <h4>Programma</h4>
+      <p>Entità <strong>passiva</strong>: il codice scritto, salvato su disco. Non cambia.</p>
+      <p class="hand">La ricetta della torta scritta sul libro.</p>
+    </div>
+    <div>
+      <h4>Processo</h4>
+      <p>Entità <strong>attiva</strong>: il programma mentre gira, con i suoi dati che cambiano istante per istante.</p>
+      <p class="hand">Il cuoco che sta preparando la torta adesso: sa a che passo è arrivato e ha gli ingredienti sul tavolo.</p>
+    </div>
+  </div>
+  <p>Ogni processo, <strong>istante per istante</strong>, è rappresentato da:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Elemento</th><th>Che cosa contiene</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Codice</strong></td><td>Le istruzioni del programma eseguito.</td></tr>
+        <tr><td><strong>Dati</strong></td><td>Le variabili globali che il processo usa nella sua evoluzione.</td></tr>
+        <tr><td><strong>Program counter</strong> (PC)</td><td>L'indirizzo della <strong>prossima istruzione</strong> da eseguire.</td></tr>
+        <tr><td><strong>Registri della CPU</strong></td><td>Alcuni registri con i valori su cui il processo sta lavorando.</td></tr>
+        <tr><td><strong>Stack</strong></td><td>Variabili locali e parametri delle funzioni chiamate.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Lo stesso programma, tanti processi</span>Se apri due finestre dello stesso browser hai <strong>un solo programma</strong> ma <strong>due processi</strong>: stesso codice, ma dati, program counter e stack diversi. Ognuno va avanti per conto suo.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il processo in memoria</h2>
+  <p>In <strong>memoria</strong> un processo è composto da una <strong>parte statica</strong> e da una <strong>parte dinamica</strong>.</p>
+  <div class="compare">
+    <div>
+      <h4>Parte statica</h4>
+      <ul>
+        <li><strong>Area codice</strong>: le istruzioni.</li>
+        <li><strong>Area dati globali</strong>: le variabili globali.</li>
+      </ul>
+      <p class="hand">La dimensione è nota prima di partire e non cambia.</p>
+    </div>
+    <div>
+      <h4>Parte dinamica</h4>
+      <ul>
+        <li><strong>Stack</strong>: cresce e cala a ogni chiamata di funzione.</li>
+        <li><strong>Heap</strong>: la memoria chiesta durante l'esecuzione (con <code>malloc</code>, <code>new</code>…).</li>
+      </ul>
+      <p class="hand">Cambia mentre il programma gira.</p>
+    </div>
+  </div>
+
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 330 250" role="img" aria-label="Schema della memoria di un processo: dall'alto codice e dati globali (parte statica), poi stack che cresce verso il basso, spazio libero, e heap che cresce verso l'alto (parte dinamica)" style="width: 100%; max-width: 420px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs>
+        <marker id="freccia-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker>
+      </defs>
+      <rect x="40" y="10" width="160" height="40" style="fill: var(--postit); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="120" y="35" text-anchor="middle" style="fill: var(--ink);">codice</text>
+      <rect x="40" y="50" width="160" height="40" style="fill: var(--postit); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="120" y="75" text-anchor="middle" style="fill: var(--ink);">dati globali</text>
+      <rect x="40" y="90" width="160" height="34" style="fill: var(--pen-soft); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="120" y="112" text-anchor="middle" style="fill: var(--ink);">stack</text>
+      <rect x="40" y="124" width="160" height="72" style="fill: var(--surface); stroke: var(--ink-soft); stroke-width: 1.2; stroke-dasharray: 4 3;"/>
+      <line x1="120" y1="128" x2="120" y2="152" marker-end="url(#freccia-mem)" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="120" y1="192" x2="120" y2="168" marker-end="url(#freccia-mem)" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="128" y="164" style="fill: var(--ink-faint); font-size: 10.5px;">spazio libero</text>
+      <rect x="40" y="196" width="160" height="34" style="fill: var(--pen-soft); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="120" y="218" text-anchor="middle" style="fill: var(--ink);">heap</text>
+      <path d="M210,12 h6 v76 h-6" style="fill: none; stroke: var(--bad); stroke-width: 1.6;"/>
+      <text x="224" y="47" style="fill: var(--bad); font-weight: 700;">parte</text>
+      <text x="224" y="61" style="fill: var(--bad); font-weight: 700;">statica</text>
+      <path d="M210,92 h6 v136 h-6" style="fill: none; stroke: var(--pen); stroke-width: 1.6;"/>
+      <text x="224" y="157" style="fill: var(--pen); font-weight: 700;">parte</text>
+      <text x="224" y="171" style="fill: var(--pen); font-weight: 700;">dinamica</text>
+    </svg>
+    <figcaption>Stack e heap crescono uno verso l'altro nello spazio libero in mezzo.</figcaption>
+  </figure>
+
+  <p>Vediamo dove finisce ogni pezzo di questo programma in C (lo stesso delle slide, con le correzioni indicate sotto):</p>
+<pre data-lang="c"><code>#include &lt;stdlib.h&gt;
+
+void swap(int *n1, int *n2) {          // n1, n2: parametri  → STACK
+    int *tmp = malloc(sizeof(int));    // tmp (il puntatore) → STACK
+                                       // l'int creato da malloc → HEAP
+    *tmp = *n1;
+    *n1 = *n2;
+    *n2 = *tmp;
+    free(tmp);                         // libera la memoria dell'heap
+}
+
+int main(void) {
+    int a = 3, b = 5;                  // locali di main → STACK
+    swap(&amp;a, &amp;b);                      // la chiamata crea un nuovo pezzo di stack
+    return 0;
+}
+// le istruzioni di swap e main → area CODICE</code></pre>
+  <p class="hand">Nelle slide <code>a</code> e <code>b</code> sono collegate ai "dati globali", ma essendo dichiarate <em>dentro</em> <code>main</code> sono variabili <strong>locali</strong> e stanno nello stack. Per finire nei dati globali dovrebbero essere scritte fuori da ogni funzione. Nelle slide mancano anche le parentesi di <code>main()</code>, un punto e virgola e la <code>free(tmp)</code>: senza la <code>free</code> ogni chiamata a <code>swap</code> lascerebbe un pezzo di heap occupato (memory leak).</p>
+
+  <!-- ============================================================= -->
+  <h2>Stack e heap</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Stack</th><th>Heap</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Com'è fatto</strong></td><td>Una pila <strong>LIFO</strong> (<em>Last In, First Out</em>): l'ultimo elemento inserito è il primo a essere rimosso.</td><td>Un grande blocco di memoria dinamica <strong>non contiguo</strong>, per dati la cui dimensione <strong>non è nota a compile-time</strong>.</td></tr>
+        <tr><td><strong>Cosa memorizza</strong></td><td><strong>Variabili locali</strong> delle funzioni e <strong>parametri</strong> passati ai metodi.</td><td><strong>Oggetti</strong>, strutture dati complesse, array che devono poter <strong>crescere</strong> dinamicamente.</td></tr>
+        <tr><td><strong>Chi lo gestisce</strong></td><td>Direttamente la <strong>CPU</strong>: alla chiamata di una funzione i suoi dati vengono "impilati" (<strong>push</strong>), quando finisce lo spazio è liberato subito (<strong>pop</strong>).</td><td>A mano (<code>malloc</code> e <code>free</code> in C/C++) oppure in automatico con il <strong>Garbage Collector</strong> (Java, Python).</td></tr>
+        <tr><td><strong>Dimensioni e limiti</strong></td><td>Piccolo e di dimensione <strong>fissa</strong>. Se lo si riempie (ad esempio con una ricorsione infinita) si ha lo <strong>Stack Overflow</strong>.</td><td>Molto più grande (limitato solo dalla RAM disponibile), ma se i dati non vengono liberati si ha un <strong>memory leak</strong>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Il paragone</span>Lo <strong>stack</strong> è una pila di piatti: ne metti uno sopra quando chiami una funzione, lo togli quando la funzione finisce, e puoi prendere solo quello in cima. L'<strong>heap</strong> è un magazzino: chiedi uno scaffale libero dove capita, della grandezza che ti serve, e lo devi restituire tu (o lo fa il Garbage Collector) quando non ti serve più.</div>
+  <p>In Java è lo stesso: in <code>Studente s = new Studente();</code> il <strong>riferimento</strong> <code>s</code> è una variabile locale e sta nello <strong>stack</strong>, l'<strong>oggetto</strong> creato con <code>new</code> sta nell'<strong>heap</strong>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Multiprogrammazione e scheduling</h2>
+  <p>Nel <strong>modello a processi</strong> tutto il software che può essere eseguito su un calcolatore, <strong>compreso il Sistema Operativo stesso</strong>, è organizzato in un certo numero di <strong>processi sequenziali</strong>.</p>
+  <p>Un <strong>unico processore</strong> può essere condiviso tra parecchi processi usando un <strong>algoritmo di schedulazione</strong> (di <strong>scheduling</strong>): è lo scheduler del SO a decidere a quale processo dare la CPU e per quanto tempo.</p>
+  <div class="callout def"><span class="callout-title">Multiprogrammazione</span>È la tecnica di gestione della CPU che permette l'<strong>evoluzione contemporanea di più processi</strong>. Richiede la <strong>contemporanea presenza di più programmi in memoria</strong>.</div>
+  <p>Vantaggi della multiprogrammazione:</p>
+  <ul>
+    <li>limita al minimo i <strong>tempi morti</strong>: quando un processo aspetta (per esempio un dato dal disco o dalla tastiera), la CPU passa a un altro invece di restare ferma;</li>
+    <li>sfrutta le <strong>potenzialità di calcolo</strong> del processore.</li>
+  </ul>
+  <div class="compare">
+    <div>
+      <h4>Monoprogrammazione</h4>
+      <p>Un solo programma in memoria alla volta: se aspetta l'I/O, la CPU <strong>resta ferma</strong>.</p>
+      <p class="hand">Un cuoco che fissa il forno finché la torta non è cotta.</p>
+    </div>
+    <div>
+      <h4>Multiprogrammazione</h4>
+      <p>Più programmi in memoria: mentre uno aspetta, la CPU <strong>lavora per un altro</strong>.</p>
+      <p class="hand">Lo stesso cuoco che, mentre la torta cuoce, prepara il sugo.</p>
+    </div>
+  </div>
+  <div class="callout warn"><span class="callout-title">"Contemporanea" non vuol dire "nello stesso istante"</span>Con una sola CPU, in ogni istante esegue <strong>un solo processo</strong>. Ma la CPU passa da un processo all'altro così in fretta (ogni pochi millisecondi) che a noi sembrano andare avanti tutti insieme: si parla di <strong>pseudo-parallelismo</strong>. Il parallelismo vero si ha solo con più CPU (o più core).</div>
+
+  <!-- ============================================================= -->
+  <h2>Processi cooperanti e in competizione</h2>
+  <p>I processi possono essere <strong>indipendenti</strong> oppure <strong>cooperare</strong> per raggiungere un medesimo obiettivo:</p>
+  <ul>
+    <li><strong>indipendenti</strong>: il processo evolve in modo <strong>autonomo</strong>, senza bisogno di comunicare con gli altri processi per scambiare dati;</li>
+    <li><strong>cooperanti</strong>: due (o più) processi, per poter evolvere, hanno bisogno di <strong>scambiarsi informazioni</strong>.</li>
+  </ul>
+  <p>Avere processi che cooperano è utile per ottenere:</p>
+  <ul>
+    <li>la <strong>parallelizzazione</strong> dell'esecuzione (un lavoro grande diviso tra più processi);</li>
+    <li>la <strong>condivisione</strong> delle informazioni.</li>
+  </ul>
+  <p>Oltre alla cooperazione esiste un'altra forma di interazione: due (o più) processi possono <strong>ostacolarsi</strong> a vicenda, compromettendo il buon fine delle loro elaborazioni. È il caso in cui <strong>competono</strong> per usare la <strong>medesima risorsa</strong> (la stampante, un file, una zona di memoria…). Questo può portare a situazioni indesiderate per uno o per entrambi i processi: un <strong>blocco individuale</strong> (uno dei due resta fermo ad aspettare) o un <strong>blocco critico</strong> (restano bloccati tutti e due, ognuno in attesa dell'altro).</p>
+  <div class="compare">
+    <div>
+      <h4>Processi cooperanti</h4>
+      <p>Un processo è <strong>cooperante</strong> se <strong>influenza</strong> o può <strong>essere influenzato</strong> da altri processi in esecuzione nel sistema, <strong>producendo o utilizzando dati</strong> in condivisione con altri processi.</p>
+      <p class="hand">Un processo scarica un file, un altro lo decomprime man mano che arriva.</p>
+    </div>
+    <div>
+      <h4>Processi in competizione</h4>
+      <p>Due processi sono <strong>in competizione</strong> se possono evolvere <strong>indipendentemente</strong> ma entrano in <strong>conflitto</strong> sulla ripartizione delle <strong>risorse</strong>.</p>
+      <p class="hand">Due programmi che vogliono usare la stessa stampante nello stesso momento.</p>
+    </div>
+  </div>
+  <div class="callout tip"><span class="callout-title">La differenza in una riga</span>I cooperanti si <strong>aiutano</strong> (hanno bisogno l'uno dei dati dell'altro); quelli in competizione si <strong>danno fastidio</strong> (non si conoscono nemmeno, ma vogliono la stessa risorsa).</div>
+
+  <!-- ============================================================= -->
+  <h2>Gli stati di un processo</h2>
+  <p>Durante il suo <strong>ciclo di vita</strong> un processo può trovarsi in una di queste situazioni:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stato</th><th>In inglese</th><th>Che cosa vuol dire</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nuovo</strong></td><td><em>new</em> (init)</td><td>Il processo è appena stato creato.</td></tr>
+        <tr><td><strong>Pronto</strong></td><td><em>ready-to-run</em></td><td>Ha tutto quello che gli serve e aspetta solo che gli venga data la <strong>CPU</strong>.</td></tr>
+        <tr><td><strong>In esecuzione</strong></td><td><em>running</em></td><td>Sta usando la CPU: le sue istruzioni vengono eseguite.</td></tr>
+        <tr><td><strong>In attesa</strong> (sospeso, bloccato)</td><td><em>waiting</em> (<em>blocked</em>)</td><td>Aspetta un <strong>evento</strong> (fine di un I/O, un dato, una risorsa): anche se gli dessero la CPU non potrebbe andare avanti.</td></tr>
+        <tr><td><strong>Finito</strong></td><td><em>terminated</em></td><td>Ha terminato l'esecuzione.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout def"><span class="callout-title">Stato di un processo</span>Con <strong>stato di un processo</strong> si intende una tra le cinque possibili situazioni in cui un processo in esecuzione può trovarsi. Può assumere <strong>una sola volta</strong> lo stato di <strong>nuovo</strong> e di <strong>terminato</strong>, mentre può essere <strong>più volte</strong> negli altri tre stati.</div>
+  <p>Quindi, durante la sua evoluzione, il processo passa avanti e indietro fra tre stati: <strong>in esecuzione</strong> (<em>running</em>), <strong>pronto</strong> (<em>ready</em>) e <strong>sospeso</strong> (<em>waiting</em>), anche detto <strong>bloccato</strong> (<em>blocked</em>).</p>
+
+  <h3>Il diagramma degli stati</h3>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 520 305" role="img" aria-label="Diagramma degli stati: Nuovo va in Pronto con la creazione; Pronto va in Esecuzione con l'assegnazione della CPU; Esecuzione torna in Pronto con la revoca; Esecuzione va in Sospeso per l'attesa di un evento; Sospeso torna in Pronto quando l'evento avviene; Esecuzione va in Finito con la terminazione" style="width: 100%; max-width: 620px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs>
+        <marker id="freccia-stati" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker>
+      </defs>
+      <!-- frecce -->
+      <path d="M80,64 L99,210" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--ink-soft); stroke-width: 1.5;"/>
+      <path d="M160,218 Q205,195 221,146" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--good); stroke-width: 1.8;"/>
+      <path d="M196,138 Q150,165 129,211" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--bad); stroke-width: 1.8;"/>
+      <path d="M300,96 Q350,52 378,45" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--ink-soft); stroke-width: 1.5;"/>
+      <path d="M325,132 Q398,148 408,210" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--ink-soft); stroke-width: 1.5;"/>
+      <path d="M340,252 Q262,292 183,252" marker-end="url(#freccia-stati)" style="fill: none; stroke: var(--ink-soft); stroke-width: 1.5;"/>
+      <!-- stati -->
+      <rect x="20" y="20" width="120" height="44" rx="6" style="fill: var(--pen-soft); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="80" y="38" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">Nuovo</text>
+      <text x="80" y="54" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">new</text>
+      <rect x="380" y="20" width="120" height="44" rx="6" style="fill: var(--pen-soft); stroke: var(--ink-soft); stroke-width: 1.2;"/>
+      <text x="440" y="38" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">Finito</text>
+      <text x="440" y="54" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">terminated</text>
+      <ellipse cx="260" cy="120" rx="72" ry="28" style="fill: var(--postit); stroke: var(--bad); stroke-width: 2;"/>
+      <text x="260" y="117" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">In esecuzione</text>
+      <text x="260" y="133" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">running · CPU</text>
+      <ellipse cx="110" cy="240" rx="72" ry="28" style="fill: var(--surface); stroke: var(--good); stroke-width: 2;"/>
+      <text x="110" y="237" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">Pronto</text>
+      <text x="110" y="253" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">ready</text>
+      <ellipse cx="410" cy="240" rx="72" ry="28" style="fill: var(--surface); stroke: var(--ink-soft); stroke-width: 2;"/>
+      <text x="410" y="237" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">Sospeso</text>
+      <text x="410" y="253" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">waiting</text>
+      <!-- etichette delle transizioni -->
+      <text x="82" y="140" text-anchor="end" style="fill: var(--ink-soft);">creazione</text>
+      <text x="218" y="196" style="fill: var(--good); font-weight: 700;">assegnazione</text>
+      <text x="152" y="168" text-anchor="end" style="fill: var(--bad); font-weight: 700;">revoca</text>
+      <text x="316" y="58" text-anchor="middle" style="fill: var(--ink-soft);">terminazione</text>
+      <text x="402" y="168" style="fill: var(--ink-soft);">attesa di</text>
+      <text x="402" y="182" style="fill: var(--ink-soft);">un evento</text>
+      <text x="262" y="296" text-anchor="middle" style="fill: var(--ink-soft);">evento avvenuto</text>
+      <text x="110" y="285" text-anchor="middle" style="fill: var(--good); font-size: 11px;">Ready List (RL)</text>
+      <text x="410" y="285" text-anchor="middle" style="fill: var(--ink-faint); font-size: 11px;">Waiting List (WL)</text>
+    </svg>
+    <figcaption>I processi pronti aspettano in fila nella Ready List, quelli sospesi nella Waiting List.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Transizione</th><th>Da → a</th><th>Quando succede</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Creazione</strong></td><td>Nuovo → Pronto</td><td>Il processo è stato creato e caricato in memoria: entra nella <strong>Ready List</strong>.</td></tr>
+        <tr><td><strong>Assegnazione</strong></td><td>Pronto → In esecuzione</td><td>Lo scheduler sceglie il processo dalla Ready List e gli <strong>assegna la CPU</strong>.</td></tr>
+        <tr><td><strong>Revoca</strong></td><td>In esecuzione → Pronto</td><td>Lo scheduler <strong>toglie la CPU</strong> al processo (per esempio è finito il suo <em>time slice</em>): il processo torna in fila nella Ready List.</td></tr>
+        <tr><td><strong>Attesa di un evento</strong></td><td>In esecuzione → Sospeso</td><td>Il processo deve aspettare qualcosa (un I/O, un dato, una risorsa): va nella <strong>Waiting List</strong> e lascia libera la CPU.</td></tr>
+        <tr><td><strong>Evento</strong></td><td>Sospeso → Pronto</td><td>L'evento atteso è avvenuto: il processo torna <strong>pronto</strong> (non direttamente in esecuzione!).</td></tr>
+        <tr><td><strong>Terminazione</strong></td><td>In esecuzione → Finito</td><td>Il processo ha finito il suo lavoro (o viene chiuso).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Le frecce che non ci sono</span>Da <strong>Sospeso</strong> non si va mai direttamente in <strong>esecuzione</strong>: prima si torna <strong>pronti</strong> e si aspetta il proprio turno. E da <strong>Pronto</strong> non si va in <strong>Sospeso</strong>: per mettersi ad aspettare un evento bisogna essere in esecuzione (è il processo stesso che chiede l'I/O).</div>
+  <div class="callout tip"><span class="callout-title">Il paragone</span>La CPU è l'unico sportello di un ufficio. Chi è allo sportello è <strong>in esecuzione</strong>; chi è in fila è <strong>pronto</strong>. Se allo sportello manca un documento, ti mandano a prenderlo (<strong>sospeso</strong>): quando torni con il documento <strong>rifai la fila</strong>, non passi davanti a tutti. E se stai allo sportello troppo a lungo, l'impiegato ti rimanda in fondo alla fila (<strong>revoca</strong>).</div>
+
+  <!-- ============================================================= -->
+  <h2>Sospensione per interrupt</h2>
+  <p>Lo <strong>scheduler</strong> blocca un processo quando ha terminato il suo <strong>time slice</strong> (il "quanto di tempo" che gli spetta) e manda in esecuzione il processo successivo. Secondo il libro, questo tipo di interruzione si chiama <strong>interrupt software</strong>.</p>
+  <p>Gli interrupt dovuti ai <strong>dispositivi di I/O</strong> (tastiera, disco, scheda di rete…) si chiamano invece <strong>interrupt hardware</strong>, o <strong>esterni</strong>: la risorsa hardware manda un segnale (INT) alla CPU, che avvisa il Sistema Operativo.</p>
+  <div class="compare">
+    <div>
+      <h4>Interrupt software</h4>
+      <p>Arriva dal <strong>Sistema Operativo</strong> (scheduler): «il tuo tempo è finito», e il processo viene interrotto.</p>
+    </div>
+    <div>
+      <h4>Interrupt hardware (esterno)</h4>
+      <p>Arriva da una <strong>risorsa hardware</strong> (un dispositivo di I/O) alla <strong>CPU</strong>: «ho finito di leggere il disco», «è stato premuto un tasto».</p>
+    </div>
+  </div>
+  <p>Quando si verifica un interrupt il SO esegue le classiche operazioni di <strong>context switching</strong>, cioè di <strong>cambio di contesto</strong>:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Salva il contesto</strong><span>Copia il program counter e i registri del processo interrotto nel suo <strong>PCB</strong>.</span></li>
+    <li><b>2</b><strong>Aggiorna lo stato</strong><span>Il processo interrotto diventa <strong>pronto</strong> (o <strong>sospeso</strong>, se aspetta un evento) e va nella lista giusta.</span></li>
+    <li><b>3</b><strong>Sceglie il prossimo</strong><span>Lo scheduler prende un processo dalla Ready List.</span></li>
+    <li><b>4</b><strong>Ripristina il contesto</strong><span>Ricarica nei registri della CPU il program counter e i registri salvati nel PCB del nuovo processo, che riparte esattamente da dove si era fermato.</span></li>
+  </ol>
+  <p class="hand">Il context switch è come mettere un segnalibro: chiudi un libro, ne apri un altro alla pagina giusta, e più tardi riprendi il primo dal segnalibro. Il segnalibro è il program counter salvato nel PCB.</p>
+
+  <!-- ============================================================= -->
+  <h2>Il PCB (Process Control Block)</h2>
+  <p>Il <strong>PCB</strong> (<em>Process Control Block</em>), o <strong>descrittore del processo</strong>, è la struttura dati con cui il Sistema Operativo tiene tutte le informazioni su un processo. Ogni processo ha il suo PCB.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Campo</th><th>A che cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nome</strong> (PID)</td><td>Il <strong>PID</strong> (<em>Process IDentifier</em>): il numero che identifica il processo.</td></tr>
+        <tr><td><strong>Stato</strong></td><td>Nuovo, pronto, in esecuzione, in attesa o finito.</td></tr>
+        <tr><td><strong>Program counter</strong></td><td rowspan="2">Il <strong>contesto del processo</strong>: dove era arrivato e con quali valori stava lavorando.</td></tr>
+        <tr><td><strong>Altri registri</strong></td></tr>
+        <tr><td><strong>Priorità</strong></td><td>Quanto è importante per lo scheduler.</td></tr>
+        <tr><td><strong>Limiti di memoria</strong></td><td>Quale zona della memoria può usare.</td></tr>
+        <tr><td><strong>File aperti</strong></td><td>I file e le risorse che sta usando.</td></tr>
+        <tr><td>…</td><td>Altre informazioni (tempo di CPU usato, processo padre…).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout def"><span class="callout-title">Contesto del processo</span>Il <strong>program counter</strong> e i <strong>registri</strong> formano il <strong>contesto del processo</strong>: questi campi del PCB prendono anche il nome di <strong>area di salvataggio dello stato della CPU</strong>.</div>
+  <p class="hand">Su Windows puoi vedere i PID nel Task Manager (scheda Dettagli); su Linux con il comando <code>ps</code> o <code>top</code>.</p>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>Un <strong>processo</strong> è identificato da un <strong>PID</strong>.</li>
+    <li>Può essere in stato di <strong>nuovo</strong>, <strong>esecuzione</strong>, <strong>attesa</strong>, <strong>pronto</strong>, <strong>finito</strong>.</li>
+    <li>Occupa memoria <strong>statica</strong> (codice, dati, registri) e <strong>dinamica</strong> (stack, heap).</li>
+    <li>Può girare in un sistema <strong>monoprogrammato</strong> o <strong>multiprogrammato</strong>; nel secondo caso i processi possono <strong>cooperare</strong> o <strong>competere</strong>.</li>
+    <li>Al cambio di processo il SO fa il <strong>context switching</strong>, salvando e ripristinando il contesto nel <strong>PCB</strong>.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Programma o processo? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Di' se si parla di programma o di processo: a) il file <code>chrome.exe</code> sul disco; b) le tre finestre di Chrome aperte adesso; c) un'entità passiva; d) un'entità che ha un program counter che cambia.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>Programma</strong> (è solo un file, passivo). b) <strong>Processi</strong>: tre esecuzioni dello stesso programma. c) <strong>Programma</strong>. d) <strong>Processo</strong>: è in evoluzione, il PC avanza istruzione per istruzione.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Stack o heap? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Dove finiscono? a) una variabile locale <code>int i</code> dentro un ciclo; b) l'oggetto creato con <code>new ArrayList&lt;&gt;()</code>; c) il parametro <code>x</code> di <code>void f(int x)</code>; d) la memoria restituita da <code>malloc(100)</code>; e) le istruzioni del programma.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>Stack</strong>; b) <strong>heap</strong>; c) <strong>stack</strong>; d) <strong>heap</strong>; e) né stack né heap: <strong>area codice</strong> (parte statica).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Che errore è? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+<pre data-lang="c"><code>int conta(int n) {
+    return conta(n + 1);
+}
+
+void leggi(void) {
+    while (1) {
+        char *riga = malloc(1000);
+        /* ... usa riga, ma non chiama mai free ... */
+    }
+}</code></pre>
+      <p>Che problema dà <code>conta</code>? E <code>leggi</code>? In quale zona della memoria succede ognuno?</p>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><code>conta</code> è una <strong>ricorsione infinita</strong>: ogni chiamata aggiunge un pezzo di <strong>stack</strong> (il parametro <code>n</code>, l'indirizzo di ritorno) che non viene mai tolto, finché lo stack, piccolo e fisso, si riempie: <strong>Stack Overflow</strong>.<br>
+      <code>leggi</code> chiede continuamente memoria all'<strong>heap</strong> senza mai liberarla con <code>free</code>: è un <strong>memory leak</strong>, la memoria occupata cresce finché la RAM non basta più.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Cooperanti o in competizione? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Un processo legge i dati da un sensore e li passa a un altro processo che ne disegna il grafico.</li>
+        <li>Word ed Excel vogliono stampare nello stesso momento sull'unica stampante.</li>
+        <li>Quattro processi calcolano ognuno un quarto di un'immagine da elaborare.</li>
+        <li>La calcolatrice e il lettore musicale aperti insieme, che non usano nessuna risorsa in comune.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Cooperanti</strong>: uno produce dati che l'altro usa.</li>
+        <li><strong>In competizione</strong>: indipendenti, ma in conflitto per la stessa risorsa.</li>
+        <li><strong>Cooperanti</strong>: si dividono il lavoro per ottenere la <strong>parallelizzazione</strong>.</li>
+        <li><strong>Indipendenti</strong>: evolvono in modo autonomo.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Segui il processo <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Lanci un programma che chiede un numero all'utente, fa un calcolo lungo e stampa il risultato. Scrivi la sequenza di stati in cui passa il processo, sapendo che durante il calcolo lo scheduler gli toglie la CPU una volta.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p><strong>Nuovo</strong> → (creazione) <strong>Pronto</strong> → (assegnazione) <strong>In esecuzione</strong> → (attesa dell'input da tastiera) <strong>Sospeso</strong> → (l'utente preme Invio: evento) <strong>Pronto</strong> → (assegnazione) <strong>In esecuzione</strong> → (fine del time slice: revoca) <strong>Pronto</strong> → (assegnazione) <strong>In esecuzione</strong> → (terminazione) <strong>Finito</strong>.</p>
+      <p>Nuovo e Finito compaiono una sola volta; gli altri tre stati più volte.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Vero o falso <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>Un processo può passare più volte nello stato di nuovo.</li>
+        <li>Quando l'evento atteso avviene, il processo sospeso torna subito in esecuzione.</li>
+        <li>Con una sola CPU la multiprogrammazione esegue due processi nello stesso istante.</li>
+        <li>Il program counter e i registri formano il contesto del processo.</li>
+        <li>Nel modello a processi anche il Sistema Operativo è organizzato in processi.</li>
+        <li>Gli interrupt dei dispositivi di I/O si chiamano interrupt software.</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Falso</strong>: nuovo e terminato si assumono una sola volta.</li>
+        <li><strong>Falso</strong>: torna <strong>pronto</strong> e aspetta che lo scheduler gli assegni la CPU.</li>
+        <li><strong>Falso</strong>: la CPU passa velocemente da un processo all'altro (pseudo-parallelismo); in ogni istante ne esegue uno.</li>
+        <li><strong>Vero</strong>: è l'area di salvataggio dello stato della CPU, nel PCB.</li>
+        <li><strong>Vero</strong>.</li>
+        <li><strong>Falso</strong>: sono interrupt <strong>hardware</strong> (esterni); quello dello scheduler a fine time slice è chiamato software.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Perché serve il PCB? <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Due processi A e B si alternano sulla stessa CPU. A viene interrotto a metà di un ciclo, con il contatore del ciclo in un registro. Cosa succederebbe se, al cambio di processo, il SO non salvasse niente nel PCB di A? Cosa deve salvare per forza?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>B, andando in esecuzione, usa gli stessi registri della CPU e li sovrascrive. Quando A ripartisse, non saprebbe più da quale istruzione riprendere (il <strong>program counter</strong> è cambiato) né quanto valeva il contatore (il <strong>registro</strong> è stato sovrascritto): ripartirebbe dal punto sbagliato con valori sbagliati.</p>
+      <p>Per questo nel context switch il SO salva nel PCB di A il suo <strong>contesto</strong>, cioè <strong>program counter e registri</strong>, e lo ricarica quando A torna in esecuzione: A riparte esattamente da dove si era fermato, come se nessuno lo avesse interrotto.</p>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Slide dell'Unità di apprendimento 1 "Processi sequenziali e paralleli", lezione 1: "Il modello a processi". Il programma in C corretto e commentato, le note sugli errori delle slide, la tabella delle transizioni, le fasi del context switch, i paragoni, gli esercizi e le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>

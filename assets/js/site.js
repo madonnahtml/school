@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "16",
+    version: "17",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -103,6 +103,7 @@
           { title: "Il linguaggio JSON", path: "materie/tpsit/json.html", type: "teoria" },
           { title: "I metodi HTTP e le API REST", path: "materie/tpsit/http-metodi.html", type: "teoria" },
           { title: "I codici di stato e HTTPS", path: "materie/tpsit/http-codici-stato-https.html", type: "teoria" },
+          { title: "Il modello a processi", path: "materie/tpsit/modello-a-processi.html", type: "teoria" },
           { title: "Classroom: HTTP e Postman (Parte 1)", path: "materie/tpsit/classroom-http-postman.html", type: "classroom", of: "materie/tpsit/http-metodi.html", n: 9, desc: "Richieste vere con Postman su JSONPlaceholder e httpbin: GET e risorse annidate, 404 e classi di status code, query string, header della richiesta, POST con body JSON, PUT e PATCH, DELETE e idempotenza, progettare le richieste." },
         ],
       },

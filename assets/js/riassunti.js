@@ -577,6 +577,71 @@ SITE.riassunti = {
       },
     ],
   },
+  "materie/tpsit/modello-a-processi.html": {
+    breve: "Un processo è un programma in esecuzione: occupa memoria statica e dinamica, si divide la CPU con gli altri grazie allo scheduling e passa tra cinque stati, salvando il contesto nel PCB.",
+    sezioni: [
+      {
+        titolo: "Programma e processo",
+        punti: [
+          "Il <strong>programma</strong> è un'entità <strong>passiva</strong>; mandato in esecuzione diventa un <strong>processo</strong>, un'entità logica <strong>in evoluzione</strong>.",
+          "Un processo è rappresentato da <strong>codice</strong>, <strong>dati</strong> (variabili globali), <strong>program counter</strong>, <strong>registri</strong> della CPU e <strong>stack</strong>.",
+        ],
+      },
+      {
+        titolo: "Il processo in memoria",
+        punti: [
+          "<strong>Parte statica</strong>: area codice e area dati globali.",
+          "<strong>Parte dinamica</strong>: <strong>stack</strong> (variabili locali, parametri) e <strong>heap</strong> (memoria chiesta con <code>malloc</code> o <code>new</code>), che crescono uno verso l'altro.",
+        ],
+      },
+      {
+        titolo: "Stack e heap",
+        punti: [
+          "<strong>Stack</strong>: pila <strong>LIFO</strong> gestita dalla CPU con push e pop; piccolo e fisso, se si riempie dà <strong>Stack Overflow</strong>.",
+          "<strong>Heap</strong>: memoria dinamica non contigua, liberata a mano (<code>free</code>) o dal <strong>Garbage Collector</strong>; se non si libera si ha un <strong>memory leak</strong>.",
+        ],
+      },
+      {
+        titolo: "Multiprogrammazione e scheduling",
+        punti: [
+          "Nel modello a processi tutto il software, <strong>compreso il SO</strong>, è organizzato in processi sequenziali.",
+          "Una sola CPU è condivisa tra più processi con un algoritmo di <strong>scheduling</strong>.",
+          "<strong>Multiprogrammazione</strong>: più programmi in memoria insieme; limita i tempi morti e sfrutta la CPU.",
+        ],
+      },
+      {
+        titolo: "Processi cooperanti e in competizione",
+        punti: [
+          "<strong>Indipendenti</strong>: evolvono in modo autonomo.",
+          "<strong>Cooperanti</strong>: influenzano o sono influenzati da altri, producendo o usando dati condivisi; servono per parallelizzazione e condivisione delle informazioni.",
+          "<strong>In competizione</strong>: evolvono indipendentemente ma sono in conflitto sulle risorse; possono finire in <strong>blocco individuale</strong> o <strong>critico</strong>.",
+        ],
+      },
+      {
+        titolo: "Gli stati di un processo",
+        punti: [
+          "Cinque stati: <strong>nuovo</strong>, <strong>pronto</strong> (ready), <strong>in esecuzione</strong> (running), <strong>in attesa</strong>/sospeso (waiting), <strong>finito</strong> (terminated).",
+          "Nuovo e finito si assumono <strong>una sola volta</strong>, gli altri tre più volte.",
+          "Transizioni: creazione, assegnazione, revoca, attesa di un evento, evento, terminazione. Pronti nella <strong>Ready List</strong>, sospesi nella <strong>Waiting List</strong>.",
+        ],
+      },
+      {
+        titolo: "Sospensione per interrupt",
+        punti: [
+          "A fine <strong>time slice</strong> lo scheduler blocca il processo: <strong>interrupt software</strong>.",
+          "Gli interrupt dei dispositivi di I/O sono <strong>interrupt hardware</strong> (esterni).",
+          "A ogni interrupt il SO fa il <strong>context switching</strong> (cambio di contesto).",
+        ],
+      },
+      {
+        titolo: "Il PCB (Process Control Block)",
+        punti: [
+          "Il <strong>PCB</strong> (descrittore del processo) contiene PID, stato, program counter, registri, priorità, limiti di memoria, file aperti.",
+          "Program counter e registri sono il <strong>contesto del processo</strong> (area di salvataggio dello stato della CPU).",
+        ],
+      },
+    ],
+  },
 
   /* ---------------- Informatica ---------------- */
   "materie/informatica/java-array-wrapper-metodi-overload.html": {
