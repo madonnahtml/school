@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Classroom: le ricette di cucina (E-R) · Scuola</title>
-  <meta name="description" content="Informatica, database: esercitazione 1 di Classroom sul modello E-R. Applicazione per le ricette di cucina: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE con cardinalità (1,1) e (0,n), tipo 1:N, diagramma E-R finale da disegnare su designer.polito.it e domande su ingredienti, N:M e schema logico.">
+  <meta name="description" content="Informatica, database: esercitazione 1 di Classroom sul modello E-R. Applicazione per le ricette di cucina: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE con cardinalità (1,1) e (0,n), tipo 1:N, diagramma E-R finale, il testo da incollare in designer.designerdb.io e domande su ingredienti, N:M e schema logico.">
   <link rel="manifest" href="../../manifest.webmanifest">
   <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
-  <link rel="stylesheet" href="../../assets/css/style.css?v=18">
-  <script src="../../assets/js/site.js?v=18"></script>
+  <link rel="stylesheet" href="../../assets/css/style.css?v=19">
+  <script src="../../assets/js/site.js?v=19"></script>
 </head>
 <body>
 <main id="content">
   <h1>Classroom: le ricette di cucina (E-R)</h1>
   <p class="lead">L'esercitazione 1 sul modello E-R: progettare lo schema concettuale di un'applicazione per le <strong>ricette di cucina</strong>. Qui la svolgiamo <strong>a tappe</strong>, seguendo i tre obiettivi della consegna, e poi rispondiamo a qualche domanda sui punti in cui si sbaglia più spesso. La teoria è nel capitolo <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
 
-  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, poi affronta le tappe nell'ordine: prova a rispondere da solo prima di aprire la <strong>risposta spiegata</strong>. La tappa 4 è lo schema E-R completo, quello da ridisegnare su designer.polito.it.</div>
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, poi affronta le tappe nell'ordine: prova a rispondere da solo prima di aprire la <strong>risposta spiegata</strong>. La tappa 4 è lo schema E-R completo; la tappa 5 è lo stesso schema scritto nella sintassi di <strong>designerdb.io</strong>, da incollare nel tool. In fondo alla pagina c'è il link per aprirlo.</div>
   <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
 
   <!-- ============================================================= -->
@@ -190,20 +190,37 @@
   </div>
 
   <div class="esercizio">
-    <div class="esercizio-head"><span class="esercizio-num">05</span>Tappa 5 · Disegnarlo su designer.polito.it <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Tappa 5 · Lo schema su designerdb.io <span class="badge badge-facile">facile</span></div>
     <div class="esercizio-body">
-      <p><strong>Consegna.</strong> Ridisegna lo schema della tappa 4 con lo strumento online indicato dal professore. Che cosa devi inserire, e in che ordine conviene farlo?</p>
+      <p><strong>Consegna.</strong> Disegna lo schema della tappa 4 con <strong>designer.designerdb.io</strong>. Il tool costruisce il diagramma da un testo con le sezioni <code>Entità:</code>, <code>Attributi:</code> e <code>(chiave)</code>, <code>Relazione:</code> e <code>Entità coinvolte:</code> con le cardinalità. Scrivi quel testo.</p>
     </div>
     <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
-      <p>Qualunque strumento E-R si usi, l'ordine più comodo è lo stesso:</p>
+<pre data-lang="testo"><code>Entità: Ricetta
+Attributi:
+- ID (chiave)
+- nome
+- descrizione
+- ingredienti
+- tempo_prep
+- difficolta
+
+Entità: Categoria
+Attributi:
+- nome_categoria (chiave)
+- descrizione
+
+Relazione: Appartiene
+Entità coinvolte:
+- Ricetta (1,1)
+- Categoria (0,N)</code></pre>
+      <h4>Come è costruito</h4>
       <ol>
-        <li>Crea le due <strong>entità</strong> RICETTA e CATEGORIA, lasciando spazio tra loro.</li>
-        <li>Aggiungi gli <strong>attributi</strong> di ognuna (6 per la ricetta, 2 per la categoria) e segna come <strong>identificatore</strong> (chiave primaria) <code>ID</code> e <code>nome_categoria</code>.</li>
-        <li>Crea la <strong>relazione</strong> APPARTIENE e collegala alle due entità.</li>
-        <li>Imposta le <strong>cardinalità</strong> su ogni collegamento: <strong>(1,1)</strong> sul lato di RICETTA, <strong>(0,n)</strong> sul lato di CATEGORIA.</li>
-        <li>Controlla con la checklist: nomi al singolare, ogni entità con la sua chiave, relazione con un verbo, cardinalità lette nei due versi. Poi salva o esporta l'immagine da consegnare.</li>
+        <li>Prima le due <strong>entità</strong>, ognuna con i suoi <strong>attributi</strong>; la chiave primaria è segnata con <code>(chiave)</code>.</li>
+        <li>Poi la <strong>relazione</strong> Appartiene con le <strong>entità coinvolte</strong>, ciascuna con la <strong>sua</strong> coppia (min, max): (1,1) per la ricetta, (0,N) per la categoria, come nel diagramma della tappa 4.</li>
+        <li>Appartiene non ha attributi propri, quindi non c'è la sezione <code>Attributi:</code> sotto la relazione.</li>
+        <li>Prima di consegnare, controlla il diagramma generato con la checklist: nomi al singolare, ogni entità con la sua chiave, relazione con un verbo, cardinalità lette nei due versi.</li>
       </ol>
-      <p class="hand">I nomi dei pulsanti dipendono dallo strumento: se non trovi "chiave primaria", cerca "identificatore" o "identifier". In molti strumenti la "n" delle cardinalità si scrive <code>N</code> oppure <code>*</code>.</p>
+      <div class="callout warn"><span class="callout-title">Controlla la sintassi nel tool</span>Le sezioni sono quelle usate dal tool (sono elencate nella consegna dell'<a href="classroom-foodexpress-er.html">esercitazione 2</a>). Se il tool segnala un errore, confronta una riga con l'esempio del professore e adatta solo i dettagli: il trattino davanti, <code>N</code> maiuscola o minuscola.</div>
     </div></details>
   </div>
 
@@ -252,8 +269,15 @@ RICETTA   (ID, nome, descrizione, ingredienti, tempo_prep, difficolta, nome_cate
     </div></details>
   </div>
 
+  <h2>Apri il tool</h2>
+  <p>Copia il testo della tappa 5 e incollalo nel tool per generare il diagramma:</p>
+  <a class="home-sum" href="https://designer.designerdb.io/" target="_blank" rel="noopener">
+    <span class="home-sum-text"><strong>Apri designer.designerdb.io</strong><span>Il tool per i diagrammi E-R: si apre in una nuova scheda</span></span>
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+  </a>
+
   <h2>Fonti</h2>
-  <p>Esercitazione 1 di Classroom (consegna riportata fedelmente in alto). Sono aggiunte nostre la divisione in tappe, le risposte spiegate, il diagramma E-R disegnato, la scelta di <code>nome_categoria</code> come chiave, l'ipotesi (1,1) sul lato della ricetta e le tre domande finali. Teoria collegata: <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
+  <p>Esercitazione 1 di Classroom (consegna riportata fedelmente in alto). Sono aggiunte nostre la divisione in tappe, le risposte spiegate, il diagramma E-R disegnato, il testo per designer.designerdb.io (al posto di designer.polito.it indicato nella consegna), la scelta di <code>nome_categoria</code> come chiave, l'ipotesi (1,1) sul lato della ricetta e le tre domande finali. Teoria collegata: <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
 </main>
 </body>
 </html>

@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: FoodExpress, consegne a domicilio (E-R) · Scuola</title>
+  <meta name="description" content="Informatica, database: esercitazione 2 di Classroom sul modello E-R. Piattaforma FoodExpress di consegna pasti: entità LOCALE, PIETANZA, CLIENTE e ORDINE con attributi e chiavi, relazioni propone, effettua e contiene con cardinalità minime e massime, attributo di relazione porzioni, diagramma E-R e traduzione nella sintassi testuale di designerdb.io.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=19">
+  <script src="../../assets/js/site.js?v=19"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: FoodExpress, consegne a domicilio (E-R)</h1>
+  <p class="lead">L'esercitazione 2 sul modello E-R: lo schema concettuale della piattaforma <strong>FoodExpress</strong>, che mette insieme locali, pietanze, clienti e ordini. È più grande della <a href="classroom-ricette-er.html">prima esercitazione</a>: quattro entità, tre relazioni e una relazione molti a molti con un attributo proprio. Alla fine lo schema va scritto nella sintassi testuale di <strong>designerdb.io</strong>. La teoria è nel capitolo <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, poi affronta le tappe nell'ordine: prova a rispondere da solo prima di aprire la <strong>risposta spiegata</strong>. Le tappe 1-4 sono l'<strong>analisi concettuale</strong>, la tappa 5 è il <strong>diagramma</strong> e la tappa 6 la <strong>sintassi designerdb.io</strong>, da copiare nel tool. In fondo alla pagina c'è il link per aprirlo.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>La consegna</h2>
+  <p>Il testo dell'esercitazione, così come è stato assegnato:</p>
+  <blockquote>
+    <p><strong>Contesto aziendale:</strong> La società <em>FoodExpress</em> intende informatizzare la propria piattaforma di consegna di pasti a domicilio per gestire le operazioni quotidiane tra i locali partner, gli utenti registrati e le vendite effettuate.</p>
+    <p><strong>Descrizione dei requisiti informativi</strong></p>
+    <ol>
+      <li><strong>Esercizi commerciali convenzionati:</strong> L'azienda lavora con diversi locali di ristorazione. Per ciascun locale è necessario memorizzare un identificativo univoco numerico, la ragione sociale, la sede legale/operativa (indirizzo completo), i recapiti di contatto (numero di telefono e indirizzo posta elettronica) e il genere gastronomico proposto (ad es. cucina italiana, sushi, messicano).</li>
+      <li><strong>Menu e pietanze:</strong> Ogni locale propone una selezione di pietanze. Ciascuna pietanza è identificata da un proprio codice ed è caratterizzata dal nome del piatto, dal prezzo di vendita al pubblico e dalla tipologia (scegliendo tra primo, secondo, dessert o bevanda). Un piatto viene preparato ed erogato esclusivamente da un determinato locale partner, mentre ciascun locale può avere in carta una molteplicità di pietanze.</li>
+      <li><strong>Utenti della piattaforma:</strong> I clienti che usufruiscono del servizio si registrano al sistema. Di ogni cliente si vuole tracciare un codice identificativo personale, il nome, il cognome, un recapito telefonico, l'indirizzo a cui consegnare i pasti e la mail per le comunicazioni. Un cliente può nel tempo effettuare diverse richieste di consegna (oppure essersi appena registrato e non aver ancora acquistato nulla).</li>
+      <li><strong>Richieste di consegna (Acquisti):</strong> Ogni acquisto completato genera un documento d'ordine identificato univocamente da un numero progressivo. Per ciascuna richiesta è fondamentale registrare il giorno dell'operazione, l'ora di inserimento, l'importo totale calcolato e lo stato dell'avanzamento (in lavorazione, completato o annullato).
+        <p>Ogni ordine è commissionato da un unico cliente ben preciso. Un singolo ordine è composto da una o più pietanze selezionate; d'altra parte, una determinata pietanza può figurare in diversi ordini effettuati da utenti differenti (oppure non essere stata ancora mai ordinata da nessuno). Nel dettaglio della richiesta di acquisto occorre specificare il numero di porzioni ordinate per ciascun piatto inserito.</p></li>
+    </ol>
+    <p><strong>Attività richieste allo studente</strong></p>
+    <ol>
+      <li><strong>Analisi concettuale:</strong>
+        <ul>
+          <li>Individua le <strong>entità</strong> del dominio di interesse e i relativi <strong>attributi</strong>, specificando chiaramente la <strong>chiave primaria</strong> per ciascuna entità.</li>
+          <li>Identifica le <strong>relazioni</strong> tra le entità, definendo per ognuna le <strong>cardinalità minime e massime</strong> nei due versi di lettura.</li>
+          <li>Verifica se tra le relazioni individuate ce ne siano alcune che richiedono <strong>attributi propri</strong> e giustificane il motivo.</li>
+        </ul></li>
+      <li><strong>Sintassi designerdb.io</strong>
+        <ul>
+          <li>Traduci l'intero schema E-R ricavato nella notazione testuale conforme alla sintassi accettata dal tool designerbd.io (definendo la sezione <code>Entità:</code>, i relativi <code>Attributi:</code> con la specifica di <code>(chiave)</code>, le sezioni <code>Relazione:</code>, le <code>Entità coinvolte:</code> con le rispettive cardinalità e gli eventuali <code>Attributi:</code> della relazione).</li>
+        </ul></li>
+    </ol>
+  </blockquote>
+
+  <!-- ============================================================= -->
+  <h2>Svolgimento a tappe</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>I <strong>nomi</strong> con tante informazioni diventano <strong>entità</strong>, i <strong>dettagli</strong> diventano <strong>attributi</strong>, i <strong>verbi</strong> che legano due entità diventano <strong>relazioni</strong>. La cardinalità si legge <strong>nei due versi</strong>; una proprietà che nasce dall'incontro di due entità va <strong>sulla relazione</strong>. Teoria: <a href="progettazione-concettuale-er.html#la-notazione-min-max">La notazione (min, max)</a>, <a href="progettazione-concettuale-er.html#attributi-delle-relazioni-ed-entita-deboli">Attributi delle relazioni</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Tappa 1 · Le entità <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Trova le entità del dominio. Il "genere gastronomico" e la "tipologia" della pietanza sono entità o attributi? E il "dettaglio della richiesta"?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p>Quattro entità, una per ogni punto dei requisiti: <strong>LOCALE</strong>, <strong>PIETANZA</strong>, <strong>CLIENTE</strong>, <strong>ORDINE</strong>.</p>
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Ognuna ha <strong>esistenza autonoma</strong>, una lista di informazioni proprie e un <strong>identificativo</strong> (numerico, codice, codice personale, numero progressivo): sono tutte entità.</li>
+        <li>Il <strong>genere gastronomico</strong> e la <strong>tipologia</strong> hanno solo un valore descrittivo ("sushi", "dessert"), senza altri dettagli: sono <strong>attributi</strong> (errore 1 della checklist: non trasformarli in entità).</li>
+        <li>Il <strong>dettaglio</strong> dell'ordine (quale piatto, quante porzioni) non è un'entità a sé: è il <strong>legame</strong> tra ORDINE e PIETANZA. Diventerà una relazione con un attributo (tappa 4).</li>
+        <li>Nomi al <strong>singolare</strong>: LOCALE, non LOCALI. Il testo usa più parole per la stessa cosa ("acquisto", "richiesta di consegna", "ordine"): scegliamo un solo nome, <strong>ORDINE</strong>.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Tappa 2 · Attributi e chiavi primarie <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Per ogni entità elenca gli attributi e sottolinea la chiave primaria.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Entità</th><th>Attributi (chiave sottolineata)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>LOCALE</strong></td><td><u>id_locale</u>, ragione_sociale, indirizzo, telefono, email, genere</td></tr>
+            <tr><td><strong>PIETANZA</strong></td><td><u>cod_pietanza</u>, nome, prezzo, tipologia</td></tr>
+            <tr><td><strong>CLIENTE</strong></td><td><u>cod_cliente</u>, nome, cognome, telefono, indirizzo_consegna, email</td></tr>
+            <tr><td><strong>ORDINE</strong></td><td><u>numero_ordine</u>, data, ora, importo_totale, stato</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Spiegazione</h4>
+      <ol>
+        <li>Le chiavi le dà il testo: "identificativo univoco numerico", "identificata da un proprio codice", "codice identificativo personale", "identificato univocamente da un numero progressivo". Nome, ragione sociale o email non vanno usati come chiave quando c'è già un codice pensato apposta.</li>
+        <li><strong>indirizzo</strong> del locale è un attributo <strong>composto</strong> ("indirizzo completo": via, civico, CAP, città). Nel tool lo scriviamo come un solo attributo; se si vuole essere più precisi si può spezzare in <code>via</code>, <code>civico</code>, <code>cap</code>, <code>citta</code>.</li>
+        <li><strong>tipologia</strong> (primo, secondo, dessert, bevanda) e <strong>stato</strong> (in lavorazione, completato, annullato) hanno un <strong>dominio</strong> limitato a pochi valori.</li>
+        <li><strong>importo_totale</strong> si potrebbe <strong>calcolare</strong> dai prezzi e dalle porzioni (è un attributo derivato), ma il testo chiede di "registrarlo", quindi lo teniamo.</li>
+        <li>Niente spazi e accenti nei nomi (<code>ragione_sociale</code>, <code>numero_ordine</code>): diventeranno colonne di tabelle.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Tappa 3 · Le relazioni e le cardinalità <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Trova le relazioni tra le entità, dai a ognuna un verbo e scrivi le cardinalità minime e massime <strong>nei due versi di lettura</strong>. Di che tipo è ognuna (1:1, 1:N, N:M)?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Relazione</th><th>Primo verso</th><th>Secondo verso</th><th>Tipo</th></tr></thead>
+          <tbody>
+            <tr><td><strong>PROPONE</strong><br>LOCALE — PIETANZA</td><td>Un locale propone <strong>(1,n)</strong> pietanze</td><td>Una pietanza è proposta da <strong>(1,1)</strong> locale</td><td><strong>1:N</strong></td></tr>
+            <tr><td><strong>EFFETTUA</strong><br>CLIENTE — ORDINE</td><td>Un cliente effettua <strong>(0,n)</strong> ordini</td><td>Un ordine è effettuato da <strong>(1,1)</strong> cliente</td><td><strong>1:N</strong></td></tr>
+            <tr><td><strong>CONTIENE</strong><br>ORDINE — PIETANZA</td><td>Un ordine contiene <strong>(1,n)</strong> pietanze</td><td>Una pietanza è contenuta in <strong>(0,n)</strong> ordini</td><td><strong>N:M</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Da dove vengono i numeri</h4>
+      <ol>
+        <li><strong>PROPONE</strong>. «Un piatto viene preparato <strong>esclusivamente</strong> da un determinato locale» → la pietanza ha <strong>(1,1)</strong>. «Ogni locale propone una selezione di pietanze», «una molteplicità» → il locale ha <strong>(1,n)</strong>: un locale convenzionato senza nessun piatto in carta non avrebbe senso. Se si vuole poter registrare un locale prima di caricarne il menu, va bene anche <strong>(0,n)</strong>.</li>
+        <li><strong>EFFETTUA</strong>. «Ogni ordine è commissionato da un <strong>unico</strong> cliente» → l'ordine ha <strong>(1,1)</strong>. «Un cliente può effettuare diverse richieste (oppure essersi appena registrato e non aver ancora acquistato nulla)» → il cliente ha <strong>(0,n)</strong>: il testo nomina apposta il caso dello zero.</li>
+        <li><strong>CONTIENE</strong>. «Un singolo ordine è composto da <strong>una o più</strong> pietanze» → l'ordine ha <strong>(1,n)</strong>. «Una pietanza può figurare in diversi ordini (oppure non essere stata ancora mai ordinata)» → la pietanza ha <strong>(0,n)</strong>. Massimi n e n: è l'unica <strong>molti a molti</strong> dello schema.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">E il legame tra ORDINE e LOCALE?</span>Il testo non lo chiede, e non serve una relazione diretta: il locale di un ordine si ricava passando dalle pietanze (ordine → pietanze → locale che le prepara). Aggiungerla duplicherebbe un'informazione già presente. Se l'azienda volesse imporre che ogni ordine sia di <strong>un solo</strong> locale, allora sì che servirebbe una relazione ORDINE (1,1) — LOCALE (0,n), da scrivere tra le ipotesi.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Tappa 4 · Le relazioni con attributi propri <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Quale relazione ha bisogno di un attributo proprio? Giustifica perché non può stare in nessuna delle due entità.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p>Solo <strong>CONTIENE</strong>, con l'attributo <strong>porzioni</strong>: «nel dettaglio della richiesta occorre specificare il numero di porzioni ordinate per ciascun piatto inserito».</p>
+      <h4>Giustificazione</h4>
+      <ol>
+        <li><strong>Non</strong> in ORDINE: un ordine ha più pietanze, ognuna con il suo numero di porzioni (2 pizze, 1 tiramisù). Un solo attributo "porzioni" nell'ordine non saprebbe a quale piatto si riferisce.</li>
+        <li><strong>Non</strong> in PIETANZA: la stessa pietanza compare in tanti ordini, ogni volta con un numero di porzioni diverso.</li>
+        <li>Il numero di porzioni esiste solo per la <strong>coppia</strong> (quell'ordine, quella pietanza): è un attributo della <strong>relazione</strong>. È lo stesso caso del voto nella relazione ESAME tra STUDENTE e MATERIA.</li>
+        <li>PROPONE ed EFFETTUA non ne hanno bisogno: sono 1:N e ogni informazione trova posto in un'entità. Per esempio il prezzo è della pietanza, la data è dell'ordine.</li>
+      </ol>
+      <p class="hand">Se il prezzo di una pietanza può cambiare nel tempo, nella realtà si salva anche il <em>prezzo al momento dell'ordine</em> come attributo di CONTIENE, così gli ordini vecchi non cambiano importo. Il testo non lo chiede: è un'idea in più.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Tappa 5 · Il diagramma E-R <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Metti insieme le tappe 1-4 in un unico diagramma E-R.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <figure style="margin: 1.2em 0;">
+        <svg viewBox="0 0 840 430" role="img" aria-label="Schema E-R di FoodExpress: LOCALE (1,n) propone (1,1) PIETANZA; CLIENTE (0,n) effettua (1,1) ORDINE; ORDINE (1,n) contiene (0,n) PIETANZA con l'attributo porzioni sulla relazione" style="width: 100%; max-width: 840px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="70.0" y="70.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="130" y="94.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">LOCALE</text>
+      <polygon points="72,215 130,189 188,215 130,241" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="130" y="219.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">propone</text>
+      <rect x="70.0" y="320.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="130" y="344.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">PIETANZA</text>
+      <rect x="570.0" y="70.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="630" y="94.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">CLIENTE</text>
+      <polygon points="572,215 630,189 688,215 630,241" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="630" y="219.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">effettua</text>
+      <rect x="570.0" y="320.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="630" y="344.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">ORDINE</text>
+      <polygon points="318,340 380,312 442,340 380,368" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="380" y="344.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">contiene</text>
+      <line x1="130" y1="110" x2="130" y2="189" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="130" y1="241" x2="130" y2="320" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="138" y="130" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(1,n)</text>
+      <text x="138" y="314" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(1,1)</text>
+      <line x1="630" y1="110" x2="630" y2="189" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="630" y1="241" x2="630" y2="320" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="638" y="130" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <text x="638" y="314" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(1,1)</text>
+      <line x1="190" y1="340" x2="318" y2="340" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="442" y1="340" x2="570" y2="340" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="196" y="330" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <text x="564" y="330" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(1,n)</text>
+      <line x1="380" y1="312" x2="380" y2="282" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="380" cy="282" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="380" y="273" text-anchor="middle" style="fill: var(--ink);">porzioni</text>
+      <line x1="190" y1="90" x2="240" y2="30" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="30" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="34" text-anchor="start" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">id_locale</text>
+      <line x1="190" y1="90" x2="240" y2="54" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="54" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="58" text-anchor="start" style="fill: var(--ink);">ragione_sociale</text>
+      <line x1="190" y1="90" x2="240" y2="78" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="78" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="82" text-anchor="start" style="fill: var(--ink);">indirizzo</text>
+      <line x1="190" y1="90" x2="240" y2="102" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="102" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="106" text-anchor="start" style="fill: var(--ink);">telefono</text>
+      <line x1="190" y1="90" x2="240" y2="126" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="126" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="130" text-anchor="start" style="fill: var(--ink);">email</text>
+      <line x1="190" y1="90" x2="240" y2="150" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="240" cy="150" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="249" y="154" text-anchor="start" style="fill: var(--ink);">genere</text>
+      <line x1="570" y1="90" x2="520" y2="30" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="30" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="34" text-anchor="end" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">cod_cliente</text>
+      <line x1="570" y1="90" x2="520" y2="54" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="54" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="58" text-anchor="end" style="fill: var(--ink);">nome</text>
+      <line x1="570" y1="90" x2="520" y2="78" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="78" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="82" text-anchor="end" style="fill: var(--ink);">cognome</text>
+      <line x1="570" y1="90" x2="520" y2="102" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="102" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="106" text-anchor="end" style="fill: var(--ink);">telefono</text>
+      <line x1="570" y1="90" x2="520" y2="126" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="126" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="130" text-anchor="end" style="fill: var(--ink);">indirizzo_consegna</text>
+      <line x1="570" y1="90" x2="520" y2="150" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="150" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="511" y="154" text-anchor="end" style="fill: var(--ink);">email</text>
+      <line x1="80" y1="360" x2="45" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="45" cy="393" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="45" y="410" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">cod_pietanza</text>
+      <line x1="115" y1="360" x2="115" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="115" cy="393" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="115" y="410" text-anchor="middle" style="fill: var(--ink);">nome</text>
+      <line x1="165" y1="360" x2="165" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="165" cy="393" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="165" y="410" text-anchor="middle" style="fill: var(--ink);">prezzo</text>
+      <line x1="180" y1="360" x2="222" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="222" cy="393" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="222" y="410" text-anchor="middle" style="fill: var(--ink);">tipologia</text>
+      <line x1="580" y1="360" x2="560" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="560" cy="393" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="560" y="410" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">numero_ordine</text>
+      <line x1="625" y1="360" x2="625" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="625" cy="393" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="625" y="410" text-anchor="middle" style="fill: var(--ink);">data</text>
+      <line x1="665" y1="360" x2="665" y2="393" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="665" cy="393" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="665" y="410" text-anchor="middle" style="fill: var(--ink);">ora</text>
+      <line x1="690" y1="332" x2="730" y2="312" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="730" cy="312" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="739" y="316" text-anchor="start" style="fill: var(--ink);">importo_totale</text>
+      <line x1="690" y1="348" x2="730" y2="368" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="730" cy="368" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="739" y="372" text-anchor="start" style="fill: var(--ink);">stato</text>
+    </svg>
+        <figcaption>Lo schema E-R di FoodExpress. Pallini pieni e sottolineati: le chiavi primarie. Le coppie (min, max) sono scritte vicino all'entità a cui si riferiscono.</figcaption>
+      </figure>
+      <p>Si legge così: un <strong>locale</strong> propone da 1 a n pietanze, ogni <strong>pietanza</strong> è di 1 solo locale; un <strong>cliente</strong> effettua da 0 a n ordini, ogni <strong>ordine</strong> è di 1 solo cliente; un ordine contiene da 1 a n pietanze, ciascuna con le sue <strong>porzioni</strong>, e una pietanza compare in 0 o più ordini.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Tappa 6 · La sintassi designerdb.io <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scrivi l'intero schema nella notazione testuale del tool, con le sezioni <code>Entità:</code>, <code>Attributi:</code> e <code>(chiave)</code>, <code>Relazione:</code>, <code>Entità coinvolte:</code> con le cardinalità e gli <code>Attributi:</code> della relazione.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+<pre data-lang="testo"><code>Entità: Locale
+Attributi:
+- id_locale (chiave)
+- ragione_sociale
+- indirizzo
+- telefono
+- email
+- genere
+
+Entità: Pietanza
+Attributi:
+- cod_pietanza (chiave)
+- nome
+- prezzo
+- tipologia
+
+Entità: Cliente
+Attributi:
+- cod_cliente (chiave)
+- nome
+- cognome
+- telefono
+- indirizzo_consegna
+- email
+
+Entità: Ordine
+Attributi:
+- numero_ordine (chiave)
+- data
+- ora
+- importo_totale
+- stato
+
+Relazione: Propone
+Entità coinvolte:
+- Locale (1,N)
+- Pietanza (1,1)
+
+Relazione: Effettua
+Entità coinvolte:
+- Cliente (0,N)
+- Ordine (1,1)
+
+Relazione: Contiene
+Entità coinvolte:
+- Ordine (1,N)
+- Pietanza (0,N)
+Attributi:
+- porzioni</code></pre>
+      <h4>Come è costruito</h4>
+      <ol>
+        <li>Prima tutte le <strong>entità</strong>, ognuna con i suoi <strong>attributi</strong>; la chiave primaria è segnata con <code>(chiave)</code>.</li>
+        <li>Poi le <strong>relazioni</strong>: per ognuna le <strong>entità coinvolte</strong>, ciascuna con la <strong>sua</strong> coppia (min, max), cioè quella che nel diagramma sta vicino a lei.</li>
+        <li>Solo <strong>Contiene</strong> ha la sezione <code>Attributi:</code>, con <code>porzioni</code>.</li>
+        <li>Nei nomi niente spazi né accenti, per evitare errori quando il tool legge il testo.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Controlla la sintassi nel tool</span>Le sezioni sono quelle indicate dalla consegna. Il formato di ogni riga (il trattino davanti, <code>N</code> maiuscola o minuscola, la virgola nelle cardinalità) segue l'esempio mostrato in classe: se il tool segnala un errore, confronta una riga con l'esempio del professore e adatta solo quei dettagli.</div>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Domande sull'esercitazione</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>(0,n) o (1,n)? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Nello schema ci sono tre minimi a 0 o a 1 che dipendono da poche parole del testo. Per ognuna di queste coppie trova la frase che decide: CLIENTE in EFFETTUA, PIETANZA in CONTIENE, ORDINE in CONTIENE.</p></div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>CLIENTE (0,n)</strong>: «oppure essersi appena registrato e non aver ancora acquistato nulla» → può partecipare zero volte.</li>
+        <li><strong>PIETANZA (0,n)</strong> in CONTIENE: «oppure non essere stata ancora mai ordinata da nessuno» → zero volte.</li>
+        <li><strong>ORDINE (1,n)</strong> in CONTIENE: «composto da <strong>una o più</strong> pietanze» → almeno una: un ordine vuoto non esiste.</li>
+      </ul>
+      <p class="hand">Regola pratica: "può non…", "oppure nessuno", "appena registrato" → minimo 0. "almeno uno", "uno o più", "deve" → minimo 1.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Uno sguardo allo schema logico <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Senza ancora scrivere SQL: quante tabelle nasceranno da questo schema? Dove finiscono le chiavi esterne e dove l'attributo <code>porzioni</code>?</p></div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p><strong>Cinque</strong> tabelle: una per ogni entità più la <strong>tabella ponte</strong> della relazione N:M.</p>
+<pre data-lang="testo"><code>LOCALE   (id_locale, ragione_sociale, indirizzo, telefono, email, genere)
+PIETANZA (cod_pietanza, nome, prezzo, tipologia, id_locale)          ← FK → LOCALE
+CLIENTE  (cod_cliente, nome, cognome, telefono, indirizzo_consegna, email)
+ORDINE   (numero_ordine, data, ora, importo_totale, stato, cod_cliente)  ← FK → CLIENTE
+CONTIENE (numero_ordine, cod_pietanza, porzioni)                     ← ponte</code></pre>
+      <ol>
+        <li><strong>PROPONE</strong> e <strong>EFFETTUA</strong> sono 1:N: la chiave del lato 1 diventa chiave esterna nel lato N (<code>id_locale</code> in PIETANZA, <code>cod_cliente</code> in ORDINE).</li>
+        <li><strong>CONTIENE</strong> è N:M: non si può risolvere con una colonna sola, serve la <strong>tabella ponte</strong>, la cui chiave è la coppia <code>(numero_ordine, cod_pietanza)</code>.</li>
+        <li>L'attributo di relazione <strong>porzioni</strong> finisce proprio nella tabella ponte: ogni riga è "in quell'ordine, quella pietanza, tante porzioni".</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <h2>Apri il tool</h2>
+  <p>Copia il testo della tappa 6 e incollalo nel tool per generare il diagramma:</p>
+  <a class="home-sum" href="https://designer.designerdb.io/" target="_blank" rel="noopener">
+    <span class="home-sum-text"><strong>Apri designer.designerdb.io</strong><span>Il tool dell'esercitazione: si apre in una nuova scheda</span></span>
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+  </a>
+
+  <h2>Fonti</h2>
+  <p>Esercitazione 2 di Classroom (consegna riportata fedelmente in alto; nella consegna il nome del tool compare anche come "designerbd.io", un errore di battitura). Sono aggiunte nostre la divisione in tappe, le risposte spiegate, il diagramma E-R disegnato, le osservazioni sul legame ordine-locale e sul prezzo storico e le due domande finali. Teoria collegata: <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
+</main>
+</body>
+</html>
