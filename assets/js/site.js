@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "17",
+    version: "18",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -54,6 +54,7 @@
           { title: "Java: eccezioni", path: "materie/informatica/java-eccezioni.html", type: "teoria" },
           { title: "Java: Collections, ArrayList, Vector e LinkedList", path: "materie/informatica/java-collections-liste.html", type: "teoria" },
           { title: "Java: HashMap", path: "materie/informatica/java-hashmap.html", type: "teoria" },
+          { title: "Progettazione concettuale e diagrammi E-R", path: "materie/informatica/progettazione-concettuale-er.html", type: "teoria" },
           { title: "Esercizi: array, wrapper, metodi e overload", path: "materie/informatica/esercizi-java-array-metodi.html", type: "esercizi", of: "materie/informatica/java-array-wrapper-metodi-overload.html", n: 15, desc: "Array e cicli, parseInt, metodi void e con return, metodi sugli array, overload." },
           { title: "Esercizi: programmazione a oggetti", path: "materie/informatica/esercizi-java-oggetti.html", type: "esercizi", of: "materie/informatica/java-programmazione-a-oggetti.html", n: 16, desc: "Classi e attributi, metodi, costruttore e this, overload dei costruttori, scope, array di oggetti." },
           { title: "Esercizi: gestione dei file", path: "materie/informatica/esercizi-java-file.html", type: "esercizi", of: "materie/informatica/java-gestione-dei-file.html", n: 17, desc: "La classe File e i percorsi, exists, FileWriter e append, FileReader carattere per carattere, delete, try-catch." },
@@ -67,6 +68,7 @@
           { title: "Classroom: eccezioni e gestione dei file", path: "materie/informatica/classroom-eccezioni-file.html", type: "classroom", of: "materie/informatica/java-eccezioni.html", n: 11, desc: "RegistroStudenti a menu: try-catch, finally, NumberFormatException, throw, throws, più catch, Path e Files (writeString con APPEND, readAllLines, exists, deleteIfExists)." },
           { title: "Classroom: ArrayList, Vector e LinkedList", path: "materie/informatica/classroom-liste.html", type: "classroom", of: "materie/informatica/java-collections-liste.html", n: 11, desc: "GestioneStudenti, confronto ArrayList e Vector, coda con LinkedList, registro con la classe Studente, menu con Scanner e switch, test delle prestazioni con nanoTime." },
           { title: "Classroom: HashMap", path: "materie/informatica/classroom-hashmap.html", type: "classroom", of: "materie/informatica/java-hashmap.html", n: 4, desc: "Rubrica, inventario, registro voti e biblioteca a menu con put, get, containsKey, containsValue, remove, size e clear." },
+          { title: "Classroom: le ricette di cucina (E-R)", path: "materie/informatica/classroom-ricette-er.html", type: "classroom", of: "materie/informatica/progettazione-concettuale-er.html", n: 8, desc: "Esercitazione 1 sul modello E-R: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE (1,1)-(0,n) di tipo 1:N, diagramma finale per designer.polito.it, ingredienti come entità, N:M e chiave esterna." },
         ],
       },
       {

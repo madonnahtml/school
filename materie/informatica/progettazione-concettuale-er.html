@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Progettazione concettuale e diagrammi E-R · Scuola</title>
+  <meta name="description" content="Informatica, database: le 5 fasi della progettazione, il modello E-R di Chen, notazione classica e UML, entità, attributi semplici, composti, opzionali e multipli, chiave primaria, relazioni binarie, ternarie e ricorsive, cardinalità 1:1, 1:N, N:M, notazione (min, max), attributi delle relazioni, entità deboli, generalizzazione totale, parziale, esclusiva e sovrapposta, il caso della videoteca e i 5 errori più comuni.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=18">
+  <script src="../../assets/js/site.js?v=18"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Progettazione concettuale e diagrammi E-R</h1>
+  <p class="lead">Prima di creare le tabelle di un database bisogna capire <strong>quali dati</strong> servono e <strong>come sono legati</strong> tra loro. Lo si fa con un disegno, lo <strong>schema concettuale</strong>, usando il <strong>modello Entità-Relazione</strong> (E-R): dal problema reale, scritto a parole, si arriva a uno schema che poi diventerà il database.</p>
+
+  <div class="callout def">
+    <span class="callout-title">Le 5 cose che contano</span>
+    <ol>
+      <li>Si passa dalla realtà al database in <strong>5 fasi</strong>: analisi dei requisiti, progettazione <strong>concettuale</strong> (lo schema E-R), <strong>logica</strong> (le tabelle), <strong>fisica</strong> (il DBMS), applicazioni e test.</li>
+      <li>Il modello E-R ha tre costrutti: <strong>entità</strong> (rettangolo), <strong>relazioni</strong> (rombo) e <strong>attributi</strong>; ogni entità ha una <strong>chiave primaria</strong> che identifica ogni istanza.</li>
+      <li>La <strong>cardinalità massima</strong> dà il tipo di relazione: <strong>1:1</strong>, <strong>1:N</strong>, <strong>N:M</strong>. La coppia <strong>(min, max)</strong> dice anche se la partecipazione è obbligatoria (min = 1) o opzionale (min = 0).</li>
+      <li>Anche le <strong>relazioni</strong> possono avere attributi (il voto di un esame); un'<strong>entità debole</strong> non esiste senza la sua entità padre.</li>
+      <li>La <strong>generalizzazione</strong> lega una superclasse alle sottoclassi, che ne <strong>ereditano</strong> attributi e relazioni; può essere totale o parziale, esclusiva o sovrapposta.</li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Le 5 fasi della progettazione</h2>
+  <p>Per passare dalla <strong>realtà</strong> (un'azienda, una scuola, una videoteca) a un <strong>database relazionale</strong> funzionante si attraversano cinque fasi, una dopo l'altra:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Analisi dei requisiti</strong><span>Raccolta e chiarimento delle <strong>specifiche del cliente</strong>: testo scritto, interviste, moduli che già usa.</span></li>
+    <li><b>2</b><strong>Progettazione concettuale</strong><span>Creazione dello <strong>schema concettuale</strong> con il <strong>modello E-R</strong>. È <strong>indipendente dal DBMS</strong>: non importa ancora quale programma useremo. <em>È l'argomento di questo capitolo.</em></span></li>
+    <li><b>3</b><strong>Progettazione logica</strong><span>Traduzione dello schema E-R nel <strong>modello relazionale</strong>: tabelle, chiavi primarie ed esterne.</span></li>
+    <li><b>4</b><strong>Progettazione fisica</strong><span>Implementazione delle tabelle nel <strong>DBMS</strong> scelto (MySQL, PostgreSQL, Oracle).</span></li>
+    <li><b>5</b><strong>Applicazioni e test</strong><span>Sviluppo dell'interfaccia utente, query SQL, viste e <strong>collaudo</strong> del sistema.</span></li>
+  </ol>
+  <div class="callout tip"><span class="callout-title">Il paragone</span>È come costruire una casa. Prima ascolti cosa vuole il cliente (<strong>requisiti</strong>), poi fai lo <strong>schizzo</strong> delle stanze e di come si collegano (<strong>concettuale</strong>), poi il <strong>progetto tecnico</strong> con le misure (<strong>logica</strong>), poi costruisci con mattoni veri (<strong>fisica</strong>) e infine arredi e controlli che tutto funzioni (<strong>applicazioni e test</strong>). Lo schizzo non dipende da quali mattoni userai.</div>
+
+  <!-- ============================================================= -->
+  <h2>Il modello E-R</h2>
+  <p>Il <strong>modello E-R</strong> (<em>Entity-Relationship</em>, Entità-Relazione) è stato proposto da <strong>Peter Chen nel 1976</strong>. È uno strumento di modellazione concettuale che permette di descrivere la struttura dei dati in modo <strong>astratto</strong>, senza curarsi dei dettagli di implementazione software.</p>
+  <p>Ha <strong>tre costrutti fondamentali</strong>:</p>
+  <div class="cards">
+    <div class="card"><strong>Entità</strong><p>Classi di oggetti reali o astratti con <strong>esistenza autonoma</strong>. Es. Studente, Automobile.</p></div>
+    <div class="card"><strong>Relazioni (associazioni)</strong><p><strong>Legami</strong> concettuali tra due o più entità. Es. Frequenta, Possiede.</p></div>
+    <div class="card"><strong>Attributi</strong><p>Proprietà elementari che <strong>descrivono</strong> entità o relazioni. Es. Nome, Matricola, Data.</p></div>
+  </div>
+
+  <h3>Notazione classica e notazione UML</h3>
+  <p>Il libro presenta due modi di disegnare lo stesso schema:</p>
+  <div class="compare">
+    <div>
+      <h4>Notazione classica (Chen)</h4>
+      <ul>
+        <li><strong>Entità</strong> = rettangolo</li>
+        <li><strong>Relazione</strong> = rombo</li>
+        <li><strong>Attributi</strong> = ellissi (o pallini) collegati</li>
+        <li><strong>Chiave primaria</strong> = testo sottolineato o simbolo dedicato (pallino pieno)</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Notazione UML (Class Diagram)</h4>
+      <ul>
+        <li><strong>Entità</strong> = rettangolo diviso in sezioni (nome ed elenco attributi)</li>
+        <li><strong>Relazione</strong> = linea con il verbo dell'associazione</li>
+        <li><strong>Chiave primaria</strong> = prefisso <code>[PK]</code> o sottolineatura</li>
+      </ul>
+    </div>
+  </div>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 560 110" role="img" aria-label="Legenda della notazione classica: entità come rettangolo, relazione come rombo, attributo come pallino vuoto collegato, chiave primaria come pallino pieno con nome sottolineato" style="width: 100%; max-width: 560px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="15.0" y="26.0" width="110" height="38" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="70" y="49.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">ENTITÀ</text>
+      <text x="70" y="95" text-anchor="middle" style="fill: var(--ink-soft);">rettangolo</text>
+      <polygon points="153,45 215,19 277,45 215,71" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="215" y="49.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">relazione</text>
+      <text x="215" y="95" text-anchor="middle" style="fill: var(--ink-soft);">rombo</text>
+      <line x1="305" y1="45" x2="345" y2="45" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="345" cy="45" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="354" y="49" text-anchor="start" style="fill: var(--ink);">nome</text>
+      <text x="345" y="95" text-anchor="middle" style="fill: var(--ink-soft);">attributo</text>
+      <line x1="430" y1="45" x2="470" y2="45" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="470" cy="45" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="479" y="49" text-anchor="start" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">codice</text>
+      <text x="470" y="95" text-anchor="middle" style="fill: var(--ink-soft);">chiave primaria</text>
+    </svg>
+    <figcaption>La notazione classica usata in questa pagina: gli attributi sono pallini "a lecca-lecca", la chiave è il pallino pieno con il nome sottolineato.</figcaption>
+  </figure>
+
+  <!-- ============================================================= -->
+  <h2>Entità, attributi e chiave primaria</h2>
+  <p>Un'<strong>entità</strong> raccoglie oggetti <strong>omogenei</strong> (tutti dello stesso tipo): l'entità STUDENTE rappresenta tutti gli studenti; ogni singolo studente è un'<strong>istanza</strong> dell'entità.</p>
+
+  <h3>Classificazione degli attributi</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Coppia</th><th>Significato</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Semplice</strong> / <strong>composto</strong></td><td>Il semplice non è divisibile; il composto si articola in sottocampi.</td><td>Età (semplice); Indirizzo = Via, CAP, Città (composto)</td></tr>
+        <tr><td><strong>Obbligatorio</strong> / <strong>opzionale</strong></td><td>L'obbligatorio deve sempre avere un valore; l'opzionale può rimanere nullo.</td><td>Cognome (obbligatorio); Email (opzionale)</td></tr>
+        <tr><td><strong>Monovalente</strong> / <strong>multiplo</strong></td><td>Il monovalente ammette un solo valore; il multiplo ne ammette più di uno.</td><td>Data di nascita (monovalente); Telefoni (multiplo)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tre esempi di entità</h3>
+  <div class="cards">
+    <div class="card"><strong>AUTOMOBILE</strong><p><u>Targa</u> [PK], Marca, Modello, Cilindrata</p></div>
+    <div class="card"><strong>STUDENTE</strong><p><u>Matricola</u> [PK], Codice Fiscale, Nome, Cognome, Email (opzionale)</p></div>
+    <div class="card"><strong>PAZIENTE</strong><p><u>Cod_Paziente</u> [PK], Nome, Cognome, Data_Nascita, Tel_Recapito (multiplo)</p></div>
+  </div>
+
+  <div class="callout def"><span class="callout-title">Chiave primaria (Primary Key, PK)</span>La <strong>chiave primaria</strong> è un attributo (o un insieme di attributi) che <strong>identifica in modo univoco</strong> ogni istanza dell'entità. Non può mai essere <strong>nulla</strong> né <strong>duplicata</strong>.</div>
+  <p class="hand">In STUDENTE anche il Codice Fiscale è unico: si sceglie comunque <em>una</em> chiave primaria (qui la Matricola). Nome e Cognome invece non vanno bene: due studenti possono chiamarsi Mario Rossi.</p>
+
+  <!-- ============================================================= -->
+  <h2>Le relazioni e il loro grado</h2>
+  <p>Le <strong>relazioni</strong> associano entità tra loro. Si classificano in base al loro <strong>grado</strong>, cioè a quante entità collegano:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Che cosa fa</th><th>Esempio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Binaria</strong> (grado 2)</td><td>Associa <strong>2 entità</strong> distinte. È la più comune (circa il 90% dei database reali).</td><td>STUDENTE — frequenta — CLASSE<br>PERSONA — possiede — AUTOMOBILE</td></tr>
+        <tr><td><strong>Ternaria</strong> (grado 3)</td><td>Associa <strong>3 entità</strong> contemporaneamente, quando l'associazione non è scomponibile.</td><td>IMPIEGATO + PROGETTO + RUOLO: un impiegato lavora a un progetto con uno specifico ruolo</td></tr>
+        <tr><td><strong>Ricorsiva</strong> (grado 1)</td><td>Lega un'entità <strong>con se stessa</strong>, che assume <strong>ruoli</strong> diversi.</td><td>DIPENDENTE — gestisce — DIPENDENTE: un dipendente fa da supervisore ad altri dipendenti</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip"><span class="callout-title">Come si dà il nome</span>Una relazione si chiama con un <strong>verbo</strong> (frequenta, possiede, gestisce) e si legge come una frase: «lo <em>studente</em> <strong>frequenta</strong> la <em>classe</em>». Nella ricorsiva si scrivono i due ruoli sulle due linee: «il dipendente <em>supervisore</em> <strong>gestisce</strong> il dipendente <em>subordinato</em>».</div>
+
+  <!-- ============================================================= -->
+  <h2>La cardinalità: 1:1, 1:N, N:M</h2>
+  <p>La <strong>cardinalità massima</strong> dice quante istanze di un'entità si possono legare a un'istanza dell'altra, e definisce la <strong>tipologia</strong> di associazione:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Regola</th><th>Esempio</th><th>Nel database relazionale</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Uno a uno (1:1)</strong></td><td>A ogni istanza di A corrisponde al massimo un'istanza di B, e viceversa.</td><td>PERSONA — possiede — CODICE FISCALE (un CF appartiene a una sola persona)</td><td>Si possono unire le entità oppure mettere la chiave esterna in una delle due.</td></tr>
+        <tr><td><strong>Uno a molti (1:N)</strong></td><td>A ogni istanza di A corrispondono più istanze di B, ma ogni B si lega a un solo A.</td><td>SCUOLA — frequenta — STUDENTE (una scuola ha più studenti; uno studente sta in una sola scuola)</td><td>La chiave primaria del lato <strong>1</strong> diventa <strong>chiave esterna</strong> (FK) nel lato <strong>N</strong>.</td></tr>
+        <tr><td><strong>Molti a molti (N:M)</strong></td><td>A ogni istanza di A corrispondono più istanze di B, e viceversa.</td><td>STUDENTE — sostiene — ESAME (uno studente fa più esami; un esame è fatto da più studenti)</td><td>Genera obbligatoriamente una nuova <strong>tabella intermedia</strong> (ponte).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn"><span class="callout-title">Leggila nei due versi</span>Per trovare il tipo fai sempre <strong>due domande</strong>: «un A a quanti B è legato al massimo?» e «un B a quanti A è legato al massimo?». Una scuola → molti studenti; uno studente → una scuola: <strong>1:N</strong>. Se rispondi "molti" tutte e due le volte è <strong>N:M</strong>; "uno" tutte e due le volte è <strong>1:1</strong>.</div>
+
+  <!-- ============================================================= -->
+  <h2>La notazione (min, max)</h2>
+  <p>Per essere più precisi, su ogni lato della relazione si scrive una coppia <strong>(min, max)</strong>:</p>
+  <div class="compare">
+    <div>
+      <h4>Cardinalità minima</h4>
+      <ul>
+        <li><strong>min = 0</strong>: partecipazione <strong>opzionale</strong> (l'entità può non partecipare mai alla relazione).</li>
+        <li><strong>min = 1</strong>: partecipazione <strong>obbligatoria</strong> (deve partecipare almeno una volta).</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Cardinalità massima</h4>
+      <ul>
+        <li><strong>max = 1</strong>: molteplicità <strong>singola</strong> (al massimo 1 associazione).</li>
+        <li><strong>max = n</strong>: molteplicità <strong>multipla</strong> (un numero indefinito di associazioni).</li>
+      </ul>
+    </div>
+  </div>
+  <p>Le quattro coppie tipiche:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Coppia</th><th>Si legge</th></tr></thead>
+      <tbody>
+        <tr><td><strong>(0,1)</strong></td><td>Opzionale, al massimo uno</td></tr>
+        <tr><td><strong>(1,1)</strong></td><td>Obbligatorio, esattamente uno</td></tr>
+        <tr><td><strong>(0,n)</strong></td><td>Opzionale, quanti si vuole</td></tr>
+        <tr><td><strong>(1,n)</strong></td><td>Obbligatorio, almeno uno</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Esempio: chi possiede le automobili</h3>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 560 120" role="img" aria-label="PERSONA (0,n) possiede (1,1) AUTOMOBILE: una persona possiede da zero a molte automobili, ogni automobile è di esattamente una persona" style="width: 100%; max-width: 560px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="20.0" y="40.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="80" y="64.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">PERSONA</text>
+      <polygon points="216,60 280,32 344,60 280,88" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="280" y="64.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">possiede</text>
+      <rect x="420.0" y="40.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="480" y="64.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">AUTOMOBILE</text>
+      <line x1="140" y1="60" x2="216" y2="60" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="344" y1="60" x2="420" y2="60" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="146" y="50" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <text x="414" y="50" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(1,1)</text>
+      <text x="80" y="102" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">ogni persona: 0 o più auto</text>
+      <text x="480" y="102" text-anchor="middle" style="fill: var(--ink-soft); font-size: 11px;">ogni auto: 1 sola persona</text>
+    </svg>
+    <figcaption>Ogni coppia si scrive vicino all'entità a cui si riferisce.</figcaption>
+  </figure>
+  <ol>
+    <li><strong>Da PERSONA verso AUTOMOBILE (0,n)</strong>: una persona può non possedere nessuna automobile (0), oppure possederne più di una (n).</li>
+    <li><strong>Da AUTOMOBILE verso PERSONA (1,1)</strong>: ogni automobile immatricolata deve essere di proprietà di esattamente una persona.</li>
+  </ol>
+  <p>Guardando solo i <strong>massimi</strong> (n e 1) la relazione è di tipo <strong>1:N</strong>: una persona, molte auto.</p>
+  <div class="callout tip"><span class="callout-title">Il trucco per leggerla</span>Metti il dito su un'entità, leggi la coppia <strong>vicina a lei</strong> e completa la frase: «ogni PERSONA possiede da <strong>0</strong> a <strong>n</strong> automobili», «ogni AUTOMOBILE è posseduta da <strong>1</strong> a <strong>1</strong> persona».</div>
+
+  <!-- ============================================================= -->
+  <h2>Attributi delle relazioni ed entità deboli</h2>
+  <h3>Attributi propri delle relazioni</h3>
+  <p>Non solo le entità: anche le <strong>relazioni</strong> possono avere attributi. Si usano quando la proprietà non appartiene né all'entità A né all'entità B, ma <strong>nasce dalla loro associazione</strong>.</p>
+  <p>Esempio classico: STUDENTE — esame — MATERIA. Dove si mettono <strong>Voto</strong> e <strong>Data dell'esame</strong>?</p>
+  <ul>
+    <li><strong>Non</strong> nello Studente: ha più voti in più materie.</li>
+    <li><strong>Non</strong> nella Materia: ha più voti per studenti diversi.</li>
+    <li>Voto e Data appartengono alla <strong>relazione ESAME</strong>: esistono solo per <em>quello</em> studente in <em>quella</em> materia.</li>
+  </ul>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 560 170" role="img" aria-label="STUDENTE (0,n) esame (0,n) MATERIA, con gli attributi voto e data attaccati alla relazione esame" style="width: 100%; max-width: 560px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="20.0" y="75.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="80" y="99.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">STUDENTE</text>
+      <polygon points="216,95 280,67 344,95 280,123" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="280" y="99.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">esame</text>
+      <rect x="420.0" y="75.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="480" y="99.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">MATERIA</text>
+      <line x1="140" y1="95" x2="216" y2="95" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="344" y1="95" x2="420" y2="95" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="146" y="85" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <text x="414" y="85" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <line x1="266" y1="81" x2="236" y2="32" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="236" cy="32" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="236" y="23" text-anchor="middle" style="fill: var(--ink);">voto</text>
+      <line x1="294" y1="81" x2="324" y2="32" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="324" cy="32" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="324" y="23" text-anchor="middle" style="fill: var(--ink);">data</text>
+      <line x1="80" y1="115" x2="80" y2="138" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="80" cy="138" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="80" y="155" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">matricola</text>
+    </svg>
+    <figcaption>Voto e data sono attaccati al rombo, non ai rettangoli.</figcaption>
+  </figure>
+
+  <h3>Direzione ed entità forti e deboli</h3>
+  <p>Nelle relazioni <strong>uno a molti (1:N)</strong> si parla di <strong>entità padre</strong> (lato 1) ed <strong>entità figlio</strong> (lato N).</p>
+  <div class="callout def"><span class="callout-title">Entità debole (weak entity)</span>Un'<strong>entità debole</strong> è un'entità la cui <strong>esistenza dipende interamente</strong> da un'altra entità, il padre. Senza il padre le sue istanze non hanno significato.</div>
+  <p>Esempio di esistenza obbligatoria: FATTURA — contiene — RIGA_FATTURA. La <strong>riga</strong> della fattura non può esistere senza la <strong>fattura</strong> a cui è collegata: se cancelli la fattura, le sue righe non hanno più senso.</p>
+  <p class="hand">Le slide chiamano il lato 1 "entità forte" e il lato N "entità debole". Attenzione però: non ogni figlio è debole. In SCUOLA — STUDENTE lo studente è il lato N, ma esiste anche da solo (cambia scuola, ha la sua matricola). È debole solo se, senza il padre, non può esistere né essere identificato, come la riga della fattura (la "riga 3" ha senso solo dentro la sua fattura).</p>
+
+  <!-- ============================================================= -->
+  <h2>La generalizzazione</h2>
+  <p>La <strong>generalizzazione</strong> modella relazioni <strong>gerarchiche</strong>: lega un'entità padre, la <strong>superclasse</strong>, a una o più entità figlie, le <strong>sottoclassi</strong>. Le sottoclassi <strong>ereditano</strong> automaticamente tutti gli attributi e le relazioni della superclasse, aggiungendone di specifici.</p>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 560 190" role="img" aria-label="Generalizzazione: PERSONA è la superclasse; LAVORATORE, DISOCCUPATO e STUDENTE sono le sottoclassi, collegate con una freccia verso PERSONA" style="width: 100%; max-width: 560px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="215.0" y="20.0" width="130" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="280" y="44.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">PERSONA</text>
+      <line x1="280" y1="120" x2="280" y2="62" marker-end="url(#er-freccia)" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="90" y1="120" x2="470" y2="120" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="90" y1="120" x2="90" y2="140" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <rect x="25.0" y="140.0" width="130" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="90" y="164.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">LAVORATORE</text>
+      <line x1="280" y1="120" x2="280" y2="140" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <rect x="215.0" y="140.0" width="130" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="280" y="164.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">DISOCCUPATO</text>
+      <line x1="470" y1="120" x2="470" y2="140" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <rect x="405.0" y="140.0" width="130" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="470" y="164.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">STUDENTE</text>
+      <line x1="345" y1="30" x2="395" y2="18" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="395" cy="18" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="404" y="22" text-anchor="start" style="fill: var(--ink);">nome</text>
+      <line x1="345" y1="50" x2="395" y2="62" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="395" cy="62" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="404" y="66" text-anchor="start" style="fill: var(--ink);">cognome</text>
+      <line x1="215" y1="40" x2="165" y2="40" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="165" cy="40" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="156" y="44" text-anchor="end" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">CF</text>
+    </svg>
+    <figcaption>PERSONA è la superclasse; ogni sottoclasse eredita CF, nome e cognome.</figcaption>
+  </figure>
+  <p class="hand">È la stessa idea dell'ereditarietà in Java: <code>class Studente extends Persona</code>.</p>
+
+  <h3>I 4 vincoli di struttura</h3>
+  <div class="compare">
+    <div>
+      <h4>Totale</h4>
+      <p>Ogni istanza della superclasse appartiene ad <strong>almeno una</strong> sottoclasse. Es. Persona = Minorenne o Maggiorenne.</p>
+    </div>
+    <div>
+      <h4>Parziale</h4>
+      <p>Esistono istanze della superclasse che <strong>non appartengono a nessuna</strong> sottoclasse. Es. Persona = Lavoratore o Disoccupato (un pensionato non è nessuno dei due).</p>
+    </div>
+    <div>
+      <h4>Esclusiva</h4>
+      <p>Un'istanza appartiene <strong>al massimo a una sola</strong> sottoclasse (sottoinsiemi disgiunti, senza oggetti in comune).</p>
+    </div>
+    <div>
+      <h4>Sovrapposta</h4>
+      <p>Un'istanza può appartenere <strong>contemporaneamente a più</strong> sottoclassi. Es. Lavoratore e Studente.</p>
+    </div>
+  </div>
+  <p>Combinando i due criteri si ottengono quattro casi:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Totale</th><th>Parziale</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Esclusiva</strong></td><td>Persona → <strong>Minorenne</strong>, <strong>Maggiorenne</strong>: ognuno è esattamente una delle due cose.</td><td>Persona → <strong>Lavoratore</strong>, <strong>Disoccupato</strong>: nessuno è tutte e due, ma c'è chi non è nessuna (uno studente).</td></tr>
+        <tr><td><strong>Sovrapposta</strong></td><td>Persona → <strong>Genitore</strong>, <strong>Figlio</strong>: tutti sono figli di qualcuno, e molti sono anche genitori.</td><td>Persona → <strong>Studente</strong>, <strong>Musicista</strong>: si può essere tutti e due, uno solo o nessuno.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Caso di studio: la videoteca</h2>
+  <h3>1. I requisiti del cliente</h3>
+  <blockquote>«Si vuole progettare un database per una videoteca: ogni <strong>film</strong> è classificato in un <strong>genere</strong> (es. Azione, Commedia). In un film recitano più <strong>attori</strong> e ciascun attore recita in più film. È necessario memorizzare i <strong>ruoli</strong> interpretati dagli attori nei vari film.»</blockquote>
+  <h3>2. Entità e chiavi</h3>
+  <ul>
+    <li><strong>FILM</strong> (<u>Cod_Film</u>, Titolo, Anno)</li>
+    <li><strong>GENERE</strong> (<u>Cod_Genere</u>, Nome_Genere)</li>
+    <li><strong>ATTORE</strong> (<u>Cod_Attore</u>, Nome, Cognome, Data_Nascita)</li>
+  </ul>
+  <h3>3. Relazioni e schema finale</h3>
+  <ul>
+    <li><strong>APPARTIENE</strong>: FILM (1,1) — GENERE (0,n). Ogni film ha un genere; un genere ha molti film. Tipo <strong>1:N</strong>.</li>
+    <li><strong>RECITA_IN</strong>: ATTORE (1,n) — FILM (1,n), con l'attributo di relazione <strong>Personaggio_Interpretato</strong>. Tipo <strong>N:M</strong>.</li>
+  </ul>
+  <figure style="margin: 1.2em 0;">
+    <svg viewBox="0 0 680 330" role="img" aria-label="Schema E-R della videoteca: FILM (1,1) appartiene (0,n) GENERE; ATTORE (1,n) recita_in (1,n) FILM con l'attributo personaggio sulla relazione" style="width: 100%; max-width: 680px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="280.0" y="70.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="340" y="94.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">FILM</text>
+      <polygon points="44,90 110,62 176,90 110,118" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="110" y="94.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">appartiene</text>
+      <rect x="50.0" y="230.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="110" y="254.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">GENERE</text>
+      <polygon points="278,250 340,222 402,250 340,278" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="340" y="254.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">recita_in</text>
+      <rect x="510.0" y="230.0" width="120" height="40" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="570" y="254.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">ATTORE</text>
+      <line x1="280" y1="90" x2="176" y2="90" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="110" y1="118" x2="110" y2="230" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="274" y="80" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(1,1)</text>
+      <text x="118" y="222" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <line x1="340" y1="110" x2="340" y2="222" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="402" y1="250" x2="510" y2="250" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="348" y="128" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(1,n)</text>
+      <text x="504" y="240" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(1,n)</text>
+      <line x1="370" y1="70" x2="400" y2="30" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="400" cy="30" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="409" y="34" text-anchor="start" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">cod_film</text>
+      <line x1="390" y1="80" x2="450" y2="60" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="450" cy="60" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="459" y="64" text-anchor="start" style="fill: var(--ink);">titolo</text>
+      <line x1="390" y1="100" x2="450" y2="110" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="450" cy="110" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="459" y="114" text-anchor="start" style="fill: var(--ink);">anno</text>
+      <line x1="80" y1="270" x2="60" y2="298" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="60" cy="298" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="60" y="315" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">cod_genere</text>
+      <line x1="140" y1="270" x2="165" y2="298" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="165" cy="298" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="165" y="315" text-anchor="middle" style="fill: var(--ink);">nome_genere</text>
+      <line x1="340" y1="278" x2="340" y2="302" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="340" cy="302" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="340" y="319" text-anchor="middle" style="fill: var(--ink);">personaggio</text>
+      <line x1="550" y1="230" x2="530" y2="198" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="530" cy="198" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="530" y="189" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">cod_attore</text>
+      <line x1="590" y1="230" x2="610" y2="198" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="610" cy="198" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="610" y="189" text-anchor="middle" style="fill: var(--ink);">nome</text>
+      <line x1="600" y1="270" x2="620" y2="298" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="620" cy="298" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="620" y="315" text-anchor="middle" style="fill: var(--ink);">cognome</text>
+      <line x1="540" y1="270" x2="520" y2="298" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="520" cy="298" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="520" y="315" text-anchor="middle" style="fill: var(--ink);">data_nascita</text>
+    </svg>
+    <figcaption>Il personaggio è un attributo della relazione: lo stesso attore fa personaggi diversi in film diversi.</figcaption>
+  </figure>
+  <div class="callout tip"><span class="callout-title">Come si arriva allo schema</span>Nel testo i <strong>nomi</strong> importanti (film, genere, attore) diventano <strong>entità</strong>, i <strong>verbi</strong> (è classificato, recitano) diventano <strong>relazioni</strong>, i <strong>dettagli</strong> (titolo, anno, nome) diventano <strong>attributi</strong>. Quello che dipende da due entità insieme (il ruolo di un attore <em>in un film</em>) va sulla relazione.</div>
+
+  <!-- ============================================================= -->
+  <h2>I 5 errori più comuni</h2>
+  <p>La checklist per la verifica e per l'Esame di Stato:</p>
+  <ol class="stack">
+    <li><b>1</b><strong>Confondere un attributo con un'entità</strong><span>Se un concetto ha soltanto un valore descrittivo (es. "Città") è un <strong>attributo</strong>. Se servono altri dettagli (CAP, Regione) diventa un'<strong>entità</strong> autonoma.</span></li>
+    <li><b>2</b><strong>Dimenticare le chiavi primarie</strong><span>Ogni entità <strong>deve</strong> avere una chiave primaria ben identificata. Senza PK le entità non si traducono in una tabella relazionale valida.</span></li>
+    <li><b>3</b><strong>Invertire le cardinalità</strong><span>Leggere <strong>sempre</strong> la relazione nei due versi: «un A quanti B ha?» e «un B a quanti A appartiene?». Controllare bene le coppie (min, max).</span></li>
+    <li><b>4</b><strong>Lasciare relazioni N:M nello schema logico</strong><span>Le N:M sono valide nello schema E-R concettuale, ma <strong>vanno ristrutturate</strong> (con la tabella ponte) prima di passare al modello relazionale.</span></li>
+    <li><b>5</b><strong>Nomi ambigui o verbi mancanti</strong><span>Entità con nomi al <strong>singolare</strong> (STUDENTE, non STUDENTI) e relazioni con <strong>verbi</strong> d'azione chiari (FREQUENTA, POSSIEDE).</span></li>
+  </ol>
+
+  <!-- ============================================================= -->
+  <h2>Mappa riassuntiva</h2>
+  <ul>
+    <li>Fasi: <strong>requisiti → concettuale (E-R) → logica (tabelle) → fisica (DBMS) → applicazioni e test</strong>.</li>
+    <li>Modello E-R (Chen, 1976): <strong>entità</strong> (rettangolo), <strong>relazioni</strong> (rombo), <strong>attributi</strong>; notazione classica o UML.</li>
+    <li>Attributi: semplici/composti, obbligatori/opzionali, monovalenti/multipli. <strong>Chiave primaria</strong>: unica e mai nulla.</li>
+    <li>Grado delle relazioni: <strong>binaria</strong> (2), <strong>ternaria</strong> (3), <strong>ricorsiva</strong> (1).</li>
+    <li>Cardinalità: <strong>1:1</strong>, <strong>1:N</strong> (FK nel lato N), <strong>N:M</strong> (tabella ponte); coppie <strong>(0,1) (1,1) (0,n) (1,n)</strong>.</li>
+    <li>Attributi di relazione; <strong>entità debole</strong> che dipende dal padre; <strong>generalizzazione</strong> totale/parziale, esclusiva/sovrapposta.</li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2>Esercizi</h2>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>In che fase siamo? <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>a) Scrivi <code>CREATE TABLE</code> in MySQL. b) Intervisti la segreteria della scuola. c) Disegni rettangoli e rombi. d) Decidi quali colonne sono chiavi esterne. e) Provi le query con dati finti.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>Progettazione fisica</strong> (4). b) <strong>Analisi dei requisiti</strong> (1). c) <strong>Progettazione concettuale</strong> (2). d) <strong>Progettazione logica</strong> (3). e) <strong>Applicazioni e test</strong> (5).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Classifica gli attributi <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body"><p>Per l'entità CLIENTE: Codice_Cliente, Indirizzo (via, civico, CAP, città), Email (non tutti ce l'hanno), Telefoni (uno o più). Di' per ognuno se è semplice o composto, obbligatorio o opzionale, monovalente o multiplo, e scegli la chiave primaria.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>Codice_Cliente</strong>: semplice, obbligatorio, monovalente: è la <strong>chiave primaria</strong>.</li>
+        <li><strong>Indirizzo</strong>: <strong>composto</strong> (via, civico, CAP, città), obbligatorio, monovalente.</li>
+        <li><strong>Email</strong>: semplice, <strong>opzionale</strong>, monovalente.</li>
+        <li><strong>Telefoni</strong>: semplice, obbligatorio (almeno uno), <strong>multiplo</strong>.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>1:1, 1:N o N:M? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <ol>
+        <li>CLASSE — ha — AULA (ogni classe ha la sua aula, ogni aula è di una classe)</li>
+        <li>SQUADRA — tessera — GIOCATORE (in un campionato, un giocatore gioca per una sola squadra)</li>
+        <li>LIBRO — scritto da — AUTORE</li>
+        <li>CLIENTE — effettua — ORDINE</li>
+        <li>STUDENTE — frequenta — CORSO (corsi pomeridiani, ognuno può sceglierne quanti vuole)</li>
+      </ol>
+    </div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>1:1</strong>: una classe → una aula; un'aula → una classe.</li>
+        <li><strong>1:N</strong>: una squadra → molti giocatori; un giocatore → una squadra.</li>
+        <li><strong>N:M</strong>: un libro può avere più autori, un autore scrive più libri.</li>
+        <li><strong>1:N</strong>: un cliente fa molti ordini, un ordine è di un solo cliente.</li>
+        <li><strong>N:M</strong>: uno studente → molti corsi; un corso → molti studenti.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Leggi le coppie (min, max) <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>DOCENTE (1,n) — insegna — (1,3) MATERIA. Scrivi le due frasi che descrivono la relazione. Che cosa cambierebbe se la coppia vicino a DOCENTE fosse (0,n)?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>«Ogni <strong>docente</strong> insegna <strong>almeno una</strong> materia, anche più di una» (1,n). «Ogni <strong>materia</strong> è insegnata da <strong>almeno 1 e al massimo 3</strong> docenti» (1,3). I massimi sono n e 3 (cioè "più di uno") quindi è una <strong>N:M</strong>.</p>
+      <p>Con (0,n) la partecipazione del docente diventerebbe <strong>opzionale</strong>: potrebbe esserci un docente che (per ora) non insegna nessuna materia, per esempio un supplente appena registrato.</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Dove va l'attributo? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Schema: CLIENTE — noleggia — AUTO (N:M: un cliente noleggia molte auto nel tempo, un'auto è noleggiata da molti clienti). Dove metti: Targa, Data_inizio, Data_fine, Patente, Prezzo_giornaliero dell'auto, Km_percorsi nel noleggio?</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ul>
+        <li><strong>Targa</strong>, <strong>Prezzo_giornaliero</strong> → AUTO (sono dell'auto, qualunque sia il cliente).</li>
+        <li><strong>Patente</strong> → CLIENTE.</li>
+        <li><strong>Data_inizio</strong>, <strong>Data_fine</strong>, <strong>Km_percorsi</strong> → relazione <strong>NOLEGGIA</strong>: esistono solo per <em>quel</em> cliente con <em>quell'</em>auto in quel noleggio.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>Che generalizzazione è? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>Classifica (totale/parziale, esclusiva/sovrapposta): a) VEICOLO → AUTO, MOTO, CAMION, in un'officina che ripara anche biciclette; b) DIPENDENTE → A_TEMPO_PIENO, PART_TIME; c) UTENTE → AUTORE, COMMENTATORE di un blog, dove alcuni utenti leggono soltanto.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <p>a) <strong>Parziale</strong> (le biciclette non sono in nessuna sottoclasse) ed <strong>esclusiva</strong> (un veicolo non è auto e moto insieme).<br>
+      b) <strong>Totale</strong> (ogni dipendente è dell'uno o dell'altro tipo) ed <strong>esclusiva</strong>.<br>
+      c) <strong>Parziale</strong> (chi legge soltanto non è in nessuna) e <strong>sovrapposta</strong> (un autore può anche commentare).</p>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Trova gli errori <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Un compagno ha consegnato questo schema per una biblioteca: entità <strong>LIBRI</strong> (Titolo, Autore, Anno); entità <strong>ANNO</strong> (Valore); relazione <strong>LIBRI</strong> — <em>(senza nome)</em> — <strong>UTENTI</strong> (Nome, Cognome). Elenca gli errori secondo la checklist e correggi lo schema.</p></div>
+    <details class="soluzione"><summary>Soluzione</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Nomi al plurale</strong> (errore 5): LIBRO e UTENTE.</li>
+        <li><strong>Mancano le chiavi primarie</strong> (errore 2): Titolo non basta (ci sono libri con lo stesso titolo), Nome e Cognome nemmeno. Aggiungo <u>Cod_Libro</u> (o ISBN) e <u>Cod_Utente</u> (numero di tessera).</li>
+        <li><strong>ANNO non è un'entità</strong> (errore 1): ha un solo valore descrittivo, va lasciato come attributo di LIBRO.</li>
+        <li><strong>Relazione senza verbo</strong> (errore 5): la chiamo PRESTITO o PRENDE_IN_PRESTITO, con gli attributi di relazione Data_prestito e Data_restituzione.</li>
+        <li>Cardinalità: un utente prende in prestito (0,n) libri; un libro, nel tempo, è prestato a (0,n) utenti: è una <strong>N:M</strong>, che nello schema logico diventerà una tabella ponte (errore 4).</li>
+      </ol>
+      <p>Schema corretto: <strong>LIBRO</strong> (<u>Cod_Libro</u>, Titolo, Autore, Anno) (0,n) — <strong>prestito</strong> (Data_prestito, Data_restituzione) — (0,n) <strong>UTENTE</strong> (<u>Cod_Utente</u>, Nome, Cognome).</p>
+    </div></details>
+  </div>
+
+  <div class="callout info"><span class="callout-title">Esercitazione</span>Lo schema E-R completo di un'applicazione per le ricette di cucina è in <a href="classroom-ricette-er.html">Classroom: le ricette di cucina (E-R)</a>.</div>
+
+  <h2>Fonti</h2>
+  <p>Slide "Progettazione Concettuale e Diagrammi E-R", dispense a cura del prof. Daniele Gravina (A.S. 2026-2027). I diagrammi ridisegnati, la nota sulle entità deboli, i paragoni, gli esempi della tabella della generalizzazione spiegati a parole, gli esercizi e le soluzioni sono aggiunte per aiutare lo studio.</p>
+</main>
+</body>
+</html>

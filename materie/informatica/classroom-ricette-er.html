@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="it" data-subject="informatica">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Classroom: le ricette di cucina (E-R) · Scuola</title>
+  <meta name="description" content="Informatica, database: esercitazione 1 di Classroom sul modello E-R. Applicazione per le ricette di cucina: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE con cardinalità (1,1) e (0,n), tipo 1:N, diagramma E-R finale da disegnare su designer.polito.it e domande su ingredienti, N:M e schema logico.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <link rel="stylesheet" href="../../assets/css/style.css?v=18">
+  <script src="../../assets/js/site.js?v=18"></script>
+</head>
+<body>
+<main id="content">
+  <h1>Classroom: le ricette di cucina (E-R)</h1>
+  <p class="lead">L'esercitazione 1 sul modello E-R: progettare lo schema concettuale di un'applicazione per le <strong>ricette di cucina</strong>. Qui la svolgiamo <strong>a tappe</strong>, seguendo i tre obiettivi della consegna, e poi rispondiamo a qualche domanda sui punti in cui si sbaglia più spesso. La teoria è nel capitolo <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
+
+  <div class="callout info"><span class="callout-title">Come usare questa pagina</span>Leggi la <strong>consegna</strong>, poi affronta le tappe nell'ordine: prova a rispondere da solo prima di aprire la <strong>risposta spiegata</strong>. La tappa 4 è lo schema E-R completo, quello da ridisegnare su designer.polito.it.</div>
+  <div class="exercise-tools"><button class="btn btn-ghost" type="button" data-toggle-solutions>Mostra tutte le soluzioni</button></div>
+
+  <!-- ============================================================= -->
+  <h2>La consegna</h2>
+  <p>Il testo dell'esercitazione, così come è stato assegnato:</p>
+  <blockquote>
+    <p>Un'azienda vuole realizzare un'applicazione per la gestione delle ricette di cucina. Ogni ricetta può appartenere ad una categoria (come "Dolce", "Primo", "Antipasto") e deve contenere varie informazioni utili per la preparazione.</p>
+    <p><strong>Ogni ricetta ha:</strong></p>
+    <ul>
+      <li>un codice identificativo (ID)</li>
+      <li>un nome</li>
+      <li>una descrizione breve</li>
+      <li>una lista di ingredienti (testo unico)</li>
+      <li>un tempo di preparazione (in minuti)</li>
+      <li>un livello di difficoltà (Facile, Media, Difficile)</li>
+    </ul>
+    <p>Ogni ricetta appartiene a una sola categoria.</p>
+    <p><strong>Ogni categoria ha:</strong></p>
+    <ul>
+      <li>un nome categoria</li>
+      <li>una descrizione</li>
+    </ul>
+    <p>Ogni categoria può contenere più ricette.</p>
+    <p>Obiettivi</p>
+    <ul>
+      <li>Identificare entità e attributi.</li>
+      <li>Definire relazioni e cardinalità.</li>
+      <li>Rappresentare il tutto in diagramma E-R (usando designer.polito.it).</li>
+    </ul>
+  </blockquote>
+
+  <!-- ============================================================= -->
+  <h2>Svolgimento a tappe</h2>
+  <div class="callout def"><span class="callout-title">Ripasso lampo</span>Nel testo i <strong>nomi</strong> che hanno tante informazioni diventano <strong>entità</strong>, i <strong>dettagli</strong> diventano <strong>attributi</strong>, i <strong>verbi</strong> che legano due entità diventano <strong>relazioni</strong>. Ogni entità ha una <strong>chiave primaria</strong>. La cardinalità si legge <strong>nei due versi</strong>. Teoria: <a href="progettazione-concettuale-er.html#entita-attributi-e-chiave-primaria">Entità, attributi e chiave primaria</a>, <a href="progettazione-concettuale-er.html#la-notazione-min-max">La notazione (min, max)</a>.</div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">01</span>Tappa 1 · Le entità <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Rileggi il testo e trova le <strong>entità</strong>. Per ognuna scrivi perché è un'entità e non un semplice attributo. "Dolce", "Primo" e "Antipasto" sono entità?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p>Le entità sono due: <strong>RICETTA</strong> e <strong>CATEGORIA</strong>.</p>
+      <h4>Ragionamento</h4>
+      <ol>
+        <li><strong>RICETTA</strong>: è l'oggetto principale dell'applicazione, ha esistenza autonoma e un elenco di informazioni proprie (ID, nome, tempo…).</li>
+        <li><strong>CATEGORIA</strong>: potrebbe sembrare un semplice attributo della ricetta, ma il testo le dà <strong>informazioni proprie</strong> (un nome <em>e una descrizione</em>) e dice che "può contenere più ricette". Un concetto con più dettagli e condiviso da tante ricette è un'<strong>entità</strong> (errore 1 della checklist: se servono altri dettagli, diventa entità).</li>
+        <li>"Dolce", "Primo", "Antipasto" <strong>non</strong> sono entità: sono <strong>istanze</strong> (esempi) dell'entità CATEGORIA, cioè le righe che ci saranno dentro.</li>
+        <li>I nomi sono al <strong>singolare</strong>: RICETTA, non RICETTE (errore 5).</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">02</span>Tappa 2 · Gli attributi <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Elenca gli attributi di ogni entità. Per ognuno indica che tipo di dato contiene e se è semplice o composto, obbligatorio o opzionale, monovalente o multiplo.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>RICETTA</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Attributo</th><th>Che cosa contiene</th><th>Classificazione</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ID</strong></td><td>Numero intero (codice identificativo)</td><td>Semplice, obbligatorio, monovalente</td></tr>
+            <tr><td><strong>nome</strong></td><td>Testo breve (es. "Tiramisù")</td><td>Semplice, obbligatorio, monovalente</td></tr>
+            <tr><td><strong>descrizione</strong></td><td>Testo breve</td><td>Semplice, monovalente</td></tr>
+            <tr><td><strong>ingredienti</strong></td><td>Testo lungo, un unico campo</td><td>Semplice, obbligatorio, monovalente</td></tr>
+            <tr><td><strong>tempo_prep</strong></td><td>Numero intero di minuti</td><td>Semplice, obbligatorio, monovalente</td></tr>
+            <tr><td><strong>difficolta</strong></td><td>Uno solo tra Facile, Media, Difficile</td><td>Semplice, obbligatorio, monovalente</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>CATEGORIA</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Attributo</th><th>Che cosa contiene</th><th>Classificazione</th></tr></thead>
+          <tbody>
+            <tr><td><strong>nome_categoria</strong></td><td>Testo breve (es. "Dolce")</td><td>Semplice, obbligatorio, monovalente</td></tr>
+            <tr><td><strong>descrizione</strong></td><td>Testo</td><td>Semplice, monovalente</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Spiegazione</h4>
+      <ol>
+        <li><strong>ingredienti</strong> sarebbe per natura una lista (quindi un attributo <em>multiplo</em>), ma la consegna dice chiaramente <strong>"testo unico"</strong>: tutti gli ingredienti scritti in un solo campo, per esempio <code>"500 g mascarpone, 4 uova, 300 g savoiardi, caffè, cacao"</code>. Quindi è <strong>semplice e monovalente</strong>.</li>
+        <li><strong>difficolta</strong> può assumere solo tre valori: è un attributo con un <strong>dominio</strong> limitato. Nello schema concettuale basta scriverlo; nello schema fisico diventerà per esempio un <code>ENUM('Facile','Media','Difficile')</code>.</li>
+        <li>Il testo dice che ogni ricetta "<strong>deve</strong> contenere" queste informazioni, quindi le consideriamo tutte obbligatorie; solo per le descrizioni si potrebbe decidere che sono opzionali.</li>
+        <li>Nei nomi degli attributi evitiamo spazi e accenti (<code>tempo_prep</code>, <code>difficolta</code>): ci risparmia problemi quando diventeranno colonne di una tabella.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">03</span>Tappa 3 · Le chiavi primarie <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Scegli la chiave primaria di RICETTA e di CATEGORIA. Attenzione: per la categoria il testo non dà nessun codice.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <ul>
+        <li>RICETTA: <strong><u>ID</u></strong>.</li>
+        <li>CATEGORIA: <strong><u>nome_categoria</u></strong>.</li>
+      </ul>
+      <h4>Ragionamento</h4>
+      <ol>
+        <li>Per la ricetta il testo dice già "codice <strong>identificativo</strong> (ID)": è proprio la chiave primaria. Il <strong>nome</strong> non andrebbe bene, perché due ricette diverse possono chiamarsi entrambe "Pasta al pomodoro".</li>
+        <li>Per la categoria non c'è un codice, ma non possono esistere due categorie con lo stesso nome (due "Dolce" non avrebbero senso): il <strong>nome</strong> è <strong>unico e sempre presente</strong>, quindi può fare da chiave primaria.</li>
+        <li>Va bene anche aggiungere un attributo <strong>ID_categoria</strong> e usare quello come chiave: è una scelta comune perché un numero è più comodo da usare come chiave esterna e il nome si può cambiare senza problemi. Se lo fai, scrivilo nelle tue ipotesi. L'importante è che <strong>ogni entità abbia la sua chiave</strong> (errore 2 della checklist).</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">04</span>Tappa 4 · Relazione, cardinalità e diagramma E-R <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Trova la relazione tra le due entità, dalle un nome con un verbo, scrivi le coppie (min, max) sui due lati e il tipo (1:1, 1:N o N:M). Poi disegna il diagramma E-R completo.</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <h4>Risposta</h4>
+      <p>RICETTA <strong>(1,1)</strong> — <strong>APPARTIENE</strong> — <strong>(0,n)</strong> CATEGORIA. Tipo <strong>1:N</strong> (una categoria, molte ricette).</p>
+      <figure style="margin: 1.2em 0;">
+        <svg viewBox="0 0 680 255" role="img" aria-label="Schema E-R delle ricette: RICETTA (1,1) appartiene (0,n) CATEGORIA. RICETTA ha ID (chiave), nome, descrizione, ingredienti, tempo_prep e difficolta; CATEGORIA ha nome_categoria (chiave) e descrizione" style="width: 100%; max-width: 680px; height: auto; display: block; font: 12px var(--font-body);">
+      <defs><marker id="er-freccia" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink-soft);"/></marker></defs>
+      <rect x="170.0" y="128.0" width="130" height="44" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="235" y="154.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">RICETTA</text>
+      <polygon points="338,150 400,120 462,150 400,180" style="fill: var(--postit); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="400" y="154.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700; font-size: 11.5px;">appartiene</text>
+      <rect x="500.0" y="128.0" width="130" height="44" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.6;"/>
+      <text x="565" y="154.5" text-anchor="middle" style="fill: var(--ink); font-weight: 700;">CATEGORIA</text>
+      <line x1="300" y1="150" x2="338" y2="150" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <line x1="462" y1="150" x2="500" y2="150" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <text x="306" y="140" text-anchor="start" style="fill: var(--pen); font-weight: 700;">(1,1)</text>
+      <text x="494" y="140" text-anchor="end" style="fill: var(--pen); font-weight: 700;">(0,n)</text>
+      <line x1="170" y1="150" x2="125" y2="70" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="70" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="74" text-anchor="end" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">ID</text>
+      <line x1="170" y1="150" x2="125" y2="102" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="102" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="106" text-anchor="end" style="fill: var(--ink);">nome</text>
+      <line x1="170" y1="150" x2="125" y2="134" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="134" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="138" text-anchor="end" style="fill: var(--ink);">descrizione</text>
+      <line x1="170" y1="150" x2="125" y2="166" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="166" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="170" text-anchor="end" style="fill: var(--ink);">ingredienti</text>
+      <line x1="170" y1="150" x2="125" y2="198" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="198" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="202" text-anchor="end" style="fill: var(--ink);">tempo_prep</text>
+      <line x1="170" y1="150" x2="125" y2="230" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="125" cy="230" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="116" y="234" text-anchor="end" style="fill: var(--ink);">difficolta</text>
+      <line x1="565" y1="128" x2="565" y2="88" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="565" cy="88" r="4.5" style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="565" y="79" text-anchor="middle" style="fill: var(--ink); text-decoration: underline; font-weight: 700;">nome_categoria</text>
+      <line x1="565" y1="172" x2="565" y2="212" style="stroke: var(--ink-soft); stroke-width: 1.4;"/>
+      <circle cx="565" cy="212" r="4.5" style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.4;"/>
+      <text x="565" y="229" text-anchor="middle" style="fill: var(--ink);">descrizione</text>
+    </svg>
+        <figcaption>Lo schema E-R finale. I pallini pieni con il nome sottolineato sono le chiavi primarie.</figcaption>
+      </figure>
+      <h4>Ragionamento: le due domande</h4>
+      <ol>
+        <li><strong>Una ricetta a quante categorie appartiene?</strong> «Ogni ricetta appartiene a <strong>una sola</strong> categoria»: massimo <strong>1</strong>. Minimo: diciamo <strong>1</strong>, perché ogni ricetta deve essere classificata. Coppia <strong>(1,1)</strong> vicino a RICETTA.</li>
+        <li><strong>Una categoria quante ricette contiene?</strong> «Ogni categoria può contenere <strong>più</strong> ricette»: massimo <strong>n</strong>. Minimo <strong>0</strong>: "può" lascia aperto il caso di una categoria appena creata e ancora vuota. Coppia <strong>(0,n)</strong> vicino a CATEGORIA.</li>
+        <li>Massimi 1 e n: è una relazione <strong>uno a molti (1:N)</strong>. CATEGORIA è il lato <strong>1</strong> (padre), RICETTA il lato <strong>N</strong> (figlio).</li>
+        <li>Il nome è un <strong>verbo</strong> che si legge come frase: «la ricetta <strong>appartiene</strong> alla categoria». Vanno bene anche CONTIENE (letto dall'altro lato) o CLASSIFICATA_IN.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Il testo è ambiguo su un punto</span>All'inizio la consegna dice che una ricetta "<strong>può</strong> appartenere ad una categoria", più sotto che "appartiene a una sola categoria". Abbiamo scelto <strong>(1,1)</strong>: ogni ricetta è sempre in una categoria. Se invece si vuole permettere una ricetta non ancora classificata, la coppia diventa <strong>(0,1)</strong>; il tipo resta 1:N. In una verifica scrivi sempre l'ipotesi che hai fatto.</div>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">05</span>Tappa 5 · Disegnarlo su designer.polito.it <span class="badge badge-facile">facile</span></div>
+    <div class="esercizio-body">
+      <p><strong>Consegna.</strong> Ridisegna lo schema della tappa 4 con lo strumento online indicato dal professore. Che cosa devi inserire, e in che ordine conviene farlo?</p>
+    </div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p>Qualunque strumento E-R si usi, l'ordine più comodo è lo stesso:</p>
+      <ol>
+        <li>Crea le due <strong>entità</strong> RICETTA e CATEGORIA, lasciando spazio tra loro.</li>
+        <li>Aggiungi gli <strong>attributi</strong> di ognuna (6 per la ricetta, 2 per la categoria) e segna come <strong>identificatore</strong> (chiave primaria) <code>ID</code> e <code>nome_categoria</code>.</li>
+        <li>Crea la <strong>relazione</strong> APPARTIENE e collegala alle due entità.</li>
+        <li>Imposta le <strong>cardinalità</strong> su ogni collegamento: <strong>(1,1)</strong> sul lato di RICETTA, <strong>(0,n)</strong> sul lato di CATEGORIA.</li>
+        <li>Controlla con la checklist: nomi al singolare, ogni entità con la sua chiave, relazione con un verbo, cardinalità lette nei due versi. Poi salva o esporta l'immagine da consegnare.</li>
+      </ol>
+      <p class="hand">I nomi dei pulsanti dipendono dallo strumento: se non trovi "chiave primaria", cerca "identificatore" o "identifier". In molti strumenti la "n" delle cardinalità si scrive <code>N</code> oppure <code>*</code>.</p>
+    </div></details>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>Domande sull'esercitazione</h2>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">06</span>E se una ricetta fosse in più categorie? <span class="badge badge-medio">medio</span></div>
+    <div class="esercizio-body"><p>L'azienda cambia idea: il tiramisù deve poter stare sia in "Dolce" sia in "Senza cottura". Cosa cambia nello schema?</p></div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li>Rifacciamo la domanda: una ricetta a quante categorie appartiene? Adesso <strong>più di una</strong>. La coppia vicino a RICETTA diventa <strong>(1,n)</strong> (almeno una, anche di più).</li>
+        <li>Il lato di CATEGORIA resta <strong>(0,n)</strong>.</li>
+        <li>Massimi n e n: la relazione diventa <strong>molti a molti (N:M)</strong>. Nello schema E-R va benissimo così; quando si passerà allo schema logico servirà una <strong>tabella ponte</strong> (errore 4 della checklist).</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">07</span>Ingredienti come entità? <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Un compagno ha disegnato un'entità INGREDIENTE. Ha sbagliato? In quale caso invece sarebbe la scelta giusta, e come cambierebbe lo schema se volessimo sapere anche la <strong>quantità</strong> di ogni ingrediente in ogni ricetta?</p></div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <ol>
+        <li><strong>Per questa consegna sì, ha sbagliato</strong>: il testo dice "lista di ingredienti (<strong>testo unico</strong>)", cioè un solo attributo di RICETTA. Trasformarlo in entità è proprio l'errore 1 della checklist al contrario: aggiungere un'entità che il cliente non ha chiesto.</li>
+        <li>Diventerebbe giusta se servissero <strong>altri dettagli</strong> sull'ingrediente (calorie, allergeni, prezzo) o se si volesse <strong>cercare</strong> le ricette per ingrediente («tutte le ricette con le uova»).</li>
+        <li>In quel caso: <strong>INGREDIENTE</strong> (<u>ID_ingrediente</u>, nome, …) e una relazione <strong>CONTIENE</strong> con RICETTA. Una ricetta ha più ingredienti, un ingrediente è in più ricette: <strong>N:M</strong>, RICETTA (1,n) — CONTIENE — (0,n) INGREDIENTE.</li>
+        <li>La <strong>quantità</strong> (es. 4 uova) non è della ricetta (ha più ingredienti) e non è dell'ingrediente (cambia da ricetta a ricetta): è un <strong>attributo della relazione</strong> CONTIENE, come il voto nella relazione ESAME.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <div class="esercizio">
+    <div class="esercizio-head"><span class="esercizio-num">08</span>Uno sguardo alla fase dopo <span class="badge badge-difficile">ragionamento</span></div>
+    <div class="esercizio-body"><p>Senza ancora scrivere SQL: quando lo schema verrà tradotto in tabelle (progettazione logica), quante tabelle ci saranno e in quale finirà la <strong>chiave esterna</strong>? Perché non nell'altra?</p></div>
+    <details class="soluzione"><summary>Risposta spiegata</summary><div class="soluzione-body">
+      <p>Due tabelle, una per entità:</p>
+<pre data-lang="testo"><code>CATEGORIA (nome_categoria, descrizione)
+RICETTA   (ID, nome, descrizione, ingredienti, tempo_prep, difficolta, nome_categoria)
+                                                                      └─ chiave esterna → CATEGORIA</code></pre>
+      <ol>
+        <li>La regola delle relazioni <strong>1:N</strong>: la chiave primaria del lato <strong>1</strong> (CATEGORIA) diventa <strong>chiave esterna</strong> nel lato <strong>N</strong> (RICETTA).</li>
+        <li>Funziona perché ogni ricetta ha <strong>una sola</strong> categoria: basta una colonna con un valore.</li>
+        <li>Al contrario non si può: una categoria ha <strong>molte</strong> ricette, e una colonna "ID_ricetta" in CATEGORIA dovrebbe contenere tanti valori insieme, cosa che una cella di una tabella non può fare.</li>
+        <li>Il minimo <strong>1</strong> di (1,1) dice che quella colonna non può essere vuota (<code>NOT NULL</code>); con (0,1) potrebbe esserlo.</li>
+      </ol>
+    </div></details>
+  </div>
+
+  <h2>Fonti</h2>
+  <p>Esercitazione 1 di Classroom (consegna riportata fedelmente in alto). Sono aggiunte nostre la divisione in tappe, le risposte spiegate, il diagramma E-R disegnato, la scelta di <code>nome_categoria</code> come chiave, l'ipotesi (1,1) sul lato della ricetta e le tre domande finali. Teoria collegata: <a href="progettazione-concettuale-er.html">Progettazione concettuale e diagrammi E-R</a>.</p>
+</main>
+</body>
+</html>

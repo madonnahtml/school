@@ -644,6 +644,80 @@ SITE.riassunti = {
   },
 
   /* ---------------- Informatica ---------------- */
+  "materie/informatica/progettazione-concettuale-er.html": {
+    breve: "Prima delle tabelle si disegna lo schema concettuale con il modello E-R: entità, relazioni con le loro cardinalità e attributi, ognuna con la sua chiave primaria.",
+    sezioni: [
+      {
+        titolo: "Le 5 fasi della progettazione",
+        punti: [
+          "<strong>Analisi dei requisiti</strong> → <strong>progettazione concettuale</strong> (schema E-R, indipendente dal DBMS) → <strong>logica</strong> (tabelle, chiavi) → <strong>fisica</strong> (MySQL, PostgreSQL…) → <strong>applicazioni e test</strong>.",
+        ],
+      },
+      {
+        titolo: "Il modello E-R",
+        punti: [
+          "Proposto da <strong>Peter Chen</strong> nel <strong>1976</strong>: descrive i dati in modo astratto.",
+          "Tre costrutti: <strong>entità</strong> (rettangolo), <strong>relazioni</strong> (rombo), <strong>attributi</strong> (ellissi o pallini).",
+          "Notazione <strong>UML</strong>: rettangolo diviso in nome e attributi, relazione come linea con il verbo, chiave con <code>[PK]</code>.",
+        ],
+      },
+      {
+        titolo: "Entità, attributi e chiave primaria",
+        punti: [
+          "Attributi <strong>semplici/composti</strong>, <strong>obbligatori/opzionali</strong>, <strong>monovalenti/multipli</strong>.",
+          "La <strong>chiave primaria</strong> identifica in modo univoco ogni istanza: mai nulla, mai duplicata.",
+        ],
+      },
+      {
+        titolo: "Le relazioni e il loro grado",
+        punti: [
+          "<strong>Binaria</strong> (2 entità, la più comune), <strong>ternaria</strong> (3 entità), <strong>ricorsiva</strong> (un'entità con se stessa, con ruoli diversi).",
+          "Le relazioni si chiamano con un <strong>verbo</strong>: frequenta, possiede, gestisce.",
+        ],
+      },
+      {
+        titolo: "La cardinalità: 1:1, 1:N, N:M",
+        punti: [
+          "<strong>1:1</strong>: al massimo uno da entrambi i lati. <strong>1:N</strong>: la PK del lato 1 diventa FK nel lato N. <strong>N:M</strong>: serve una tabella ponte.",
+          "Si legge sempre <strong>nei due versi</strong>: «un A a quanti B?» e «un B a quanti A?».",
+        ],
+      },
+      {
+        titolo: "La notazione (min, max)",
+        punti: [
+          "<strong>min = 0</strong> opzionale, <strong>min = 1</strong> obbligatoria; <strong>max = 1</strong> singola, <strong>max = n</strong> multipla.",
+          "Coppie tipiche: <strong>(0,1) (1,1) (0,n) (1,n)</strong>. Es. PERSONA (0,n) possiede (1,1) AUTOMOBILE.",
+        ],
+      },
+      {
+        titolo: "Attributi delle relazioni ed entità deboli",
+        punti: [
+          "Un attributo che nasce dall'associazione va sulla <strong>relazione</strong>: il voto sta su ESAME, non su STUDENTE né su MATERIA.",
+          "Nelle 1:N: entità <strong>padre</strong> (lato 1) e <strong>figlio</strong> (lato N). Un'<strong>entità debole</strong> non esiste senza il padre (RIGA_FATTURA senza FATTURA).",
+        ],
+      },
+      {
+        titolo: "La generalizzazione",
+        punti: [
+          "Lega una <strong>superclasse</strong> alle <strong>sottoclassi</strong>, che ne ereditano attributi e relazioni.",
+          "<strong>Totale</strong> (ognuno è in almeno una sottoclasse) o <strong>parziale</strong>; <strong>esclusiva</strong> (al massimo in una) o <strong>sovrapposta</strong> (anche in più).",
+        ],
+      },
+      {
+        titolo: "Caso di studio: la videoteca",
+        punti: [
+          "FILM (1,1) <strong>appartiene</strong> (0,n) GENERE: 1:N.",
+          "ATTORE (1,n) <strong>recita_in</strong> (1,n) FILM: N:M, con l'attributo di relazione Personaggio_Interpretato.",
+        ],
+      },
+      {
+        titolo: "I 5 errori più comuni",
+        punti: [
+          "Confondere attributo ed entità; dimenticare le chiavi primarie; invertire le cardinalità; lasciare le N:M nello schema logico; nomi al plurale o relazioni senza verbo.",
+        ],
+      },
+    ],
+  },
   "materie/informatica/java-array-wrapper-metodi-overload.html": {
     breve: "Array per tenere tanti valori insieme, wrapper per trattare i numeri come oggetti, metodi per dividere il programma, overload per riusare lo stesso nome.",
     sezioni: [
