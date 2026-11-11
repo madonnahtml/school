@@ -19,7 +19,7 @@
   var SITE = {
     title: "Scuola",
     tagline: "Quaderno di appunti, esercizi e riassunti",
-    version: "18",
+    version: "19",
 
     // Funzioni attivabili. ripasso: pagina Ripasso con flashcard e quiz
     // (false = nascosta dal menu e dalla home; le pagine non hanno ancora flashcard o quiz).
@@ -68,7 +68,8 @@
           { title: "Classroom: eccezioni e gestione dei file", path: "materie/informatica/classroom-eccezioni-file.html", type: "classroom", of: "materie/informatica/java-eccezioni.html", n: 11, desc: "RegistroStudenti a menu: try-catch, finally, NumberFormatException, throw, throws, più catch, Path e Files (writeString con APPEND, readAllLines, exists, deleteIfExists)." },
           { title: "Classroom: ArrayList, Vector e LinkedList", path: "materie/informatica/classroom-liste.html", type: "classroom", of: "materie/informatica/java-collections-liste.html", n: 11, desc: "GestioneStudenti, confronto ArrayList e Vector, coda con LinkedList, registro con la classe Studente, menu con Scanner e switch, test delle prestazioni con nanoTime." },
           { title: "Classroom: HashMap", path: "materie/informatica/classroom-hashmap.html", type: "classroom", of: "materie/informatica/java-hashmap.html", n: 4, desc: "Rubrica, inventario, registro voti e biblioteca a menu con put, get, containsKey, containsValue, remove, size e clear." },
-          { title: "Classroom: le ricette di cucina (E-R)", path: "materie/informatica/classroom-ricette-er.html", type: "classroom", of: "materie/informatica/progettazione-concettuale-er.html", n: 8, desc: "Esercitazione 1 sul modello E-R: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE (1,1)-(0,n) di tipo 1:N, diagramma finale per designer.polito.it, ingredienti come entità, N:M e chiave esterna." },
+          { title: "Classroom: le ricette di cucina (E-R)", path: "materie/informatica/classroom-ricette-er.html", type: "classroom", of: "materie/informatica/progettazione-concettuale-er.html", n: 8, desc: "Esercitazione 1 sul modello E-R: entità RICETTA e CATEGORIA, attributi e chiavi, relazione APPARTIENE (1,1)-(0,n) di tipo 1:N, diagramma finale e testo per designerdb.io, ingredienti come entità, N:M e chiave esterna." },
+          { title: "Classroom: FoodExpress, consegne a domicilio (E-R)", path: "materie/informatica/classroom-foodexpress-er.html", type: "classroom", of: "materie/informatica/progettazione-concettuale-er.html", n: 8, desc: "Esercitazione 2 sul modello E-R: LOCALE, PIETANZA, CLIENTE e ORDINE, relazioni propone, effettua e contiene con cardinalità nei due versi, l'attributo porzioni sulla N:M, diagramma e sintassi designerdb.io." },
         ],
       },
       {
